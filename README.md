@@ -1,1 +1,3 @@
 # raymann
+Starting a new bigger Ray Tracer.
+Under Construction...
