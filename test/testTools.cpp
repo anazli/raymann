@@ -1,8 +1,8 @@
 #include <iostream>
 
+#include "../src/tools/tools.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "src/tools/tools.h"
 
 using namespace testing;
 
