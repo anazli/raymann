@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "src/tools/tools.h"
+#include "tools/tools.h"
 
 using namespace std;
 

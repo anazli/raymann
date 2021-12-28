@@ -9,6 +9,7 @@ set(EXE raymann)
 set(sources main.cpp src/tools/tools.h)
 
 add_executable(${EXE} ${sources})
+target_include_directories(${EXE} PUBLIC ${PROJECT_SOURCE_DIR}/src)
 set_target_properties(${EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
 
 #include(FetchContent)
@@ -21,11 +22,21 @@ set_target_properties(${EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
 #FetchContent_MakeAvailable(googletest)
 enable_testing()
 
-add_executable(TestTools test/testTools.cpp src/tools/tools.h)
 include_directories($ENV{GMOCK_HOME}/include $ENV{GMOCK_HOME}/gtest/include)
-target_link_libraries(TestTools gtest_main gtest pthread)
-set_target_properties(TestTools PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
-add_test(TestTools ${RUN_TEST_DIR}/TestTools)
+
+set(test1 TestTools)
+add_executable(${test1} test/testTools.cpp src/tools/tools.h)
+target_include_directories(${test1} PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(${test1} gtest_main gtest pthread)
+set_target_properties(${test1} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
+add_test(${test1} ${RUN_TEST_DIR}/${test1})
+
+set(test2 TestCanvas)
+add_executable(${test2} test/testCanvas.cpp src/tools/tools.h)
+target_include_directories(${test2} PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(${test2} gtest_main gtest pthread)
+set_target_properties(${test2} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
+add_test(${test2} ${RUN_TEST_DIR}/${test2})
 
 #include(GoogleTest)
 #gtest_discover_tests(hello_test)
