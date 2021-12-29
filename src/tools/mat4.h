@@ -164,9 +164,9 @@ Mat3<T> Mat4<T>::minor(const int& i, const int& j) const {
 }
 
 template <typename T>
-Mat4<T> Mat4<T>::inverse() const {
-  Mat4<T> inv;
-  for (int i = 0; i < 4; ++i) {
+Mat4<T> Mat4<T>::inverse() const {  // TODO: Shouldn't use T, with integers
+  Mat4<T> inv;                      // the result is not correct. It doesn't
+  for (int i = 0; i < 4; ++i) {     // make any sense to use T.
     for (int j = 0; j < 4; ++j) {
       inv.m_vec[j][i] = coFactor(i, j);
     }
@@ -297,6 +297,26 @@ Mat4<T> translation(const Vec3<T>& v) {
   ret[0][3] = v.x();
   ret[1][3] = v.y();
   ret[2][3] = v.z();
+  return ret;
+}
+
+template <typename T>
+Mat4<T> scale(const T& x, const T& y, const T& z) {
+  Mat4<T> ret;
+  ret.identity();
+  ret[0][0] = x;
+  ret[1][1] = y;
+  ret[2][2] = z;
+  return ret;
+}
+
+template <typename T>
+Mat4<T> scale(const Vec3<T>& v) {
+  Mat4<T> ret;
+  ret.identity();
+  ret[0][0] = v.x();
+  ret[1][1] = v.y();
+  ret[2][2] = v.z();
   return ret;
 }
 
