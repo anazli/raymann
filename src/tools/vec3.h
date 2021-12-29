@@ -6,7 +6,7 @@
 #include <iostream>
 #include <random>
 
-std::mt19937 gen(13759327u);
+// std::mt19937 gen(13759327u);
 
 /*! \brief A simple 3D vector class.
  *
@@ -366,7 +366,7 @@ Vec3<T> getUnitVectorOf(
   return v / (v.length() + 1.E-30);
 }
 
-template <typename T>
+/*template <typename T>
 Vec3<T> randomVector(
     const T& a = 0.,
     const T& b = 1.)  //!< Returns a vector with uniformly random
@@ -395,6 +395,6 @@ randomVectorOnUnitSphere()  //!< Returns a random vector on a unit sphere.
 
   Vec3<T> ret(dmx, dmy, dmz);
   return ret;
-}
+}*/
 
 #endif  // VEC3_H

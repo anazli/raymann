@@ -32,7 +32,7 @@ set_target_properties(${test1} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DI
 add_test(${test1} ${RUN_TEST_DIR}/${test1})
 
 set(test2 TestCanvas)
-add_executable(${test2} test/testCanvas.cpp src/tools/tools.h)
+add_executable(${test2} test/testCanvas.cpp src/tools/tools.h src/canvas.cpp src/canvas.h)
 target_include_directories(${test2} PUBLIC ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(${test2} gtest_main gtest pthread)
 set_target_properties(${test2} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})

@@ -24,6 +24,8 @@ class Canvas {
 
   Vec3f pixel(const int &x, const int &y) const { return m_pixels[x][y]; }
 
+  void save();
+
  private:
   int m_width;
   int m_height;
