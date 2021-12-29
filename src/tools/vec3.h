@@ -6,6 +6,8 @@
 #include <iostream>
 #include <random>
 
+#include "vec4.h"
+
 // std::mt19937 gen(13759327u);
 
 /*! \brief A simple 3D vector class.
@@ -29,6 +31,7 @@ class Vec3 {
   //! Copy Constructor. Creates a vector that is a copy
   //! of an existing vector provided as argument.
   Vec3<T>(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
+  Vec3<T>(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
 
   // Getters
   T x() const { return m_x; }  //!< returns the x component.
@@ -67,6 +70,13 @@ class Vec3 {
   }
 
   Vec3<T>& operator=(const Vec3<T>& v) {
+    m_x = v.x();
+    m_y = v.y();
+    m_z = v.z();
+    return *this;
+  }
+
+  Vec3<T>& operator=(const Vec4<T>& v) {
     m_x = v.x();
     m_y = v.y();
     m_z = v.z();

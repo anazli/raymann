@@ -270,4 +270,24 @@ Mat4<T> operator*(const Mat4<T>& m1, const Mat4<T>& m2) {
    * 30 31 32 33*/
 }
 
+template <typename T>
+Vec4<T> operator*(const Mat4<T>& m, const Vec4<T>& v) {
+  Vec4<T> ret;
+  ret[0] = dot(m[0], v);
+  ret[1] = dot(m[1], v);
+  ret[2] = dot(m[2], v);
+  ret[3] = dot(m[3], v);
+  return ret;
+}
+
+template <typename T>
+Mat4<T> translation(const T& x, const T& y, const T& z) {
+  Mat4<T> ret;
+  ret.identity();
+  ret[0][3] = x;
+  ret[1][3] = y;
+  ret[2][3] = z;
+  return ret;
+}
+
 #endif  // MAT4

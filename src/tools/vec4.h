@@ -5,6 +5,9 @@
 #include <iostream>
 #include <random>
 
+#include "point3.h"
+#include "vec3.h"
+
 /*! \brief A simple 4D vector class.
  *
  *  The Vec4 class creates a 4D vector (x,y,z,w) and provides some useful
@@ -27,6 +30,8 @@ class Vec4 {
   //! Copy Constructor. Creates a vector that is a copy
   //! of an existing vector provided as argument.
   Vec4<T>(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()}, m_w{v.w()} {}
+  Vec4<T>(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
+  Vec4<T>(const Point3<T> p) : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
 
   // Getters
   T x() const { return m_x; }  //!< returns the x component.

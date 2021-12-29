@@ -3,12 +3,22 @@
 #include <cassert>
 
 #include "vec3.h"
+#include "vec4.h"
+
+template <class T>
+class Vec4;
+
+template <class T>
+class Vec3;
 
 template <class T>
 class Point3 {
  public:
   Point3<T>(const T &x = T(), const T &y = T(), const T &z = T())
       : m_x(x), m_y(y), m_z(z) {}
+
+  Point3<T>(const Point3<T> &p) : m_x(p.x()), m_y(p.y()), m_z(p.z()) {}
+  Point3<T>(const Vec4<T> &v) : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
@@ -34,6 +44,13 @@ class Point3 {
   }
 
   Point3<T> &operator=(const Point3<T> &v) {
+    m_x = v.x();
+    m_y = v.y();
+    m_z = v.z();
+    return *this;
+  }
+
+  Point3<T> &operator=(const Vec4<T> &v) {
     m_x = v.x();
     m_y = v.y();
     m_z = v.z();

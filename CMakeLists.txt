@@ -38,6 +38,12 @@ target_link_libraries(${test2} gtest_main gtest pthread)
 set_target_properties(${test2} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
 add_test(${test2} ${RUN_TEST_DIR}/${test2})
 
+set(test3 TestTrans)
+add_executable(${test3} test/testTrans.cpp src/tools/tools.h)
+target_include_directories(${test3} PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(${test3} gtest_main gtest pthread)
+set_target_properties(${test3} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
+add_test(${test3} ${RUN_TEST_DIR}/${test3})
 #include(GoogleTest)
 #gtest_discover_tests(hello_test)
 
