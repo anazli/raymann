@@ -24,6 +24,20 @@ TEST_F(Ttrans, appliesTranslationToPoint) {  // TODO: better interface
   ASSERT_EQ(p.z(), 7);
 }
 
+TEST_F(Ttrans, appliesTranslationToPointOverloaded) {  // TODO: better interface
+  p = Point3i(-3, 4, 5);
+  Vec3i trans(5, -3, 2);
+  m = translation(trans);
+  Vec4i v4(p);
+
+  v4 = m * v4;  // transformation
+  p = v4;
+
+  ASSERT_EQ(p.x(), 2);
+  ASSERT_EQ(p.y(), 1);
+  ASSERT_EQ(p.z(), 7);
+}
+
 TEST_F(Ttrans, appliesInverseTranslationToPoint) {
   p = Point3i(-3, 4, 5);
   m = translation(5, -3, 2);

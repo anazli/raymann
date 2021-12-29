@@ -290,4 +290,14 @@ Mat4<T> translation(const T& x, const T& y, const T& z) {
   return ret;
 }
 
+template <typename T>
+Mat4<T> translation(const Vec3<T>& v) {
+  Mat4<T> ret;
+  ret.identity();
+  ret[0][3] = v.x();
+  ret[1][3] = v.y();
+  ret[2][3] = v.z();
+  return ret;
+}
+
 #endif  // MAT4
