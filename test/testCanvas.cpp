@@ -20,3 +20,14 @@ TEST_F(Tcanvas, createsCanvas) {
   ASSERT_EQ(c.height(), 90);
   ASSERT_TRUE(c.pixel(40, 50) == Vec3f(0., 0., 0.));
 }
+
+TEST_F(Tcanvas, setsPixelColor) {
+  c = Canvas(800, 600);
+  ASSERT_EQ(c.width(), 800);
+  ASSERT_EQ(c.height(), 600);
+  c.writePixel(500, 500, Vec3f(1., 0., 0));
+  ASSERT_TRUE(c.pixel(500, 500) == Vec3f(1., 0., 0.));
+  ASSERT_TRUE(c.pixel(100, 500) == Vec3f(0., 0., 0.));
+  ASSERT_TRUE(c.pixel(799, 599) == Vec3f(0., 0., 0.));
+  ASSERT_TRUE(c.pixel(0, 0) == Vec3f(0., 0., 0.));
+}
