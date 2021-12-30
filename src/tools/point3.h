@@ -90,3 +90,8 @@ class Point3 {
 typedef Point3<double> Point3d;
 typedef Point3<float> Point3f;
 typedef Point3<int> Point3i;
+
+template <typename T>
+bool operator==(const Point3<T> &p1, const Point3<T> &p2) {
+  return (p1.x() == p2.x()) && (p1.y() == p2.y()) && (p1.z() == p2.z());
+}
