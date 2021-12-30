@@ -83,6 +83,22 @@ class Vec4 {
     return *this;
   }
 
+  Vec4<T>& operator=(const Vec3<T>& v) {
+    m_x = v.x();
+    m_y = v.y();
+    m_z = v.z();
+    m_w = (T)0;
+    return *this;
+  }
+
+  Vec4<T>& operator=(const Point3<T>& p) {
+    m_x = p.x();
+    m_y = p.y();
+    m_z = p.z();
+    m_w = (T)1;
+    return *this;
+  }
+
   Vec4<T> operator+() const {
     return Vec4<T>(m_x, m_y, m_z, m_w);
   };  //!< Overloaded unary (+) operator. Returns the same vector.

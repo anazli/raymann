@@ -320,4 +320,37 @@ Mat4<T> scale(const Vec3<T>& v) {
   return ret;
 }
 
+template <typename T>
+Mat4<T> rotationX(const T& rad) {
+  Mat4<T> ret;
+  ret.identity();
+  ret[1][1] = cos(rad);
+  ret[1][2] = -sin(rad);
+  ret[2][1] = sin(rad);
+  ret[2][2] = cos(rad);
+  return ret;
+}
+
+template <typename T>
+Mat4<T> rotationY(const T& rad) {
+  Mat4<T> ret;
+  ret.identity();
+  ret[0][0] = cos(rad);
+  ret[0][2] = sin(rad);
+  ret[2][0] = -sin(rad);
+  ret[2][2] = cos(rad);
+  return ret;
+}
+
+template <typename T>
+Mat4<T> rotationZ(const T& rad) {
+  Mat4<T> ret;
+  ret.identity();
+  ret[0][0] = cos(rad);
+  ret[0][1] = -sin(rad);
+  ret[1][0] = sin(rad);
+  ret[1][1] = cos(rad);
+  return ret;
+}
+
 #endif  // MAT4
