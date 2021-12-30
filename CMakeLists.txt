@@ -44,6 +44,13 @@ target_include_directories(${test3} PUBLIC ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(${test3} gtest_main gtest pthread)
 set_target_properties(${test3} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
 add_test(${test3} ${RUN_TEST_DIR}/${test3})
+
+set(test4 TestRay)
+add_executable(${test4} test/testRay.cpp src/tools/ray.h src/tools/point3.h src/tools/vec3.h)
+target_include_directories(${test4} PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(${test4} gtest_main gtest pthread)
+set_target_properties(${test4} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
+add_test(${test4} ${RUN_TEST_DIR}/${test4})
 #include(GoogleTest)
 #gtest_discover_tests(hello_test)
 

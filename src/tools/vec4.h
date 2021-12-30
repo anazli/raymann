@@ -17,6 +17,12 @@
  *
  */
 
+template <typename T>
+class Vec3;
+
+template <typename T>
+class Point3;
+
 template <class T>
 class Vec4 {
  public:
