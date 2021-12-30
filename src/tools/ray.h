@@ -12,6 +12,7 @@ class Ray {
   void setDirection(const Vec3f &dir) { m_dir = dir; }
   Point3f origin() const { return m_ori; }
   Vec3f direction() const { return m_dir; }
+  Point3f position(const float &t) { return origin() + t * direction(); }
 
  private:
   Point3f m_ori;
