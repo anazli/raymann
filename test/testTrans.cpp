@@ -194,3 +194,18 @@ TEST_F(Ttrans, appliesTransformationsInSequence) {
   ASSERT_FLOAT_EQ(p3.y(), 0.0f);
   ASSERT_FLOAT_EQ(p3.z(), 7.0f);
 }
+
+TEST_F(Ttrans, appliesTransformationChaining) {
+  p = Point3f(1.0f, 0.0f, 1.0f);
+  Mat4f A = rotationX(PI / 2.0f);
+  Mat4f B = scale(5.0f, 5.0f, 5.0f);
+  Mat4f C = translation(10.0f, 5.0f, 7.0f);
+  m = C * B * A;
+  Vec4f v4(p);
+  v4 = m * v4;
+  p = v4;
+
+  ASSERT_FLOAT_EQ(p.x(), 15.0f);
+  ASSERT_FLOAT_EQ(p.y(), 0.0f);
+  ASSERT_FLOAT_EQ(p.z(), 7.0f);
+}
