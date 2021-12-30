@@ -163,3 +163,34 @@ TEST_F(Ttrans, appliesRotationZToPoint) {
   ASSERT_FLOAT_EQ(p.y(), sqrt(2.) / 2.0f);
   ASSERT_FLOAT_EQ(p.z(), 0.0f);
 }
+
+TEST_F(Ttrans, appliesTransformationsInSequence) {
+  p = Point3f(1.0f, 0.0f, 1.0f);
+
+  Mat4f A = rotationX(PI / 2.0f);
+  Mat4f B = scale(5.0f, 5.0f, 5.0f);
+  Mat4f C = translation(10.0f, 5.0f, 7.0f);
+  Vec4f v4(p);
+  v4 = A * v4;
+  Point3f p1(v4);
+
+  ASSERT_FLOAT_EQ(p1.x(), 1.0f);
+  ASSERT_FLOAT_EQ(p1.y(), -1.0f);
+  EXPECT_NEAR(p1.z(), 0.0f, 4.4E-8);
+
+  Vec4f v41(p1);
+  v41 = B * v41;
+  Point3f p2(v41);
+
+  ASSERT_FLOAT_EQ(p2.x(), 5.0f);
+  ASSERT_FLOAT_EQ(p2.y(), -5.0f);
+  EXPECT_NEAR(p2.z(), 0.0f, 2.2E-7);
+
+  Vec4f v42(p2);
+  v41 = C * v41;
+  Point3f p3(v41);
+
+  ASSERT_FLOAT_EQ(p3.x(), 15.0f);
+  ASSERT_FLOAT_EQ(p3.y(), 0.0f);
+  ASSERT_FLOAT_EQ(p3.z(), 7.0f);
+}

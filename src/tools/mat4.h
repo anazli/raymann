@@ -320,6 +320,8 @@ Mat4<T> scale(const Vec3<T>& v) {
   return ret;
 }
 
+// TODO: floating point errors ~ E-8
+
 template <typename T>
 Mat4<T> rotationX(const T& rad) {
   Mat4<T> ret;
@@ -352,5 +354,7 @@ Mat4<T> rotationZ(const T& rad) {
   ret[1][1] = cos(rad);
   return ret;
 }
+
+// TODO: Shearing
 
 #endif  // MAT4
