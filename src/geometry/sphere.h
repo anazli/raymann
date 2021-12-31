@@ -2,6 +2,7 @@
 
 #include "tools/point3.h"
 #include "tools/ray.h"
+#include "tools/vec3.h"
 #include "traceable.h"
 
 class Sphere : public Traceable {
@@ -10,15 +11,30 @@ class Sphere : public Traceable {
       : m_center(c), m_radius(r) {}
 
   virtual ~Sphere() {}
-  bool intersect(const Ray &r) override { return false; }
+  bool intersect(const Ray &r) override;
   void setCenter(const Point3f &c) { m_center = c; }
   void setRadius(const float &r) { m_radius = r; }
   Point3f center() const { return m_center; }
   float radius() const { return m_radius; }
-  std::vector<float> intersections() const { return m_intersections; }
 
  private:
   Point3f m_center;
   float m_radius;
-  std::vector<float> m_intersections;
 };
+
+inline bool Sphere::intersect(const Ray &r) {
+  Vec3f co = r.origin() - center();
+  float a = dot(r.direction(), r.direction());
+  float b = 2.0f * dot(r.direction(), co);
+  float c = dot(co, co) - radius() * radius();
+  float discr = b * b - 4.0f * a * c;
+  if (discr >= 0.0f) {
+    float t1 = (-b - sqrt(discr)) / (2. * a);
+    float t2 = (-b + sqrt(discr)) / (2. * a);
+    rec.t1 = t1;
+    rec.t2 = t2;
+    rec.count += 2;
+    return true;
+  }
+  return false;
+}

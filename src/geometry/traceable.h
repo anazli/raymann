@@ -5,6 +5,12 @@
 
 #include "tools/ray.h"
 
+struct record {
+  int count;
+  float t1;
+  float t2;
+};
+
 class Traceable {
  public:
   virtual ~Traceable() {}
@@ -12,6 +18,8 @@ class Traceable {
   virtual void add(Traceable *) {}
   virtual void remove(Traceable *) {}
   std::string name() const { return m_name; }
+
+  record rec;
 
  protected:
   Traceable() {}
