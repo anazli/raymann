@@ -42,10 +42,11 @@ class World : public Traceable {
       delete (*it);
   }
   bool intersect(const Ray &r) override {
+    bool has_intersection = false;
     std::list<Traceable *>::iterator it;
     for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
-      return (*it)->intersect(r);
-    return false;
+      if ((*it)->intersect(r)) has_intersection = true;
+    return has_intersection;
   }
   void add(Traceable *item) override {
     m_traceable_list.push_back(item);

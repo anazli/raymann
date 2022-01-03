@@ -21,4 +21,8 @@ TEST_F(Tworld, createsWolrdWithShere) {
   ASSERT_EQ(s->rec.count, 2);
   ASSERT_EQ(s->rec.t1, 4.0f);
   ASSERT_EQ(s->rec.t2, 6.0f);
+
+  w.remove(s);
+  ASSERT_FALSE(s->getParent() == &w);
+  ASSERT_TRUE(s->getParent() == nullptr);
 }
