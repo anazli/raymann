@@ -6,7 +6,7 @@ set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(EXE raymann)
 
-set(sources main.cpp src/tools/tools.h)
+set(sources src/main.cpp src/tools/tools.h)
 
 add_executable(${EXE} ${sources})
 target_include_directories(${EXE} PUBLIC ${PROJECT_SOURCE_DIR}/src)
