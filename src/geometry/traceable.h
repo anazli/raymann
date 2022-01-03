@@ -34,6 +34,8 @@ class Traceable {
 
 class World : public Traceable {
  public:
+  World() {}
+  World(const std::string &n);
   virtual ~World();
   bool intersect(const Ray &r) override {
     std::list<Traceable *>::iterator it;
@@ -50,10 +52,6 @@ class World : public Traceable {
     item->setParent(nullptr);
   }
   bool isWorld() const override { return true; }
-
- protected:
-  World() {}
-  World(const std::string &n);
 
  private:
   std::list<Traceable *> m_traceable_list;  // TODO: or maybe list
