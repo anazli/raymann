@@ -20,6 +20,7 @@ class Traceable {
     int count = 0;
     float t1 = 0.0f;
     float t2 = 0.0f;
+    float t_min() { return std::min(t1, t2); }
   };
   record rec;
 
@@ -59,5 +60,5 @@ class World : public Traceable {
   bool isWorld() const override { return true; }
 
  private:
-  std::list<Traceable *> m_traceable_list;  // TODO: or maybe list
+  std::list<Traceable *> m_traceable_list;
 };
