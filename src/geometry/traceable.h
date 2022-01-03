@@ -36,7 +36,11 @@ class World : public Traceable {
  public:
   World() {}
   World(const std::string &n);
-  virtual ~World();
+  virtual ~World() {
+    std::list<Traceable *>::iterator it;
+    for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
+      delete (*it);
+  }
   bool intersect(const Ray &r) override {
     std::list<Traceable *>::iterator it;
     for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
