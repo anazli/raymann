@@ -5,12 +5,6 @@
 
 #include "tools/ray.h"
 
-struct record {
-  int count;
-  float t1;
-  float t2;
-};
-
 class Traceable {
  public:
   virtual ~Traceable() {}
@@ -22,6 +16,11 @@ class Traceable {
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
 
+  struct record {
+    int count = 0;
+    float t1 = 0.0f;
+    float t2 = 0.0f;
+  };
   record rec;
 
  protected:
