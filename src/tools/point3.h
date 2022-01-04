@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <sstream>
 
 #include "vec3.h"
 #include "vec4.h"
@@ -94,4 +95,10 @@ typedef Point3<int> Point3i;
 template <typename T>
 bool operator==(const Point3<T> &p1, const Point3<T> &p2) {
   return (p1.x() == p2.x()) && (p1.y() == p2.y()) && (p1.z() == p2.z());
+}
+
+template <typename T>
+std::stringstream &operator<<(std::stringstream &out, const Point3<T> &p) {
+  out << "(" << p.x() << "," << p.y() << "," << p.z() << ")";
+  return out;
 }

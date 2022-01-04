@@ -10,6 +10,9 @@ class Sphere : public Traceable {
   Sphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f), const float &r = 0.0f)
       : m_center(c), m_radius(r) {
     setParent(nullptr);
+    std::stringstream ss;
+    ss << center();
+    m_name = "Sphere:" + ss.str();
   }
 
   virtual ~Sphere() {}

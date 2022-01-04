@@ -28,8 +28,6 @@ class Traceable {
   Traceable() {}
   Traceable(const std::string &n);
   Traceable *m_parent;
-
- private:
   std::string m_name;
 };
 
