@@ -66,6 +66,7 @@ class World : public Traceable {
         temp = (*it);
         min_hit = temp->rec.t_min();
       }
+    assert(temp != nullptr);  // All intersections are negative
     return *temp;
   }
 
