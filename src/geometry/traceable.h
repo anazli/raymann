@@ -62,7 +62,7 @@ class World : public Traceable {
     Traceable *temp = nullptr;
     float min_hit = MAXFLOAT;
     for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
-      if ((*it)->rec.t_min() < min_hit) {
+      if ((*it)->rec.t_min() > 0.0f && (*it)->rec.t_min() < min_hit) {
         temp = (*it);
         min_hit = temp->rec.t_min();
       }
