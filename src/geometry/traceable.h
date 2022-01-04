@@ -10,7 +10,7 @@ class Traceable {
   virtual ~Traceable() {}
   virtual bool intersect(const Ray &r) = 0;
   virtual void add(Traceable *item) {}
-  virtual void remove(Traceable *item) {}
+  virtual void remove(Traceable *item, bool del = true) {}
   virtual bool isWorld() const { return false; }
   std::string name() const { return m_name; }
   void setParent(Traceable *t) { m_parent = t; }
@@ -53,11 +53,23 @@ class World : public Traceable {
     m_traceable_list.push_back(item);
     item->setParent(this);
   }
-  void remove(Traceable *item) override {
+  void remove(Traceable *item, bool del = true) override {
     m_traceable_list.remove(item);
     item->setParent(nullptr);
+    if (del) delete item;
   }
   bool isWorld() const override { return true; }
+  Traceable &closestHit() const {  // TODO: maybe a better solution
+    std::list<Traceable *>::const_iterator it;
+    Traceable *temp = nullptr;
+    float min_hit = MAXFLOAT;
+    for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
+      if ((*it)->rec.t_min() < min_hit) {
+        temp = (*it);
+        min_hit = temp->rec.t_min();
+      }
+    return *temp;
+  }
 
  private:
   std::list<Traceable *> m_traceable_list;
