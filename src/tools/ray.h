@@ -1,7 +1,9 @@
 #pragma once
 
+#include "mat4.h"
 #include "point3.h"
 #include "vec3.h"
+#include "vec4.h"
 
 class Ray {
  public:
@@ -13,6 +15,20 @@ class Ray {
   Point3f origin() const { return m_ori; }
   Vec3f direction() const { return m_dir; }
   Point3f position(const float &t) const { return origin() + t * direction(); }
+  Ray transform(const Mat4f &m) const {
+    Ray ret;
+
+    Vec4f v4(origin());
+    v4 = m * v4;
+    Point3f new_o = v4;
+    ret.setOrigin(new_o);
+
+    v4 = direction();
+    v4 = m * v4;
+    Vec4f new_d = v4;
+    ret.setDirection(new_d);
+    return ret;
+  }
 
  private:
   Point3f m_ori;

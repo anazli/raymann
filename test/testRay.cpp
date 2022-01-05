@@ -31,3 +31,21 @@ TEST_F(Tray, computesPositionAtT) {
   ASSERT_TRUE(r.position(-1) == Point3f(1, 3, 4));
   ASSERT_TRUE(r.position(2.5) == Point3f(4.5, 3, 4));
 }
+
+TEST_F(Tray, translatesRay) {
+  r = Ray(Point3f(1, 2, 3), Vec3f(0, 1, 0));
+  Mat4f m = translation(3.0f, 4.0f, 5.0f);
+  Ray tr = r.transform(m);
+
+  ASSERT_TRUE(tr.origin() == Point3f(4.0f, 6.0f, 8.0f));
+  ASSERT_TRUE(tr.direction() == Vec3f(0.0f, 1.0f, 0.0f));
+}
+
+TEST_F(Tray, scalesRay) {
+  r = Ray(Point3f(1, 2, 3), Vec3f(0, 1, 0));
+  Mat4f m = scale(2.0f, 3.0f, 4.0f);
+  Ray tr = r.transform(m);
+
+  ASSERT_TRUE(tr.origin() == Point3f(2.0f, 6.0f, 12.0f));
+  ASSERT_TRUE(tr.direction() == Vec3f(0.0f, 3.0f, 0.0f));
+}
