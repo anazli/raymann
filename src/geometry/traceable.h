@@ -35,7 +35,7 @@ class Traceable {
 class TraceableDeco : public Traceable {
  public:
   TraceableDeco(Traceable *tr) : m_traceable(tr) {}
-  virtual ~TraceableDeco() {}
+  virtual ~TraceableDeco() { delete m_traceable; }
   bool intersect(const Ray &r) override { return m_traceable->intersect(r); }
   std::string name() const override { return m_traceable->name(); }
   Record record() const override { return m_traceable->record(); }
