@@ -27,9 +27,10 @@ TEST_F(Tworld, createsWorldOfShere) {
   ASSERT_EQ(closest.record().t1, s->record().t1);
   ASSERT_EQ(closest.record().t2, s->record().t2);
 
-  w.remove(s);
+  w.remove(s, false);
   ASSERT_FALSE(s->getParent() == &w);
   ASSERT_TRUE(s->getParent() == nullptr);
+  delete s;
 }
 
 TEST_F(Tworld, createsWorldOfTwoSpheres) {
@@ -56,13 +57,15 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   ASSERT_EQ(closest.record().t1, s->record().t1);
   ASSERT_EQ(closest.record().t2, s->record().t2);
 
-  w.remove(s);
-  w.remove(s1);
+  w.remove(s, false);
+  w.remove(s1, false);
 
   ASSERT_FALSE(s->getParent() == &w);
   ASSERT_TRUE(s->getParent() == nullptr);
   ASSERT_FALSE(s1->getParent() == &w);
   ASSERT_TRUE(s1->getParent() == nullptr);
+  delete s;
+  delete s1;
 }
 
 TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {

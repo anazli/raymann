@@ -22,7 +22,6 @@ class Traceable {
     float t2 = 0.0f;
     float t_min() { return std::min(t1, t2); }
   };
-  Record rec;
   virtual Record record() const { return rec; }
 
  protected:
@@ -30,6 +29,7 @@ class Traceable {
   Traceable(const std::string &n);
   Traceable *m_parent;
   std::string m_name;
+  Record rec;
 };
 
 class TraceableDeco : public Traceable {
@@ -93,9 +93,9 @@ class World : public Traceable {
     Traceable *temp = nullptr;
     float min_hit = MAXFLOAT;
     for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
-      if ((*it)->rec.t_min() > 0.0f && (*it)->rec.t_min() < min_hit) {
+      if ((*it)->record().t_min() > 0.0f && (*it)->record().t_min() < min_hit) {
         temp = (*it);
-        min_hit = temp->rec.t_min();
+        min_hit = temp->record().t_min();
       }
     assert(temp != nullptr);  // All intersections are negative
     return *temp;
