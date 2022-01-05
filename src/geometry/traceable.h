@@ -12,7 +12,7 @@ class Traceable {
   virtual void add(Traceable *item) {}
   virtual void remove(Traceable *item, bool del = true) {}
   virtual bool isWorld() const { return false; }
-  std::string name() const { return m_name; }
+  virtual std::string name() const { return m_name; }
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
 
@@ -29,6 +29,34 @@ class Traceable {
   Traceable(const std::string &n);
   Traceable *m_parent;
   std::string m_name;
+};
+
+class TraceableDeco : public Traceable {
+ public:
+  TraceableDeco(Traceable *tr) : m_traceable(tr) {}
+  virtual ~TraceableDeco() {}
+  bool intersect(const Ray &r) override { return m_traceable->intersect(r); }
+  std::string name() const override { return m_traceable->name(); }
+
+ protected:
+  Traceable *m_traceable;
+};
+
+class TraceableTransformer : public TraceableDeco {
+ public:
+  TraceableTransformer(Traceable *tr) : TraceableDeco(tr) {
+    m_transformer.identity();
+  }
+  TraceableTransformer(Traceable *tr, const Mat4f &m)
+      : TraceableDeco(tr), m_transformer(m) {}
+  bool intersect(const Ray &r) override {
+    Ray r_transformed = r.transform(m_transformer.inverse());
+    return TraceableDeco::intersect(r_transformed);
+  }
+  std::string name() const override { return TraceableDeco::name(); }
+
+ private:
+  Mat4f m_transformer;
 };
 
 class World : public Traceable {
