@@ -102,3 +102,9 @@ std::stringstream &operator<<(std::stringstream &out, const Point3<T> &p) {
   out << "(" << p.x() << "," << p.y() << "," << p.z() << ")";
   return out;
 }
+
+template <typename T>
+std::ostream &operator<<(std::ostream &out, const Point3<T> &p) {
+  out << "(" << p.x() << "," << p.y() << "," << p.z() << ")";
+  return out;
+}
