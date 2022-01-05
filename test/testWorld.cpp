@@ -108,8 +108,8 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
   ASSERT_EQ(s1->record().t1, -4.0f);
   ASSERT_EQ(s1->record().t2, -2.0f);
 
-  ASSERT_DEATH(Traceable &closest = w.closestHit(), "");
-}
+  ASSERT_DEATH(Traceable &closest = w.closestHit(), "");  // Running it with
+}  // valgrind results in signal 6 (SIGABRT)
 
 TEST_F(Tworld, createsWorldOfFourSpheres) {
   w = World();
