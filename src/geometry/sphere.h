@@ -19,6 +19,7 @@ class Sphere : public Traceable {
   bool intersect(const Ray &r) override;
   bool isWorld() const override { return false; }
   std::string name() const override { return m_name; }
+  Record record() const override { return rec; }
   void setCenter(const Point3f &c) { m_center = c; }
   void setRadius(const float &r) { m_radius = r; }
   Point3f center() const { return m_center; }

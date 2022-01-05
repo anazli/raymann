@@ -16,13 +16,14 @@ class Traceable {
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
 
-  struct record {
+  struct Record {
     int count = 0;
     float t1 = 0.0f;
     float t2 = 0.0f;
     float t_min() { return std::min(t1, t2); }
   };
-  record rec;
+  Record rec;
+  virtual Record record() const { return rec; }
 
  protected:
   Traceable() {}
@@ -37,6 +38,7 @@ class TraceableDeco : public Traceable {
   virtual ~TraceableDeco() {}
   bool intersect(const Ray &r) override { return m_traceable->intersect(r); }
   std::string name() const override { return m_traceable->name(); }
+  Record record() const override { return m_traceable->record(); }
 
  protected:
   Traceable *m_traceable;
@@ -54,6 +56,7 @@ class TraceableTransformer : public TraceableDeco {
     return TraceableDeco::intersect(r_transformed);
   }
   std::string name() const override { return TraceableDeco::name(); }
+  Record record() const override { return TraceableDeco::record(); }
 
  private:
   Mat4f m_transformer;
