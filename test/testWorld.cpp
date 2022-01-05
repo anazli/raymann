@@ -12,7 +12,7 @@ class Tworld : public Test {
 
 TEST_F(Tworld, createsWorldOfShere) {
   w = World();
-  Sphere *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   w.add(s);
   ASSERT_TRUE(s->getParent() == &w);
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -35,8 +35,8 @@ TEST_F(Tworld, createsWorldOfShere) {
 TEST_F(Tworld, createsWorldOfTwoSpheres) {
   w = World();
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Sphere *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
-  Sphere *s1 = new Sphere(Point3f(0.0f, 0.0f, 5.0f), 1.0f);
+  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  Traceable *s1 = new Sphere(Point3f(0.0f, 0.0f, 5.0f), 1.0f);
 
   w.add(s);
   w.add(s1);
@@ -68,8 +68,8 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
 TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   w = World();
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Sphere *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
-  Sphere *s1 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
+  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  Traceable *s1 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
 
   w.add(s);
   w.add(s1);
@@ -91,8 +91,8 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
 TEST_F(Tworld, createsWorldOfNegativeIntersections) {
   w = World();
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Sphere *s = new Sphere(Point3f(0.0f, 0.0f, -11.0f), 1.0f);
-  Sphere *s1 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
+  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, -11.0f), 1.0f);
+  Traceable *s1 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
 
   w.add(s);
   w.add(s1);
@@ -111,10 +111,10 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
 TEST_F(Tworld, createsWorldOfFourSpheres) {
   w = World();
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Sphere *s = new Sphere(Point3f(0.0f, 0.0f, 5.0f), 1.0f);
-  Sphere *s1 = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
-  Sphere *s2 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
-  Sphere *s3 = new Sphere(Point3f(0.0f, 0.0f, 8.0f), 1.0f);
+  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, 5.0f), 1.0f);
+  Traceable *s1 = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  Traceable *s2 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
+  Traceable *s3 = new Sphere(Point3f(0.0f, 0.0f, 8.0f), 1.0f);
 
   w.add(s);
   w.add(s1);
