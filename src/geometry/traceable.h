@@ -44,12 +44,10 @@ class TraceableDeco : public Traceable {
   Traceable *m_traceable;
 };
 
-class TraceableTransformer : public TraceableDeco {
+class Transformer : public TraceableDeco {
  public:
-  TraceableTransformer(Traceable *tr) : TraceableDeco(tr) {
-    m_transformer.identity();
-  }
-  TraceableTransformer(Traceable *tr, const Mat4f &m)
+  Transformer(Traceable *tr) : TraceableDeco(tr) { m_transformer.identity(); }
+  Transformer(Traceable *tr, const Mat4f &m)
       : TraceableDeco(tr), m_transformer(m) {}
   bool intersect(const Ray &r) override {
     Ray r_transformed = r.transform(m_transformer.inverse());

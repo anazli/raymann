@@ -69,11 +69,20 @@ TEST_F(Tsphere, testingTheNextTest) {
 
 TEST_F(Tsphere, transformsSphere) {
   r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Traceable *t = new TraceableTransformer(
-      new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f), scale(2.0f, 2.0f, 2.0f));
+  Traceable *t = new Transformer(new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f),
+                                 scale(2.0f, 2.0f, 2.0f));
   ASSERT_TRUE(t->intersect(r));
   ASSERT_EQ(t->record().count, 2);
   ASSERT_EQ(t->record().t1, 3.0f);
   ASSERT_EQ(t->record().t2, 7.0f);
+  delete t;
+}
+
+TEST_F(Tsphere, translatesSphere) {
+  r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  Traceable *t = new Transformer(new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f),
+                                 translation(5.0f, 0.0f, 0.0f));
+  ASSERT_FALSE(t->intersect(r));
+  ASSERT_TRUE(t->record().count == 0);
   delete t;
 }
