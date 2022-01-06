@@ -9,7 +9,7 @@ using std::ofstream;
 void Canvas::render(World &w, const Ray &r) {
   float wall_z = r.direction().z();
   float wall_size = 7.0f;
-  float pixel_size = wall_size / (float)(width() * height());
+  float pixel_size = wall_size / (float)width();
   float half = wall_size / 2.0f;
   Vec3f color(1.0f, 0.0f, 0.0f);
   for (int j = 0; j < height(); ++j) {
