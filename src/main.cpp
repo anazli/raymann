@@ -1,14 +1,15 @@
 #include <fstream>
 #include <iostream>
 
-#include "canvas.h"
+#include "container/canvas.h"
 #include "geometry/sphere.h"
 #include "tools/tools.h"
 
 using namespace std;
 
 int main() {
-  Traceable *t = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  Traceable *sphere = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  Traceable *t = new Transformer(sphere, scale(0.5f, 1.0f, 1.0f));
   World w;
   w.add(t);
 
