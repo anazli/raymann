@@ -35,15 +35,17 @@ set_target_properties(${test} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR
 add_test(${test} ${RUN_TEST_DIR}/${test})
 ENDMACRO(TESTCASE)
 
-enable_testing()
-include_directories($ENV{GMOCK_HOME}/include $ENV{GMOCK_HOME}/gtest/include)
+if(BUILD_TESTING)  #cmake .. -DBUILD_TESTING=ON
+  enable_testing()
+  include_directories($ENV{GMOCK_HOME}/include $ENV{GMOCK_HOME}/gtest/include)
 
-TESTCASE(Tools)
-TESTCASE(Canvas)
-TESTCASE(Trans)
-TESTCASE(Ray)
-TESTCASE(Sphere)
-TESTCASE(World)
+  TESTCASE(Tools)
+  TESTCASE(Canvas)
+  TESTCASE(Trans)
+  TESTCASE(Ray)
+  TESTCASE(Sphere)
+  TESTCASE(World)
+endif()
 
 
 #include(GoogleTest)
