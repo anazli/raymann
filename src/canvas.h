@@ -18,7 +18,7 @@ class Canvas {
   // void setHeight(const int &h) { m_height = h; }
   void setFileName(const std::string &fn) { m_fileName = fn; }
 
-  void render(const World &w, const Ray &r);
+  void render(World &w, const Ray &r);
   void writePixel(const int &x, const int &y, const Vec3f &color) {
     m_pixels[x][y] = color;
   }

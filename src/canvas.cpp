@@ -6,9 +6,22 @@
 using std::endl;
 using std::ofstream;
 
-void Canvas::render(const World &w, const Ray &r) {
-  for (int i = 0; i < width(); ++i) {
-    for (int j = 0; j < height(); ++j) {
+void Canvas::render(World &w, const Ray &r) {
+  float wall_z = r.direction().z();
+  float wall_size = 7.0f;
+  float pixel_size = wall_size / (float)(width() * height());
+  float half = wall_size / 2.0f;
+  Vec3f color(1.0f, 0.0f, 0.0f);
+  for (int j = 0; j < height(); ++j) {
+    float world_y = half - pixel_size * j;
+    for (int i = 0; i < width(); ++i) {
+      float world_x = -half + pixel_size * i;
+      Point3f position(world_x, world_y, wall_z);
+      Ray ray(r.origin(), (position - r.origin()).normalize());
+      if (w.intersect(ray))
+        writePixel(i, j, color);
+      else
+        writePixel(i, j, Vec3f(0.0f, 0.0f, 0.0f));
     }
   }
 }

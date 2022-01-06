@@ -12,10 +12,12 @@ int main() {
   World w;
   w.add(t);
 
-  Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 10.0f));
 
   Canvas canvas(100, 100);
   canvas.setFileName("scene.ppm");
+
+  canvas.render(w, r);
   canvas.save();
 
   return 0;

@@ -211,8 +211,8 @@ Vec3<T>& Vec3<T>::operator*=(const T& num) {
 
 template <typename T>
 Vec3<T>& Vec3<T>::normalize() {
-  double norm = this->length();
-  *this = (*this) / (norm + 1.E-30);
+  T norm = this->length() + (T)1.E-30;
+  *this = (*this) / norm;
   return *this;
 }
 
