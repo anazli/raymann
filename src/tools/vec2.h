@@ -6,43 +6,27 @@
 #include <iostream>
 #include <random>
 
-/*! \brief A simple 2D vector class.
- *
- *  The Vec2 class creates a 2D vector (x,y) and provides some useful operations
- *  such as dot, normalization, random vectors. It also supports all
- *  the operations such as multiplication, addition, subtraction, division etc.
- *
- */
-
 template <class T>
 class Vec2 {
  public:
-  //! Constructor with default arguments. If no parameters
-  //! are provided, a vector (0,0) is created. Otherwise
-  //! a vector (x,y,z) is created.
   Vec2(const T& p1 = 0., const T& p2 = 0.) : m_x{p1}, m_y{p2} {}
-
-  //! Copy Constructor. Creates a vector that is a copy
-  //! of an existing vector provided as argument.
   Vec2(const Vec2<T>& v) : m_x{v.x()}, m_y{v.y()} {}
 
-  // Getters
-  T x() const { return m_x; }  //!< returns the x component.
-  T y() const { return m_y; }  //!< returns the y component.
+  T x() const { return m_x; }
+  T y() const { return m_y; }
 
-  // Setters
-  void setX(const T& p) { m_x = p; }  //!< sets the x component.
-  void setY(const T& p) { m_y = p; }  //!< sets the y component.
+  void setX(const T& p) { m_x = p; }
+  void setY(const T& p) { m_y = p; }
 
   void setXY(const T& num) {
     setX(num);
     setY(num);
-  }  //!< sets the two components to a specific value.
+  }
 
   void setXY(const T& p1, const T& p2) {
     setX(p1);
     setY(p2);
-  }  //!< Every component gets a unique value.
+  }
 
   T operator[](int i) const {
     assert(i >= 0 && i <= 1);
@@ -62,41 +46,23 @@ class Vec2 {
     return *this;
   }
 
-  Vec2<T> operator+() const {
-    return Vec2<T>(m_x, m_y);
-  };  //!< Overloaded unary (+) operator. Returns the same vector.
-  Vec2<T> operator-() const {
-    return Vec2<T>(-m_x, -m_y);
-  }  //!< Overloaded unary (-) operator. Returns the opposite vector.
+  Vec2<T> operator+() const { return Vec2<T>(m_x, m_y); };
+  Vec2<T> operator-() const { return Vec2<T>(-m_x, -m_y); }
+  Vec2<T>& operator++();
+  Vec2<T>& operator--();
+  Vec2<T> operator++(int);
+  Vec2<T> operator--(int);
 
-  // Prefix
-  Vec2<T>& operator++();  //!< Overloaded prefix (++) operator. Returns the
-                          //!< vector and increments its components by one.
-  Vec2<T>& operator--();  //!< Overloaded prefix (--) operator. Returns the
-                          //!< vector and decrements its components by one.
-  // Postfix
-  Vec2<T> operator++(int);  //!< Overloaded postfix (++) operator. Increments
-                            //!< the vectors components by one and returns it.
-  Vec2<T> operator--(int);  //!< Overloaded postfix (--) operator. Decrements
-                            //!< the vectors components by one and returns it.
+  Vec2<T>& operator+=(const T& num);
 
-  Vec2<T>& operator+=(
-      const T& num);  //!< Overloaded unary (+=) operator. Increments the
-                      //!< vector's components by a value num.
   Vec2<T>& operator+=(const Vec2<T>& v);
-  Vec2<T>& operator-=(
-      const T& num);  //!< Overloaded unary (-=) operator. Decrements the
-                      //!< vector's components by a value num.
-  Vec2<T>& operator-=(const Vec2<T>& v);
-  Vec2<T>& operator*=(
-      const T& num);  //!< Overloaded unary (*=) operator. Multiplies the
-                      //!< vector's components by a value num.
+  Vec2<T>& operator-=(const T& num);
 
-  Vec2<T>& normalize();  //!< Makes the vector a unit vector of length one.
-  double length() const  //!< Returns the length of the vector.
-  {
-    return sqrt(x() * x() + y() * y());
-  }
+  Vec2<T>& operator-=(const Vec2<T>& v);
+  Vec2<T>& operator*=(const T& num);
+
+  Vec2<T>& normalize();
+  double length() const { return sqrt(x() * x() + y() * y()); }
 
   bool isValid() {
     if (m_x * 0. != m_x * 0.) {
@@ -209,111 +175,73 @@ inline std::ostream& operator<<(std::ostream& out, const Vec2<T>& v) {
 //--------------------------------------------
 
 template <typename T>
-Vec2<T> operator+(const Vec2<T>& v1,
-                  const Vec2<T>& v2)  //!< Overloaded binary (+) operator.
-                                      //!< Addition of two vectors.
+Vec2<T> operator+(const Vec2<T>& v1, const Vec2<T>& v2)
+
 {
   return Vec2<T>(v1.x() + v2.x(), v1.y() + v2.y());
 }
 
 template <typename T>
-Vec2<T> operator+(const Vec2<T>& v,
-                  const T& num)  //!< Overloaded binary (+) operator. Addition
-                                 //!< of !< a vector and a number.
+Vec2<T> operator+(const Vec2<T>& v, const T& num)
+
 {
   return Vec2<T>(v.x() + num, v.y() + num);
 }
 
 template <typename T>
-Vec2<T> operator+(const T& num,
-                  const Vec2<T>& v)  //!< Overloaded binary (+) operator.
-                                     //!< Addition of a !< vector and a number.
-{
+Vec2<T> operator+(const T& num, const Vec2<T>& v) {
   return v + num;
 }
 
 template <typename T>
-Vec2<T> operator-(const Vec2<T>& v1,
-                  const Vec2<T>& v2)  //!< Overloaded binary (-) operator. !<
-                                      //!< Subtraction of two vectors.
-{
+Vec2<T> operator-(const Vec2<T>& v1, const Vec2<T>& v2) {
   return Vec2<T>(v1.x() - v2.x(), v1.y() - v2.y());
 }
 
 template <typename T>
-Vec2<T> operator-(const Vec2<T>& v,
-                  const T& num)  //!< Overloaded binary (-) operator.
-                                 //!< Subtraction !< of a vector and a number.
-{
+Vec2<T> operator-(const Vec2<T>& v, const T& num) {
   return Vec2<T>(v.x() - num, v.y() - num);
 }
 
 template <typename T>
-Vec2<T> operator-(
-    const T& num,
-    const Vec2<T>& v)  //!< Overloaded binary (-) operator. Subtraction !< of a
-                       //!< vector and a number.
-{
+Vec2<T> operator-(const T& num, const Vec2<T>& v) {
   return v - num;
 }
 
 template <typename T>
-Vec2<T> operator*(const Vec2<T>& v1,
-                  const Vec2<T>& v2)  //!< Overloaded binary (*) operator. !<
-                                      //!< Multiplication of two vectors.
-{
+Vec2<T> operator*(const Vec2<T>& v1, const Vec2<T>& v2) {
   return Vec2<T>(v1.x() * v2.x(), v1.y() * v2.y());
 }
 
 template <typename T>
-Vec2<T> operator*(const Vec2<T>& v,
-                  const T& num)  //!< Overloaded binary (*) operator. !<
-                                 //!< Multiplication of a vector and a number.
-{
+Vec2<T> operator*(const Vec2<T>& v, const T& num) {
   return Vec2<T>(v.x() * num, v.y() * num);
 }
 
 template <typename T>
-Vec2<T> operator*(
-    const T& num,
-    const Vec2<T>& v)  //!< Overloaded binary (*) operator. !< Multiplication of
-                       //!< a vector and a number.
-{
+Vec2<T> operator*(const T& num, const Vec2<T>& v) {
   return v * num;
 }
 
 template <typename T>
-Vec2<T> operator/(
-    const Vec2<T>& v1,
-    const Vec2<T>& v2)  //!< Overloaded binary (/) operator. Division of !< two
-                        //!< vectors component by component.
-{
+Vec2<T> operator/(const Vec2<T>& v1, const Vec2<T>& v2) {
   if (v2.x() == (T)0 || v2.y() == (T)0) throw "Division by zero!";
   return Vec2<T>(v1.x() / v2.x(), v1.y() / v2.y());
 }
 
 template <typename T>
-Vec2<T> operator/(const Vec2<T>& v,
-                  const T& num)  //!< Overloaded binary (/) operator. Division
-                                 //!< of !< a vector's components by a number.
-{
+Vec2<T> operator/(const Vec2<T>& v, const T& num) {
   T e = 1.E-30;
   return Vec2<T>(v.x() / (num + e), v.y() / (num + e));
 }
 
 template <typename T>
-bool operator==(const Vec2<T>& v1,
-                const Vec2<T>& v2)  //!< Overloaded binary (==) operator. Checks
-                                    //!< if !< two vectors are identical.
-{
+bool operator==(const Vec2<T>& v1, const Vec2<T>& v2) {
   return (v1.x() == v2.x() && v1.y() == v2.y());
 }
 
 template <typename T>
-bool operator!=(const Vec2<T>& v1,
-                const Vec2<T>& v2)  //!< Overloaded binary (!=) operator. Checks
-                                    //!< if !< two vectors are not identical.
-{
+bool operator!=(const Vec2<T>& v1, const Vec2<T>& v2) {
   return !(v1 == v2);
 }
 
@@ -322,20 +250,14 @@ bool operator!=(const Vec2<T>& v1,
 //--------------------------------------------
 
 template <typename T>
-T dot(const Vec2<T>& v1,
-      const Vec2<T>& v2)  //!< The dot product of two vectors. !< Returns a
-                          //!< number of type double.
-{
+T dot(const Vec2<T>& v1, const Vec2<T>& v2) {
   Vec2<T> v = v1 * v2;
   return v.x() + v.y();
 }
 
 template <typename T>
-Vec2<T> getUnitVectorOf(
-    const Vec2<T>& v)  //!< Gets the unit vector of a vector !< without changing
-                       //!< the provided vector.
-{
-  return v / (v.length() + 1.E-30);
+Vec2<T> getUnitVectorOf(const Vec2<T>& v) {
+  return v / (v.length() + (T)1.E-30);
 }
 
 #endif  // VEC2_H
