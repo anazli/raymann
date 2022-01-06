@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "canvas.h"
-#include "sphere.h"
+#include "geometry/sphere.h"
 #include "tools/tools.h"
 
 using namespace std;
