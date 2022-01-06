@@ -6,14 +6,11 @@
 using std::endl;
 using std::ofstream;
 
-void Canvas::render() const {
-  ofstream out;
-  out.open(fileName());
+void Canvas::render(const World &w, const Ray &r) {
   for (int i = 0; i < width(); ++i) {
     for (int j = 0; j < height(); ++j) {
     }
   }
-  out.close();
 }
 
 void Canvas::save() {

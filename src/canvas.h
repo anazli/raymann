@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "geometry/traceable.h"
 #include "tools/tools.h"
 
 class Canvas {
@@ -17,7 +18,7 @@ class Canvas {
   // void setHeight(const int &h) { m_height = h; }
   void setFileName(const std::string &fn) { m_fileName = fn; }
 
-  void render(/*Scene - World, Camera*/) const;
+  void render(const World &w, const Ray &r);
   void writePixel(const int &x, const int &y, const Vec3f &color) {
     m_pixels[x][y] = color;
   }
