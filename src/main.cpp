@@ -15,7 +15,7 @@ int main() {
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 10.0f));
 
   Canvas canvas(100, 100);
-  canvas.setFileName("scene.ppm");
+  canvas.setFileName("scenes/scene.ppm");
 
   canvas.render(w, r);
   canvas.save();
