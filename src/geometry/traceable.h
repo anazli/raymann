@@ -12,6 +12,7 @@ class Traceable {
   virtual void add(Traceable *item) {}
   virtual void remove(Traceable *item, bool del = true) {}
   virtual bool isWorld() const { return false; }
+  virtual Vec3f normal(const Point3f &p) const { return Vec3f(); }
   virtual std::string name() const { return m_name; }
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
@@ -39,6 +40,9 @@ class TraceableDeco : public Traceable {
   bool intersect(const Ray &r) override { return m_traceable->intersect(r); }
   std::string name() const override { return m_traceable->name(); }
   Record record() const override { return m_traceable->record(); }
+  Vec3f normal(const Point3f &p) const override {
+    return m_traceable->normal(p);
+  }
 
  protected:
   Traceable *m_traceable;
@@ -55,6 +59,9 @@ class Transformer : public TraceableDeco {
   }
   std::string name() const override { return TraceableDeco::name(); }
   Record record() const override { return TraceableDeco::record(); }
+  Vec3f normal(const Point3f &p) const override {
+    return TraceableDeco::normal(p);
+  }
 
  private:
   Mat4f m_transformer;
