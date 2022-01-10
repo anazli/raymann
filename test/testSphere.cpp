@@ -86,3 +86,27 @@ TEST_F(Tsphere, translatesSphere) {
   ASSERT_TRUE(t->record().count == 0);
   delete t;
 }
+
+TEST_F(Tsphere, returnsSurfaceNormalOnX) {
+  s = Sphere();
+  Vec3f n = s.normal(Point3f(1, 0, 0));
+  ASSERT_TRUE(n == Vec3f(1, 0, 0));
+}
+
+TEST_F(Tsphere, returnsSurfaceNormalOnY) {
+  s = Sphere();
+  Vec3f n = s.normal(Point3f(0, 1, 0));
+  ASSERT_TRUE(n == Vec3f(0, 1, 0));
+}
+
+TEST_F(Tsphere, returnsSurfaceNormalOnZ) {
+  s = Sphere();
+  Vec3f n = s.normal(Point3f(0, 0, 1));
+  ASSERT_TRUE(n == Vec3f(0, 0, 1));
+}
+
+TEST_F(Tsphere, returnsNonAxialSurfaceNormal) {
+  s = Sphere();
+  Vec3f n = s.normal(Point3f(sqrt(3) / 3.0f, sqrt(3) / 3.0f, sqrt(3) / 3.0f));
+  ASSERT_TRUE(n == Vec3f(sqrt(3) / 3.0f, sqrt(3) / 3.0f, sqrt(3) / 3.0f));
+}
