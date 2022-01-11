@@ -107,6 +107,17 @@ TEST_F(Tsphere, returnsSurfaceNormalOnZ) {
 
 TEST_F(Tsphere, returnsNonAxialSurfaceNormal) {
   s = Sphere();
-  Vec3f n = s.normal(Point3f(sqrt(3) / 3.0f, sqrt(3) / 3.0f, sqrt(3) / 3.0f));
-  ASSERT_TRUE(n == Vec3f(sqrt(3) / 3.0f, sqrt(3) / 3.0f, sqrt(3) / 3.0f));
+  Vec3f n = s.normal(
+      Point3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
+  Vec3f n1 = Vec3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f);
+  ASSERT_FLOAT_EQ(n.x(), n1.x());
+  ASSERT_FLOAT_EQ(n.y(), n1.y());
+  ASSERT_FLOAT_EQ(n.z(), n1.z());
+}
+
+TEST_F(Tsphere, normalIsNormalizedVector) {
+  s = Sphere();
+  Vec3f n = s.normal(
+      Point3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
+  ASSERT_TRUE(n == n.normalize());
 }
