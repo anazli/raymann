@@ -218,9 +218,10 @@ TEST_F(Ttrans, computesNormalOfTranslatedSphere) {
 
   Vec3f tn(0.0f, 0.70711f, -0.70711f);
 
-  ASSERT_FLOAT_EQ(norm.x(), tn.x());
-  ASSERT_FLOAT_EQ(norm.y(), tn.y());
-  ASSERT_FLOAT_EQ(norm.z(), tn.z());
+  float eps = 1.E-5;
+  EXPECT_NEAR(norm.x(), tn.x(), eps);
+  EXPECT_NEAR(norm.y(), tn.y(), eps);
+  EXPECT_NEAR(norm.z(), tn.z(), eps);
 
   delete t;  // Note: when a Test doesn't pass, mem is not dealocated. Flow
              // stops above.
@@ -234,9 +235,10 @@ TEST_F(Ttrans, computesNormalOfRotatedSphere) {
   Vec3f norm = t->normal(Point3f(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
   Vec3f tn(0.0f, 0.97014f, -0.24254f);
 
-  ASSERT_FLOAT_EQ(norm.x(), tn.x());
-  ASSERT_FLOAT_EQ(norm.y(), tn.y());
-  ASSERT_FLOAT_EQ(norm.z(), tn.z());
+  float eps = 1.E-5;
+  EXPECT_NEAR(norm.x(), tn.x(), eps);
+  EXPECT_NEAR(norm.y(), tn.y(), eps);
+  EXPECT_NEAR(norm.z(), tn.z(), eps);
 
   delete t;
 }
