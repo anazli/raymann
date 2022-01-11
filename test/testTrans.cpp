@@ -1,3 +1,4 @@
+#include "geometry/sphere.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "tools/tools.h"
@@ -208,4 +209,34 @@ TEST_F(Ttrans, appliesTransformationChaining) {
   ASSERT_FLOAT_EQ(p.x(), 15.0f);
   ASSERT_FLOAT_EQ(p.y(), 0.0f);
   ASSERT_FLOAT_EQ(p.z(), 7.0f);
+}
+
+TEST_F(Ttrans, computesNormalOfTranslatedSphere) {
+  Traceable *s = new Sphere();
+  Traceable *t = new Transformer(s, translation(0.0f, 1.0f, 0.0f));
+  Vec3f norm = t->normal(Point3f(0.0f, 1.70711f, -0.70711));
+
+  Vec3f tn(0.0f, 0.70711f, -0.70711f);
+
+  ASSERT_FLOAT_EQ(norm.x(), tn.x());
+  ASSERT_FLOAT_EQ(norm.y(), tn.y());
+  ASSERT_FLOAT_EQ(norm.z(), tn.z());
+
+  delete t;  // Note: when a Test doesn't pass, mem is not dealocated. Flow
+             // stops above.
+}
+
+TEST_F(Ttrans, computesNormalOfRotatedSphere) {
+  Traceable *s = new Sphere();
+  Traceable *t = new Transformer(new Transformer(s, rotationZ(PI / 5.0f)),
+                                 scale(1.0f, 0.5f, 1.0f));
+
+  Vec3f norm = t->normal(Point3f(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
+  Vec3f tn(0.0f, 0.97014f, -0.24254f);
+
+  ASSERT_FLOAT_EQ(norm.x(), tn.x());
+  ASSERT_FLOAT_EQ(norm.y(), tn.y());
+  ASSERT_FLOAT_EQ(norm.z(), tn.z());
+
+  delete t;
 }
