@@ -20,3 +20,13 @@ $ cmake .. -DBUILD_TESTING=ON
 $ make
 $ make test
 ```
+To run the program
+```bash
+$ cd ..
+$ bin/raymann
+```
+
+To run the tests
+```bash
+$ test/bin/Test...
+```
