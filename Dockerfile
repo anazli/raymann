@@ -8,7 +8,7 @@ USER root
 
 ENV DEBIAN_FRONTEND=noninteractive 
 RUN apt update -qq  && \
-    apt upgrade -y -qq --no-install-recommends build-essential cmake && \
+    apt upgrade -y -qq --no-install-recommends build-essential cmake vim python3 && \
     useradd guest
 
 ADD test raymann/test
