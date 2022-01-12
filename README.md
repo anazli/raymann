@@ -39,7 +39,7 @@ To build the Docker container run
 $ docker build -t raymann .
 ```
 This will build the container with the tag raymann.
-To log in the container with interactive shell run
+To run the container with interactive shell run
 ```bash
 $ docker run -it -u guest raymann bash --login
 ```
