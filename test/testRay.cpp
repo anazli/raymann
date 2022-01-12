@@ -1,4 +1,3 @@
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "tools/ray.h"
 #include "tools/tools.h"
