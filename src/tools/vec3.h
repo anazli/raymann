@@ -287,6 +287,11 @@ Vec3<T> getUnitVectorOf(const Vec3<T>& v) {
   return v / (v.length() + 1.E-30);
 }
 
+template <typename T>
+Vec3<T> reflect(const Vec3<T>& in, const Vec3<T>& normal) {
+  return in - normal * (T)2 * dot(in, normal);
+}
+
 /*template <typename T>
 Vec3<T> randomVector(
     const T& a = 0.,

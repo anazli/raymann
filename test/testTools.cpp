@@ -300,6 +300,24 @@ TEST_F(Vector3, TestsInequality) {
   ASSERT_TRUE(v != Vec3<double>(4.2, -4.36, 0.0));
 }
 
+TEST_F(Vector3, reflectsVector1) {
+  v = Vec3d(1., -1., 0.);
+  Vec3d n(0., 1., 0.);
+  Vec3d r = reflect(v, n);
+  ASSERT_TRUE(r == Vec3d(1., 1., 0.));
+}
+
+TEST_F(Vector3, reflectsVector2) {
+  v = Vec3d(0., -1., 0.);
+  Vec3d n(sqrt(2.) / 2., sqrt(2.) / 2., 0.);
+  Vec3d r = reflect(v, n);
+
+  double eps = 10.E-9;
+  EXPECT_NEAR(r.x(), 1, eps);  // Gtest says that 1 is not equal to 1
+  EXPECT_NEAR(r.y(), 0, eps);  // or 0 != 0
+  EXPECT_NEAR(r.z(), 0, eps);
+}
+
 //--------------------------------------------
 //     VEC4
 //--------------------------------------------
