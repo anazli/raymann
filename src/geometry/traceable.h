@@ -9,6 +9,8 @@ class Traceable {
  public:
   virtual ~Traceable() {}
   virtual bool intersect(const Ray &r) = 0;
+  // virtual Vec3f lighting(const Light &l, const Point3f &p, const Vec3f &eye)
+  // = 0;
   virtual void add(Traceable *item) {}
   virtual void remove(Traceable *item, bool del = true) {}
   virtual bool isWorld() const { return false; }
