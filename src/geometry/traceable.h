@@ -77,7 +77,6 @@ class Transformer : public TraceableDeco {
 
 class Material : public TraceableDeco {
  public:
-  Material(Traceable *tr) : TraceableDeco(tr) {}
   Material(Traceable *tr, const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
            float am = 0.1f, float diff = 0.9f, float spec = 0.9f,
            float shi = 200.0)
