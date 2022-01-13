@@ -75,6 +75,32 @@ class Transformer : public TraceableDeco {
   Mat4f m_transformer;
 };
 
+class Material : public TraceableDeco {
+ public:
+  Material(Traceable *tr) : TraceableDeco(tr) {}
+  Material(Traceable *tr, const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
+           float am = 0.1f, float diff = 0.9f, float spec = 0.9f,
+           float shi = 200.0)
+      : TraceableDeco(tr),
+        color(c),
+        ambient(am),
+        diffuse(diff),
+        specular(spec),
+        shininess(shi) {}
+
+  bool intersect(const Ray &r) override { return TraceableDeco::intersect(r); }
+  std::string name() const override { return TraceableDeco::name(); }
+  Vec3f normal(const Point3f &p) const override {
+    return TraceableDeco::normal(p);
+  }
+
+  Vec3f color;
+  float ambient;
+  float diffuse;
+  float specular;
+  float shininess;
+};
+
 class World : public Traceable {
  public:
   World() {}
