@@ -9,9 +9,9 @@ using namespace std;
 
 int main() {
   PointLight light(Point3f(-15.0f, 15.0f, -15.0f), Vec3f(0.7f, 0.7f, 0.7f));
-  Traceable *sphere = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
-  // Traceable *t = new Transformer(sphere, scale(0.5f, 1.0f, 1.0f));
-  Traceable *m = new Material(sphere, Vec3f(1.0f, 0.2f, 0.2f));
+  Traceable *m =
+      new Material(new Transformer(new Sphere(), scale(0.8f, 1.0f, 1.0f)),
+                   Vec3f(0.2f, 1.0f, 0.2f));
   World w;
   w.add(m);
 

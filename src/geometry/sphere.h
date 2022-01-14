@@ -7,7 +7,7 @@
 
 class Sphere : public Traceable {
  public:
-  Sphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f), const float &r = 0.0f)
+  Sphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
       : m_center(c), m_radius(r) {
     setParent(nullptr);
     std::stringstream ss;
