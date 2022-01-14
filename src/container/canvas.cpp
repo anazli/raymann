@@ -4,24 +4,34 @@
 #include <fstream>
 
 using std::endl;
+using std::list;
 using std::ofstream;
 
-void Canvas::render(World &w, const Ray &r) {
+void Canvas::render(World &w, const Ray &r, const PointLight &light) {
   float wall_z = r.direction().z();
   float wall_size = 7.0f;
   float pixel_size = wall_size / (float)width();
   float half = wall_size / 2.0f;
-  Vec3f color(1.0f, 0.0f, 0.0f);
+
   for (int j = 0; j < height(); ++j) {
     float world_y = half - pixel_size * j;
     for (int i = 0; i < width(); ++i) {
       float world_x = -half + pixel_size * i;
       Point3f position(world_x, world_y, wall_z);
       Ray ray(r.origin(), (position - r.origin()).normalize());
-      if (w.intersect(ray))
-        writePixel(i, j, color);
-      else
-        writePixel(i, j, Vec3f(0.0f, 0.0f, 0.0f));
+      Vec3f color;
+
+      list<Traceable *>::iterator it;
+      for (it = w.createIterator(); it != w.isDone(); ++it) {
+        if ((*it)->intersect(ray)) {
+          Point3f point = ray.position((*it)->record().t_min());
+          Vec3f eye = -r.direction();
+          color = (*it)->lighting(light, point, eye);
+        } else {
+          color = Vec3f();
+        }
+      }
+      writePixel(i, j, color);
     }
   }
 }
