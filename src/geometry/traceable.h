@@ -87,7 +87,7 @@ class Material : public TraceableDeco {
  public:
   Material(Traceable *tr, const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
            float am = 0.1f, float diff = 0.9f, float spec = 0.9f,
-           float shi = 200.0)
+           float shi = 200.0f)
       : TraceableDeco(tr),
         m_color(c),
         m_ambient(am),
@@ -119,6 +119,7 @@ class Material : public TraceableDeco {
     return ret_ambient + ret_diffuse + ret_specular;
   }
   std::string name() const override { return TraceableDeco::name(); }
+  Record record() const override { return TraceableDeco::record(); }
   Vec3f normal(const Point3f &p) const override {
     return TraceableDeco::normal(p);
   }
@@ -140,7 +141,7 @@ class World : public Traceable {
     for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
       delete (*it);
   }
-  bool intersect(const Ray &r) override {
+  bool intersect(const Ray &r) override {  // TODO: update Implementation
     bool has_intersection = false;
     std::list<Traceable *>::iterator it;
     for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
@@ -169,6 +170,11 @@ class World : public Traceable {
     assert(temp != nullptr);  // All intersections are negative
     return *temp;
   }
+  std::list<Traceable *>::iterator createIterator() {
+    return m_traceable_list.begin();
+  }
+
+  std::list<Traceable *>::iterator isDone() { return m_traceable_list.end(); }
 
  private:
   std::list<Traceable *> m_traceable_list;
