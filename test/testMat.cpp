@@ -46,10 +46,10 @@ TEST_F(TMat, lightsWithEyeBetweenLightAndSurface) {
   //----------------------------------
 
   Vec3f eye(0.0f, 0.0f, -1.0f);
-  light = PointLight(Point3f(0.0f, 0.0f, -10.0f), Vec3f(1.0f));
+  light = PointLight(Point3f(0.0f, 0.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
 
-  Point3f p(0.0f);
-  Vec3f m_color(1.0f);
+  Point3f p(0.0f, 0.0f, 0.0f);
+  Vec3f m_color(1.0f, 1.0f, 1.0f);
   Vec3f effective_color = m_color * light.intensity();
   Vec3f lightv = (light.position() - p).normalize();
   float m_ambient = 0.1f;
@@ -63,7 +63,7 @@ TEST_F(TMat, lightsWithEyeBetweenLightAndSurface) {
   Vec3f ret_specular;
 
   float light_normal = dot(lightv, norm);
-  if (light_normal > 0.0f) {
+  if (light_normal >= 0.0f) {
     ret_diffuse = effective_color * m_diffuse * light_normal;
     Vec3f reflectv = reflect(-lightv, norm);
     float reflect_dot_eye = dot(reflectv, eye);
@@ -78,5 +78,5 @@ TEST_F(TMat, lightsWithEyeBetweenLightAndSurface) {
   ASSERT_EQ(result.x(), 1.9f);
   ASSERT_EQ(result.y(), 1.9f);
   ASSERT_EQ(result.z(), 1.9f);
-  ASSERT_TRUE(result == Vec3f(1.9f));
+  ASSERT_TRUE(result == Vec3f(1.9f, 1.9f, 1.9f));
 }
