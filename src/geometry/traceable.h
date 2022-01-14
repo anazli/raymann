@@ -3,14 +3,16 @@
 #include <list>
 #include <string>
 
-#include "tools/ray.h"
+#include "tools/tools.h"
 
 class Traceable {
  public:
   virtual ~Traceable() {}
   virtual bool intersect(const Ray &r) = 0;
-  // virtual Vec3f lighting(const Light &l, const Point3f &p, const Vec3f &eye)
-  // = 0;
+  virtual Vec3f lighting(const PointLight &light, const Point3f &p,
+                         const Vec3f &eye) {
+    return Vec3f();
+  }
   virtual void add(Traceable *item) {}
   virtual void remove(Traceable *item, bool del = true) {}
   virtual bool isWorld() const { return false; }
@@ -40,6 +42,10 @@ class TraceableDeco : public Traceable {
   TraceableDeco(Traceable *tr) : m_traceable(tr) {}
   virtual ~TraceableDeco() { delete m_traceable; }
   bool intersect(const Ray &r) override { return m_traceable->intersect(r); }
+  Vec3f lighting(const PointLight &light, const Point3f &p,
+                 const Vec3f &eye) override {
+    return m_traceable->lighting(light, p, eye);
+  }
   std::string name() const override { return m_traceable->name(); }
   Record record() const override { return m_traceable->record(); }
   Vec3f normal(const Point3f &p) const override {
@@ -83,23 +89,46 @@ class Material : public TraceableDeco {
            float am = 0.1f, float diff = 0.9f, float spec = 0.9f,
            float shi = 200.0)
       : TraceableDeco(tr),
-        color(c),
-        ambient(am),
-        diffuse(diff),
-        specular(spec),
-        shininess(shi) {}
+        m_color(c),
+        m_ambient(am),
+        m_diffuse(diff),
+        m_specular(spec),
+        m_shininess(shi) {}
 
   bool intersect(const Ray &r) override { return TraceableDeco::intersect(r); }
+  Vec3f lighting(const PointLight &light, const Point3f &p,
+                 const Vec3f &eye) override {
+    Vec3f effective_color = m_color * light.intensity();
+    Vec3f lightv = (light.position() - p).normalize();
+    Vec3f ret_ambient = effective_color * this->m_ambient;
+
+    float light_normal = dot(lightv, this->normal(p));
+
+    Vec3f ret_diffuse;
+    Vec3f ret_specular;
+    if (light_normal > 0.0f) {
+      ret_diffuse = effective_color * m_diffuse * light_normal;
+      Vec3f reflectv = reflect(-lightv, normal(p));
+      float reflect_dot_eye = dot(reflectv, eye);
+      if (reflect_dot_eye > 0.0f) {
+        float factor = pow(reflect_dot_eye, m_shininess);
+        ret_specular = light.intensity() * m_specular * factor;
+      }
+    }
+
+    return ret_ambient + ret_diffuse + ret_specular;
+  }
   std::string name() const override { return TraceableDeco::name(); }
   Vec3f normal(const Point3f &p) const override {
     return TraceableDeco::normal(p);
   }
 
-  Vec3f color;
-  float ambient;
-  float diffuse;
-  float specular;
-  float shininess;
+ protected:
+  Vec3f m_color;
+  float m_ambient;
+  float m_diffuse;
+  float m_specular;
+  float m_shininess;
 };
 
 class World : public Traceable {
