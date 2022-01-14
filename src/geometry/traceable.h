@@ -87,7 +87,7 @@ class Material : public TraceableDeco {
  public:
   Material(Traceable *tr, const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
            float am = 0.1f, float diff = 0.9f, float spec = 0.9f,
-           float shi = 200.0f)
+           float shi = 10.0f)
       : TraceableDeco(tr),
         m_color(c),
         m_ambient(am),
@@ -111,7 +111,7 @@ class Material : public TraceableDeco {
       Vec3f reflectv = reflect(-lightv, normal(p));
       float reflect_dot_eye = dot(reflectv, eye);
       if (reflect_dot_eye > 0.0f) {
-        float factor = pow(reflect_dot_eye, m_shininess);
+        float factor = 1.E-10f * pow(reflect_dot_eye, m_shininess);
         ret_specular = light.intensity() * m_specular * factor;
       }
     }
