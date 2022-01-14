@@ -47,5 +47,5 @@ You can also run the program inside the container.
 
 Current Scene
 -------------
-![alt text](https://github.com/anazli/raymann/blob/main/scenes/scene.ppm?raw=true)
+![alt text](https://github.com/anazli/raymann/blob/main/scenes/scene.jpg?raw=true)
 
