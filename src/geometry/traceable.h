@@ -100,12 +100,12 @@ class Material : public TraceableDeco {
                  const Vec3f &eye) override {
     Vec3f effective_color = m_color * light.intensity();
     Vec3f lightv = (light.position() - p).normalize();
+
     Vec3f ret_ambient = effective_color * this->m_ambient;
-
-    float light_normal = dot(lightv, this->normal(p));
-
     Vec3f ret_diffuse;
     Vec3f ret_specular;
+
+    float light_normal = dot(lightv, this->normal(p));
     if (light_normal > 0.0f) {
       ret_diffuse = effective_color * m_diffuse * light_normal;
       Vec3f reflectv = reflect(-lightv, normal(p));
