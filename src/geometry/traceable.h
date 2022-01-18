@@ -5,6 +5,8 @@
 
 #include "tools/tools.h"
 
+// TODO: Refactoring in an implementation file
+
 class Traceable {
  public:
   virtual ~Traceable() {}
@@ -142,7 +144,7 @@ class World : public Traceable {
     for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
       delete (*it);
   }
-  bool intersect(const Ray &r) override {  // TODO: update Implementation
+  bool intersect(const Ray &r) override {
     bool has_intersection = false;
     std::list<Traceable *>::iterator it;
     for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
