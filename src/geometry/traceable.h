@@ -18,6 +18,7 @@ class Traceable {
   virtual bool isWorld() const { return false; }
   virtual Vec3f normal(const Point3f &p) const { return Vec3f(); }
   virtual std::string name() const { return m_name; }
+  virtual Traceable &closestHit() { return *this; }
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
 
@@ -158,7 +159,7 @@ class World : public Traceable {
     if (del) delete item;
   }
   bool isWorld() const override { return true; }
-  Traceable &closestHit() const {  // TODO: maybe a better solution
+  Traceable &closestHit() override {
     std::list<Traceable *>::const_iterator it;
     Traceable *temp = nullptr;
     float min_hit = MAXFLOAT;

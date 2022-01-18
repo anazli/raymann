@@ -14,8 +14,8 @@ int main() {
   sphere = new Material(new Transformer(sphere, scale(0.8f, 1.0f, 1.0f)),
                         Vec3f(0.2f, 1.0f, 0.2f));
 
-  World w;
-  w.add(sphere);
+  Traceable *w = new World();
+  w->add(sphere);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 10.0f));
 
@@ -24,6 +24,7 @@ int main() {
 
   canvas.render(w, r, light);
   canvas.save();
+  delete w;
 
   return 0;
 }

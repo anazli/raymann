@@ -7,7 +7,7 @@ using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(World &w, const Ray &r, const PointLight &light) {
+void Canvas::render(Traceable *world, const Ray &r, const PointLight &light) {
   float wall_z = r.direction().z();
   float wall_size = 7.0f;
   float pixel_size = wall_size / (float)width();
@@ -21,15 +21,13 @@ void Canvas::render(World &w, const Ray &r, const PointLight &light) {
       Ray ray(r.origin(), (position - r.origin()).normalize());
       Vec3f color;
 
-      list<Traceable *>::iterator it;
-      for (it = w.createIterator(); it != w.isDone(); ++it) {
-        if ((*it)->intersect(ray)) {
-          Point3f point = ray.position((*it)->record().t_min());
-          Vec3f eye = -r.direction();
-          color = (*it)->lighting(light, point, eye);
-        } else {
-          color = Vec3f();
-        }
+      if (world->intersect(ray)) {
+        Traceable &closest = world->closestHit();
+        Point3f point = ray.position(closest.record().t_min());
+        Vec3f eye = -r.direction();
+        color = closest.lighting(light, point, eye);
+      } else {
+        color = Vec3f();
       }
       writePixel(i, j, color);
     }
