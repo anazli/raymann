@@ -8,15 +8,15 @@ using std::list;
 using std::ofstream;
 
 void Canvas::render(Traceable *world, const Ray &r, const PointLight &light) {
-  float wall_z = r.direction().z();
-  float wall_size = 7.0f;
-  float pixel_size = wall_size / (float)width();
-  float half = wall_size / 2.0f;
-
   for (int j = 0; j < height(); ++j) {
-    float world_y = half - pixel_size * j;
     for (int i = 0; i < width(); ++i) {
+      float wall_z = r.direction().z();
+      float wall_size = 7.0f;
+      float pixel_size = wall_size / (float)width();
+      float half = wall_size / 2.0f;
+      float world_y = half - pixel_size * j;
       float world_x = -half + pixel_size * i;
+
       Point3f position(world_x, world_y, wall_z);
       Ray ray(r.origin(), (position - r.origin()).normalize());
       Vec3f color;
