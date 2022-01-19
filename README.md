@@ -1,5 +1,10 @@
 # raymann
-Under Construction...
+A Ray Tracer. 
+Still under construction...
+
+Current Scene
+-------------
+![alt text](https://github.com/anazli/raymann/blob/main/scenes/scene.jpg?raw=true)
 
 Building
 --------
@@ -44,8 +49,3 @@ To run the container with interactive shell run
 $ docker run -it -u guest raymann bash --login
 ```
 You can also run the program inside the container.
-
-Current Scene
--------------
-![alt text](https://github.com/anazli/raymann/blob/main/scenes/scene.jpg?raw=true)
-
