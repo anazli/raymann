@@ -1,5 +1,11 @@
 #include "traceable.h"
 
+#include <algorithm>
+
+using std::list;
+using std::sort;
+using std::vector;
+
 /*****************************
  * 		 Transformer
  * ***************************/
@@ -57,14 +63,14 @@ Vec3f Material::lighting(const PointLight &light, const Point3f &p,
  * ***************************/
 
 World::~World() {
-  std::list<Traceable *>::iterator it;
+  list<Traceable *>::iterator it;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
     delete (*it);
 }
 
 bool World::intersect(const Ray &r) {
   bool has_intersection = false;
-  std::list<Traceable *>::iterator it;
+  list<Traceable *>::iterator it;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
     if ((*it)->intersect(r)) has_intersection = true;
   return has_intersection;
@@ -82,7 +88,7 @@ void World::remove(Traceable *item, bool del) {
 }
 
 Traceable &World::closestHit() {
-  std::list<Traceable *>::const_iterator it;
+  list<Traceable *>::const_iterator it;
   Traceable *temp = nullptr;
   float min_hit = MAXFLOAT;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
@@ -92,4 +98,17 @@ Traceable &World::closestHit() {
     }
   assert(temp != nullptr);  // All intersections are negative
   return *temp;
+}
+
+bool compare(const float &f1, const float &f2) { return f1 < f2; }
+
+vector<float> World::intersectionsSorted() const {
+  vector<float> ret;
+  list<Traceable *>::const_iterator it;
+  for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it) {
+    ret.push_back((*it)->record().t1);
+    ret.push_back((*it)->record().t2);
+  }
+  sort(ret.begin(), ret.end(), compare);
+  return ret;
 }

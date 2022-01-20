@@ -2,6 +2,7 @@
 
 #include <list>
 #include <string>
+#include <vector>
 
 #include "tools/tools.h"
 
@@ -107,6 +108,7 @@ class World : public Traceable {
   void remove(Traceable *item, bool del = true) override;
   bool isWorld() const override { return true; }
   Traceable &closestHit() override;
+  std::vector<float> intersectionsSorted() const;
   std::list<Traceable *>::iterator createIterator() {
     return m_traceable_list.begin();
   }
