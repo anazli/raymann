@@ -35,9 +35,9 @@ Material::Material(Traceable *tr, const Vec3f &c, float am, float diff,
       m_specular(spec),
       m_shininess(shi) {}
 
-Vec3f Material::lighting(const PointLight &light, const Point3f &p,
-                         const Vec3f &eye) {
+Vec3f Material::lighting(const PointLight &light, const Ray &ray) {
   Vec3f effective_color = m_color * light.intensity();
+  Point3f p = record().point(ray);
   Vec3f lightv = (light.position() - p).normalize();
 
   Vec3f ret_ambient = effective_color * this->m_ambient;
@@ -48,9 +48,9 @@ Vec3f Material::lighting(const PointLight &light, const Point3f &p,
   if (light_normal > 0.0f) {
     ret_diffuse = effective_color * m_diffuse * light_normal;
     Vec3f reflectv = reflect(-lightv, normal(p));
-    float reflect_dot_eye = dot(reflectv, eye);
+    float reflect_dot_eye = dot(reflectv, record().eye(ray));
     if (reflect_dot_eye > 0.0f) {
-      float factor = 1.E-10f * pow(reflect_dot_eye, m_shininess);
+      float factor = pow(reflect_dot_eye, m_shininess);
       ret_specular = light.intensity() * m_specular * factor;
     }
   }

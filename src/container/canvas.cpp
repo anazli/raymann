@@ -25,9 +25,7 @@ void Canvas::render(Traceable *world, const Ray &r, const PointLight &light) {
 
         if (world->intersect(ray)) {
           Traceable &closest = world->closestHit();
-          Point3f point = ray.position(closest.record().t_min());
-          Vec3f eye = -r.direction();
-          color += closest.lighting(light, point, eye);
+          color += closest.lighting(light, ray);
         } else {
           color += Vec3f(0.1, 0.1, 0.2);
         }
