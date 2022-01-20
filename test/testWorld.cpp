@@ -142,3 +142,33 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
   ASSERT_EQ(closest.record().t1, s1->record().t1);
   ASSERT_EQ(closest.record().t2, s1->record().t2);
 }
+
+TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
+  w = World();
+  Traceable *s1 =
+      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  Traceable *s2 = new Transformer(new Sphere(), scale(0.5f, 0.5f, 0.5f));
+  w.add(s1);
+  w.add(s2);
+  ASSERT_TRUE(s1->getParent() == &w);
+  ASSERT_TRUE(s2->getParent() == &w);
+}
+
+TEST_F(Tworld, intersectsRayWithWorld) {
+  w = World();
+  Traceable *s1 =
+      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  Traceable *s2 = new Transformer(new Sphere(), scale(0.5f, 0.5f, 0.5f));
+  w.add(s1);
+  w.add(s2);
+
+  Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  w.intersect(r);
+  std::vector<float> v = w.intersectionsSorted();
+
+  ASSERT_EQ(v.size(), 4);
+  ASSERT_EQ(v[0], 4.0f);
+  ASSERT_EQ(v[1], 4.5f);
+  ASSERT_EQ(v[2], 5.5f);
+  ASSERT_EQ(v[3], 6.0f);
+}
