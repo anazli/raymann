@@ -26,7 +26,9 @@ $ cmake .. -DBUILD_TESTING=ON
 $ make
 $ make test
 ```
-To run the program, in main directory
+Running
+-------
+To run the program, from the main directory
 ```bash
 $ cd ..
 $ bin/raymann
