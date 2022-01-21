@@ -29,6 +29,7 @@ class Traceable {
     float t_min() const { return std::min(t1, t2); }
     Point3f point(const Ray &r) const { return r.position(t_min()); }
     Vec3f eye(const Ray &r) const { return -r.direction(); }
+    bool inside = false;
   };
   virtual Record record() const { return rec; }
 

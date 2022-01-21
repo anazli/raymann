@@ -40,14 +40,15 @@ Vec3f Material::lighting(const PointLight &light, const Ray &ray) {
   Point3f p = record().point(ray);
   Vec3f lightv = (light.position() - p).normalize();
 
-  Vec3f ret_ambient = effective_color * this->m_ambient;
+  Vec3f ret_ambient = effective_color * m_ambient;
   Vec3f ret_diffuse;
   Vec3f ret_specular;
+  Vec3f normal_vec = record().inside ? -normal(p) : normal(p);
 
-  float light_normal = dot(lightv, this->normal(p));
+  float light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {
     ret_diffuse = effective_color * m_diffuse * light_normal;
-    Vec3f reflectv = reflect(-lightv, normal(p));
+    Vec3f reflectv = reflect(-lightv, normal_vec);
     float reflect_dot_eye = dot(reflectv, record().eye(ray));
     if (reflect_dot_eye > 0.0f) {
       float factor = pow(reflect_dot_eye, m_shininess);

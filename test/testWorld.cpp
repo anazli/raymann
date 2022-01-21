@@ -154,7 +154,7 @@ TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
   ASSERT_TRUE(s2->getParent() == &w);
 }
 
-TEST_F(Tworld, intersectsRayWithWorld) {
+TEST_F(Tworld, getsVectorOFIntersectionPoints) {
   w = World();
   Traceable *s1 =
       new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
@@ -171,4 +171,16 @@ TEST_F(Tworld, intersectsRayWithWorld) {
   ASSERT_EQ(v[1], 4.5f);
   ASSERT_EQ(v[2], 5.5f);
   ASSERT_EQ(v[3], 6.0f);
+}
+
+TEST_F(Tworld, computesQuantitiesOfClosestIntersection) {
+  w = World();
+  Traceable *s1 =
+      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  Traceable *s2 = new Transformer(new Sphere(), scale(0.5f, 0.5f, 0.5f));
+  w.add(s1);
+  w.add(s2);
+
+  Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  w.intersect(r);
 }
