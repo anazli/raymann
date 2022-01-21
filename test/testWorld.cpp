@@ -173,14 +173,17 @@ TEST_F(Tworld, getsVectorOFIntersectionPoints) {
   ASSERT_EQ(v[3], 6.0f);
 }
 
-TEST_F(Tworld, computesQuantitiesOfClosestIntersection) {
+TEST_F(Tworld, computesQuantitiesOfIntersection) {
   w = World();
   Traceable *s1 =
       new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  Traceable *s2 = new Transformer(new Sphere(), scale(0.5f, 0.5f, 0.5f));
   w.add(s1);
-  w.add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w.intersect(r);
+  Traceable &t = w.closestHit();
+
+  ASSERT_TRUE(t.record().eye(r) == Vec3f(0.0f, 0.0f, -1.0f));
+  ASSERT_TRUE(t.record().point(r) == Point3f(0.0f, 0.0f, -1.0f));
+  ASSERT_TRUE(t.normal(t.record().point(r)) == Vec3f(0.0f, 0.0f, -1.0f));
 }
