@@ -12,7 +12,7 @@ int main() {
 
   Traceable *sphere = new Sphere();
   sphere = new Material(new Transformer(sphere, scale(0.8f, 1.0f, 1.0f)),
-                        Vec3f(0.2f, 1.0f, 0.2f));
+                        Vec3f(0.09f, 0.172f, 0.909f));
 
   /*sphere = new Transformer(sphere, translation(-0.6f, 0.0f, 0.0f));
   Traceable *sphere2 = new Sphere();
