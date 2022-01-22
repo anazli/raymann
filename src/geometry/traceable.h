@@ -19,6 +19,10 @@ class Traceable {
   virtual Vec3f normal(const Point3f &p) const { return Vec3f(); }
   virtual std::string name() const { return m_name; }
   virtual Traceable &closestHit() { return *this; }
+  virtual void checkInside(const Ray &r) {
+    if (dot(record().eye(r), normal(record().point(r))) < 0.0f)
+      rec.inside = true;
+  }
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
 
@@ -26,7 +30,13 @@ class Traceable {
     int count = 0;
     float t1 = 0.0f;
     float t2 = 0.0f;
-    float t_min() const { return std::min(t1, t2); }
+    float t_min() const {
+      if (t1 < 0.0f)
+        return t2;
+      else if (t2 < 0.0f)
+        return t1;
+      return std::min(t1, t2);
+    }
     Point3f point(const Ray &r) const { return r.position(t_min()); }
     Vec3f eye(const Ray &r) const { return -r.direction(); }
     bool inside = false;
@@ -53,6 +63,9 @@ class TraceableDeco : public Traceable {
   Record record() const override { return m_traceable->record(); }
   Vec3f normal(const Point3f &p) const override {
     return m_traceable->normal(p);
+  }
+  void checkInside(const Ray &r) override {
+    return m_traceable->checkInside(r);
   }
 
  protected:

@@ -187,3 +187,34 @@ TEST_F(Tworld, computesQuantitiesOfIntersection) {
   ASSERT_TRUE(t.record().point(r) == Point3f(0.0f, 0.0f, -1.0f));
   ASSERT_TRUE(t.normal(t.record().point(r)) == Vec3f(0.0f, 0.0f, -1.0f));
 }
+
+TEST_F(Tworld, intersectionWhenHitOccursOutside) {
+  w = World();
+  Traceable *s1 =
+      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  w.add(s1);
+
+  Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  w.intersect(r);
+
+  Traceable &t = w.closestHit();
+  t.checkInside(r);
+
+  ASSERT_FALSE(t.record().inside == true);
+}
+
+TEST_F(Tworld, intersectionWhenHitOccursInside) {
+  w = World();
+  Traceable *s1 =
+      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  w.add(s1);
+
+  Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  w.intersect(r);
+
+  Traceable &t = w.closestHit();
+  t.checkInside(r);
+  std::cout << t.record().inside << std::endl;
+
+  ASSERT_TRUE(t.record().inside == true);
+}
