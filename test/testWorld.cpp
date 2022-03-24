@@ -269,3 +269,26 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
   EXPECT_NEAR(color.y(), 0.90498f, eps);
   EXPECT_NEAR(color.z(), 0.90498f, eps);
 }
+
+TEST_F(Tworld, colorWhenRayMisses) {
+  w = World();
+  Traceable *s1 =
+      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  Traceable *s2 = new Material(new Sphere(), Vec3f(1.0f, 1.0f, 1.0f), 0.1f,
+                               0.9f, 0.9f, 200.0f);
+  s2 = new Transformer(s2, scale(0.5f, 0.5f, 0.5f));
+  w.add(s1);
+  w.add(s2);
+
+  Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 1.0f, 0.0f));
+  w.intersect(r);
+
+  Traceable &t = w.closestHit();
+
+  PointLight l(Point3f(0.0f, 0.00f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f));
+  Vec3f color = t.lighting(l, r);
+
+  ASSERT_EQ(color.x(), 0.0f);
+  ASSERT_EQ(color.y(), 0.0f);
+  ASSERT_EQ(color.z(), 0.0f);
+}
