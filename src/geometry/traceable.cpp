@@ -92,12 +92,15 @@ Traceable &World::closestHit() {
   list<Traceable *>::const_iterator it;
   Traceable *temp = nullptr;
   float min_hit = MAXFLOAT;
-  for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
+  for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it) {
     if ((*it)->record().t_min() > 0.0f && (*it)->record().t_min() < min_hit) {
       temp = (*it);
       min_hit = temp->record().t_min();
     }
-  assert(temp != nullptr);  // All intersections are negative
+  }
+  if (temp == nullptr) {
+    temp = m_traceable_list.front();  // just return the first one.
+  }
   return *temp;
 }
 
