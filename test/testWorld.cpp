@@ -318,3 +318,20 @@ TEST_F(Tworld, colorWhenRayHits) {
   EXPECT_NEAR(color.y(), 0.47583f, eps);
   EXPECT_NEAR(color.z(), 0.2855f, eps);
 }
+
+TEST_F(Tworld, colorWithAnIntersectionBehind) {
+  w = World();
+  Traceable *s1 =
+      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 1.0f, 0.7f, 0.2f);
+  Traceable *s2 = new Material(new Sphere(), Vec3f(1.0f, 1.0f, 1.0f), 1.0f,
+                               0.9f, 0.9f, 200.0f);
+  s2 = new Transformer(s2, scale(0.5f, 0.5f, 0.5f));
+  w.add(s1);
+  w.add(s2);
+
+  Ray r(Point3f(0.0f, 0.0f, 0.75f), Vec3f(0.0f, 0.0f, -1.0f));
+  w.intersect(r);
+  Traceable &t = w.closestHit();
+
+  ASSERT_TRUE(&t == s2);  // color of the inner sphere
+}
