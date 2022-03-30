@@ -40,7 +40,8 @@ if(BUILD_TESTING)
   ENDMACRO(TESTCASE)
 
   enable_testing()
-  include_directories($ENV{GMOCK_HOME}/include $ENV{GMOCK_HOME}/gtest/include)
+  find_package(GTest REQUIRED)
+  include_directories(${GTEST_INCLUDE_DIRS})
 
   TESTCASE(Tools)
   TESTCASE(Canvas)
