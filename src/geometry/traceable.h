@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -13,8 +14,8 @@ class Traceable {
   virtual Vec3f lighting(const PointLight &light, const Ray &ray) {
     return Vec3f();
   }
-  virtual void add(Traceable *item) {}
-  virtual void remove(Traceable *item, bool del = true) {}
+  virtual void add(std::shared_ptr<Traceable> &item) {}
+  virtual void remove(std::shared_ptr<Traceable> &item, bool del = true) {}
   virtual bool isWorld() const { return false; }
   virtual Vec3f normal(const Point3f &p) const { return Vec3f(); }
   virtual std::string name() const { return m_name; }
@@ -117,17 +118,12 @@ class World : public Traceable {
   World(const std::string &n);
   virtual ~World();
   bool intersect(const Ray &r) override;
-  void add(Traceable *item) override;
-  void remove(Traceable *item, bool del = true) override;
+  void add(std::shared_ptr<Traceable> &item) override;
+  void remove(std::shared_ptr<Traceable> &item, bool del = true) override;
   bool isWorld() const override { return true; }
   Traceable &closestHit() override;
   std::vector<float> intersectionsSorted() const;
-  std::list<Traceable *>::iterator createIterator() {
-    return m_traceable_list.begin();
-  }
-
-  std::list<Traceable *>::iterator isDone() { return m_traceable_list.end(); }
 
  private:
-  std::list<Traceable *> m_traceable_list;
+  std::list<std::shared_ptr<Traceable>> m_traceable_list;
 };

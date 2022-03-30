@@ -7,7 +7,8 @@ using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(Traceable *world, const Ray &r, const PointLight &light) {
+void Canvas::render(std::unique_ptr<Traceable> world, const Ray &r,
+                    const PointLight &light) {
   int num_samples = 70;
   for (int j = 0; j < height(); ++j) {
     for (int i = 0; i < width(); ++i) {

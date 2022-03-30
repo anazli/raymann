@@ -21,17 +21,20 @@ int main() {
   sphere2 = new Transformer(sphere2, translation(0.6f, 0.0f, 0.0f));
   */
 
-  Traceable *w = new World();
-  w->add(sphere);
+  unique_ptr<Traceable> w;
+  w.reset(new World());
+
+  shared_ptr<Traceable> shared_sphere;
+  shared_sphere.reset(sphere);
+  w->add(shared_sphere);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 10.0f));
 
   Canvas canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
 
-  canvas.render(w, r, light);
+  canvas.render(move(w), r, light);
   canvas.save();
-  delete w;
 
   return 0;
 }
