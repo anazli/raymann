@@ -1,6 +1,7 @@
 #include "geometry/sphere.h"
 #include "geometry/traceable.h"
 #include "gtest/gtest.h"
+#include "world/world.h"
 
 using namespace testing;
 

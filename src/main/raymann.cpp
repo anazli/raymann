@@ -4,6 +4,7 @@
 #include "container/canvas.h"
 #include "geometry/sphere.h"
 #include "tools/tools.h"
+#include "world/world.h"
 
 using namespace std;
 
