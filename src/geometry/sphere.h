@@ -1,9 +1,9 @@
 #pragma once
 
+#include "geometry/traceable.h"
 #include "tools/point3.h"
 #include "tools/ray.h"
 #include "tools/vec3.h"
-#include "traceable.h"
 
 class Sphere : public Traceable {
  public:
@@ -61,7 +61,7 @@ class SphereBuilder {
   virtual std::shared_ptr<Traceable> getSphere() { return nullptr; }
 
  protected:
-  SphereBuilder();
+  SphereBuilder() {}
 };
 
 class StandardSphere : public SphereBuilder {
