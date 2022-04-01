@@ -54,7 +54,7 @@ class SphereBuilder {
  public:
   virtual void buildSphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
                            const float &r = 1.0f) {}
-  virtual std::shared_ptr<Sphere> getSphere() { return nullptr; }
+  virtual std::shared_ptr<Traceable> getSphere() { return nullptr; }
 
  protected:
   SphereBuilder();
@@ -66,8 +66,8 @@ class StandardSphere : public SphereBuilder {
                            const float &r = 1.0f) {
     m_currentSphere.reset(new Sphere(c, r));
   }
-  virtual std::shared_ptr<Sphere> getSphere() { return m_currentSphere; }
+  virtual std::shared_ptr<Traceable> getSphere() { return m_currentSphere; }
 
  private:
-  std::shared_ptr<Sphere> m_currentSphere;
+  std::shared_ptr<Traceable> m_currentSphere;
 };

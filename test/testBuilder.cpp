@@ -9,5 +9,5 @@ TEST(SphereBuilder, CreateSimpleSphere) {
   StandardSphere builder;
 
   world->createSphere(builder);
-  std::shared_ptr<Sphere> sphere = builder.getSphere();
+  std::shared_ptr<Traceable> sphere = builder.getSphere();
 }
