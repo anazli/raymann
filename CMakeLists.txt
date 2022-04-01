@@ -9,7 +9,8 @@ set(EXE raymann)
 set(sources src/main/raymann.cpp
             src/geometry/traceable.cpp
             src/container/canvas.cpp
-            src/world/world.cpp)
+            src/world/world.cpp
+            src/world/scene.cpp)
 
 add_executable(${EXE} ${sources})
 target_include_directories(${EXE} PUBLIC ${PROJECT_SOURCE_DIR}/src)
