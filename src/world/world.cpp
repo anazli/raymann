@@ -60,7 +60,25 @@ vector<float> World::intersectionsSorted() const {
   return ret;
 }
 
-Traceable *World::createSphere(std::shared_ptr<SphereBuilder> b) {
-  b->buildSphere();
+Traceable *World::createSphere(std::shared_ptr<SphereBuilder> b,
+                               const Point3f &center, const float &radius,
+                               const Vec3f &color, float am, float diff,
+                               float spec, float shi) {
+  b->buildSphere(center, radius);
+  b->colorSphere(color, am, diff, spec, shi);
   add(b->getSphere());
+  return b->getSphere().get();
+}
+
+Traceable *World::createTransformedSphere(std::shared_ptr<SphereBuilder> b,
+                                          const Mat4f &matrix,
+                                          const Point3f &center,
+                                          const float &radius,
+                                          const Vec3f &color, float am,
+                                          float diff, float spec, float shi) {
+  b->buildSphere(center, radius);
+  b->transformSphere(matrix);
+  b->colorSphere(color, am, diff, spec, shi);
+  add(b->getSphere());
+  return b->getSphere().get();
 }
