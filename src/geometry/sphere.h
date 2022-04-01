@@ -49,3 +49,25 @@ inline bool Sphere::intersect(const Ray &r) {
   }
   return false;
 }
+
+class SphereBuilder {
+ public:
+  virtual void buildSphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
+                           const float &r = 1.0f) {}
+  virtual std::shared_ptr<Sphere> getSphere() { return nullptr; }
+
+ protected:
+  SphereBuilder();
+};
+
+class StandardSphere : public SphereBuilder {
+ public:
+  virtual void buildSphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
+                           const float &r = 1.0f) {
+    m_currentSphere.reset(new Sphere(c, r));
+  }
+  virtual std::shared_ptr<Sphere> getSphere() { return m_currentSphere; }
+
+ private:
+  std::shared_ptr<Sphere> m_currentSphere;
+};
