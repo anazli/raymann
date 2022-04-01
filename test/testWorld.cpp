@@ -14,7 +14,7 @@ class Tworld : public Test {
   World w;
   std::shared_ptr<SphereBuilder> builder;
 
-  Tworld() : w(World()) { builder.reset(new StandardSphere); }
+  Tworld() : w(World()), builder(new StandardSphere) {}
 };
 
 TEST_F(Tworld, createsWorldOfShere) {

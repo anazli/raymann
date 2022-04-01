@@ -80,8 +80,7 @@ class StandardSphere : public SphereBuilder {
     m_currentSphere = new Material(m_currentSphere, c, am, diff, spec, shi);
   }
   std::shared_ptr<Traceable> getSphere() override {
-    std::shared_ptr<Traceable> ret;
-    ret.reset(m_currentSphere);
+    std::shared_ptr<Traceable> ret(m_currentSphere);
     return ret;
   }
 
