@@ -1,18 +1,24 @@
 #include "geometry/sphere.h"
 #include "geometry/traceable.h"
 #include "gtest/gtest.h"
+#include "world/scene.h"
 #include "world/world.h"
 
 using namespace testing;
+using std::shared_ptr;
+using std::vector;
 
 class Tworld : public Test {
  public:
+  Scene scene;
   World w;
+  std::shared_ptr<SphereBuilder> builder;
+
+  Tworld() : w(World()) { builder.reset(new StandardSphere); }
 };
 
 TEST_F(Tworld, createsWorldOfShere) {
-  w = World();
-  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  shared_ptr<Traceable> s = scene.createSphere(builder);
   w.add(s);
   ASSERT_TRUE(s->getParent() == &w);
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -30,14 +36,14 @@ TEST_F(Tworld, createsWorldOfShere) {
   w.remove(s, false);
   ASSERT_FALSE(s->getParent() == &w);
   ASSERT_TRUE(s->getParent() == nullptr);
-  delete s;
 }
 
 TEST_F(Tworld, createsWorldOfTwoSpheres) {
-  w = World();
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
-  Traceable *s1 = new Sphere(Point3f(0.0f, 0.0f, 5.0f), 1.0f);
+  shared_ptr<Traceable> s = scene.createSphere(builder);
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
+                         Point3f(0.0f, 0.0f, 5.0f), 1.0f);
 
   w.add(s);
   w.add(s1);
@@ -64,15 +70,14 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   ASSERT_TRUE(s->getParent() == nullptr);
   ASSERT_FALSE(s1->getParent() == &w);
   ASSERT_TRUE(s1->getParent() == nullptr);
-  delete s;
-  delete s1;
 }
 
 TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
-  w = World();
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
-  Traceable *s1 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
+  shared_ptr<Traceable> s = scene.createSphere(builder);
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
+                         Point3f(0.0f, 0.0f, -8.0f), 1.0f);
 
   w.add(s);
   w.add(s1);
@@ -92,10 +97,13 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
 }
 
 TEST_F(Tworld, createsWorldOfNegativeIntersections) {
-  w = World();
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, -11.0f), 1.0f);
-  Traceable *s1 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
+  shared_ptr<Traceable> s =
+      scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
+                         Point3f(0.0f, 0.0f, -11.0f), 1.0f);
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
+                         Point3f(0.0f, 0.0f, -8.0f), 1.0f);
 
   w.add(s);
   w.add(s1);
@@ -111,15 +119,22 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
   // ASSERT_DEATH(Traceable &closest = w.closestHit(), "");  // Running it with
   // valgrind results in signal 6 (SIGABRT)
   Traceable &closest = w.closestHit();
-  ASSERT_TRUE(&closest == s);
+  ASSERT_TRUE(&closest == s.get());
 }
 TEST_F(Tworld, createsWorldOfFourSpheres) {
-  w = World();
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  Traceable *s = new Sphere(Point3f(0.0f, 0.0f, 5.0f), 1.0f);
-  Traceable *s1 = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
-  Traceable *s2 = new Sphere(Point3f(0.0f, 0.0f, -8.0f), 1.0f);
-  Traceable *s3 = new Sphere(Point3f(0.0f, 0.0f, 8.0f), 1.0f);
+  shared_ptr<Traceable> s =
+      scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
+                         Point3f(0.0f, 0.0f, 5.0f), 1.0f);
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
+                         Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  shared_ptr<Traceable> s2 =
+      scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
+                         Point3f(0.0f, 0.0f, -8.0f), 1.0f);
+  shared_ptr<Traceable> s3 =
+      scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
+                         Point3f(0.0f, 0.0f, 8.0f), 1.0f);
 
   w.add(s);
   w.add(s1);
@@ -147,10 +162,10 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
 }
 
 TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  Traceable *s2 = new Transformer(new Sphere(), scale(0.5f, 0.5f, 0.5f));
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s2 =
+      scene.createTransformedSphere(builder, scale(0.5f, 0.5f, 0.5f));
   w.add(s1);
   w.add(s2);
   ASSERT_TRUE(s1->getParent() == &w);
@@ -158,16 +173,16 @@ TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
 }
 
 TEST_F(Tworld, getsVectorOFIntersectionPoints) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  Traceable *s2 = new Transformer(new Sphere(), scale(0.5f, 0.5f, 0.5f));
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s2 =
+      scene.createTransformedSphere(builder, scale(0.5f, 0.5f, 0.5f));
   w.add(s1);
   w.add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w.intersect(r);
-  std::vector<float> v = w.intersectionsSorted();
+  vector<float> v = w.intersectionsSorted();
 
   ASSERT_EQ(v.size(), 4);
   ASSERT_EQ(v[0], 4.0f);
@@ -177,9 +192,8 @@ TEST_F(Tworld, getsVectorOFIntersectionPoints) {
 }
 
 TEST_F(Tworld, computesQuantitiesOfIntersection) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
   w.add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -192,9 +206,8 @@ TEST_F(Tworld, computesQuantitiesOfIntersection) {
 }
 
 TEST_F(Tworld, intersectionWhenHitOccursOutside) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
   w.add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -207,9 +220,8 @@ TEST_F(Tworld, intersectionWhenHitOccursOutside) {
 }
 
 TEST_F(Tworld, intersectionWhenHitOccursInside) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
   w.add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -222,10 +234,10 @@ TEST_F(Tworld, intersectionWhenHitOccursInside) {
 }
 
 TEST_F(Tworld, ShadingAnIntersection) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  Traceable *s2 = new Transformer(new Sphere(), scale(0.5f, 0.5f, 0.5f));
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s2 =
+      scene.createTransformedSphere(builder, scale(0.5f, 0.5f, 0.5f));
   w.add(s1);
   w.add(s2);
 
@@ -238,7 +250,7 @@ TEST_F(Tworld, ShadingAnIntersection) {
   PointLight l(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
   Vec3f color = t.lighting(l, r);
 
-  ASSERT_TRUE(&t == s1);
+  ASSERT_TRUE(&t == s1.get());
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.38066f, eps);
@@ -247,12 +259,11 @@ TEST_F(Tworld, ShadingAnIntersection) {
 }
 
 TEST_F(Tworld, ShadingAnInsideIntersection) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  Traceable *s2 = new Material(new Sphere(), Vec3f(1.0f, 1.0f, 1.0f), 0.1f,
-                               0.9f, 0.9f, 200.0f);
-  s2 = new Transformer(s2, scale(0.5f, 0.5f, 0.5f));
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s2 = scene.createTransformedSphere(
+      builder, scale(0.5f, 0.5f, 0.5f), Vec3f(1.0f, 1.0f, 1.0f), 0.1f, 0.9f,
+      0.9f, 200.0f);
   w.add(s1);
   w.add(s2);
 
@@ -265,7 +276,7 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
   PointLight l(Point3f(0.0f, 0.25f, 0.0f), Vec3f(1.0f, 1.0f, 1.0f));
   Vec3f color = t.lighting(l, r);
 
-  ASSERT_TRUE(&t == s2);
+  ASSERT_TRUE(&t == s2.get());
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.90498f, eps);
@@ -274,12 +285,11 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
 }
 
 TEST_F(Tworld, colorWhenRayMisses) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  Traceable *s2 = new Material(new Sphere(), Vec3f(1.0f, 1.0f, 1.0f), 0.1f,
-                               0.9f, 0.9f, 200.0f);
-  s2 = new Transformer(s2, scale(0.5f, 0.5f, 0.5f));
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s2 = scene.createTransformedSphere(
+      builder, scale(0.5f, 0.5f, 0.5f), Vec3f(1.0f, 1.0f, 1.0f), 0.1f, 0.9f,
+      0.9f, 200.0f);
   w.add(s1);
   w.add(s2);
 
@@ -297,12 +307,11 @@ TEST_F(Tworld, colorWhenRayMisses) {
 }
 
 TEST_F(Tworld, colorWhenRayHits) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  Traceable *s2 = new Material(new Sphere(), Vec3f(1.0f, 1.0f, 1.0f), 0.1f,
-                               0.9f, 0.9f, 200.0f);
-  s2 = new Transformer(s2, scale(0.5f, 0.5f, 0.5f));
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s2 = scene.createTransformedSphere(
+      builder, scale(0.5f, 0.5f, 0.5f), Vec3f(1.0f, 1.0f, 1.0f), 0.1f, 0.9f,
+      0.9f, 200.0f);
   w.add(s1);
   w.add(s2);
 
@@ -321,12 +330,11 @@ TEST_F(Tworld, colorWhenRayHits) {
 }
 
 TEST_F(Tworld, colorWithAnIntersectionBehind) {
-  w = World();
-  Traceable *s1 =
-      new Material(new Sphere(), Vec3f(0.8f, 1.0f, 0.6f), 1.0f, 0.7f, 0.2f);
-  Traceable *s2 = new Material(new Sphere(), Vec3f(1.0f, 1.0f, 1.0f), 1.0f,
-                               0.9f, 0.9f, 200.0f);
-  s2 = new Transformer(s2, scale(0.5f, 0.5f, 0.5f));
+  shared_ptr<Traceable> s1 =
+      scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 1.0f, 0.7f, 0.2f);
+  shared_ptr<Traceable> s2 = scene.createTransformedSphere(
+      builder, scale(0.5f, 0.5f, 0.5f), Vec3f(1.0f, 1.0f, 1.0f), 1.0f, 0.9f,
+      0.9f, 200.0f);
   w.add(s1);
   w.add(s2);
 
@@ -334,5 +342,5 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
   w.intersect(r);
   Traceable &t = w.closestHit();
 
-  ASSERT_TRUE(&t == s2);  // color of the inner sphere
+  ASSERT_TRUE(&t == s2.get());  // color of the inner sphere
 }
