@@ -60,7 +60,7 @@ vector<float> World::intersectionsSorted() const {
   return ret;
 }
 
-void World::createSphere(std::shared_ptr<SphereBuilder> b) {
+Traceable *World::createSphere(std::shared_ptr<SphereBuilder> b) {
   b->buildSphere();
   add(b->getSphere());
 }

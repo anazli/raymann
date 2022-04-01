@@ -14,7 +14,7 @@ class World : public Traceable {
   bool isWorld() const override { return true; }
   Traceable &closestHit() override;
   std::vector<float> intersectionsSorted() const;
-  void createSphere(std::shared_ptr<SphereBuilder> b);
+  Traceable *createSphere(std::shared_ptr<SphereBuilder> b);
 
  private:
   std::list<std::shared_ptr<Traceable>> m_traceable_list;

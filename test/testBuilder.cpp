@@ -8,6 +8,10 @@ TEST(SphereBuilder, CreateSimpleSphere) {
   std::unique_ptr<World> world;
   std::shared_ptr<StandardSphere> builder;
 
-  world->createSphere(builder);
-  std::shared_ptr<Traceable> sphere = builder.getSphere();
+  Traceable *test = world->createSphere(builder);
+  std::shared_ptr<Traceable> sphere =
+      builder->getSphere();  // not really neccessary, in case we want to use
+                             // sphere in another world
+
+  ASSERT_TRUE(test == sphere.get());
 }
