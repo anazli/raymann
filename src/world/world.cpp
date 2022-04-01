@@ -20,12 +20,12 @@ bool World::intersect(const Ray &r) {
   return has_intersection;
 }
 
-void World::add(std::shared_ptr<Traceable> &item) {
+void World::add(std::shared_ptr<Traceable> item) {
   m_traceable_list.push_back(item);
   item->setParent(this);
 }
 
-void World::remove(std::shared_ptr<Traceable> &item, bool del) {
+void World::remove(std::shared_ptr<Traceable> item, bool del) {
   m_traceable_list.remove(item);
   item->setParent(nullptr);
   if (del) item.reset();
@@ -58,4 +58,9 @@ vector<float> World::intersectionsSorted() const {
   }
   sort(ret.begin(), ret.end(), compare);
   return ret;
+}
+
+void World::createSphere(std::shared_ptr<SphereBuilder> b) {
+  b->buildSphere();
+  add(b->getSphere());
 }

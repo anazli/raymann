@@ -14,8 +14,8 @@ class Traceable {
   virtual Vec3f lighting(const PointLight &light, const Ray &ray) {
     return Vec3f();
   }
-  virtual void add(std::shared_ptr<Traceable> &item) {}
-  virtual void remove(std::shared_ptr<Traceable> &item, bool del = true) {}
+  virtual void add(std::shared_ptr<Traceable> item) {}
+  virtual void remove(std::shared_ptr<Traceable> item, bool del = true) {}
   virtual bool isWorld() const { return false; }
   virtual Vec3f normal(const Point3f &p) const { return Vec3f(); }
   virtual std::string name() const { return m_name; }

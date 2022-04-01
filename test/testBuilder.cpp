@@ -6,7 +6,7 @@ using namespace testing;
 
 TEST(SphereBuilder, CreateSimpleSphere) {
   std::unique_ptr<World> world;
-  StandardSphere builder;
+  std::shared_ptr<StandardSphere> builder;
 
   world->createSphere(builder);
   std::shared_ptr<Traceable> sphere = builder.getSphere();
