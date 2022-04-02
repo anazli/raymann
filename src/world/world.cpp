@@ -3,24 +3,21 @@
 #include <algorithm>
 
 using std::list;
+using std::shared_ptr;
 using std::sort;
 using std::vector;
 
-World::~World() {
-  /*list<Traceable *>::iterator it;
-  for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
-    delete (*it);*/
-}
+World::~World() {}
 
 bool World::intersect(const Ray &r) {
   bool has_intersection = false;
-  list<std::shared_ptr<Traceable>>::iterator it;
+  list<shared_ptr<Traceable>>::iterator it;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
     if ((*it)->intersect(r)) has_intersection = true;
   return has_intersection;
 }
 
-void World::add(std::shared_ptr<Traceable> item) {
+void World::add(shared_ptr<Traceable> item) {
   m_traceable_list.push_back(item);
   item->setParent(this);
 }
@@ -32,26 +29,28 @@ void World::remove(std::shared_ptr<Traceable> item, bool del) {
 }
 
 Traceable &World::closestHit() {
-  list<std::shared_ptr<Traceable>>::const_iterator it;
-  Traceable *temp = nullptr;
+  list<shared_ptr<Traceable>>::const_iterator it;
+  Traceable *ret = nullptr;
   float min_hit = MAXFLOAT;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it) {
     if ((*it)->record().t_min() > 0.0f && (*it)->record().t_min() < min_hit) {
-      temp = (it->get());
-      min_hit = temp->record().t_min();
+      ret = (it->get());
+      min_hit = ret->record().t_min();
     }
   }
-  if (temp == nullptr) {
-    temp = m_traceable_list.front().get();  // just return the first one.
+  if (ret == nullptr) {
+    ret = m_traceable_list.front()
+              .get();  // There is no Hit -> Black color, so any member would
+                       // be ok, just return the first one.
   }
-  return *temp;
+  return *ret;
 }
 
 bool compare(const float &f1, const float &f2) { return f1 < f2; }
 
 vector<float> World::intersectionsSorted() const {
   vector<float> ret;
-  list<std::shared_ptr<Traceable>>::const_iterator it;
+  list<shared_ptr<Traceable>>::const_iterator it;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it) {
     ret.push_back((*it)->record().t1);
     ret.push_back((*it)->record().t2);
