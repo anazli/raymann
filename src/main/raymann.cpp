@@ -13,7 +13,7 @@ int main() {
   Scene scene;
   PointLight light(Point3f(-15.0f, 15.0f, -15.0f), Vec3f(0.7f, 0.7f, 0.7f));
 
-  shared_ptr<SphereBuilder> builder(new StandardSphere);
+  shared_ptr<SphereBuilder> builder = make_shared<StandardSphere>();
 
   shared_ptr<Traceable> sphere = scene.createTransformedSphere(
       builder, scale(0.8f, 1.0f, 1.0f), Vec3f(0.09f, 0.172f, 0.909f));
@@ -23,7 +23,7 @@ int main() {
   Canvas canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
 
-  unique_ptr<Traceable> w(new World());
+  unique_ptr<Traceable> w = make_unique<World>();
   w->add(sphere);
 
   canvas.render(move(w), r, light);
