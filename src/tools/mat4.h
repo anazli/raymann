@@ -281,6 +281,16 @@ Vec4<T> operator*(const Mat4<T>& m, const Vec4<T>& v) {
 }
 
 template <typename T>
+bool operator==(const Mat4<T>& m1, const Mat4<T>& m2) {
+  return m1[0] == m2[0] && m1[1] == m2[1] && m1[2] == m2[2] && m1[3] == m2[3];
+}
+
+template <typename T>
+bool operator!=(const Mat4<T>& m1, const Mat4<T>& m2) {
+  return !(m1 == m2);
+}
+
+template <typename T>
 Mat4<T> translation(const T& x, const T& y, const T& z) {
   Mat4<T> ret;
   ret.identity();
@@ -354,6 +364,10 @@ Mat4<T> rotationZ(const T& rad) {
   ret[1][1] = cos(rad);
   return ret;
 }
+
+template <typename T>
+Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
+                       const Point3<T>& up) {}
 
 // TODO: Shearing
 
