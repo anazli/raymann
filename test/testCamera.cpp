@@ -20,3 +20,17 @@ TEST_F(Tcam, createsCamera) {
   ASSERT_EQ(c.fieldOfView(), PI / 2.0f);
   ASSERT_TRUE(c.transform() == Mat4f());
 }
+
+TEST_F(Tcam, pixelSizeForHorCanvas) {
+  c = Camera(200, 125, PI / 2.0f);
+  c.computePixelSize();
+  ASSERT_EQ(c.pixelSize(), 0.01f);
+}
+
+TEST_F(Tcam, pixelSizeForVerCanvas) {
+  c = Camera(125, 200, PI / 2.0f);
+  c.computePixelSize();
+  ASSERT_EQ(c.pixelSize(), 0.01f);
+}
+
+TEST_F(Tcam, rayThroughTheCenterOfCanvas) {}
