@@ -35,12 +35,26 @@ TEST_F(Tcam, pixelSizeForVerCanvas) {
 
 TEST_F(Tcam, rayThroughTheCenterOfCanvas) {
   c = Camera(201, 101, PI / 2.0f);
+  c.computePixelSize();
   Ray r = Ray(c, 100, 50);
-  float eps = 1.E-9;
+  float eps = 1.E-6;
   EXPECT_NEAR(r.origin().x(), 0.0f, eps);
   EXPECT_NEAR(r.origin().y(), 0.0f, eps);
   EXPECT_NEAR(r.origin().z(), 0.0f, eps);
   EXPECT_NEAR(r.direction().x(), 0.0f, eps);
   EXPECT_NEAR(r.direction().y(), 0.0f, eps);
   EXPECT_NEAR(r.direction().z(), -1.0f, eps);
+}
+
+TEST_F(Tcam, rayThroughCornerOfCanvas) {
+  c = Camera(201, 101, PI / 2.0f);
+  c.computePixelSize();
+  Ray r = Ray(c, 0, 0);
+  float eps = 1.E-5;
+  EXPECT_NEAR(r.origin().x(), 0.0f, eps);
+  EXPECT_NEAR(r.origin().y(), 0.0f, eps);
+  EXPECT_NEAR(r.origin().z(), 0.0f, eps);
+  EXPECT_NEAR(r.direction().x(), 0.66519f, eps);
+  EXPECT_NEAR(r.direction().y(), 0.33259f, eps);
+  EXPECT_NEAR(r.direction().z(), -0.66851f, eps);
 }
