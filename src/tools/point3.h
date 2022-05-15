@@ -69,11 +69,11 @@ class Point3 {
     return *this;
   }
 
-  Vec3<T> operator-(const Point3<T> &p) const {
+  Vec3<T> operator-(const Point3<T> &p) const {  // Point - Point = Vector
     return Vec3<T>(x() - p.x(), y() - p.y(), z() - p.z());
   }
 
-  Point3<T> operator-(const Vec3<T> &v) const {
+  Point3<T> operator-(const Vec3<T> &v) const {  // Point - Vector = Point
     return Point3<T>(x() - v.x(), y() - v.y(), z() - v.z());
   }
 
@@ -91,6 +91,12 @@ class Point3 {
 typedef Point3<double> Point3d;
 typedef Point3<float> Point3f;
 typedef Point3<int> Point3i;
+
+template <typename T>
+Vec3<T> operator-(const Vec3<T> &v,      // TODO: Cannot be (Smth is wrong)
+                  const Point3<T> &p) {  // Vector - Point = Vector
+  return Vec3<T>(v.x() - p.x(), v.y() - p.y(), v.z() - p.z());
+}
 
 template <typename T>
 bool operator==(const Point3<T> &p1, const Point3<T> &p2) {
