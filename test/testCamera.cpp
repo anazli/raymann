@@ -58,3 +58,17 @@ TEST_F(Tcam, rayThroughCornerOfCanvas) {
   EXPECT_NEAR(r.direction().y(), 0.33259f, eps);
   EXPECT_NEAR(r.direction().z(), -0.66851f, eps);
 }
+
+TEST_F(Tcam, rayWhenCameraIsTransformed) {
+  c = Camera(201, 101, PI / 2.0f);
+  c.setTransform(rotationY(PI / 4.0f) * translation(0.0f, -2.0f, 5.0f));
+  c.computePixelSize();
+  Ray r = Ray(c, 100, 50);
+  float eps = 1.E-5;
+  EXPECT_NEAR(r.origin().x(), 0.0f, eps);
+  EXPECT_NEAR(r.origin().y(), 2.0f, eps);
+  EXPECT_NEAR(r.origin().z(), -5.0f, eps);
+  EXPECT_NEAR(r.direction().x(), 0.7071f, eps);
+  EXPECT_NEAR(r.direction().y(), 0.0f, eps);
+  EXPECT_NEAR(r.direction().z(), -0.7071f, eps);
+}
