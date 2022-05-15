@@ -367,7 +367,20 @@ Mat4<T> rotationZ(const T& rad) {
 
 template <typename T>
 Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
-                       const Point3<T>& up) {}
+                       const Vec3<T>& up) {
+  Vec3f forward = Vec3f(to - from).normalize();
+  Vec3f up_norm = Vec3f(up).normalize();
+  Vec3f left = cross(forward, up_norm);
+  Vec3f up_res = cross(left, forward);
+
+  Mat4f orientation =
+      Mat4f(Vec4f(left.x(), left.y(), left.z(), 0.0f),
+            Vec4f(up_res.x(), up_res.y(), up_res.z(), 0.0f),
+            Vec4f(-forward.x(), -forward.y(), -forward.z(), 0.0f),
+            Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+
+  return orientation * translation(-from.x(), -from.y(), -from.z());
+}
 
 // TODO: Shearing
 

@@ -241,3 +241,62 @@ TEST_F(Ttrans, computesNormalOfRotatedSphere) {
 
   delete t;
 }
+
+TEST_F(Ttrans, transformationMatrixForDefaultOrientation) {
+  Point3f from = Point3f(0.0f, 0.0f, 0.0f);
+  Point3f to = Point3f(0.0f, 0.0f, -1.0f);
+  Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
+
+  Mat4f m = view_transform(from, to, up);
+  Mat4f t = Mat4f();
+  t.identity();
+  ASSERT_TRUE(m == t);
+}
+
+TEST_F(Ttrans, viewTransformationLookingInPositiveZ) {
+  Point3f from = Point3f(0.0f, 0.0f, 0.0f);
+  Point3f to = Point3f(0.0f, 0.0f, 1.0f);
+  Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
+
+  Mat4f m = view_transform(from, to, up);
+  ASSERT_TRUE(m == scale(-1.0f, 1.0f, -1.0f));
+}
+
+TEST_F(Ttrans, viewTransformationMovesTheWorld) {
+  Point3f from = Point3f(0.0f, 0.0f, 8.0f);
+  Point3f to = Point3f(0.0f, 0.0f, 0.0f);
+  Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
+
+  Mat4f m = view_transform(from, to, up);
+  ASSERT_TRUE(m == translation(0.0f, 0.0f, -8.0f));
+}
+
+TEST_F(Ttrans, ArbitraryViewTransformation) {
+  Point3f from = Point3f(1.0f, 3.0f, 2.0f);
+  Point3f to = Point3f(4.0f, -2.0f, 8.0f);
+  Vec3f up = Vec3f(1.0f, 1.0f, 0.0f);
+
+  Mat4f m = view_transform(from, to, up);
+  Mat4f t(Vec4f(-0.50709, 0.50709, 0.67612, -2.36643),
+          Vec4f(0.76772, 0.60609, 0.12122, -2.82843),
+          Vec4f(-0.35857, 0.59761, -0.71714, 0.0f),
+          Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+
+  float eps = 10E-6;
+  EXPECT_NEAR(m[0][0], t[0][0], eps);
+  EXPECT_NEAR(m[0][1], t[0][1], eps);
+  EXPECT_NEAR(m[0][2], t[0][2], eps);
+  EXPECT_NEAR(m[0][3], t[0][3], eps);
+  EXPECT_NEAR(m[1][0], t[1][0], eps);
+  EXPECT_NEAR(m[1][1], t[1][1], eps);
+  EXPECT_NEAR(m[1][2], t[1][2], eps);
+  EXPECT_NEAR(m[1][3], t[1][3], eps);
+  EXPECT_NEAR(m[2][0], t[2][0], eps);
+  EXPECT_NEAR(m[2][1], t[2][1], eps);
+  EXPECT_NEAR(m[2][2], t[2][2], eps);
+  EXPECT_NEAR(m[2][3], t[2][3], eps);
+  EXPECT_NEAR(m[3][0], t[3][0], eps);
+  EXPECT_NEAR(m[3][1], t[3][1], eps);
+  EXPECT_NEAR(m[3][2], t[3][2], eps);
+  EXPECT_NEAR(m[3][3], t[3][3], eps);
+}
