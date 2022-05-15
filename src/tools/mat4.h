@@ -135,12 +135,10 @@ T Mat4<T>::trace() const {
 
 template <typename T>
 T Mat4<T>::determinant() const {
-  double det = 0.;
-  double sign = 1.;
+  T det = 0;
   for (int j = 0; j < 4; ++j) {
     Mat3<T> mi = minor(0, j);
-    det += m_vec[0][j] * mi.determinant() * sign;
-    sign = sign * (-1.);
+    det += m_vec[0][j] * coFactor(0, j);
   }
 
   return det;
@@ -169,17 +167,16 @@ Mat3<T> Mat4<T>::minor(const int& i, const int& j) const {
 }
 
 template <typename T>
-Mat4<T> Mat4<T>::inverse() const {  // TODO: Shouldn't use T, with integers
-  Mat4<T> inv;                      // the result is not correct. It doesn't
-  for (int i = 0; i < 4; ++i) {     // make any sense to use T.
+Mat4<T> Mat4<T>::inverse() const {
+  T det = determinant();
+  if (det == 0) throw "Matrix is not invertible!";
+  Mat4<T> inv;
+  for (int i = 0; i < 4; ++i) {
     for (int j = 0; j < 4; ++j) {
-      inv.m_vec[j][i] = coFactor(i, j);
+      T c = coFactor(i, j);
+      inv.m_vec[j][i] = coFactor(i, j) / det;
     }
   }
-
-  T det = determinant();
-  T invDet = 1. / det;
-  inv *= invDet;
   return inv;
 }
 
