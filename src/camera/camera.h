@@ -11,6 +11,7 @@ class Camera {
   void setHSize(const int &hs) { m_hsize = hs; }
   void setVSize(const int &vs) { m_vsize = vs; }
   void setFieldOfView(const float &fv) { m_field_of_view = fv; }
+  void setTransform(const Mat4f &m) { m_transform = m; }
 
   int hSize() const { return m_hsize; }
   int vSize() const { return m_vsize; }
