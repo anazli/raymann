@@ -23,10 +23,17 @@ int main() {
   Canvas canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
 
+  Camera c(canvas.width(), canvas.height(), PI / 2.0f);
+  c.computePixelSize();
+  Point3f from(0.0f, 0.0f, -5.0f);
+  Point3f to(0.0f, 0.0f, 0.0f);
+  Vec3f up(0.0f, 1.0f, 0.0f);
+  c.setTransform(view_transform(from, to, up));
+
   unique_ptr<Traceable> w = make_unique<World>();
   w->add(sphere);
 
-  canvas.render(move(w), r, light);
+  canvas.render(move(w), c, r, light);
   canvas.save();
 
   return 0;

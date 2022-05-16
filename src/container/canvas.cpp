@@ -7,23 +7,14 @@ using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(std::unique_ptr<Traceable> world, const Ray &r,
-                    const PointLight &light) {
+void Canvas::render(std::unique_ptr<Traceable> world, const Camera &c,
+                    const Ray &r, const PointLight &light) {
   int num_samples = 70;
-  for (int j = 0; j < height(); ++j) {
-    for (int i = 0; i < width(); ++i) {
-      float wall_z = r.direction().z();
-      float wall_size = 7.0f;
-      float pixel_size = wall_size / (float)width();
-      float half = wall_size / 2.0f;
-
+  for (int j = 0; j < c.vSize(); ++j) {
+    for (int i = 0; i < c.hSize(); ++i) {
       Vec3f color;
       for (int s = 0; s < num_samples; ++s) {
-        float world_y = half - pixel_size * (j + drand48());
-        float world_x = -half + pixel_size * (i + drand48());
-        Point3f position(world_x, world_y, wall_z);
-        Ray ray(r.origin(), (position - r.origin()).normalize());
-
+        Ray ray(c, i, j);
         if (world->intersect(ray)) {
           Traceable &closest = world->closestHit();
           color += closest.lighting(light, ray);
