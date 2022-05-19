@@ -8,8 +8,8 @@ using std::list;
 using std::ofstream;
 
 void Canvas::render(std::unique_ptr<Traceable> world, const Camera &c,
-                    const Ray &r, const PointLight &light) {
-  int num_samples = 70;
+                    const PointLight &light) {
+  int num_samples = 1;
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {
       Vec3f color;
@@ -19,7 +19,7 @@ void Canvas::render(std::unique_ptr<Traceable> world, const Camera &c,
           Traceable &closest = world->closestHit();
           color += closest.lighting(light, ray);
         } else {
-          color += Vec3f(0.1, 0.1, 0.2);
+          color += Vec3f(0.0, 0.0, 0.0);
         }
       }
       color = color / (float)num_samples;
