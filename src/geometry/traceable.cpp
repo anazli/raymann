@@ -12,14 +12,14 @@ using std::vector;
 
 Vec3f Transformer::normal(const Point3f &p) const {
   Vec4f v4(p);
-  v4 = m_transformer.inverse() * v4;
-  Point3f object_point = v4;
-  Vec3f object_normal = object_point - Point3f(0.0f, 0.0f, 0.0f);
-  v4 = object_normal;
   v4 = m_transformer.inverse().transpose() * v4;
-  Vec3f world_normal = v4;
-  return world_normal.normalize();
-  // return TraceableDeco::normal(p);
+  Point3f object_point = v4;
+  // Vec3f object_normal = object_point - Point3f(0.0f, 0.0f, 0.0f);
+  // v4 = object_normal;
+  // v4 = m_transformer.inverse().transpose() * v4;
+  // Vec3f world_normal = v4;
+  // return world_normal.normalize();
+  return TraceableDeco::normal(object_point);
 }
 
 /*****************************
