@@ -46,8 +46,6 @@ Traceable &World::closestHit() {
   return *ret;
 }
 
-bool compare(const float &f1, const float &f2) { return f1 < f2; }
-
 vector<float> World::intersectionsSorted() const {
   vector<float> ret;
   list<shared_ptr<Traceable>>::const_iterator it;
@@ -55,6 +53,6 @@ vector<float> World::intersectionsSorted() const {
     ret.push_back((*it)->record().t1);
     ret.push_back((*it)->record().t2);
   }
-  sort(ret.begin(), ret.end(), compare);
+  sort(ret.begin(), ret.end(), [](float f1, float f2) { return f1 < f2; });
   return ret;
 }
