@@ -18,7 +18,13 @@ int main() {
   shared_ptr<Traceable> sphere = scene.createTransformedSphere(
       builder, scale(0.8f, 1.0f, 1.0f), Vec3f(0.09f, 0.172f, 0.909f));
 
-  Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 10.0f));
+  shared_ptr<Traceable> sphere1 = scene.createTransformedSphere(
+      builder, scale(0.8f, 1.0f, 1.0f), Vec3f(1.0f, 0.0f, 0.0f), 0.1f, 0.9f,
+      0.9f, 10.0f, Point3f(2.0f, 0.0f, 0.0f));
+
+  shared_ptr<Traceable> sphere2 = scene.createTransformedSphere(
+      builder, scale(0.8f, 1.0f, 1.0f), Vec3f(0.0f, 1.0f, 0.0f), 0.1f, 0.9f,
+      0.9f, 10.0f, Point3f(-2.0f, 0.0f, 0.0f));
 
   Canvas canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
@@ -32,8 +38,10 @@ int main() {
 
   unique_ptr<Traceable> w = make_unique<World>();
   w->add(sphere);
+  // w->add(sphere1);
+  w->add(sphere2);
 
-  canvas.render(move(w), c, r, light);
+  canvas.render(move(w), c, light);
   canvas.save();
 
   return 0;
