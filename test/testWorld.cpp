@@ -248,7 +248,7 @@ TEST_F(Tworld, ShadingAnIntersection) {
   t.checkInside(r);
 
   PointLight l(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(l, r);
+  Vec3f color = t.lighting(l, r, false);
 
   ASSERT_TRUE(&t == s1.get());
 
@@ -274,7 +274,7 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
   t.checkInside(r);
 
   PointLight l(Point3f(0.0f, 0.25f, 0.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(l, r);
+  Vec3f color = t.lighting(l, r, false);
 
   ASSERT_TRUE(&t == s2.get());
 
@@ -299,7 +299,7 @@ TEST_F(Tworld, colorWhenRayMisses) {
   Traceable &t = w.closestHit();
 
   PointLight l(Point3f(0.0f, 0.00f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f));
-  Vec3f color = t.lighting(l, r);
+  Vec3f color = t.lighting(l, r, false);
 
   ASSERT_EQ(color.x(), 0.0f);
   ASSERT_EQ(color.y(), 0.0f);
@@ -321,7 +321,7 @@ TEST_F(Tworld, colorWhenRayHits) {
   Traceable &t = w.closestHit();
 
   PointLight l(Point3f(-10.0f, 10.00f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(l, r);
+  Vec3f color = t.lighting(l, r, false);
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.38066f, eps);
