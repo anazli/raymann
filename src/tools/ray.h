@@ -37,9 +37,9 @@ class Ray {
     float world_x = c.halfWidth() - xoffset;
     float world_y = c.halfHeight() - yoffset;
     Mat4f inversed = c.transform().inverse();
-    Vec4f pixel = inversed * Vec4f(world_x, world_y, -1.0f, 1.0f);
-    m_ori = inversed * Vec4f(m_ori);
-    m_dir = (Vec3f(pixel.x(), pixel.y(), pixel.z()) - m_ori).normalize();
+    Point3f pixel = inversed * Vec4f(world_x, world_y, -1.0f, 1.0f);
+    m_ori = inversed * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+    m_dir = (Point3f(pixel.x(), pixel.y(), pixel.z()) - m_ori).normalize();
   }
 
  private:
