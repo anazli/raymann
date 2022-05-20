@@ -56,14 +56,3 @@ vector<float> World::intersectionsSorted() const {
   sort(ret.begin(), ret.end(), [](float f1, float f2) { return f1 < f2; });
   return ret;
 }
-
-bool World::isShadowed(const PointLight &l, const Point3f &p) {
-  Vec3f v = l.position() - p;
-  float distance = v.length();
-  Vec3f direction = v.normalize();
-  Ray r(p, direction);
-  intersect(r);
-  Traceable &t = closestHit();
-  if (t.record().t_min() > 0 && t.record().t_min() < distance) return true;
-  return false;
-}

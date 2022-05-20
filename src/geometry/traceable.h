@@ -27,6 +27,7 @@ class Traceable {
   }
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
+  bool isShadowed(const PointLight &l, const Point3f &p);
 
   struct Record {
     int count = 0;

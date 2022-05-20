@@ -354,26 +354,38 @@ TEST_F(Tworld, noShadowWhenNothingCollinear) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
   w.add(s1);
   Point3f p(0.0f, 10.0f, 0.0f);
-  ASSERT_FALSE(w.isShadowed(light, p));
+  Ray r(p, (light.position() - p).normalize());
+  w.intersect(r);
+  Traceable &t = w.closestHit();
+  ASSERT_FALSE(t.isShadowed(light, p));
 }
 
 TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
   w.add(s1);
   Point3f p(10.0f, -10.0f, 10.0f);
-  ASSERT_TRUE(w.isShadowed(light, p));
+  Ray r(p, (light.position() - p).normalize());
+  w.intersect(r);
+  Traceable &t = w.closestHit();
+  ASSERT_TRUE(t.isShadowed(light, p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindLight) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
   w.add(s1);
   Point3f p(-20.0f, 20.0f, -20.0f);
-  ASSERT_FALSE(w.isShadowed(light, p));
+  Ray r(p, (light.position() - p).normalize());
+  w.intersect(r);
+  Traceable &t = w.closestHit();
+  ASSERT_FALSE(t.isShadowed(light, p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
   w.add(s1);
   Point3f p(-2.0f, 2.0f, -2.0f);
-  ASSERT_FALSE(w.isShadowed(light, p));
+  Ray r(p, (light.position() - p).normalize());
+  w.intersect(r);
+  Traceable &t = w.closestHit();
+  ASSERT_FALSE(t.isShadowed(light, p));
 }
