@@ -33,7 +33,7 @@ TEST_F(Tworld, createsWorldOfShere) {
   ASSERT_EQ(s->record().t1, 4.0f);
   ASSERT_EQ(s->record().t2, 6.0f);
 
-  Traceable &closest = w.closestHit();
+  Traceable &closest = w.closestHit(r);
   ASSERT_EQ(closest.record().t_min(), s->record().t_min());
   ASSERT_EQ(closest.record().t1, s->record().t1);
   ASSERT_EQ(closest.record().t2, s->record().t2);
@@ -63,7 +63,7 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   ASSERT_EQ(s1->record().t1, 9.0f);
   ASSERT_EQ(s1->record().t2, 11.0f);
 
-  Traceable &closest = w.closestHit();
+  Traceable &closest = w.closestHit(r);
   ASSERT_EQ(closest.record().t_min(), s->record().t_min());
   ASSERT_EQ(closest.record().t1, s->record().t1);
   ASSERT_EQ(closest.record().t2, s->record().t2);
@@ -95,7 +95,7 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   ASSERT_EQ(s1->record().t1, -4.0f);
   ASSERT_EQ(s1->record().t2, -2.0f);
 
-  Traceable &closest = w.closestHit();
+  Traceable &closest = w.closestHit(r);
   ASSERT_EQ(closest.record().t_min(), s->record().t_min());
   ASSERT_EQ(closest.record().t1, s->record().t1);
   ASSERT_EQ(closest.record().t2, s->record().t2);
@@ -123,7 +123,7 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
 
   // ASSERT_DEATH(Traceable &closest = w.closestHit(), "");  // Running it with
   // valgrind results in signal 6 (SIGABRT)
-  Traceable &closest = w.closestHit();
+  Traceable &closest = w.closestHit(r);
   ASSERT_TRUE(&closest == s.get());
 }
 TEST_F(Tworld, createsWorldOfFourSpheres) {
@@ -160,7 +160,7 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
   ASSERT_EQ(s3->record().t1, 12.0f);
   ASSERT_EQ(s3->record().t2, 14.0f);
 
-  Traceable &closest = w.closestHit();
+  Traceable &closest = w.closestHit(r);
   ASSERT_EQ(closest.record().t_min(), s1->record().t_min());
   ASSERT_EQ(closest.record().t1, s1->record().t1);
   ASSERT_EQ(closest.record().t2, s1->record().t2);
@@ -203,7 +203,7 @@ TEST_F(Tworld, computesQuantitiesOfIntersection) {
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w.intersect(r);
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
 
   ASSERT_TRUE(t.record().eye(r) == Vec3f(0.0f, 0.0f, -1.0f));
   ASSERT_TRUE(t.record().point(r) == Point3f(0.0f, 0.0f, -1.0f));
@@ -218,7 +218,7 @@ TEST_F(Tworld, intersectionWhenHitOccursOutside) {
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w.intersect(r);
 
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   t.checkInside(r);
 
   ASSERT_FALSE(t.record().inside == true);
@@ -232,7 +232,7 @@ TEST_F(Tworld, intersectionWhenHitOccursInside) {
   Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w.intersect(r);
 
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   t.checkInside(r);
 
   ASSERT_TRUE(t.record().inside == true);
@@ -249,7 +249,7 @@ TEST_F(Tworld, ShadingAnIntersection) {
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w.intersect(r);
 
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   t.checkInside(r);
 
   PointLight l(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
@@ -275,7 +275,7 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
   Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w.intersect(r);
 
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   t.checkInside(r);
 
   PointLight l(Point3f(0.0f, 0.25f, 0.0f), Vec3f(1.0f, 1.0f, 1.0f));
@@ -301,7 +301,7 @@ TEST_F(Tworld, colorWhenRayMisses) {
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 1.0f, 0.0f));
   w.intersect(r);
 
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
 
   PointLight l(Point3f(0.0f, 0.00f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f));
   Vec3f color = t.lighting(l, r);
@@ -323,7 +323,7 @@ TEST_F(Tworld, colorWhenRayHits) {
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w.intersect(r);
 
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
 
   PointLight l(Point3f(-10.0f, 10.00f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
   Vec3f color = t.lighting(l, r);
@@ -345,7 +345,7 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
 
   Ray r(Point3f(0.0f, 0.0f, 0.75f), Vec3f(0.0f, 0.0f, -1.0f));
   w.intersect(r);
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
 
   ASSERT_TRUE(&t == s2.get());  // color of the inner sphere
 }
@@ -356,7 +356,7 @@ TEST_F(Tworld, noShadowWhenNothingCollinear) {
   Point3f p(0.0f, 10.0f, 0.0f);
   Ray r(p, (light.position() - p).normalize());
   w.intersect(r);
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   ASSERT_FALSE(t.isShadowed(light, p));
 }
 
@@ -366,7 +366,7 @@ TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
   Point3f p(10.0f, -10.0f, 10.0f);
   Ray r(p, (light.position() - p).normalize());
   w.intersect(r);
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   ASSERT_TRUE(t.isShadowed(light, p));
 }
 
@@ -376,7 +376,7 @@ TEST_F(Tworld, noShadowWhenObjectBehindLight) {
   Point3f p(-20.0f, 20.0f, -20.0f);
   Ray r(p, (light.position() - p).normalize());
   w.intersect(r);
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   ASSERT_FALSE(t.isShadowed(light, p));
 }
 
@@ -386,7 +386,7 @@ TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
   Point3f p(-2.0f, 2.0f, -2.0f);
   Ray r(p, (light.position() - p).normalize());
   w.intersect(r);
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   ASSERT_FALSE(t.isShadowed(light, p));
 }
 
@@ -399,7 +399,7 @@ TEST_F(Tworld, intersectionWithShadows) {
   Ray r(Point3f(0.0f, 0.0f, 5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   light = PointLight(Point3f(0.0f, 0.0f, 10.0f), Vec3f(1.0f, 1.0f, 1.0f));
   w.intersect(r);
-  Traceable &t = w.closestHit();
+  Traceable &t = w.closestHit(r);
   Vec3f color = t.lighting(light, r);
   ASSERT_TRUE(color == Vec3f(0.1f, 0.1f, 0.1f));
 }

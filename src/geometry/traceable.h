@@ -19,7 +19,7 @@ class Traceable {
   virtual bool isWorld() const { return false; }
   virtual Vec3f normal(const Point3f &p) const { return Vec3f(); }
   virtual std::string name() const { return m_name; }
-  virtual Traceable &closestHit() { return *this; }
+  virtual Traceable &closestHit(const Ray &r) { return *this; }
   virtual void checkInside(const Ray &r) {
     if (dot(record().eye(r), normal(record().point(r))) < 0.0f)
       rec.inside = true;
@@ -37,6 +37,7 @@ class Traceable {
         return t2;
       else if (t2 < 0.0f && t1 > 0.0f)
         return t1;
+
       return std::min(t1, t2);
     }
     Point3f point(const Ray &r) const { return r.position(t_min()); }

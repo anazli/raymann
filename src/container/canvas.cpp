@@ -16,7 +16,7 @@ void Canvas::render(std::unique_ptr<Traceable> world, const Camera &c,
       for (int s = 0; s < num_samples; ++s) {
         Ray ray(c, i, j);
         if (world->intersect(ray)) {
-          Traceable &closest = world->closestHit();
+          Traceable &closest = world->closestHit(ray);
           color += closest.lighting(light, ray);
         } else {
           color += Vec3f(0.0, 0.0, 0.0);

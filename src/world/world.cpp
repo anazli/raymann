@@ -28,17 +28,18 @@ void World::remove(std::shared_ptr<Traceable> item, bool del) {
   if (del) item.reset();
 }
 
-Traceable &World::closestHit() {
+Traceable &World::closestHit(const Ray &r) {
   list<shared_ptr<Traceable>>::const_iterator it;
   Traceable *ret = nullptr;
   float min_hit = MAXFLOAT;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it) {
-    if ((*it)->record().t_min() > 0.0f && (*it)->record().t_min() < min_hit) {
+    if ((*it)->intersect(r) && (*it)->record().t_min() >= 0.0f &&
+        (*it)->record().t_min() < min_hit) {
       ret = (it->get());
       min_hit = ret->record().t_min();
     }
   }
-  if (ret == nullptr) {
+  if (!ret) {
     ret = m_traceable_list.front()
               .get();  // There is no Hit -> Black color, so any member would
                        // be ok, just return the first one.

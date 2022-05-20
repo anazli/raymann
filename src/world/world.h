@@ -12,7 +12,7 @@ class World : public Traceable {
   void add(std::shared_ptr<Traceable> item) override;
   void remove(std::shared_ptr<Traceable> item, bool del = true) override;
   bool isWorld() const override { return true; }
-  Traceable &closestHit() override;
+  Traceable &closestHit(const Ray &r) override;
   std::vector<float> intersectionsSorted() const;
 
  private:
