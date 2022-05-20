@@ -36,16 +36,15 @@ Material::Material(Traceable *tr, const Vec3f &c, float am, float diff,
 
 Vec3f Material::lighting(const PointLight &light, const Ray &ray) {
   Vec3f effective_color = m_color * light.intensity();
-  Point3f p = record().point(ray);
+  Point3f p = record().point(ray) + normal(record().point(ray)) * 0.0001f;
+  Vec3f normal_vec = record().inside ? -normal(p) : normal(p);
   Vec3f lightv = (light.position() - p).normalize();
 
   Vec3f ret_ambient = effective_color * m_ambient;
   Vec3f ret_diffuse;
   Vec3f ret_specular;
-  Vec3f normal_vec = record().inside ? -normal(p) : normal(p);
 
-  Point3f over_point = p + normal_vec * 0.0015f;
-  if (isShadowed(light, over_point)) return ret_ambient;
+  if (isShadowed(light, p)) return ret_ambient;
 
   float light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {
@@ -66,7 +65,7 @@ bool Traceable::isShadowed(const PointLight &l, const Point3f &p) {
   float distance = v.length();
   Vec3f direction = v.normalize();
   Ray r(p, direction);
-  intersect(r);
-  if (record().t_min() > 0 && record().t_min() < distance) return true;
+  if (intersect(r) && record().t_min() > 0 && record().t_min() < distance)
+    return true;
   return false;
 }

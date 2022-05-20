@@ -24,9 +24,9 @@ class Traceable {
     if (dot(record().eye(r), normal(record().point(r))) < 0.0f)
       rec.inside = true;
   }
+  virtual bool isShadowed(const PointLight &l, const Point3f &p);
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
-  bool isShadowed(const PointLight &l, const Point3f &p);
 
   struct Record {
     int count = 0;
@@ -70,6 +70,9 @@ class TraceableDeco : public Traceable {
   void checkInside(const Ray &r) override {
     return m_traceable->checkInside(r);
   }
+  bool isShadowed(const PointLight &l, const Point3f &p) override {
+    return m_traceable->isShadowed(l, p);
+  }
 
  protected:
   Traceable *m_traceable;
@@ -87,6 +90,9 @@ class Transformer : public TraceableDeco {
   std::string name() const override { return TraceableDeco::name(); }
   Record record() const override { return TraceableDeco::record(); }
   Vec3f normal(const Point3f &p) const override;
+  bool isShadowed(const PointLight &l, const Point3f &p) override {
+    return TraceableDeco::isShadowed(l, p);
+  }
 
  private:
   Mat4f m_transformer;
@@ -104,6 +110,9 @@ class Material : public TraceableDeco {
   Record record() const override { return TraceableDeco::record(); }
   Vec3f normal(const Point3f &p) const override {
     return TraceableDeco::normal(p);
+  }
+  bool isShadowed(const PointLight &l, const Point3f &p) override {
+    return TraceableDeco::isShadowed(l, p);
   }
 
  protected:
