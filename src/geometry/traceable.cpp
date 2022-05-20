@@ -17,8 +17,7 @@ Vec3f Transformer::normal(const Point3f &p) const {
   Vec3f object_normal = object_point - Point3f(0.0f, 0.0f, 0.0f);
   v4 = object_normal;
   v4 = m_transformer.inverse().transpose() * v4;
-  object_point = v4;
-  return TraceableDeco::normal(object_point);
+  return TraceableDeco::normal(Point3f(v4));
 }
 
 /*****************************
@@ -36,7 +35,10 @@ Material::Material(Traceable *tr, const Vec3f &c, float am, float diff,
 
 Vec3f Material::lighting(const PointLight &light, const Ray &ray) {
   Vec3f effective_color = m_color * light.intensity();
-  Point3f p = record().point(ray) + normal(record().point(ray)) * 0.0001f;
+  Point3f p =
+      record().point(ray) + (record().inside ? -normal(record().point(ray))
+                                             : normal(record().point(ray))) *
+                                0.000001f;
   Vec3f normal_vec = record().inside ? -normal(p) : normal(p);
   Vec3f lightv = (light.position() - p).normalize();
 

@@ -68,7 +68,7 @@ class SphereBuilder {
   virtual void transformSphere(const Mat4f &m) {}
   virtual void colorSphere(const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
                            float am = 0.1f, float diff = 0.9f,
-                           float spec = 0.9f, float shi = 10.0f) {}
+                           float spec = 0.9f, float shi = 200.0f) {}
   virtual std::shared_ptr<Traceable> getSphere() { return nullptr; }
 
  protected:
@@ -87,7 +87,7 @@ class StandardSphere : public SphereBuilder {
   }
   void colorSphere(const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f), float am = 0.1f,
                    float diff = 0.9f, float spec = 0.9f,
-                   float shi = 10.0f) override {
+                   float shi = 200.0f) override {
     m_currentSphere = new Material(m_currentSphere, c, am, diff, spec, shi);
   }
   std::shared_ptr<Traceable> getSphere() override {
