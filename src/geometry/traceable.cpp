@@ -40,10 +40,12 @@ Vec3f Material::lighting(const PointLight &light, const Ray &ray) {
   Vec3f lightv = (light.position() - p).normalize();
 
   Vec3f ret_ambient = effective_color * m_ambient;
-  if (isShadowed(light, p)) return ret_ambient;
   Vec3f ret_diffuse;
   Vec3f ret_specular;
   Vec3f normal_vec = record().inside ? -normal(p) : normal(p);
+
+  Point3f over_point = p + normal_vec * static_cast<float>(1.E-2);
+  if (isShadowed(light, over_point)) return ret_ambient;
 
   float light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {

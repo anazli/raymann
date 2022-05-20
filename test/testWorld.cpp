@@ -389,3 +389,17 @@ TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
   Traceable &t = w.closestHit();
   ASSERT_FALSE(t.isShadowed(light, p));
 }
+
+TEST_F(Tworld, intersectionWithShadows) {
+  shared_ptr<Traceable> s1 = scene.createSphere(builder);
+  w.add(s1);
+  shared_ptr<Traceable> s2 =
+      scene.createTransformedSphere(builder, translation(0.0f, 0.0f, 10.0f));
+  w.add(s2);
+  Ray r(Point3f(0.0f, 0.0f, 5.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  light = PointLight(Point3f(0.0f, 0.0f, 10.0f), Vec3f(1.0f, 1.0f, 1.0f));
+  w.intersect(r);
+  Traceable &t = w.closestHit();
+  Vec3f color = t.lighting(light, r);
+  ASSERT_TRUE(color == Vec3f(0.1f, 0.1f, 0.1f));
+}
