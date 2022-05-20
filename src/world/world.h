@@ -14,6 +14,7 @@ class World : public Traceable {
   bool isWorld() const override { return true; }
   Traceable &closestHit() override;
   std::vector<float> intersectionsSorted() const;
+  bool isShadowed(const PointLight &l, const Point3f &p);
 
  private:
   std::list<std::shared_ptr<Traceable>> m_traceable_list;

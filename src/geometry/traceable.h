@@ -33,9 +33,9 @@ class Traceable {
     float t1 = 0.0f;
     float t2 = 0.0f;
     float t_min() const {
-      if (t1 < 0.0f)
+      if (t1 < 0.0f && t2 > 0.0f)
         return t2;
-      else if (t2 < 0.0f)
+      else if (t2 < 0.0f && t1 > 0.0f)
         return t1;
       return std::min(t1, t2);
     }

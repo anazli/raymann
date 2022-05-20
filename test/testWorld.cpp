@@ -13,8 +13,13 @@ class Tworld : public Test {
   Scene scene;
   World w;
   std::shared_ptr<SphereBuilder> builder;
+  PointLight light;
 
-  Tworld() : w(World()), builder(new StandardSphere) {}
+  Tworld()
+      : w(World()),
+        builder(new StandardSphere),
+        light(PointLight(Point3f(-10.0f, 10.0f, -10.0f),
+                         Vec3f(1.0f, 1.0f, 1.0f))) {}
 };
 
 TEST_F(Tworld, createsWorldOfShere) {
@@ -343,4 +348,32 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
   Traceable &t = w.closestHit();
 
   ASSERT_TRUE(&t == s2.get());  // color of the inner sphere
+}
+
+TEST_F(Tworld, noShadowWhenNothingCollinear) {
+  shared_ptr<Traceable> s1 = scene.createSphere(builder);
+  w.add(s1);
+  Point3f p(0.0f, 10.0f, 0.0f);
+  ASSERT_FALSE(w.isShadowed(light, p));
+}
+
+TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
+  shared_ptr<Traceable> s1 = scene.createSphere(builder);
+  w.add(s1);
+  Point3f p(10.0f, -10.0f, 10.0f);
+  ASSERT_TRUE(w.isShadowed(light, p));
+}
+
+TEST_F(Tworld, noShadowWhenObjectBehindLight) {
+  shared_ptr<Traceable> s1 = scene.createSphere(builder);
+  w.add(s1);
+  Point3f p(-20.0f, 20.0f, -20.0f);
+  ASSERT_FALSE(w.isShadowed(light, p));
+}
+
+TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
+  shared_ptr<Traceable> s1 = scene.createSphere(builder);
+  w.add(s1);
+  Point3f p(-2.0f, 2.0f, -2.0f);
+  ASSERT_FALSE(w.isShadowed(light, p));
 }
