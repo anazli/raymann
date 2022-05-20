@@ -11,7 +11,7 @@ using namespace std;
 
 int main() {
   Scene scene;
-  PointLight light(Point3f(-15.0f, 15.0f, -15.0f), Vec3f(0.7f, 0.7f, 0.7f));
+  PointLight light(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
 
   shared_ptr<SphereBuilder> builder = make_shared<StandardSphere>();
 
