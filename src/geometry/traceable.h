@@ -24,7 +24,9 @@ class Traceable {
     if (dot(record().eye(r), normal(record().point(r))) < 0.0f)
       rec.inside = true;
   }
-  virtual bool isShadowed(const PointLight &l, const Point3f &p);
+  virtual bool isShadowed(const PointLight &l, const Point3f &p) {
+    return false;
+  }
   void setParent(Traceable *t) { m_parent = t; }
   Traceable *getParent() const { return m_parent; }
 
@@ -87,9 +89,15 @@ class Transformer : public TraceableDeco {
     Ray r_transformed = r.transform(m_transformer.inverse());
     return TraceableDeco::intersect(r_transformed);
   }
+  Vec3f lighting(const PointLight &light, const Ray &ray) override {
+    return TraceableDeco::lighting(light, ray);
+  }
   std::string name() const override { return TraceableDeco::name(); }
   Record record() const override { return TraceableDeco::record(); }
   Vec3f normal(const Point3f &p) const override;
+  void checkInside(const Ray &r) override {
+    return TraceableDeco::checkInside(r);
+  }
   bool isShadowed(const PointLight &l, const Point3f &p) override {
     return TraceableDeco::isShadowed(l, p);
   }
@@ -110,6 +118,9 @@ class Material : public TraceableDeco {
   Record record() const override { return TraceableDeco::record(); }
   Vec3f normal(const Point3f &p) const override {
     return TraceableDeco::normal(p);
+  }
+  void checkInside(const Ray &r) override {
+    return TraceableDeco::checkInside(r);
   }
   bool isShadowed(const PointLight &l, const Point3f &p) override {
     return TraceableDeco::isShadowed(l, p);

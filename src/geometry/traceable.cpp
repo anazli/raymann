@@ -60,13 +60,3 @@ Vec3f Material::lighting(const PointLight &light, const Ray &ray) {
 
   return ret_ambient + ret_diffuse + ret_specular;
 }
-
-bool Traceable::isShadowed(const PointLight &l, const Point3f &p) {
-  Vec3f v = l.position() - p;
-  float distance = v.length();
-  Vec3f direction = v.normalize();
-  Ray r(p, direction);
-  if (intersect(r) && record().t_min() > 0 && record().t_min() < distance)
-    return true;
-  return false;
-}
