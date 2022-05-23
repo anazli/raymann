@@ -11,35 +11,37 @@ using std::vector;
 class Tworld : public Test {
  public:
   Scene scene;
-  World w;
+  shared_ptr<Traceable> w;
   std::shared_ptr<SphereBuilder> builder;
   PointLight light;
 
   Tworld()
-      : w(World()),
+      : w(new World()),
         builder(new StandardSphere),
         light(PointLight(Point3f(-10.0f, 10.0f, -10.0f),
-                         Vec3f(1.0f, 1.0f, 1.0f))) {}
+                         Vec3f(1.0f, 1.0f, 1.0f))) {
+    w->setLight(light);
+  }
 };
 
 TEST_F(Tworld, createsWorldOfShere) {
   shared_ptr<Traceable> s = scene.createSphere(builder);
-  w.add(s);
-  ASSERT_TRUE(s->getParent() == &w);
+  w->add(s);
+  ASSERT_TRUE(s->getParent() == w.get());
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
 
-  ASSERT_TRUE(w.intersect(r));
+  ASSERT_TRUE(w->intersect(r));
   ASSERT_EQ(s->record().count, 2);
   ASSERT_EQ(s->record().t1, 4.0f);
   ASSERT_EQ(s->record().t2, 6.0f);
 
-  Traceable &closest = w.closestHit(r);
+  Traceable &closest = w->closestHit(r);
   ASSERT_EQ(closest.record().t_min(), s->record().t_min());
   ASSERT_EQ(closest.record().t1, s->record().t1);
   ASSERT_EQ(closest.record().t2, s->record().t2);
 
-  w.remove(s, false);
-  ASSERT_FALSE(s->getParent() == &w);
+  w->remove(s, false);
+  ASSERT_FALSE(s->getParent() == w.get());
   ASSERT_TRUE(s->getParent() == nullptr);
 }
 
@@ -50,11 +52,11 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
       scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
                          Point3f(0.0f, 0.0f, 5.0f), 1.0f);
 
-  w.add(s);
-  w.add(s1);
-  ASSERT_TRUE(s->getParent() == &w);
-  ASSERT_TRUE(s1->getParent() == &w);
-  ASSERT_TRUE(w.intersect(r));
+  w->add(s);
+  w->add(s1);
+  ASSERT_TRUE(s->getParent() == w.get());
+  ASSERT_TRUE(s1->getParent() == w.get());
+  ASSERT_TRUE(w->intersect(r));
 
   ASSERT_EQ(s->record().count, 2);
   ASSERT_EQ(s->record().t1, 4.0f);
@@ -63,17 +65,17 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   ASSERT_EQ(s1->record().t1, 9.0f);
   ASSERT_EQ(s1->record().t2, 11.0f);
 
-  Traceable &closest = w.closestHit(r);
+  Traceable &closest = w->closestHit(r);
   ASSERT_EQ(closest.record().t_min(), s->record().t_min());
   ASSERT_EQ(closest.record().t1, s->record().t1);
   ASSERT_EQ(closest.record().t2, s->record().t2);
 
-  w.remove(s, false);
-  w.remove(s1, false);
+  w->remove(s, false);
+  w->remove(s1, false);
 
-  ASSERT_FALSE(s->getParent() == &w);
+  ASSERT_FALSE(s->getParent() == w.get());
   ASSERT_TRUE(s->getParent() == nullptr);
-  ASSERT_FALSE(s1->getParent() == &w);
+  ASSERT_FALSE(s1->getParent() == w.get());
   ASSERT_TRUE(s1->getParent() == nullptr);
 }
 
@@ -84,9 +86,9 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
       scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
                          Point3f(0.0f, 0.0f, -8.0f), 1.0f);
 
-  w.add(s);
-  w.add(s1);
-  ASSERT_TRUE(w.intersect(r));
+  w->add(s);
+  w->add(s1);
+  ASSERT_TRUE(w->intersect(r));
 
   ASSERT_EQ(s->record().count, 2);
   ASSERT_EQ(s->record().t1, 4.0f);
@@ -95,7 +97,7 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   ASSERT_EQ(s1->record().t1, -4.0f);
   ASSERT_EQ(s1->record().t2, -2.0f);
 
-  Traceable &closest = w.closestHit(r);
+  Traceable &closest = w->closestHit(r);
   ASSERT_EQ(closest.record().t_min(), s->record().t_min());
   ASSERT_EQ(closest.record().t1, s->record().t1);
   ASSERT_EQ(closest.record().t2, s->record().t2);
@@ -110,9 +112,9 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
       scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
                          Point3f(0.0f, 0.0f, -8.0f), 1.0f);
 
-  w.add(s);
-  w.add(s1);
-  ASSERT_TRUE(w.intersect(r));
+  w->add(s);
+  w->add(s1);
+  ASSERT_TRUE(w->intersect(r));
 
   ASSERT_EQ(s->record().count, 2);
   ASSERT_EQ(s->record().t1, -7.0f);
@@ -123,7 +125,7 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
 
   // ASSERT_DEATH(Traceable &closest = w.closestHit(), "");  // Running it with
   // valgrind results in signal 6 (SIGABRT)
-  Traceable &closest = w.closestHit(r);
+  Traceable &closest = w->closestHit(r);
   ASSERT_TRUE(&closest == s.get());
 }
 TEST_F(Tworld, createsWorldOfFourSpheres) {
@@ -141,11 +143,11 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
       scene.createSphere(builder, Vec3f(0.09f, 0.172f, 0.909f), 0, 0, 0, 0,
                          Point3f(0.0f, 0.0f, 8.0f), 1.0f);
 
-  w.add(s);
-  w.add(s1);
-  w.add(s2);
-  w.add(s3);
-  ASSERT_TRUE(w.intersect(r));
+  w->add(s);
+  w->add(s1);
+  w->add(s2);
+  w->add(s3);
+  ASSERT_TRUE(w->intersect(r));
 
   ASSERT_EQ(s->record().count, 2);
   ASSERT_EQ(s->record().t1, 9.0f);
@@ -160,7 +162,7 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
   ASSERT_EQ(s3->record().t1, 12.0f);
   ASSERT_EQ(s3->record().t2, 14.0f);
 
-  Traceable &closest = w.closestHit(r);
+  Traceable &closest = w->closestHit(r);
   ASSERT_EQ(closest.record().t_min(), s1->record().t_min());
   ASSERT_EQ(closest.record().t1, s1->record().t1);
   ASSERT_EQ(closest.record().t2, s1->record().t2);
@@ -171,10 +173,10 @@ TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
       scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
   shared_ptr<Traceable> s2 =
       scene.createTransformedSphere(builder, scale(0.5f, 0.5f, 0.5f));
-  w.add(s1);
-  w.add(s2);
-  ASSERT_TRUE(s1->getParent() == &w);
-  ASSERT_TRUE(s2->getParent() == &w);
+  w->add(s1);
+  w->add(s2);
+  ASSERT_TRUE(s1->getParent() == w.get());
+  ASSERT_TRUE(s2->getParent() == w.get());
 }
 
 TEST_F(Tworld, getsVectorOFIntersectionPoints) {
@@ -182,28 +184,28 @@ TEST_F(Tworld, getsVectorOFIntersectionPoints) {
       scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
   shared_ptr<Traceable> s2 =
       scene.createTransformedSphere(builder, scale(0.5f, 0.5f, 0.5f));
-  w.add(s1);
-  w.add(s2);
+  w->add(s1);
+  w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  w.intersect(r);
-  vector<float> v = w.intersectionsSorted();
+  w->intersect(r);
+  /*vector<float> v = w->intersectionsSorted();
 
   ASSERT_EQ(v.size(), 4);
   ASSERT_EQ(v[0], 4.0f);
   ASSERT_EQ(v[1], 4.5f);
   ASSERT_EQ(v[2], 5.5f);
-  ASSERT_EQ(v[3], 6.0f);
+  ASSERT_EQ(v[3], 6.0f);*/
 }
 
 TEST_F(Tworld, computesQuantitiesOfIntersection) {
   shared_ptr<Traceable> s1 =
       scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  w.add(s1);
+  w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  w.intersect(r);
-  Traceable &t = w.closestHit(r);
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
 
   ASSERT_TRUE(t.record().eye(r) == Vec3f(0.0f, 0.0f, -1.0f));
   ASSERT_TRUE(t.record().point(r) == Point3f(0.0f, 0.0f, -1.0f));
@@ -213,12 +215,12 @@ TEST_F(Tworld, computesQuantitiesOfIntersection) {
 TEST_F(Tworld, intersectionWhenHitOccursOutside) {
   shared_ptr<Traceable> s1 =
       scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  w.add(s1);
+  w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  w.intersect(r);
+  w->intersect(r);
 
-  Traceable &t = w.closestHit(r);
+  Traceable &t = w->closestHit(r);
   t.checkInside(r);
 
   ASSERT_FALSE(t.record().inside == true);
@@ -227,12 +229,12 @@ TEST_F(Tworld, intersectionWhenHitOccursOutside) {
 TEST_F(Tworld, intersectionWhenHitOccursInside) {
   shared_ptr<Traceable> s1 =
       scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
-  w.add(s1);
+  w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  w.intersect(r);
+  w->intersect(r);
 
-  Traceable &t = w.closestHit(r);
+  Traceable &t = w->closestHit(r);
   t.checkInside(r);
 
   ASSERT_TRUE(t.record().inside == true);
@@ -243,17 +245,17 @@ TEST_F(Tworld, ShadingAnIntersection) {
       scene.createSphere(builder, Vec3f(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f);
   shared_ptr<Traceable> s2 =
       scene.createTransformedSphere(builder, scale(0.5f, 0.5f, 0.5f));
-  w.add(s1);
-  w.add(s2);
+  w->add(s1);
+  w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  w.intersect(r);
+  w->intersect(r);
 
-  Traceable &t = w.closestHit(r);
+  Traceable &t = w->closestHit(r);
   t.checkInside(r);
 
   PointLight l(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(l, r);
+  Vec3f color = t.lighting(w, r);
 
   ASSERT_TRUE(&t == s1.get());
 
@@ -269,17 +271,17 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
   shared_ptr<Traceable> s2 = scene.createTransformedSphere(
       builder, scale(0.5f, 0.5f, 0.5f), Vec3f(1.0f, 1.0f, 1.0f), 0.1f, 0.9f,
       0.9f, 200.0f);
-  w.add(s1);
-  w.add(s2);
+  w->add(s1);
+  w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  w.intersect(r);
+  w->intersect(r);
 
-  Traceable &t = w.closestHit(r);
+  Traceable &t = w->closestHit(r);
   t.checkInside(r);
 
   PointLight l(Point3f(0.0f, 0.25f, 0.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(l, r);
+  Vec3f color = t.lighting(w, r);
 
   ASSERT_TRUE(&t == s2.get());
 
@@ -295,16 +297,17 @@ TEST_F(Tworld, colorWhenRayMisses) {
   shared_ptr<Traceable> s2 = scene.createTransformedSphere(
       builder, scale(0.5f, 0.5f, 0.5f), Vec3f(1.0f, 1.0f, 1.0f), 0.1f, 0.9f,
       0.9f, 200.0f);
-  w.add(s1);
-  w.add(s2);
+  w->add(s1);
+  w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 1.0f, 0.0f));
-  w.intersect(r);
+  w->intersect(r);
 
-  Traceable &t = w.closestHit(r);
+  Traceable &t = w->closestHit(r);
 
   PointLight l(Point3f(0.0f, 0.00f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f));
-  Vec3f color = t.lighting(l, r);
+  w->setLight(l);
+  Vec3f color = t.lighting(w, r);
 
   ASSERT_EQ(color.x(), 0.0f);
   ASSERT_EQ(color.y(), 0.0f);
@@ -317,16 +320,16 @@ TEST_F(Tworld, colorWhenRayHits) {
   shared_ptr<Traceable> s2 = scene.createTransformedSphere(
       builder, scale(0.5f, 0.5f, 0.5f), Vec3f(1.0f, 1.0f, 1.0f), 0.1f, 0.9f,
       0.9f, 200.0f);
-  w.add(s1);
-  w.add(s2);
+  w->add(s1);
+  w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  w.intersect(r);
+  w->intersect(r);
 
-  Traceable &t = w.closestHit(r);
+  Traceable &t = w->closestHit(r);
 
   PointLight l(Point3f(-10.0f, 10.00f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(l, r);
+  Vec3f color = t.lighting(w, r);
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.38066f, eps);
@@ -340,66 +343,67 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
   shared_ptr<Traceable> s2 = scene.createTransformedSphere(
       builder, scale(0.5f, 0.5f, 0.5f), Vec3f(1.0f, 1.0f, 1.0f), 1.0f, 0.9f,
       0.9f, 200.0f);
-  w.add(s1);
-  w.add(s2);
+  w->add(s1);
+  w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, 0.75f), Vec3f(0.0f, 0.0f, -1.0f));
-  w.intersect(r);
-  Traceable &t = w.closestHit(r);
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
 
   ASSERT_TRUE(&t == s2.get());  // color of the inner sphere
 }
 
 TEST_F(Tworld, noShadowWhenNothingCollinear) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
-  w.add(s1);
+  w->add(s1);
   Point3f p(0.0f, 10.0f, 0.0f);
   Ray r(p, (light.position() - p).normalize());
-  w.intersect(r);
-  Traceable &t = w.closestHit(r);
-  ASSERT_FALSE(t.isShadowed(light, p));
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
+  ASSERT_FALSE(t.isShadowed(w, p));
 }
 
 TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
-  w.add(s1);
+  w->add(s1);
   Point3f p(10.0f, -10.0f, 10.0f);
   Ray r(p, (light.position() - p).normalize());
-  w.intersect(r);
-  Traceable &t = w.closestHit(r);
-  ASSERT_TRUE(t.isShadowed(light, p));
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
+  ASSERT_TRUE(t.isShadowed(w, p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindLight) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
-  w.add(s1);
+  w->add(s1);
   Point3f p(-20.0f, 20.0f, -20.0f);
   Ray r(p, (light.position() - p).normalize());
-  w.intersect(r);
-  Traceable &t = w.closestHit(r);
-  ASSERT_FALSE(t.isShadowed(light, p));
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
+  ASSERT_FALSE(t.isShadowed(w, p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
-  w.add(s1);
+  w->add(s1);
   Point3f p(-2.0f, 2.0f, -2.0f);
   Ray r(p, (light.position() - p).normalize());
-  w.intersect(r);
-  Traceable &t = w.closestHit(r);
-  ASSERT_FALSE(t.isShadowed(light, p));
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
+  ASSERT_FALSE(t.isShadowed(w, p));
 }
 
 TEST_F(Tworld, intersectionWithShadows) {
   shared_ptr<Traceable> s1 = scene.createSphere(builder);
-  w.add(s1);
+  w->add(s1);
   shared_ptr<Traceable> s2 =
       scene.createTransformedSphere(builder, translation(0.0f, 0.0f, 10.0f));
-  w.add(s2);
+  w->add(s2);
   Ray r(Point3f(0.0f, 0.0f, 5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   light = PointLight(Point3f(0.0f, 0.0f, 10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  w.intersect(r);
-  Traceable &t = w.closestHit(r);
-  Vec3f color = t.lighting(light, r);
+  w->setLight(light);
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
+  Vec3f color = t.lighting(w, r);
   ASSERT_TRUE(color == Vec3f(0.1f, 0.1f, 0.1f));
 }
