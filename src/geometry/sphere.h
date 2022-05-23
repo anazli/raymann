@@ -52,9 +52,9 @@ inline bool Sphere::intersect(const Ray &r) {
 }
 
 inline bool Sphere::isShadowed(const PointLight &l, const Point3f &p) {
-  Vec3f v = l.position() - p;
+  Vec3f v = p - l.position();
   float distance = v.length();
-  Ray r(p, v.normalize());
+  Ray r(l.position(), v.normalize());
   if (intersect(r) && record().t_min() >= 0.0f && record().t_min() < distance)
     return true;
   return false;

@@ -14,5 +14,6 @@
 #include "vec4.h"
 
 const float PI = acos(-1.);
+const float EPS = 0.0001f;
 
 #endif  // TOOLS_H

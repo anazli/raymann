@@ -8,7 +8,7 @@ class Plane : public Traceable {
   virtual ~Plane() {}
   bool isWorld() const override { return false; }
   bool intersect(const Ray &r) override {
-    if (fabs(r.direction().y()) < 0.0001f) {
+    if (fabs(r.direction().y()) < EPS) {
       return false;
     }
     rec.t1 = -r.origin().y() / r.direction().y();
@@ -20,9 +20,9 @@ class Plane : public Traceable {
   }
   Record record() const override { return rec; }
   bool isShadowed(const PointLight &l, const Point3f &p) override {
-    Vec3f v = l.position() - p;
+    Vec3f v = p - l.position();
     float distance = v.length();
-    Ray r(p, v.normalize());
+    Ray r(l.position(), v.normalize());
     if (intersect(r) && record().t_min() >= 0.0f && record().t_min() < distance)
       return true;
     return false;
