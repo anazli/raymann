@@ -13,7 +13,8 @@ bool World::intersect(const Ray &r) {
   bool has_intersection = false;
   list<shared_ptr<Traceable>>::iterator it;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
-    if ((*it)->intersect(r)) has_intersection = true;
+    if ((*it)->intersect(r) && (*it)->record().t_min() >= 0.0f)
+      has_intersection = true;  // TODO: to be fixed for negative intersections
   return has_intersection;
 }
 

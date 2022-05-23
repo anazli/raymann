@@ -12,7 +12,6 @@ class Plane : public Traceable {
       return false;
     }
     rec.t1 = -r.origin().y() / r.direction().y();
-    rec.t2 = rec.t1;
     rec.count = 1;
     return true;
   }
@@ -24,7 +23,7 @@ class Plane : public Traceable {
     Vec3f v = l.position() - p;
     float distance = v.length();
     Ray r(p, v.normalize());
-    if (intersect(r) && record().t_min() > 0.0f && record().t_min() < distance)
+    if (intersect(r) && record().t_min() >= 0.0f && record().t_min() < distance)
       return true;
     return false;
   }

@@ -34,8 +34,8 @@ TEST_F(Tsphere, raySphereNoIntersection) {
   r = Ray(Point3f(0.0f, 2.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   ASSERT_FALSE(s.intersect(r));
   ASSERT_EQ(s.record().count, 0);
-  ASSERT_EQ(s.record().t1, 0.0f);
-  ASSERT_EQ(s.record().t2, 0.0f);
+  ASSERT_EQ(s.record().t1, -1.0f);
+  ASSERT_EQ(s.record().t2, -1.0f);
 }
 
 TEST_F(Tsphere, rayOriginAtSphereCenterIntersection) {
