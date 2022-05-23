@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "container/canvas.h"
+#include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "tools/tools.h"
 #include "world/scene.h"
@@ -11,13 +12,12 @@ using namespace std;
 
 int main() {
   Scene scene;
-  PointLight light(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
+  PointLight light(Point3f(-20.0f, 20.0f, -20.0f), Vec3f(1.0f, 1.0f, 1.0f));
 
   shared_ptr<SphereBuilder> builder = make_shared<StandardSphere>();
 
-  shared_ptr<Traceable> floor =
-      scene.createTransformedSphere(builder, scale(10.0f, 0.01f, 10.0f),
-                                    Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  shared_ptr<Traceable> floor(
+      new Material(new Plane(), Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f));
 
   shared_ptr<Traceable> left_wall = scene.createTransformedSphere(
       builder,
@@ -54,8 +54,8 @@ int main() {
 
   unique_ptr<Traceable> w = make_unique<World>();
   w->add(floor);
-  w->add(left_wall);
-  w->add(right_wall);
+  // w->add(left_wall);
+  // w->add(right_wall);
   w->add(middle);
   w->add(right);
   w->add(left);
