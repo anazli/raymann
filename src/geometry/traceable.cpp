@@ -37,7 +37,7 @@ Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray &ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
-                                0.001f;
+                                0.02f;
   Vec3f normal_vec = record().inside ? -normal(p) : normal(p);
   Vec3f lightv = (w->getLight().position() - p).normalize();
 

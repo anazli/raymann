@@ -48,8 +48,8 @@ int main() {
   shared_ptr<Traceable> w = make_shared<World>();
   w->setLight(light);
   w->add(floor);
-  // w->add(left_wall);
-  // w->add(right_wall);
+  w->add(left_wall);
+  w->add(right_wall);
   w->add(middle);
   w->add(right);
   w->add(left);
