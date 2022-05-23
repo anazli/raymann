@@ -32,20 +32,20 @@ Material::Material(Traceable *tr, const Vec3f &c, float am, float diff,
       m_specular(spec),
       m_shininess(shi) {}
 
-Vec3f Material::lighting(const PointLight &light, const Ray &ray) {
-  Vec3f effective_color = m_color * light.intensity();
+Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray &ray) {
+  Vec3f effective_color = m_color * w->getLight().intensity();
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 EPS;
   Vec3f normal_vec = record().inside ? -normal(p) : normal(p);
-  Vec3f lightv = (light.position() - p).normalize();
+  Vec3f lightv = (w->getLight().position() - p).normalize();
 
   Vec3f ret_ambient = effective_color * m_ambient;
   Vec3f ret_diffuse;
   Vec3f ret_specular;
 
-  if (isShadowed(light, p)) return ret_ambient;
+  if (isShadowed(w, p)) return ret_ambient;
 
   float light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {
@@ -54,7 +54,7 @@ Vec3f Material::lighting(const PointLight &light, const Ray &ray) {
     float reflect_dot_eye = dot(reflectv, record().eye(ray));
     if (reflect_dot_eye > 0.0f) {
       float factor = pow(reflect_dot_eye, m_shininess);
-      ret_specular = light.intensity() * m_specular * factor;
+      ret_specular = w->getLight().intensity() * m_specular * factor;
     }
   }
 

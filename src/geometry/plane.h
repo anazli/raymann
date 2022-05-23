@@ -19,12 +19,15 @@ class Plane : public Traceable {
     return Vec3f(0.0f, 1.0f, 0.0f);
   }
   Record record() const override { return rec; }
-  bool isShadowed(const PointLight &l, const Point3f &p) override {
-    Vec3f v = p - l.position();
+  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override {
+    Vec3f v = p - w->getLight().position();
     float distance = v.length();
-    Ray r(l.position(), v.normalize());
-    if (intersect(r) && record().t_min() >= 0.0f && record().t_min() < distance)
-      return true;
+    Ray r(w->getLight().position(), v.normalize());
+    if (w->intersect(r)) {
+      Traceable &t = w->closestHit(r);
+      if (t.record().t_min() >= 0.0f && t.record().t_min() < distance)
+        return true;
+    }
     return false;
   }
 };

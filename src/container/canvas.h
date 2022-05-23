@@ -18,8 +18,7 @@ class Canvas {
   // void setHeight(const int &h) { m_height = h; }
   void setFileName(const std::string &fn) { m_fileName = fn; }
 
-  void render(std::unique_ptr<Traceable> tr, const Camera &c,
-              const PointLight &light);
+  void render(std::shared_ptr<Traceable> tr, const Camera &c);
   void writePixel(const int &x, const int &y, const Vec3f &color) {
     m_pixels[x][y] = color;
   }
