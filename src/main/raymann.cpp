@@ -5,35 +5,46 @@
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "tools/tools.h"
-#include "world/scene.h"
 #include "world/world.h"
 
 using namespace std;
 
 int main() {
-  Scene scene;
   shared_ptr<SphereBuilder> builder = make_shared<StandardSphere>();
+
   shared_ptr<Traceable> floor(
       new Material(new Plane(), Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f));
-  shared_ptr<Traceable> left_wall = scene.createTransformedSphere(
-      builder,
-      translation(0.0f, 0.0f, 5.0f) * rotationY(-PI / 4.0f) *
-          rotationX(PI / 2.0f) * scale(10.0f, 0.01f, 10.0f),
-      Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
-  shared_ptr<Traceable> right_wall = scene.createTransformedSphere(
-      builder,
-      translation(0.0f, 0.0f, 5.0f) * rotationY(PI / 4.0f) *
-          rotationX(PI / 2.0f) * scale(10.0f, 0.01f, 10.0f),
-      Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
-  shared_ptr<Traceable> middle =
-      scene.createTransformedSphere(builder, translation(-0.5f, 1.0f, 0.5f),
-                                    Vec3f(0.1f, 1.0f, 0.5f), 0.1f, 0.7f, 0.3f);
-  shared_ptr<Traceable> right = scene.createTransformedSphere(
-      builder, translation(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f),
-      Vec3f(0.5f, 1.0f, 0.1f), 0.1f, 0.7f, 0.3f);
-  shared_ptr<Traceable> left = scene.createTransformedSphere(
-      builder, translation(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f),
-      Vec3f(1.0f, 0.8f, 0.1f), 0.1f, 0.7f, 0.3f);
+
+  builder->addSphere();
+  builder->transformSphere(translation(0.0f, 0.0f, 5.0f) *
+                           rotationY(-PI / 4.0f) * rotationX(PI / 2.0f) *
+                           scale(10.0f, 0.01f, 10.0f));
+  builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  shared_ptr<Traceable> left_wall = builder->getSphere();
+
+  builder->addSphere();
+  builder->transformSphere(translation(0.0f, 0.0f, 5.0f) *
+                           rotationY(PI / 4.0f) * rotationX(PI / 2.0f) *
+                           scale(10.0f, 0.01f, 10.0f));
+  builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  shared_ptr<Traceable> right_wall = builder->getSphere();
+
+  builder->addSphere();
+  builder->transformSphere(translation(-0.5f, 1.0f, 0.5f));
+  builder->addColor(Vec3f(0.1f, 0.0f, 1.0f), 0.1f, 0.7f, 0.3f);
+  shared_ptr<Traceable> middle = builder->getSphere();
+
+  builder->addSphere();
+  builder->transformSphere(translation(1.5f, 0.5f, -0.5f) *
+                           scale(0.5f, 0.5f, 0.5f));
+  builder->addColor(Vec3f(1.0f, 0.0f, 0.1f), 0.1f, 0.7f, 0.3f);
+  shared_ptr<Traceable> right = builder->getSphere();
+
+  builder->addSphere();
+  builder->transformSphere(translation(-1.5f, 0.33f, -0.75f) *
+                           scale(0.33f, 0.33f, 0.33f));
+  builder->addColor(Vec3f(0.8f, 0.8f, 0.8f), 0.1f, 0.7f, 0.3f);
+  shared_ptr<Traceable> left = builder->getSphere();
 
   Canvas canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
@@ -44,7 +55,7 @@ int main() {
   Vec3f up(0.0f, 1.0f, 0.0f);
   c.setTransform(view_transform(from, to, up));
 
-  PointLight light(Point3f(-20.0f, 20.0f, -20.0f), Vec3f(1.0f, 1.0f, 1.0f));
+  PointLight light(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
   shared_ptr<Traceable> w = make_shared<World>();
   w->setLight(light);
   w->add(floor);
