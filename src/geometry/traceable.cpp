@@ -60,3 +60,13 @@ Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray &ray) {
 
   return ret_ambient + ret_diffuse + ret_specular;
 }
+
+Vec3f StripePattern::lighting(std::shared_ptr<Traceable> w, const Ray &ray) {
+  Point3f p =
+      record().point(ray) + (record().inside ? normal(record().point(ray))
+                                             : normal(record().point(ray))) *
+                                0.02f;
+
+  m_color = stripe_at(p);
+  return Material::lighting(w, ray);
+}

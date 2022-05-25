@@ -31,7 +31,8 @@ int main() {
 
   builder->addSphere();
   builder->transformSphere(translation(-0.5f, 1.0f, 0.5f));
-  builder->addColor(Vec3f(0.1f, 0.0f, 1.0f), 0.1f, 0.7f, 0.3f);
+  // builder->addColor(Vec3f(0.1f, 0.0f, 1.0f), 0.1f, 0.7f, 0.3f);
+  builder->addStripePattern(Vec3f(1.0f, 0.1f, 0.1f), Vec3f(0.1f, 0.1f, 1.0f));
   shared_ptr<Traceable> middle = builder->getSphere();
 
   builder->addSphere();
