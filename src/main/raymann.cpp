@@ -10,11 +10,12 @@
 using namespace std;
 
 int main() {
-  shared_ptr<SphereBuilder> builder = make_shared<StandardSphere>();
-
+  //----------------------Floor---------------------
   shared_ptr<Traceable> floor(
       new Material(new Plane(), Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f));
 
+  //----------------------Left wall---------------------
+  shared_ptr<SphereBuilder> builder = make_shared<StandardSphere>();
   builder->addSphere();
   builder->transformSphere(translation(0.0f, 0.0f, 5.0f) *
                            rotationY(-PI / 4.0f) * rotationX(PI / 2.0f) *
@@ -22,6 +23,7 @@ int main() {
   builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
   shared_ptr<Traceable> left_wall = builder->getSphere();
 
+  //----------------------Right wall---------------------
   builder->addSphere();
   builder->transformSphere(translation(0.0f, 0.0f, 5.0f) *
                            rotationY(PI / 4.0f) * rotationX(PI / 2.0f) *
@@ -29,18 +31,21 @@ int main() {
   builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
   shared_ptr<Traceable> right_wall = builder->getSphere();
 
+  //----------------------Middle sphere---------------------
   builder->addSphere();
   builder->transformSphere(translation(-0.5f, 1.0f, 0.5f));
   // builder->addColor(Vec3f(0.1f, 0.0f, 1.0f), 0.1f, 0.7f, 0.3f);
   builder->addStripePattern(Vec3f(1.0f, 0.1f, 0.1f), Vec3f(0.1f, 0.1f, 1.0f));
   shared_ptr<Traceable> middle = builder->getSphere();
 
+  //----------------------Right sphere---------------------
   builder->addSphere();
   builder->transformSphere(translation(1.5f, 0.5f, -0.5f) *
                            scale(0.5f, 0.5f, 0.5f));
   builder->addColor(Vec3f(1.0f, 0.0f, 0.1f), 0.1f, 0.7f, 0.3f);
   shared_ptr<Traceable> right = builder->getSphere();
 
+  //----------------------Left sphere---------------------
   builder->addSphere();
   builder->transformSphere(translation(-1.5f, 0.33f, -0.75f) *
                            scale(0.33f, 0.33f, 0.33f));
