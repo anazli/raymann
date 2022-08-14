@@ -35,7 +35,7 @@ struct Record {
 
 class Traceable {
  public:
-  virtual ~Traceable() {}
+  virtual ~Traceable();
   virtual bool intersect(const Ray &r) = 0;
   virtual Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray);
   virtual void add(std::shared_ptr<Traceable> item) {}
@@ -87,26 +87,16 @@ class TraceableDeco : public Traceable {
 
 class Transformer : public TraceableDeco {
  public:
-  Transformer(Traceable *tr) : TraceableDeco(tr) { m_transformer.identity(); }
-  Transformer(Traceable *tr, const Mat4f &m)
-      : TraceableDeco(tr), m_transformer(m) {}
-  virtual ~Transformer() {}
-  bool intersect(const Ray &r) override {
-    Ray r_transformed = r.transform(m_transformer.inverse());
-    return TraceableDeco::intersect(r_transformed);
-  }
-  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override {
-    return TraceableDeco::lighting(w, ray);
-  }
-  std::string name() const override { return TraceableDeco::name(); }
-  Record record() const override { return TraceableDeco::record(); }
+  Transformer(Traceable *tr);
+  Transformer(Traceable *tr, const Mat4f &m);
+  virtual ~Transformer();
+  bool intersect(const Ray &r) override;
+  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
+  std::string name() const override;
+  Record record() const override;
   Vec3f normal(const Point3f &p) const override;
-  void checkInside(const Ray &r) override {
-    return TraceableDeco::checkInside(r);
-  }
-  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override {
-    return TraceableDeco::isShadowed(w, p);
-  }
+  void checkInside(const Ray &r) override;
+  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override;
 
  private:
   Mat4f m_transformer;
@@ -118,25 +108,19 @@ class Transformer : public TraceableDeco {
 
 class Material : public TraceableDeco {
  public:
-  Material(Traceable *tr, Vec3f &color) : TraceableDeco(tr), m_color(color) {}
+  Material(Traceable *tr, Vec3f &color);
   Material(Traceable *tr, const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
            float am = 0.1f, float diff = 0.9f, float spec = 0.9f,
            float shi = 200.0f);
-  virtual ~Material() {}
+  virtual ~Material();
 
-  bool intersect(const Ray &r) override { return TraceableDeco::intersect(r); }
+  bool intersect(const Ray &r) override;
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
-  std::string name() const override { return TraceableDeco::name(); }
-  Record record() const override { return TraceableDeco::record(); }
-  Vec3f normal(const Point3f &p) const override {
-    return TraceableDeco::normal(p);
-  }
-  void checkInside(const Ray &r) override {
-    return TraceableDeco::checkInside(r);
-  }
-  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override {
-    return TraceableDeco::isShadowed(w, p);
-  }
+  std::string name() const override;
+  Record record() const override;
+  Vec3f normal(const Point3f &p) const override;
+  void checkInside(const Ray &r) override;
+  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override;
 
  protected:
   Vec3f m_color = Vec3f(1.0f, 1.0f, 1.0f);
@@ -153,25 +137,19 @@ class Material : public TraceableDeco {
 class StripePattern : public Material {
  public:
   StripePattern(Traceable *tr, const Vec3f &a = Vec3f(1.0f, 1.0f, 1.0f),
-                const Vec3f &b = Vec3f())
-      : Material(tr), m_color_a(a), m_color_b(b) {}
+                const Vec3f &b = Vec3f());
 
-  bool intersect(const Ray &r) override { return Material::intersect(r); }
+  bool intersect(const Ray &r) override;
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
-  std::string name() const override { return Material::name(); }
-  Record record() const override { return Material::record(); }
-  Vec3f normal(const Point3f &p) const override { return Material::normal(p); }
-  void checkInside(const Ray &r) override { return Material::checkInside(r); }
-  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override {
-    return Material::isShadowed(w, p);
-  }
+  std::string name() const override;
+  Record record() const override;
+  Vec3f normal(const Point3f &p) const override;
+  void checkInside(const Ray &r) override;
+  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override;
 
  private:
   Vec3f m_color_a;
   Vec3f m_color_b;
 
-  Vec3f stripe_at(const Point3f &p) {
-    if (fmod(floor(p.x()), 2.0f) == 0.0f) return m_color_a;
-    return m_color_b;
-  }
+  Vec3f stripe_at(const Point3f &p);
 };
