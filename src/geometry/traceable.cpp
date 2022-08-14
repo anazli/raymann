@@ -6,11 +6,43 @@ using std::list;
 using std::sort;
 using std::vector;
 
-/*****************************
- * 		 Transformer
- * ***************************/
+//------------------------------------------------------------------------------
+//---------------------------Abstract Traceable---------------------------------
+//------------------------------------------------------------------------------
 
-Vec3f Transformer::normal(const Point3f &p) const {
+Vec3f Traceable::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+  return Vec3f();
+}
+
+bool Traceable::isWorld() const { return false; }
+
+Vec3f Traceable::normal(const Point3f& p) const { return Vec3f(); }
+
+std::string Traceable::name() const { return m_name; }
+
+Traceable& Traceable::closestHit(const Ray& r) { return *this; }
+
+void Traceable::checkInside(const Ray& r) {
+  if (dot(record().eye(r), normal(record().point(r))) < 0.0f) rec.inside = true;
+}
+
+bool Traceable::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
+  return false;
+}
+
+PointLight Traceable::getLight() const { return PointLight(); }
+
+void Traceable::setParent(Traceable* t) { m_parent = t; }
+
+Traceable* Traceable::getParent() const { return m_parent; }
+
+Record Traceable::record() const { return rec; }
+
+//------------------------------------------------------------------------------
+//---------------------------Transformer----------------------------------------
+//------------------------------------------------------------------------------
+
+Vec3f Transformer::normal(const Point3f& p) const {
   Vec4f v4 = p;
   Point3f object_point = m_transformer.inverse() * v4;
   Vec3f object_normal = TraceableDeco::normal(object_point);
@@ -19,11 +51,11 @@ Vec3f Transformer::normal(const Point3f &p) const {
   return world_normal.normalize();
 }
 
-/*****************************
- * 		    Material
- * ***************************/
+//------------------------------------------------------------------------------
+//---------------------------Material-------------------------------------------
+//------------------------------------------------------------------------------
 
-Material::Material(Traceable *tr, const Vec3f &c, float am, float diff,
+Material::Material(Traceable* tr, const Vec3f& c, float am, float diff,
                    float spec, float shi)
     : TraceableDeco(tr),
       m_color(c),
@@ -32,7 +64,7 @@ Material::Material(Traceable *tr, const Vec3f &c, float am, float diff,
       m_specular(spec),
       m_shininess(shi) {}
 
-Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray &ray) {
+Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Vec3f effective_color = m_color * w->getLight().intensity();
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
@@ -61,7 +93,11 @@ Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray &ray) {
   return ret_ambient + ret_diffuse + ret_specular;
 }
 
-Vec3f StripePattern::lighting(std::shared_ptr<Traceable> w, const Ray &ray) {
+//------------------------------------------------------------------------------
+//---------------------------Stripe Pattern-------------------------------------
+//------------------------------------------------------------------------------
+
+Vec3f StripePattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
