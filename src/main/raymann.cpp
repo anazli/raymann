@@ -31,24 +31,26 @@ int main() {
   builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
   shared_ptr<Traceable> right_wall = builder->getSphere();
 
+  Vec3f pattern_colorA(0.1f, 0.1f, 1.0f);
+  Vec3f pattern_colorB(1.0f, 0.1f, 0.1f);
   //----------------------Middle sphere---------------------
   builder->addSphere();
   builder->transformSphere(translation(-0.5f, 1.0f, 0.5f));
-  builder->addStripePattern(Vec3f(1.0f, 0.1f, 0.1f), Vec3f(0.1f, 0.1f, 1.0f));
+  builder->addStripePattern(pattern_colorA, pattern_colorB);
   shared_ptr<Traceable> middle = builder->getSphere();
 
   //----------------------Right sphere---------------------
   builder->addSphere();
   builder->transformSphere(translation(1.5f, 0.5f, -0.5f) *
                            scale(0.5f, 0.5f, 0.5f));
-  builder->addColor(Vec3f(1.0f, 0.0f, 0.1f), 0.1f, 0.7f, 0.3f);
+  builder->addRingPattern(pattern_colorA, pattern_colorB);
   shared_ptr<Traceable> right = builder->getSphere();
 
   //----------------------Left sphere---------------------
   builder->addSphere();
   builder->transformSphere(translation(-1.5f, 0.33f, -0.75f) *
                            scale(0.33f, 0.33f, 0.33f));
-  builder->addGradientPattern(Vec3f(1.0f, 0.1f, 0.1f), Vec3f(0.1f, 0.1f, 1.0f));
+  builder->addGradientPattern(pattern_colorA, pattern_colorB);
   shared_ptr<Traceable> left = builder->getSphere();
 
   Canvas canvas(600, 600);

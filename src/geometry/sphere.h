@@ -75,6 +75,8 @@ class SphereBuilder {
                                 const Vec3f &colorB = Vec3f()) {}
   virtual void addGradientPattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
                                   const Vec3f &colorB = Vec3f()) {}
+  virtual void addRingPattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
+                              const Vec3f &colorB = Vec3f()) {}
   virtual std::shared_ptr<Traceable> getSphere() { return nullptr; }
 
  protected:
@@ -103,6 +105,10 @@ class StandardSphere : public SphereBuilder {
   void addGradientPattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
                           const Vec3f &colorB = Vec3f()) override {
     m_currentSphere = new GradientPattern(m_currentSphere, colorA, colorB);
+  }
+  void addRingPattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
+                      const Vec3f &colorB = Vec3f()) override {
+    m_currentSphere = new RingPattern(m_currentSphere, colorA, colorB);
   }
   std::shared_ptr<Traceable> getSphere() override {
     std::shared_ptr<Traceable> ret(m_currentSphere);

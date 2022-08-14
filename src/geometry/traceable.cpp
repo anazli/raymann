@@ -187,32 +187,13 @@ bool Material::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
 StripePattern::StripePattern(Traceable* tr, const Vec3f& a, const Vec3f& b)
     : Material(tr), m_color_a(a), m_color_b(b) {}
 
-bool StripePattern::intersect(const Ray& r) { return Material::intersect(r); }
-
 Vec3f StripePattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
-
   m_color = stripe_at(p);
   return Material::lighting(w, ray);
-}
-
-std::string StripePattern::name() const { return Material::name(); }
-
-Record StripePattern::record() const { return Material::record(); }
-
-Vec3f StripePattern::normal(const Point3f& p) const {
-  return Material::normal(p);
-}
-
-void StripePattern::checkInside(const Ray& r) {
-  return Material::checkInside(r);
-}
-
-bool StripePattern::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
-  return Material::isShadowed(w, p);
 }
 
 Vec3f StripePattern::stripe_at(const Point3f& p) {
@@ -227,37 +208,39 @@ Vec3f StripePattern::stripe_at(const Point3f& p) {
 GradientPattern::GradientPattern(Traceable* tr, const Vec3f& a, const Vec3f& b)
     : Material(tr), m_color_a(a), m_color_b(b) {}
 
-bool GradientPattern::intersect(const Ray& r) { return Material::intersect(r); }
-
 Vec3f GradientPattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
-
   m_color = gradient_at(p);
   return Material::lighting(w, ray);
 }
 
-std::string GradientPattern::name() const { return Material::name(); }
-
-Record GradientPattern::record() const { return Material::record(); }
-
-Vec3f GradientPattern::normal(const Point3f& p) const {
-  return Material::normal(p);
-}
-
-void GradientPattern::checkInside(const Ray& r) {
-  return Material::checkInside(r);
-}
-
-bool GradientPattern::isShadowed(std::shared_ptr<Traceable> w,
-                                 const Point3f& p) {
-  return Material::isShadowed(w, p);
-}
-
 Vec3f GradientPattern::gradient_at(const Point3f& p) {
   Vec3f distance = m_color_b - m_color_a;
-  float fraction = p.x() - floor(p.x() - 0.001f);
+  float fraction = p.x() - floor(p.x());
   return m_color_a + distance * fraction;
+}
+
+//------------------------------------------------------------------------------
+//---------------------------Ring Pattern---------------------------------------
+//------------------------------------------------------------------------------
+
+RingPattern::RingPattern(Traceable* tr, const Vec3f& a, const Vec3f& b)
+    : Material(tr), m_color_a(a), m_color_b(b) {}
+
+Vec3f RingPattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+  Point3f p =
+      record().point(ray) + (record().inside ? normal(record().point(ray))
+                                             : normal(record().point(ray))) *
+                                0.02f;
+  m_color = ring_at(p);
+  return Material::lighting(w, ray);
+}
+
+Vec3f RingPattern::ring_at(const Point3f& p) {
+  if (fmod(floor(sqrt(p.x() * p.x() + p.z() * p.z())), 2.) == 0.)
+    return m_color_a;
+  return m_color_b;
 }
