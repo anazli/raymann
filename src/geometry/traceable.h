@@ -153,3 +153,27 @@ class StripePattern : public Material {
 
   Vec3f stripe_at(const Point3f &p);
 };
+
+//------------------------------------------------------------------------------
+//---------------------------Gradient Pattern Decorator-------------------------
+//------------------------------------------------------------------------------
+
+class GradientPattern : public Material {
+ public:
+  GradientPattern(Traceable *tr, const Vec3f &a = Vec3f(1.0f, 1.0f, 1.0f),
+                  const Vec3f &b = Vec3f());
+
+  bool intersect(const Ray &r) override;
+  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
+  std::string name() const override;
+  Record record() const override;
+  Vec3f normal(const Point3f &p) const override;
+  void checkInside(const Ray &r) override;
+  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override;
+
+ private:
+  Vec3f m_color_a;
+  Vec3f m_color_b;
+
+  Vec3f gradient_at(const Point3f &p);
+};
