@@ -80,3 +80,5 @@ raymann*
 
 # Scenes
 #**/*.ppm
+# vscode
+.vscode
