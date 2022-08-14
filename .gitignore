@@ -78,6 +78,9 @@ compile_commands.json
 raymann*
 !raymann.cpp
 
+# Qt clang 
+.qtc_clangd
+
 # Scenes
 #**/*.ppm
 # vscode
