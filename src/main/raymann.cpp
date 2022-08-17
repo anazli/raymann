@@ -34,26 +34,35 @@ int main() {
   Vec3f pattern_colorA(0.1f, 0.1f, 1.0f);
   Vec3f pattern_colorB(1.0f, 0.1f, 0.1f);
   //----------------------Middle sphere---------------------
+  Mat4f transformation = translation(-0.5f, 1.0f, 0.5f);
   builder->addSphere();
-  builder->transformSphere(translation(-0.5f, 1.0f, 0.5f));
-  builder->addStripePattern(pattern_colorA, pattern_colorB);
+  builder->transformSphere(transformation);
+  builder->addStripePattern(pattern_colorA, pattern_colorB, transformation,
+                            transformation);
   shared_ptr<Traceable> middle = builder->getSphere();
 
   //----------------------Right sphere---------------------
+  transformation = translation(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) *
+                   rotationY(PI / 2.0f);
   builder->addSphere();
-  builder->transformSphere(translation(1.5f, 0.5f, -0.5f) *
-                           scale(0.5f, 0.5f, 0.5f));
-  builder->addRingPattern(pattern_colorA, pattern_colorB);
+  builder->transformSphere(transformation);
+  builder->addRingPattern(
+      pattern_colorA, pattern_colorB,
+      translation(1.5f, 0.5f, -0.5f) * scale(0.1f, 0.1f, 0.1f), transformation);
   shared_ptr<Traceable> right = builder->getSphere();
 
   //----------------------Left sphere---------------------
+  transformation =
+      translation(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f);
   builder->addSphere();
-  builder->transformSphere(translation(-1.5f, 0.33f, -0.75f) *
-                           scale(0.33f, 0.33f, 0.33f));
-  builder->addGradientPattern(pattern_colorA, pattern_colorB);
+  builder->transformSphere(transformation);
+  builder->addGradientPattern(
+      pattern_colorA, pattern_colorB,
+      translation(-1.5f, 0.33f, -0.75f) * scale(4.0f, 4.0f, 4.0f),
+      transformation);
   shared_ptr<Traceable> left = builder->getSphere();
 
-  Canvas canvas(600, 600);
+  Canvas canvas(800, 800);
   canvas.setFileName("scenes/scene.ppm");
   Camera c(canvas.width(), canvas.height(), PI / 3.0f);
   c.computePixelSize();
