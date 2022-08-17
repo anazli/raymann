@@ -34,32 +34,34 @@ int main() {
   Vec3f pattern_colorA(0.1f, 0.1f, 1.0f);
   Vec3f pattern_colorB(1.0f, 0.1f, 0.1f);
   //----------------------Middle sphere---------------------
-  Mat4f transformation = translation(-0.5f, 1.0f, 0.5f);
+  Mat4f object_transform = translation(-0.5f, 1.0f, 0.5f);
+  Mat4f pattern_transform =
+      translation(-0.5f, 1.0f, 0.5f) * scale(0.5f, 0.5f, 0.5f);
   builder->addSphere();
-  builder->transformSphere(transformation);
-  builder->addStripePattern(pattern_colorA, pattern_colorB, transformation,
-                            transformation);
+  builder->transformSphere(object_transform);
+  builder->addCheckerPattern(pattern_colorA, pattern_colorB, object_transform,
+                             pattern_transform);
   shared_ptr<Traceable> middle = builder->getSphere();
 
   //----------------------Right sphere---------------------
-  transformation = translation(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) *
-                   rotationY(PI / 2.0f);
+  object_transform = translation(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) *
+                     rotationY(PI / 2.0f);
+  pattern_transform = translation(1.5f, 0.5f, -0.5f) * scale(0.1f, 0.1f, 0.1f);
   builder->addSphere();
-  builder->transformSphere(transformation);
-  builder->addRingPattern(
-      pattern_colorA, pattern_colorB,
-      translation(1.5f, 0.5f, -0.5f) * scale(0.1f, 0.1f, 0.1f), transformation);
+  builder->transformSphere(object_transform);
+  builder->addRingPattern(pattern_colorA, pattern_colorB, pattern_transform,
+                          object_transform);
   shared_ptr<Traceable> right = builder->getSphere();
 
   //----------------------Left sphere---------------------
-  transformation =
+  object_transform =
       translation(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f);
+  pattern_transform =
+      translation(-1.5f, 0.33f, -0.75f) * scale(4.0f, 4.0f, 4.0f);
   builder->addSphere();
-  builder->transformSphere(transformation);
-  builder->addGradientPattern(
-      pattern_colorA, pattern_colorB,
-      translation(-1.5f, 0.33f, -0.75f) * scale(4.0f, 4.0f, 4.0f),
-      transformation);
+  builder->transformSphere(object_transform);
+  builder->addGradientPattern(pattern_colorA, pattern_colorB, pattern_transform,
+                              object_transform);
   shared_ptr<Traceable> left = builder->getSphere();
 
   Canvas canvas(800, 800);
