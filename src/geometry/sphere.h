@@ -71,12 +71,14 @@ class SphereBuilder {
   virtual void addColor(const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
                         float am = 0.1f, float diff = 0.9f, float spec = 0.9f,
                         float shi = 200.0f) {}
-  virtual void addStripePattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
-                                const Vec3f &colorB = Vec3f()) {}
-  virtual void addGradientPattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
-                                  const Vec3f &colorB = Vec3f()) {}
-  virtual void addRingPattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
-                              const Vec3f &colorB = Vec3f()) {}
+  virtual void addStripePattern(const Vec3f &colorA, const Vec3f &colorB,
+                                const Mat4f &ptrans, const Mat4f &otrans) {}
+  virtual void addGradientPattern(const Vec3f &colorA, const Vec3f &colorB,
+                                  const Mat4f &ptrans, const Mat4f &otrans) {}
+  virtual void addRingPattern(const Vec3f &colorA, const Vec3f &colorB,
+                              const Mat4f &ptrans, const Mat4f &otrans) {}
+  virtual void addCheckerPattern(const Vec3f &colorA, const Vec3f &colorB,
+                                 const Mat4f &ptrans, const Mat4f &otrans) {}
   virtual std::shared_ptr<Traceable> getSphere() { return nullptr; }
 
  protected:
@@ -98,17 +100,25 @@ class StandardSphere : public SphereBuilder {
                 float shi = 200.0f) override {
     m_currentSphere = new Material(m_currentSphere, c, am, diff, spec, shi);
   }
-  void addStripePattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
-                        const Vec3f &colorB = Vec3f()) override {
-    m_currentSphere = new StripePattern(m_currentSphere, colorA, colorB);
+  void addStripePattern(const Vec3f &colorA, const Vec3f &colorB,
+                        const Mat4f &ptrans, const Mat4f &otrans) override {
+    m_currentSphere =
+        new StripePattern(m_currentSphere, colorA, colorB, ptrans, otrans);
   }
-  void addGradientPattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
-                          const Vec3f &colorB = Vec3f()) override {
-    m_currentSphere = new GradientPattern(m_currentSphere, colorA, colorB);
+  void addGradientPattern(const Vec3f &colorA, const Vec3f &colorB,
+                          const Mat4f &ptrans, const Mat4f &otrans) override {
+    m_currentSphere =
+        new GradientPattern(m_currentSphere, colorA, colorB, ptrans, otrans);
   }
-  void addRingPattern(const Vec3f &colorA = Vec3f(1.0f, 1.0f, 1.0f),
-                      const Vec3f &colorB = Vec3f()) override {
-    m_currentSphere = new RingPattern(m_currentSphere, colorA, colorB);
+  void addRingPattern(const Vec3f &colorA, const Vec3f &colorB,
+                      const Mat4f &ptrans, const Mat4f &otrans) override {
+    m_currentSphere =
+        new RingPattern(m_currentSphere, colorA, colorB, ptrans, otrans);
+  }
+  void addCheckerPattern(const Vec3f &colorA, const Vec3f &colorB,
+                         const Mat4f &ptrans, const Mat4f &otrans) override {
+    m_currentSphere =
+        new CheckerPattern(m_currentSphere, colorA, colorB, ptrans, otrans);
   }
   std::shared_ptr<Traceable> getSphere() override {
     std::shared_ptr<Traceable> ret(m_currentSphere);

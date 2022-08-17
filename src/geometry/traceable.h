@@ -136,15 +136,18 @@ class Material : public TraceableDeco {
 
 class StripePattern : public Material {
  public:
-  StripePattern(Traceable *tr, const Vec3f &a = Vec3f(1.0f, 1.0f, 1.0f),
-                const Vec3f &b = Vec3f());
+  StripePattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
+                const Mat4f &ptrans, const Mat4f &otrans);
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
   Vec3f m_color_a;
   Vec3f m_color_b;
+  Mat4f m_object_trans;
+  Mat4f m_pattern_trans;  // Currently the pattern transformations follow the
+                          // object's ones
 
-  Vec3f stripe_at(const Point3f &p);
+  Vec3f pattern_at(const Point3f &p) const;
 };
 
 //------------------------------------------------------------------------------
@@ -153,15 +156,17 @@ class StripePattern : public Material {
 
 class GradientPattern : public Material {
  public:
-  GradientPattern(Traceable *tr, const Vec3f &a = Vec3f(1.0f, 1.0f, 1.0f),
-                  const Vec3f &b = Vec3f());
+  GradientPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
+                  const Mat4f &ptrans, const Mat4f &otrans);
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
   Vec3f m_color_a;
   Vec3f m_color_b;
+  Mat4f m_object_trans;
+  Mat4f m_pattern_trans;  // Currently the pattern transformations follow the
 
-  Vec3f gradient_at(const Point3f &p);
+  Vec3f pattern_at(const Point3f &p) const;
 };
 
 //------------------------------------------------------------------------------
@@ -170,13 +175,34 @@ class GradientPattern : public Material {
 
 class RingPattern : public Material {
  public:
-  RingPattern(Traceable *tr, const Vec3f &a = Vec3f(1.0f, 1.0f, 1.0f),
-              const Vec3f &b = Vec3f());
+  RingPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
+              const Mat4f &ptrans, const Mat4f &otrans);
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
   Vec3f m_color_a;
   Vec3f m_color_b;
+  Mat4f m_object_trans;
+  Mat4f m_pattern_trans;  // Currently the pattern transformations follow the
 
-  Vec3f ring_at(const Point3f &p);
+  Vec3f pattern_at(const Point3f &p) const;
+};
+
+//------------------------------------------------------------------------------
+//---------------------------Ring Pattern Decorator-----------------------------
+//------------------------------------------------------------------------------
+
+class CheckerPattern : public Material {
+ public:
+  CheckerPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
+                 const Mat4f &ptrans, const Mat4f &otrans);
+  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
+
+ private:
+  Vec3f m_color_a;
+  Vec3f m_color_b;
+  Mat4f m_object_trans;
+  Mat4f m_pattern_trans;  // Currently the pattern transformations follow the
+
+  Vec3f pattern_at(const Point3f &p) const;
 };
