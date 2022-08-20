@@ -11,32 +11,45 @@ using namespace std;
 
 int main() {
   //----------------------Floor---------------------
+  Vec3f pattern_colorA(1.0f, 1.0f, 1.0f);
+  Vec3f pattern_colorB(0.1f, 0.1f, 0.1f);
+  Mat4f object_transform =
+      translation(0.0f, 0.0f, 5.0f) * rotationX(-PI / 2.0f);
+
   shared_ptr<TraceableBuilder> plane_builder = make_shared<StandardPlane>();
   plane_builder->addTraceable();
-  plane_builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  plane_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
+                                   object_transform, Mat4f());
   shared_ptr<Traceable> floor = plane_builder->getTraceable();
 
   //----------------------Left wall---------------------
+  pattern_colorA = Vec3f(0.1f, 0.1f, 0.1f);
+  pattern_colorB = Vec3f(0.1f, 1.0f, 0.1f);
+  object_transform = translation(0.0f, 0.0f, 5.0f) * rotationX(-PI / 2.0f);
   plane_builder->addTraceable();
-  plane_builder->transformTraceable(translation(0.0f, 0.0f, 5.0f) *
-                                    rotationX(PI / 2.0f));
+  plane_builder->transformTraceable(object_transform);
   plane_builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  plane_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
+                                   object_transform,
+                                   translation(0.0f, 0.0f, 5.0f));
   shared_ptr<Traceable> left_wall = plane_builder->getTraceable();
 
   //----------------------Right wall---------------------
+  object_transform = translation(0.0f, 0.0f, 5.0f) * rotationY(PI / 4.0f) *
+                     rotationX(-PI / 2.0f);
   plane_builder->addTraceable();
-  plane_builder->transformTraceable(translation(0.0f, 0.0f, 5.0f) *
-                                    rotationY(PI / 4.0f) *
-                                    rotationX(PI / 2.0f));
-  plane_builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  plane_builder->transformTraceable(object_transform);
+  plane_builder->addRingPattern(
+      pattern_colorA, pattern_colorB, object_transform,
+      translation(0.0f, 2.0f, -0.5f) * scale(0.9f, 0.9f, 0.9f));
   shared_ptr<Traceable> right_wall = plane_builder->getTraceable();
   //----------------------------------------------------------------------------
 
-  Vec3f pattern_colorA(0.1f, 0.1f, 1.0f);
-  Vec3f pattern_colorB(1.0f, 0.1f, 0.1f);
+  pattern_colorA = Vec3f(0.1f, 0.1f, 1.0f);
+  pattern_colorB = Vec3f(1.0f, 0.1f, 0.1f);
   shared_ptr<TraceableBuilder> sphere_builder = make_shared<StandardSphere>();
   //----------------------Middle sphere---------------------
-  Mat4f object_transform = translation(-0.5f, 1.0f, 0.5f);
+  object_transform = translation(-0.5f, 1.0f, 0.5f);
   Mat4f pattern_transform =
       translation(-0.5f, 1.0f, 0.5f) * scale(0.5f, 0.5f, 0.5f);
   sphere_builder->addTraceable();
@@ -66,11 +79,11 @@ int main() {
                                      pattern_transform, object_transform);
   shared_ptr<Traceable> left = sphere_builder->getTraceable();
 
-  Canvas canvas(500, 500);
+  Canvas canvas(800, 800);
   canvas.setFileName("scenes/scene.ppm");
   Camera c(canvas.width(), canvas.height(), PI / 3.0f);
   c.computePixelSize();
-  Point3f from(0.0f, 1.5f, -5.0f);
+  Point3f from(0.0f, 2.0f, -7.0f);
   Point3f to(0.0f, 1.0f, 0.0f);
   Vec3f up(0.0f, 1.0f, 0.0f);
   c.setTransform(view_transform(from, to, up));
