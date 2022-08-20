@@ -10,38 +10,39 @@
 using namespace std;
 
 int main() {
-  //----------------------Floor---------------------
   Vec3f pattern_colorA(1.0f, 1.0f, 1.0f);
   Vec3f pattern_colorB(0.1f, 0.1f, 0.1f);
   Mat4f object_transform =
       translation(0.0f, 0.0f, 5.0f) * rotationX(-PI / 2.0f);
+  Mat4f pattern_transform;
 
+  //----------------------Floor---------------------
   shared_ptr<TraceableBuilder> plane_builder = make_shared<StandardPlane>();
   plane_builder->addTraceable();
   plane_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
-                                   object_transform, Mat4f());
+                                   object_transform, pattern_transform);
   shared_ptr<Traceable> floor = plane_builder->getTraceable();
 
   //----------------------Left wall---------------------
   pattern_colorA = Vec3f(0.1f, 0.1f, 0.1f);
   pattern_colorB = Vec3f(0.1f, 1.0f, 0.1f);
+  pattern_transform = translation(0.0f, 0.0f, 5.0f);
   object_transform = translation(0.0f, 0.0f, 5.0f) * rotationX(-PI / 2.0f);
   plane_builder->addTraceable();
   plane_builder->transformTraceable(object_transform);
   plane_builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
   plane_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
-                                   object_transform,
-                                   translation(0.0f, 0.0f, 5.0f));
+                                   object_transform, pattern_transform);
   shared_ptr<Traceable> left_wall = plane_builder->getTraceable();
 
   //----------------------Right wall---------------------
   object_transform = translation(0.0f, 0.0f, 5.0f) * rotationY(PI / 4.0f) *
                      rotationX(-PI / 2.0f);
+  pattern_transform = translation(0.0f, 2.0f, -0.5f) * scale(0.9f, 0.9f, 0.9f);
   plane_builder->addTraceable();
   plane_builder->transformTraceable(object_transform);
-  plane_builder->addRingPattern(
-      pattern_colorA, pattern_colorB, object_transform,
-      translation(0.0f, 2.0f, -0.5f) * scale(0.9f, 0.9f, 0.9f));
+  plane_builder->addRingPattern(pattern_colorA, pattern_colorB,
+                                object_transform, pattern_transform);
   shared_ptr<Traceable> right_wall = plane_builder->getTraceable();
   //----------------------------------------------------------------------------
 
@@ -50,8 +51,7 @@ int main() {
   shared_ptr<TraceableBuilder> sphere_builder = make_shared<StandardSphere>();
   //----------------------Middle sphere---------------------
   object_transform = translation(-0.5f, 1.0f, 0.5f);
-  Mat4f pattern_transform =
-      translation(-0.5f, 1.0f, 0.5f) * scale(0.5f, 0.5f, 0.5f);
+  pattern_transform = translation(-0.5f, 1.0f, 0.5f) * scale(0.5f, 0.5f, 0.5f);
   sphere_builder->addTraceable();
   sphere_builder->transformTraceable(object_transform);
   sphere_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
