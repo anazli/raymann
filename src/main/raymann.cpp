@@ -11,60 +11,62 @@ using namespace std;
 
 int main() {
   //----------------------Floor---------------------
-  shared_ptr<Traceable> floor(
-      new Material(new Plane(), Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f));
+  shared_ptr<TraceableBuilder> plane_builder = make_shared<StandardPlane>();
+  plane_builder->addTraceable();
+  plane_builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  shared_ptr<Traceable> floor = plane_builder->getTraceable();
 
   //----------------------Left wall---------------------
-  shared_ptr<SphereBuilder> builder = make_shared<StandardSphere>();
-  builder->addSphere();
-  builder->transformSphere(translation(0.0f, 0.0f, 5.0f) *
-                           rotationY(-PI / 4.0f) * rotationX(PI / 2.0f) *
-                           scale(10.0f, 0.01f, 10.0f));
-  builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
-  shared_ptr<Traceable> left_wall = builder->getSphere();
+  plane_builder->addTraceable();
+  plane_builder->transformTraceable(translation(0.0f, 0.0f, 5.0f) *
+                                    rotationX(PI / 2.0f));
+  plane_builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  shared_ptr<Traceable> left_wall = plane_builder->getTraceable();
 
   //----------------------Right wall---------------------
-  builder->addSphere();
-  builder->transformSphere(translation(0.0f, 0.0f, 5.0f) *
-                           rotationY(PI / 4.0f) * rotationX(PI / 2.0f) *
-                           scale(10.0f, 0.01f, 10.0f));
-  builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
-  shared_ptr<Traceable> right_wall = builder->getSphere();
+  plane_builder->addTraceable();
+  plane_builder->transformTraceable(translation(0.0f, 0.0f, 5.0f) *
+                                    rotationY(PI / 4.0f) *
+                                    rotationX(PI / 2.0f));
+  plane_builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
+  shared_ptr<Traceable> right_wall = plane_builder->getTraceable();
+  //----------------------------------------------------------------------------
 
   Vec3f pattern_colorA(0.1f, 0.1f, 1.0f);
   Vec3f pattern_colorB(1.0f, 0.1f, 0.1f);
+  shared_ptr<TraceableBuilder> sphere_builder = make_shared<StandardSphere>();
   //----------------------Middle sphere---------------------
   Mat4f object_transform = translation(-0.5f, 1.0f, 0.5f);
   Mat4f pattern_transform =
       translation(-0.5f, 1.0f, 0.5f) * scale(0.5f, 0.5f, 0.5f);
-  builder->addSphere();
-  builder->transformSphere(object_transform);
-  builder->addCheckerPattern(pattern_colorA, pattern_colorB, object_transform,
-                             pattern_transform);
-  shared_ptr<Traceable> middle = builder->getSphere();
+  sphere_builder->addTraceable();
+  sphere_builder->transformTraceable(object_transform);
+  sphere_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
+                                    object_transform, pattern_transform);
+  shared_ptr<Traceable> middle = sphere_builder->getTraceable();
 
   //----------------------Right sphere---------------------
   object_transform = translation(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) *
                      rotationY(PI / 2.0f);
   pattern_transform = translation(1.5f, 0.5f, -0.5f) * scale(0.1f, 0.1f, 0.1f);
-  builder->addSphere();
-  builder->transformSphere(object_transform);
-  builder->addRingPattern(pattern_colorA, pattern_colorB, pattern_transform,
-                          object_transform);
-  shared_ptr<Traceable> right = builder->getSphere();
+  sphere_builder->addTraceable();
+  sphere_builder->transformTraceable(object_transform);
+  sphere_builder->addRingPattern(pattern_colorA, pattern_colorB,
+                                 pattern_transform, object_transform);
+  shared_ptr<Traceable> right = sphere_builder->getTraceable();
 
   //----------------------Left sphere---------------------
   object_transform =
       translation(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f);
   pattern_transform =
       translation(-1.5f, 0.33f, -0.75f) * scale(4.0f, 4.0f, 4.0f);
-  builder->addSphere();
-  builder->transformSphere(object_transform);
-  builder->addGradientPattern(pattern_colorA, pattern_colorB, pattern_transform,
-                              object_transform);
-  shared_ptr<Traceable> left = builder->getSphere();
+  sphere_builder->addTraceable();
+  sphere_builder->transformTraceable(object_transform);
+  sphere_builder->addGradientPattern(pattern_colorA, pattern_colorB,
+                                     pattern_transform, object_transform);
+  shared_ptr<Traceable> left = sphere_builder->getTraceable();
 
-  Canvas canvas(800, 800);
+  Canvas canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   Camera c(canvas.width(), canvas.height(), PI / 3.0f);
   c.computePixelSize();

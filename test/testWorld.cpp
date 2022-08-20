@@ -12,7 +12,7 @@ class Tworld : public Test {
  public:
   Scene scene;
   shared_ptr<Traceable> w;
-  std::shared_ptr<SphereBuilder> builder;
+  std::shared_ptr<TraceableBuilder> builder;
   PointLight light;
 
   Tworld()
