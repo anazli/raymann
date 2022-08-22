@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "geometry/traceable.h"
+#include "composite/traceable.h"
 #include "tools/tools.h"
 
 class Canvas {

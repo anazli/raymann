@@ -2,8 +2,8 @@
 
 #include <list>
 
+#include "composite/traceable.h"
 #include "geometry/sphere.h"
-#include "geometry/traceable.h"
 
 class World : public Traceable {
  public:

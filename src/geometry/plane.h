@@ -1,6 +1,6 @@
 #pragma once
 
-#include "geometry/traceable.h"
+#include "composite/traceable.h"
 
 class Plane : public Traceable {
  public:

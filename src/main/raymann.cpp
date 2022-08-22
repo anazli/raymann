@@ -3,11 +3,11 @@
 
 #include "builder/plane_builder.h"
 #include "builder/sphere_builder.h"
+#include "composite/world.h"
 #include "container/canvas.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "tools/tools.h"
-#include "world/world.h"
 
 using namespace std;
 

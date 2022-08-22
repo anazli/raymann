@@ -7,10 +7,10 @@ set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(EXE raymann)
 
 set(sources src/main/raymann.cpp
-            src/geometry/traceable.cpp
+            src/composite/traceable.cpp
             src/container/canvas.cpp
-            src/world/world.cpp
-            src/world/scene.cpp
+            src/composite/world.cpp
+            src/composite/scene.cpp
             src/decorators/material.cpp
             src/decorators/traceable_deco.cpp
             src/decorators/transformer.cpp)

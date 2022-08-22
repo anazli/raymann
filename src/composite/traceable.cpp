@@ -1,4 +1,4 @@
-#include "geometry/traceable.h"
+#include "composite/traceable.h"
 
 Traceable::~Traceable() {}
 

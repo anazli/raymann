@@ -1,4 +1,4 @@
-#include "world/scene.h"
+#include "composite/scene.h"
 
 std::shared_ptr<Traceable> Scene::createSphere(
     std::shared_ptr<TraceableBuilder> b, const Vec3f& color, float am,
