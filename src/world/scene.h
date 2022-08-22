@@ -1,5 +1,6 @@
 #pragma once
 
+#include "builder/builder.h"
 #include "geometry/sphere.h"
 
 class Scene {

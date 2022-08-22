@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+
 #include "geometry/sphere.h"
 #include "geometry/traceable.h"
 

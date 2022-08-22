@@ -1,6 +1,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "builder/plane_builder.h"
+#include "builder/sphere_builder.h"
 #include "container/canvas.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
@@ -30,7 +32,6 @@ int main() {
   object_transform = translation(0.0f, 0.0f, 5.0f) * rotationX(-PI / 2.0f);
   plane_builder->addTraceable();
   plane_builder->transformTraceable(object_transform);
-  plane_builder->addColor(Vec3f(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f);
   plane_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
                                    object_transform, pattern_transform);
   shared_ptr<Traceable> left_wall = plane_builder->getTraceable();
