@@ -8,9 +8,10 @@
 class Material : public TraceableDeco {
  public:
   Material(Traceable *tr, Vec3f &color);
+  Material(Traceable *tr, Vec3f &color, float reflection);
   Material(Traceable *tr, const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
-           float am = 0.1f, float diff = 0.9f, float spec = 0.9f,
-           float shi = 200.0f);
+           float reflection = 0.0f, float am = 0.1f, float diff = 0.9f,
+           float spec = 0.9f, float shi = 200.0f);
   virtual ~Material();
 
   bool intersect(const Ray &r) override;
@@ -23,6 +24,7 @@ class Material : public TraceableDeco {
 
  protected:
   Vec3f m_color = Vec3f(1.0f, 1.0f, 1.0f);
+  float m_reflective = 0.0f;
   float m_ambient = 0.1f;
   float m_diffuse = 0.9f;
   float m_specular = 0.9f;

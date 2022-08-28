@@ -14,10 +14,15 @@ class StandardPlane : public TraceableBuilder {
   void transformTraceable(const Mat4f &m) override {
     m_currentPlane = new Transformer(m_currentPlane, m);
   }
-  void addColor(const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f), float am = 0.1f,
-                float diff = 0.9f, float spec = 0.9f,
-                float shi = 200.0f) override {
-    m_currentPlane = new Material(m_currentPlane, c, am, diff, spec, shi);
+  void addColor(const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
+                float reflection = 0.0f) override {
+    m_currentPlane = new Material(m_currentPlane, c, reflection);
+  }
+  void addColor(const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),
+                float reflection = 0.0f, float am = 0.1f, float diff = 0.9f,
+                float spec = 0.9f, float shi = 200.0f) override {
+    m_currentPlane =
+        new Material(m_currentPlane, c, reflection, am, diff, spec, shi);
   }
   void addStripePattern(const Vec3f &colorA, const Vec3f &colorB,
                         const Mat4f &ptrans, const Mat4f &otrans) override {

@@ -7,10 +7,14 @@
 Material::Material(Traceable* tr, Vec3f& color)
     : TraceableDeco(tr), m_color(color) {}
 
-Material::Material(Traceable* tr, const Vec3f& c, float am, float diff,
-                   float spec, float shi)
+Material::Material(Traceable* tr, Vec3f& color, float reflection)
+    : TraceableDeco(tr), m_color(color), m_reflective(reflection) {}
+
+Material::Material(Traceable* tr, const Vec3f& c, float reflection, float am,
+                   float diff, float spec, float shi)
     : TraceableDeco(tr),
       m_color(c),
+      m_reflective(reflection),
       m_ambient(am),
       m_diffuse(diff),
       m_specular(spec),
