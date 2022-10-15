@@ -17,7 +17,7 @@ class Tworld : public Test {
 
   Tworld()
       : w(new World()),
-        builder(new StandardSphere),
+        builder(new Shape),
         light(PointLight(Point3f(-10.0f, 10.0f, -10.0f),
                          Vec3f(1.0f, 1.0f, 1.0f))) {
     w->setLight(light);

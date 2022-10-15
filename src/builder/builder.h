@@ -4,8 +4,7 @@
 
 class TraceableBuilder {
  public:
-  virtual void addTraceable(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
-                            const float &r = 1.0f) = 0;
+  virtual void addTraceable(Traceable *tr) = 0;
   virtual void transformTraceable(const Mat4f &m) = 0;
   virtual void addColor(const Vec3f &c, float reflection) {}
   virtual void addColor(const Vec3f &c = Vec3f(1.0f, 1.0f, 1.0f),

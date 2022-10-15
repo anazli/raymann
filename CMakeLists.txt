@@ -7,10 +7,10 @@ set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(EXE raymann)
 
 set(sources src/main/raymann.cpp
+            src/builder/shape_builder.cpp
             src/composite/traceable.cpp
             src/container/canvas.cpp
             src/composite/world.cpp
-            src/composite/scene.cpp
             src/decorators/material.cpp
             src/decorators/traceable_deco.cpp
             src/decorators/transformer.cpp)
@@ -36,8 +36,7 @@ if(BUILD_TESTING)
     set(test Test${Name})
     add_executable(${test} test/test${Name}.cpp src/geometry/traceable.cpp
                                                  src/container/canvas.cpp
-                                                 src/world/world.cpp
-                                                 src/world/scene.cpp)
+                                                 src/world/world.cpp)
 
     target_include_directories(${test} PUBLIC ${PROJECT_SOURCE_DIR}/src)
     target_link_libraries(${test} gtest_main gtest pthread)

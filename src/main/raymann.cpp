@@ -1,8 +1,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "builder/plane_builder.h"
-#include "builder/sphere_builder.h"
+#include "builder/shape_builder.h"
 #include "composite/world.h"
 #include "container/canvas.h"
 #include "geometry/plane.h"
@@ -19,8 +18,8 @@ int main() {
   Mat4f pattern_transform;
 
   //----------------------Floor---------------------
-  shared_ptr<TraceableBuilder> plane_builder = make_shared<StandardPlane>();
-  plane_builder->addTraceable();
+  shared_ptr<TraceableBuilder> plane_builder = make_shared<Shape>();
+  plane_builder->addTraceable(new Plane);
   plane_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
                                    object_transform, pattern_transform);
   shared_ptr<Traceable> floor = plane_builder->getTraceable();
@@ -30,7 +29,7 @@ int main() {
   pattern_colorB = Vec3f(0.1f, 1.0f, 0.1f);
   pattern_transform = translation(0.0f, 0.0f, 5.0f);
   object_transform = translation(0.0f, 0.0f, 5.0f) * rotationX(-PI / 2.0f);
-  plane_builder->addTraceable();
+  plane_builder->addTraceable(new Plane);
   plane_builder->transformTraceable(object_transform);
   plane_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
                                    object_transform, pattern_transform);
@@ -40,7 +39,7 @@ int main() {
   object_transform = translation(0.0f, 0.0f, 5.0f) * rotationY(PI / 4.0f) *
                      rotationX(-PI / 2.0f);
   pattern_transform = translation(0.0f, 2.0f, -0.5f) * scale(0.9f, 0.9f, 0.9f);
-  plane_builder->addTraceable();
+  plane_builder->addTraceable(new Plane);
   plane_builder->transformTraceable(object_transform);
   plane_builder->addRingPattern(pattern_colorA, pattern_colorB,
                                 object_transform, pattern_transform);
@@ -49,11 +48,11 @@ int main() {
 
   pattern_colorA = Vec3f(0.1f, 0.1f, 1.0f);
   pattern_colorB = Vec3f(1.0f, 0.1f, 0.1f);
-  shared_ptr<TraceableBuilder> sphere_builder = make_shared<StandardSphere>();
+  shared_ptr<TraceableBuilder> sphere_builder = make_shared<Shape>();
   //----------------------Middle sphere---------------------
   object_transform = translation(-0.5f, 1.0f, 0.5f);
   pattern_transform = translation(-0.5f, 1.0f, 0.5f) * scale(0.5f, 0.5f, 0.5f);
-  sphere_builder->addTraceable();
+  sphere_builder->addTraceable(new Sphere);
   sphere_builder->transformTraceable(object_transform);
   sphere_builder->addCheckerPattern(pattern_colorA, pattern_colorB,
                                     object_transform, pattern_transform);
@@ -63,7 +62,7 @@ int main() {
   object_transform = translation(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) *
                      rotationY(PI / 2.0f);
   pattern_transform = translation(1.5f, 0.5f, -0.5f) * scale(0.1f, 0.1f, 0.1f);
-  sphere_builder->addTraceable();
+  sphere_builder->addTraceable(new Sphere);
   sphere_builder->transformTraceable(object_transform);
   sphere_builder->addRingPattern(pattern_colorA, pattern_colorB,
                                  pattern_transform, object_transform);
@@ -74,7 +73,7 @@ int main() {
       translation(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f);
   pattern_transform =
       translation(-1.5f, 0.33f, -0.75f) * scale(4.0f, 4.0f, 4.0f);
-  sphere_builder->addTraceable();
+  sphere_builder->addTraceable(new Sphere);
   sphere_builder->transformTraceable(object_transform);
   sphere_builder->addGradientPattern(pattern_colorA, pattern_colorB,
                                      pattern_transform, object_transform);
