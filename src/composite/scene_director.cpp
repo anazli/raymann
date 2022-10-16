@@ -18,11 +18,11 @@ std::shared_ptr<Traceable> StandardSphere::create() {
   return m_builder->getTraceable();
 }
 
-SphereWithCheckerPattern::SphereWithCheckerPattern(
+CheckerSphere::CheckerSphere(
     std::shared_ptr<TraceableBuilder> builder, const Properties& prop)
     : SceneDirector(builder, prop) {}
 
-std::shared_ptr<Traceable> SphereWithCheckerPattern::create() {
+std::shared_ptr<Traceable> CheckerSphere::create() {
   m_builder->addTraceable(new Sphere);
   m_builder->setProperties(m_properties);
   m_builder->addTransformer();
@@ -30,11 +30,11 @@ std::shared_ptr<Traceable> SphereWithCheckerPattern::create() {
   return m_builder->getTraceable();
 }
 
-SphereWithRingPattern::SphereWithRingPattern(
+RingSphere::RingSphere(
     std::shared_ptr<TraceableBuilder> builder, const Properties& prop)
     : SceneDirector(builder, prop) {}
 
-std::shared_ptr<Traceable> SphereWithRingPattern::create() {
+std::shared_ptr<Traceable> RingSphere::create() {
   m_builder->addTraceable(new Sphere);
   m_builder->setProperties(m_properties);
   m_builder->addTransformer();
@@ -42,11 +42,11 @@ std::shared_ptr<Traceable> SphereWithRingPattern::create() {
   return m_builder->getTraceable();
 }
 
-SphereWithGradientPattern::SphereWithGradientPattern(
+GradientSphere::GradientSphere(
     std::shared_ptr<TraceableBuilder> builder, const Properties& prop)
     : SceneDirector(builder, prop) {}
 
-std::shared_ptr<Traceable> SphereWithGradientPattern::create() {
+std::shared_ptr<Traceable> GradientSphere::create() {
   m_builder->addTraceable(new Sphere);
   m_builder->setProperties(m_properties);
   m_builder->addTransformer();
@@ -66,11 +66,11 @@ std::shared_ptr<Traceable> StandardPlane::create() {
   return m_builder->getTraceable();
 }
 
-PlaneWithCheckerPattern::PlaneWithCheckerPattern(
+CheckerPlane::CheckerPlane(
     std::shared_ptr<TraceableBuilder> builder, const Properties& prop)
     : SceneDirector(builder, prop) {}
 
-std::shared_ptr<Traceable> PlaneWithCheckerPattern::create() {
+std::shared_ptr<Traceable> CheckerPlane::create() {
   m_builder->addTraceable(new Plane);
   m_builder->setProperties(m_properties);
   m_builder->addTransformer();
@@ -78,11 +78,11 @@ std::shared_ptr<Traceable> PlaneWithCheckerPattern::create() {
   return m_builder->getTraceable();
 }
 
-PlaneWithRingPattern::PlaneWithRingPattern(
+RingPlane::RingPlane(
     std::shared_ptr<TraceableBuilder> builder, const Properties& prop)
     : SceneDirector(builder, prop) {}
 
-std::shared_ptr<Traceable> PlaneWithRingPattern::create() {
+std::shared_ptr<Traceable> RingPlane::create() {
   m_builder->addTraceable(new Plane);
   m_builder->setProperties(m_properties);
   m_builder->addTransformer();

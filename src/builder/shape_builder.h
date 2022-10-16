@@ -4,7 +4,7 @@
 #include "decorators/transformer.h"
 #include "geometry/sphere.h"
 
-class StandardBuilder : public TraceableBuilder {
+class ShapeBuilder : public TraceableBuilder {
  public:
   void addTraceable(Traceable *tr) override;
   void addTransformer() override;

@@ -293,7 +293,7 @@ bool operator!=(const Mat4<T>& m1, const Mat4<T>& m2) {
 }
 
 template <typename T>
-Mat4<T> translation(const T& x, const T& y, const T& z) {
+Mat4<T> transl(const T& x, const T& y, const T& z) {
   Mat4<T> ret;
   ret.identity();
   ret[0][3] = x;
@@ -303,7 +303,7 @@ Mat4<T> translation(const T& x, const T& y, const T& z) {
 }
 
 template <typename T>
-Mat4<T> translation(const Vec3<T>& v) {
+Mat4<T> transl(const Vec3<T>& v) {
   Mat4<T> ret;
   ret.identity();
   ret[0][3] = v.x();
@@ -335,7 +335,7 @@ Mat4<T> scale(const Vec3<T>& v) {
 // TODO: floating point errors ~ E-8
 
 template <typename T>
-Mat4<T> rotationX(const T& rad) {
+Mat4<T> rotX(const T& rad) {
   Mat4<T> ret;
   ret.identity();
   ret[1][1] = cos(rad);
@@ -346,7 +346,7 @@ Mat4<T> rotationX(const T& rad) {
 }
 
 template <typename T>
-Mat4<T> rotationY(const T& rad) {
+Mat4<T> rotY(const T& rad) {
   Mat4<T> ret;
   ret.identity();
   ret[0][0] = cos(rad);
@@ -357,7 +357,7 @@ Mat4<T> rotationY(const T& rad) {
 }
 
 template <typename T>
-Mat4<T> rotationZ(const T& rad) {
+Mat4<T> rotZ(const T& rad) {
   Mat4<T> ret;
   ret.identity();
   ret[0][0] = cos(rad);
@@ -381,7 +381,7 @@ Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
             Vec4f(-forward.x(), -forward.y(), -forward.z(), 0.0f),
             Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 
-  return orientation * translation(-from.x(), -from.y(), -from.z());
+  return orientation * transl(-from.x(), -from.y(), -from.z());
 }
 
 // TODO: Shearing

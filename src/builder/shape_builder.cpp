@@ -1,43 +1,43 @@
 #include "builder/shape_builder.h"
 
-void StandardBuilder::addTraceable(Traceable* tr) { m_currentTraceable = tr; }
+void ShapeBuilder::addTraceable(Traceable* tr) { m_currentTraceable = tr; }
 
-void StandardBuilder::addTransformer() {
+void ShapeBuilder::addTransformer() {
   m_currentTraceable =
-      new Transformer(m_currentTraceable, m_prop.objectTransformation());
+      new Transformer(m_currentTraceable, m_prop.objTrans());
 }
 
-void StandardBuilder::addMaterial() {
+void ShapeBuilder::addMaterial() {
   m_currentTraceable = new Material(
       m_currentTraceable, m_prop.color(), m_prop.reflection(), m_prop.ambient(),
       m_prop.diffuse(), m_prop.specular(), m_prop.shininess());
 }
 
-void StandardBuilder::addStripePattern() {
+void ShapeBuilder::addStripePattern() {
   m_currentTraceable = new StripePattern(
-      m_currentTraceable, m_prop.patternColorA(), m_prop.patternColorB(),
-      m_prop.objectTransformation(), m_prop.patternTransformation());
+      m_currentTraceable, m_prop.patColA(), m_prop.patColB(),
+      m_prop.objTrans(), m_prop.patTrans());
 }
 
-void StandardBuilder::addGradientPattern() {
+void ShapeBuilder::addGradientPattern() {
   m_currentTraceable = new GradientPattern(
-      m_currentTraceable, m_prop.patternColorA(), m_prop.patternColorB(),
-      m_prop.objectTransformation(), m_prop.patternTransformation());
+      m_currentTraceable, m_prop.patColA(), m_prop.patColB(),
+      m_prop.objTrans(), m_prop.patTrans());
 }
 
-void StandardBuilder::addRingPattern() {
+void ShapeBuilder::addRingPattern() {
   m_currentTraceable = new RingPattern(
-      m_currentTraceable, m_prop.patternColorA(), m_prop.patternColorB(),
-      m_prop.objectTransformation(), m_prop.patternTransformation());
+      m_currentTraceable, m_prop.patColA(), m_prop.patColB(),
+      m_prop.objTrans(), m_prop.patTrans());
 }
 
-void StandardBuilder::addCheckerPattern() {
+void ShapeBuilder::addCheckerPattern() {
   m_currentTraceable = new CheckerPattern(
-      m_currentTraceable, m_prop.patternColorA(), m_prop.patternColorB(),
-      m_prop.objectTransformation(), m_prop.patternTransformation());
+      m_currentTraceable, m_prop.patColA(), m_prop.patColB(),
+      m_prop.objTrans(), m_prop.patTrans());
 }
 
-std::shared_ptr<Traceable> StandardBuilder::getTraceable() const {
+std::shared_ptr<Traceable> ShapeBuilder::getTraceable() const {
   std::shared_ptr<Traceable> ret(m_currentTraceable);
   return ret;
 }

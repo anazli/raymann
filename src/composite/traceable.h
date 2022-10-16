@@ -54,3 +54,5 @@ class Traceable {
   std::string m_name;
   Record rec;
 };
+
+typedef std::shared_ptr<Traceable> TraceablePtr;

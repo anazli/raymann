@@ -33,7 +33,7 @@ TEST_F(Tray, computesPositionAtT) {
 
 TEST_F(Tray, translatesRay) {
   r = Ray(Point3f(1, 2, 3), Vec3f(0, 1, 0));
-  Mat4f m = translation(3.0f, 4.0f, 5.0f);
+  Mat4f m = transl(3.0f, 4.0f, 5.0f);
   Ray tr = r.transform(m);
 
   ASSERT_TRUE(tr.origin() == Point3f(4.0f, 6.0f, 8.0f));

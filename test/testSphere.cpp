@@ -80,7 +80,7 @@ TEST_F(Tsphere, transformsSphere) {
 TEST_F(Tsphere, translatesSphere) {
   r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   Traceable *t = new Transformer(new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f),
-                                 translation(5.0f, 0.0f, 0.0f));
+                                 transl(5.0f, 0.0f, 0.0f));
   ASSERT_FALSE(t->intersect(r));
   ASSERT_TRUE(t->record().count == 0);
   delete t;

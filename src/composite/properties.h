@@ -6,24 +6,52 @@
 class Properties {
  public:
   Properties() {}
-  void setObjectTransformation(const Mat4f &oTrans) { m_object_trans = oTrans; }
-  void setPatternTransformation(const Mat4f &pTrans) {
-    m_pattern_trans = pTrans;
+  Properties &setObjTrans(const Mat4f &oTrans) {
+    m_object_trans = oTrans;
+    return *this;
   }
-  void setColor(const Vec3f &color) { m_color = color; }
-  void setPatternColorA(const Vec3f &color) { m_pattern_colorA = color; }
-  void setPatternColorB(const Vec3f &color) { m_pattern_colorB = color; }
-  void setAmbient(const float &am) { m_ambient = am; }
-  void setDiffuse(const float &di) { m_diffuse = di; }
-  void setSpecular(const float &sp) { m_specular = sp; }
-  void setShininess(const float &sh) { m_shininess = sh; }
-  void setReflection(const float &ref) { m_reflective = ref; }
+  Properties &setPatTrans(const Mat4f &pTrans) {
+    m_pattern_trans = pTrans;
+    return *this;
+  }
+  Properties &setColor(const Vec3f &color) {
+    m_color = color;
+    return *this;
+  }
+  Properties &setPatColA(const Vec3f &color) {
+    m_pattern_colorA = color;
+    return *this;
+  }
+  Properties &setPatColB(const Vec3f &color) {
+    m_pattern_colorB = color;
+    return *this;
+  }
+  Properties &setAmbient(const float &am) {
+    m_ambient = am;
+    return *this;
+  }
+  Properties &setDiffuse(const float &di) {
+    m_diffuse = di;
+    return *this;
+  }
+  Properties &setSpecular(const float &sp) {
+    m_specular = sp;
+    return *this;
+  }
+  Properties &setShininess(const float &sh) {
+    m_shininess = sh;
+    return *this;
+  }
+  Properties &setReflection(const float &ref) {
+    m_reflective = ref;
+    return *this;
+  }
 
-  Mat4f objectTransformation() const { return m_object_trans; }
-  Mat4f patternTransformation() const { return m_pattern_trans; }
+  Mat4f objTrans() const { return m_object_trans; }
+  Mat4f patTrans() const { return m_pattern_trans; }
   Vec3f color() const { return m_color; }
-  Vec3f patternColorA() const { return m_pattern_colorA; }
-  Vec3f patternColorB() const { return m_pattern_colorB; }
+  Vec3f patColA() const { return m_pattern_colorA; }
+  Vec3f patColB() const { return m_pattern_colorB; }
   float ambient() const { return m_ambient; }
   float diffuse() const { return m_diffuse; }
   float specular() const { return m_specular; }

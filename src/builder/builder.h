@@ -20,3 +20,5 @@ class TraceableBuilder {
  protected:
   Properties m_prop;
 };
+
+typedef std::shared_ptr<TraceableBuilder> TraceableBuilderPtr;

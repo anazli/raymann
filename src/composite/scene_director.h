@@ -16,6 +16,8 @@ class SceneDirector {
   Properties m_properties;
 };
 
+typedef std::shared_ptr<SceneDirector> SceneDirectorPtr;
+
 class StandardSphere : public SceneDirector {
  public:
   StandardSphere(std::shared_ptr<TraceableBuilder> builder,
@@ -23,24 +25,23 @@ class StandardSphere : public SceneDirector {
   std::shared_ptr<Traceable> create() override;
 };
 
-class SphereWithCheckerPattern : public SceneDirector {
+class CheckerSphere : public SceneDirector {
  public:
-  SphereWithCheckerPattern(std::shared_ptr<TraceableBuilder> builder,
-                           const Properties &prop);
+  CheckerSphere(std::shared_ptr<TraceableBuilder> builder,
+                const Properties &prop);
   std::shared_ptr<Traceable> create() override;
 };
 
-class SphereWithRingPattern : public SceneDirector {
+class RingSphere : public SceneDirector {
  public:
-  SphereWithRingPattern(std::shared_ptr<TraceableBuilder> builder,
-                        const Properties &prop);
+  RingSphere(std::shared_ptr<TraceableBuilder> builder, const Properties &prop);
   std::shared_ptr<Traceable> create() override;
 };
 
-class SphereWithGradientPattern : public SceneDirector {
+class GradientSphere : public SceneDirector {
  public:
-  SphereWithGradientPattern(std::shared_ptr<TraceableBuilder> builder,
-                            const Properties &prop);
+  GradientSphere(std::shared_ptr<TraceableBuilder> builder,
+                 const Properties &prop);
   std::shared_ptr<Traceable> create() override;
 };
 
@@ -51,16 +52,15 @@ class StandardPlane : public SceneDirector {
   std::shared_ptr<Traceable> create() override;
 };
 
-class PlaneWithCheckerPattern : public SceneDirector {
+class CheckerPlane : public SceneDirector {
  public:
-  PlaneWithCheckerPattern(std::shared_ptr<TraceableBuilder> builder,
-                          const Properties &prop);
+  CheckerPlane(std::shared_ptr<TraceableBuilder> builder,
+               const Properties &prop);
   std::shared_ptr<Traceable> create() override;
 };
 
-class PlaneWithRingPattern : public SceneDirector {
+class RingPlane : public SceneDirector {
  public:
-  PlaneWithRingPattern(std::shared_ptr<TraceableBuilder> builder,
-                       const Properties &prop);
+  RingPlane(std::shared_ptr<TraceableBuilder> builder, const Properties &prop);
   std::shared_ptr<Traceable> create() override;
 };
