@@ -38,7 +38,7 @@ class Material : public TraceableDeco {
 class StripePattern : public Material {
  public:
   StripePattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
-                const Mat4f &ptrans, const Mat4f &otrans);
+                const Mat4f &otrans, const Mat4f &ptrans);
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
@@ -57,7 +57,7 @@ class StripePattern : public Material {
 class GradientPattern : public Material {
  public:
   GradientPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
-                  const Mat4f &ptrans, const Mat4f &otrans);
+                  const Mat4f &otrans, const Mat4f &ptrans);
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
@@ -76,7 +76,7 @@ class GradientPattern : public Material {
 class RingPattern : public Material {
  public:
   RingPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
-              const Mat4f &ptrans, const Mat4f &otrans);
+              const Mat4f &otrans, const Mat4f &ptrans);
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
@@ -95,7 +95,7 @@ class RingPattern : public Material {
 class CheckerPattern : public Material {
  public:
   CheckerPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
-                 const Mat4f &ptrans, const Mat4f &otrans);
+                 const Mat4f &otrans, const Mat4f &ptrans);
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:

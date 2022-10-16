@@ -6,7 +6,7 @@ using namespace testing;
 
 class TMat : public Test {
  public:
-  Sphere *s;
+  SphereI *s;
   PointLight light;
 };
 

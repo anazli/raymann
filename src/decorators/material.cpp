@@ -74,7 +74,7 @@ bool Material::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
 //------------------------------------------------------------------------------
 
 StripePattern::StripePattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                             const Mat4f& ptrans, const Mat4f& otrans)
+                             const Mat4f& otrans, const Mat4f& ptrans)
     : Material(tr),
       m_color_a(a),
       m_color_b(b),
@@ -102,7 +102,7 @@ Vec3f StripePattern::pattern_at(const Point3f& p) const {
 //------------------------------------------------------------------------------
 
 GradientPattern::GradientPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                                 const Mat4f& ptrans, const Mat4f& otrans)
+                                 const Mat4f& otrans, const Mat4f& ptrans)
     : Material(tr),
       m_color_a(a),
       m_color_b(b),
@@ -132,7 +132,7 @@ Vec3f GradientPattern::pattern_at(const Point3f& p) const {
 //------------------------------------------------------------------------------
 
 RingPattern::RingPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                         const Mat4f& ptrans, const Mat4f& otrans)
+                         const Mat4f& otrans, const Mat4f& ptrans)
     : Material(tr),
       m_color_a(a),
       m_color_b(b),
@@ -163,7 +163,7 @@ Vec3f RingPattern::pattern_at(const Point3f& p) const {
 //------------------------------------------------------------------------------
 
 CheckerPattern::CheckerPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                               const Mat4f& ptrans, const Mat4f& otrans)
+                               const Mat4f& otrans, const Mat4f& ptrans)
     : Material(tr),
       m_color_a(a),
       m_color_b(b),

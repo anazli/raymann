@@ -9,6 +9,7 @@ set(EXE raymann)
 set(sources src/main/raymann.cpp
             src/builder/shape_builder.cpp
             src/composite/traceable.cpp
+            src/composite/scene_director.cpp
             src/container/canvas.cpp
             src/composite/world.cpp
             src/decorators/material.cpp
