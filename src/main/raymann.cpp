@@ -13,13 +13,12 @@ using namespace std;
 
 int main() {
   //----------------------Floor---------------------
-  Properties floor_properties;
-  floor_properties.setPatColA(Vec3f(1.0f, 1.0f, 1.0f))
+  Properties fl_prop;
+  fl_prop.setPatColA(Vec3f(1.0f, 1.0f, 1.0f))
       .setPatColB(Vec3f(0.1f, 0.1f, 0.1f));
-  TraceableBuilderPtr floor_builder = make_shared<ShapeBuilder>();
-  SceneDirectorPtr floorD =
-      make_shared<CheckerPlane>(floor_builder, floor_properties);
-  TraceablePtr floor = floorD->create();
+  TraceableBuilderPtr fl_builder = make_shared<ShapeBuilder>();
+  SceneDirectorPtr fl_dir = make_shared<CheckerPlane>(fl_builder, fl_prop);
+  TraceablePtr floor = fl_dir->create();
 
   //----------------------Left wall---------------------
   Properties lw_prop;
@@ -67,8 +66,7 @@ int main() {
   Properties ls_prop;
   ls_prop.setPatColA(Vec3f(0.1f, 0.1f, 1.0f))
       .setPatColB(Vec3f(1.0f, 0.1f, 0.1f))
-      .setObjTrans(transl(-1.5f, 0.33f, -0.75f) *
-                   scale(0.33f, 0.33f, 0.33f))
+      .setObjTrans(transl(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f))
       .setPatTrans(transl(-1.5f, 0.33f, -0.75f) * scale(4.0f, 4.0f, 4.0f));
   TraceableBuilderPtr ls_builder = make_shared<ShapeBuilder>();
   SceneDirectorPtr ls_dir = make_shared<GradientSphere>(ls_builder, ls_prop);
