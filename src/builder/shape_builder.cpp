@@ -1,5 +1,10 @@
 #include "builder/shape_builder.h"
 
+ShapeBuilder::~ShapeBuilder()
+{
+
+}
+
 void ShapeBuilder::addTraceable(Traceable* tr) { m_currentTraceable = tr; }
 
 void ShapeBuilder::addTransformer() {

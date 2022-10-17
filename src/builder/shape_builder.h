@@ -6,6 +6,7 @@
 
 class ShapeBuilder : public TraceableBuilder {
  public:
+  virtual ~ShapeBuilder();
   void addTraceable(Traceable *tr) override;
   void addTransformer() override;
   void addMaterial() override;

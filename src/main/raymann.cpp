@@ -73,7 +73,7 @@ int main() {
   TraceablePtr left = ls_dir->create();
 
   //----------------------------------------------------------------------------
-  Canvas canvas(300, 300);
+  Canvas canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   Camera c(canvas.width(), canvas.height(), PI / 3.0f);
   c.computePixelSize();

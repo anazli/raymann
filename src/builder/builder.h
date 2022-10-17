@@ -5,7 +5,7 @@
 
 class TraceableBuilder {
  public:
-  ~TraceableBuilder() {}
+  virtual ~TraceableBuilder() {}
   virtual void addTraceable(Traceable* tr) {}
   virtual void addTransformer() {}
   virtual void addMaterial() {}

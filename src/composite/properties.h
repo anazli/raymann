@@ -1,62 +1,39 @@
 #pragma once
 
+#include <any>
+#include <map>
+
 #include "tools/mat4.h"
 #include "tools/vec3.h"
 
 class Properties {
  public:
-  Properties() {}
-  Properties &setObjTrans(const Mat4f &oTrans) {
-    m_object_trans = oTrans;
-    return *this;
-  }
-  Properties &setPatTrans(const Mat4f &pTrans) {
-    m_pattern_trans = pTrans;
-    return *this;
-  }
-  Properties &setColor(const Vec3f &color) {
-    m_color = color;
-    return *this;
-  }
-  Properties &setPatColA(const Vec3f &color) {
-    m_pattern_colorA = color;
-    return *this;
-  }
-  Properties &setPatColB(const Vec3f &color) {
-    m_pattern_colorB = color;
-    return *this;
-  }
-  Properties &setAmbient(const float &am) {
-    m_ambient = am;
-    return *this;
-  }
-  Properties &setDiffuse(const float &di) {
-    m_diffuse = di;
-    return *this;
-  }
-  Properties &setSpecular(const float &sp) {
-    m_specular = sp;
-    return *this;
-  }
-  Properties &setShininess(const float &sh) {
-    m_shininess = sh;
-    return *this;
-  }
-  Properties &setReflection(const float &ref) {
-    m_reflective = ref;
-    return *this;
-  }
+  Properties();
+  Properties &setObjTrans(const Mat4f &oTrans);
+  Properties &setPatTrans(const Mat4f &pTrans);
+  Properties &setColor(const Vec3f &color);
+  Properties &setPatColA(const Vec3f &color);
+  Properties &setPatColB(const Vec3f &color);
+  Properties &setAmbient(const float &am);
+  Properties &setDiffuse(const float &di);
+  Properties &setSpecular(const float &sp);
+  Properties &setShininess(const float &sh);
+  Properties &setReflection(const float &ref);
+  Properties &setSphereCenter(const Point3f &c);
+  Properties &setSphereRadius(const float &r);
 
-  Mat4f objTrans() const { return m_object_trans; }
-  Mat4f patTrans() const { return m_pattern_trans; }
-  Vec3f color() const { return m_color; }
-  Vec3f patColA() const { return m_pattern_colorA; }
-  Vec3f patColB() const { return m_pattern_colorB; }
-  float ambient() const { return m_ambient; }
-  float diffuse() const { return m_diffuse; }
-  float specular() const { return m_specular; }
-  float shininess() const { return m_shininess; }
-  float reflection() const { return m_reflective; }
+  Mat4f objTrans() const;
+  Mat4f patTrans() const;
+  Vec3f color() const;
+  Vec3f patColA() const;
+  Vec3f patColB() const;
+  float ambient() const;
+  float diffuse() const;
+  float specular() const;
+  float shininess() const;
+  float reflection() const;
+  Point3f sphereCenter() const;
+  float sphereRadius() const;
 
  private:
   Mat4f m_object_trans = Mat4f();
@@ -69,4 +46,7 @@ class Properties {
   float m_specular = 0.9f;
   float m_shininess = 200.f;
   float m_reflective = 0.f;
+  Point3f m_sphere_center = Point3f(0.f, 0.f, 0.f);
+  float m_sphere_radius = 1.f;
+  std::map<std::string, std::any> m_prop;
 };
