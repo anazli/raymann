@@ -26,9 +26,9 @@ if(BUILD_TESTING)
   include(FetchContent)
   FetchContent_Declare(
     googletest
-    URL https://github.com/google/googletest/archive/2d07f12b607c528b21795ab672cff3afaf64f7a1.zip
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG release-1.12.1
   )
-  # For Windows: Prevent overriding the parent project's compiler/linker settings
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   FetchContent_MakeAvailable(googletest)
   include(GoogleTest)
@@ -46,7 +46,6 @@ if(BUILD_TESTING)
         src/decorators/transformer.cpp
         src/decorators/material.cpp
         src/decorators/traceable_deco.cpp)
-
     target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
     target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
     set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
