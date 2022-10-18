@@ -1,3 +1,5 @@
+#include "builder/shape_builder.h"
+#include "composite/scene_director.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"
 #include "tools/tools.h"
@@ -123,4 +125,18 @@ TEST_F(TMat, lightingWithSurfaceInShadow) {
   ASSERT_EQ(result.y(), 0.1f);
   ASSERT_EQ(result.z(), 0.1f);
   ASSERT_TRUE(result == Vec3f(0.1f, 0.1f, 0.1f));
+}
+
+TEST_F(TMat, precomputingTheReflectionVector) {
+  Properties prop;
+  TraceableBuilderPtr builder = std::make_shared<ShapeBuilder>();
+  SceneDirectorPtr direct = std::make_shared<StandardPlane>(builder, prop);
+  TraceablePtr plane = direct->create();
+  Ray r(Point3f(0.f, 1.f, -1.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
+  plane->intersect(r);
+  Vec3f reflection_vector =
+      reflect(r.direction(), plane->normal(plane->record().point(r)));
+
+  EXPECT_TRUE(reflection_vector ==
+              Vec3f(0.f, sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));
 }
