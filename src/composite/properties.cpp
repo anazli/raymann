@@ -2,6 +2,23 @@
 
 Properties::Properties() {}
 
+Properties& Properties::reset() {
+  m_object_trans = Mat4f();
+  m_pattern_trans = Mat4f();
+  m_color = Vec3f();
+  m_pattern_colorA = Vec3f();
+  m_pattern_colorB = Vec3f();
+  m_ambient = 0.1f;
+  m_diffuse = 0.9f;
+  m_specular = 0.9f;
+  m_shininess = 200.f;
+  m_reflective = 0.f;
+  m_sphere_center = Point3f(0.f, 0.f, 0.f);
+  m_sphere_radius = 1.f;
+
+  return *this;
+}
+
 Properties& Properties::setObjTrans(const Mat4f& oTrans) {
   m_object_trans = oTrans;
   return *this;

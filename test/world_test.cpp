@@ -1,8 +1,9 @@
+#include "composite/world.h"
+
 #include "builder/shape_builder.h"
 #include "composite/properties.h"
 #include "composite/scene_director.h"
 #include "composite/traceable.h"
-#include "composite/world.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"
 
@@ -30,8 +31,8 @@ class Tworld : public Test {
 };
 
 TEST_F(Tworld, createsWorldOfShere) {
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s = direct->create(builder, prop);
   w->add(s);
   ASSERT_TRUE(s->getParent() == w.get());
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -53,16 +54,16 @@ TEST_F(Tworld, createsWorldOfShere) {
 
 TEST_F(Tworld, createsWorldOfTwoSpheres) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s = direct->create(builder, prop);
   prop.setSphereCenter(Point3f(0.0f, 0.0f, 5.0f))
       .setColor(Vec3f(0.09f, 0.172f, 0.909f))
       .setAmbient(0.f)
       .setDiffuse(0.f)
       .setSpecular(0.f)
       .setShininess(0.f);
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct2->create(builder, prop);
 
   w->add(s);
   w->add(s1);
@@ -93,16 +94,16 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
 
 TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s = direct->create(builder, prop);
   prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f))
       .setColor(Vec3f(0.09f, 0.172f, 0.909f))
       .setAmbient(0.f)
       .setDiffuse(0.f)
       .setSpecular(0.f)
       .setShininess(0.f);
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct2->create(builder, prop);
 
   w->add(s);
   w->add(s1);
@@ -123,17 +124,18 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
 
 TEST_F(Tworld, createsWorldOfNegativeIntersections) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  direct = make_shared<StandardSphere>(builder, prop);
+  direct = make_shared<StandardSphere>();
   prop.setSphereCenter(Point3f(0.0f, 0.0f, -11.0f))
       .setColor(Vec3f(0.09f, 0.172f, 0.909f))
       .setAmbient(0.f)
       .setDiffuse(0.f)
       .setSpecular(0.f)
       .setShininess(0.f);
-  shared_ptr<Traceable> s = direct->create();
+  shared_ptr<Traceable> s = direct->create(builder, prop);
   prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct2->create();
+
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct2->create(builder, prop);
 
   w->add(s);
   w->add(s1);
@@ -160,17 +162,21 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
       .setDiffuse(0.f)
       .setSpecular(0.f)
       .setShininess(0.f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s = direct->create();
+
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s = direct->create(builder, prop);
+
   prop.setSphereCenter(Point3f(0.0f, 0.0f, 0.0f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct2->create(builder, prop);
+
   prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f));
-  SceneDirectorPtr direct3 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct3->create();
+  SceneDirectorPtr direct3 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct3->create(builder, prop);
+
   prop.setSphereCenter(Point3f(0.0f, 0.0f, 8.0f));
-  SceneDirectorPtr direct4 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s3 = direct4->create();
+  SceneDirectorPtr direct4 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s3 = direct4->create(builder, prop);
 
   w->add(s);
   w->add(s1);
@@ -202,11 +208,11 @@ TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
   ASSERT_TRUE(s1->getParent() == w.get());
@@ -218,11 +224,11 @@ TEST_F(Tworld, getsVectorOFIntersectionPoints) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
@@ -242,8 +248,8 @@ TEST_F(Tworld, computesQuantitiesOfIntersection) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -260,8 +266,8 @@ TEST_F(Tworld, intersectionWhenHitOccursOutside) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -278,8 +284,8 @@ TEST_F(Tworld, intersectionWhenHitOccursInside) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -296,11 +302,11 @@ TEST_F(Tworld, ShadingAnIntersection) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
@@ -326,16 +332,16 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
       .setAmbient(0.1f)
       .setDiffuse(0.9f)
       .setSpecular(0.9f)
       .setShininess(200.f)
       .setObjTrans(scale(0.5f, 0.5f, 0.5f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
@@ -361,16 +367,16 @@ TEST_F(Tworld, colorWhenRayMisses) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
       .setAmbient(0.1f)
       .setDiffuse(0.9f)
       .setSpecular(0.9f)
       .setShininess(200.f)
       .setObjTrans(scale(0.5f, 0.5f, 0.5f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
@@ -393,16 +399,16 @@ TEST_F(Tworld, colorWhenRayHits) {
       .setAmbient(0.1f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
       .setAmbient(0.1f)
       .setDiffuse(0.9f)
       .setSpecular(0.9f)
       .setShininess(200.f)
       .setObjTrans(scale(0.5f, 0.5f, 0.5f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
@@ -425,16 +431,16 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
       .setAmbient(1.0f)
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
       .setAmbient(0.1f)
       .setDiffuse(0.9f)
       .setSpecular(0.9f)
       .setShininess(200.f)
       .setObjTrans(scale(0.5f, 0.5f, 0.5f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
@@ -446,8 +452,8 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
 }
 
 TEST_F(Tworld, noShadowWhenNothingCollinear) {
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   w->add(s1);
   Point3f p(0.0f, 10.0f, 0.0f);
   Ray r(p, (light.position() - p).normalize());
@@ -457,8 +463,8 @@ TEST_F(Tworld, noShadowWhenNothingCollinear) {
 }
 
 TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   w->add(s1);
   Point3f p(10.0f, -10.0f, 10.0f);
   Ray r(p, (light.position() - p).normalize());
@@ -468,8 +474,8 @@ TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindLight) {
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   w->add(s1);
   Point3f p(-20.0f, 20.0f, -20.0f);
   Ray r(p, (light.position() - p).normalize());
@@ -479,8 +485,8 @@ TEST_F(Tworld, noShadowWhenObjectBehindLight) {
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   w->add(s1);
   Point3f p(-2.0f, 2.0f, -2.0f);
   Ray r(p, (light.position() - p).normalize());
@@ -490,12 +496,12 @@ TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
 }
 
 TEST_F(Tworld, intersectionWithShadows) {
-  direct = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s1 = direct->create();
+  direct = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s1 = direct->create(builder, prop);
   w->add(s1);
   prop.setObjTrans(transl(0.0f, 0.0f, 10.0f));
-  direct2 = make_shared<StandardSphere>(builder, prop);
-  shared_ptr<Traceable> s2 = direct2->create();
+  direct2 = make_shared<StandardSphere>();
+  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s2);
   Ray r(Point3f(0.0f, 0.0f, 5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   light = PointLight(Point3f(0.0f, 0.0f, 10.0f), Vec3f(1.0f, 1.0f, 1.0f));

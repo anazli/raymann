@@ -130,8 +130,8 @@ TEST_F(TMat, lightingWithSurfaceInShadow) {
 TEST_F(TMat, precomputingTheReflectionVector) {
   Properties prop;
   TraceableBuilderPtr builder = std::make_shared<ShapeBuilder>();
-  SceneDirectorPtr direct = std::make_shared<StandardPlane>(builder, prop);
-  TraceablePtr plane = direct->create();
+  SceneDirectorPtr direct = std::make_shared<StandardPlane>();
+  TraceablePtr plane = direct->create(builder, prop);
   Ray r(Point3f(0.f, 1.f, -1.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r);
   Vec3f reflection_vector =

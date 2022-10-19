@@ -9,6 +9,7 @@
 class Properties {
  public:
   Properties();
+  Properties &reset();
   Properties &setObjTrans(const Mat4f &oTrans);
   Properties &setPatTrans(const Mat4f &pTrans);
   Properties &setColor(const Vec3f &color);
