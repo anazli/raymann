@@ -9,7 +9,8 @@
 template <class T>
 class Vec2 {
  public:
-  Vec2(const T& p1 = 0., const T& p2 = 0.) : m_x{p1}, m_y{p2} {}
+  Vec2(const T& p1 = static_cast<T>(0), const T& p2 = static_cast<T>(0))
+      : m_x{p1}, m_y{p2} {}
   Vec2(const Vec2<T>& v) : m_x{v.x()}, m_y{v.y()} {}
 
   T x() const { return m_x; }

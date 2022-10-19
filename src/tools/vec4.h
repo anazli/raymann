@@ -17,8 +17,8 @@ class Point3;
 template <class T>
 class Vec4 {
  public:
-  Vec4<T>(const T& p1 = 0., const T& p2 = 0., const T& p3 = 0.,
-          const T& p4 = 0.)
+  Vec4<T>(const T& p1 = static_cast<T>(0), const T& p2 = static_cast<T>(0),
+          const T& p3 = static_cast<T>(0), const T& p4 = static_cast<T>(0))
       : m_x{p1}, m_y{p2}, m_z{p3}, m_w{p4} {}
 
   Vec4<T>(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()}, m_w{v.w()} {}

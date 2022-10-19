@@ -8,10 +8,14 @@ template <class T>
 class Mat4 {
  public:
   Mat4<T>() {
-    m_vec[0] = Vec4<T>(1, 0, 0, 0);
-    m_vec[1] = Vec4<T>(0, 1, 0, 0);
-    m_vec[2] = Vec4<T>(0, 0, 1, 0);
-    m_vec[3] = Vec4<T>(0, 0, 0, 1);
+    m_vec[0] = Vec4<T>(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0),
+                       static_cast<T>(0));
+    m_vec[1] = Vec4<T>(static_cast<T>(0), static_cast<T>(1), static_cast<T>(0),
+                       static_cast<T>(0));
+    m_vec[2] = Vec4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(1),
+                       static_cast<T>(0));
+    m_vec[3] = Vec4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0),
+                       static_cast<T>(1));
   }
   Mat4<T>(const T& num) {
     m_vec[0].setXYZW(num);

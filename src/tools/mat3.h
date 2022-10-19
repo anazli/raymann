@@ -8,9 +8,9 @@ template <class T>
 class Mat3 {
  public:
   Mat3<T>() {
-    m_vec[0] = Vec3<T>(1, 0, 0);
-    m_vec[1] = Vec3<T>(0, 1, 0);
-    m_vec[2] = Vec3<T>(0, 0, 1);
+    m_vec[0] = Vec3<T>(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0));
+    m_vec[1] = Vec3<T>(static_cast<T>(0), static_cast<T>(1), static_cast<T>(0));
+    m_vec[2] = Vec3<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(1));
   }
   Mat3<T>(const T& num) {
     m_vec[0].setXYZ(num);

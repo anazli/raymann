@@ -11,7 +11,8 @@
 template <class T>
 class Vec3 {
  public:
-  Vec3<T>(const T& p1 = 0., const T& p2 = 0., const T& p3 = 0.)
+  Vec3<T>(const T& p1 = static_cast<T>(0), const T& p2 = static_cast<T>(0),
+          const T& p3 = static_cast<T>(0))
       : m_x{p1}, m_y{p2}, m_z{p3} {}
 
   Vec3<T>(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
