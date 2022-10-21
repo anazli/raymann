@@ -54,7 +54,21 @@ Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
 }
 
 Vec3f Material::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
-  return Vec3f();
+  if (m_reflective == 0.f) {
+    return Vec3f(0.f, 0.f, 0.f);
+  }
+  Vec3f reflectv =
+      reflect(r.direction(), (record().inside ? normal(record().point(r))
+                                              : normal(record().point(r))));
+  Point3f over_point =
+      record().point(r) + (record().inside ? normal(record().point(r))
+                                           : normal(record().point(r))) *
+                              0.02f;
+  record().over_point_from_refl_surf = over_point;
+  Ray reflect_ray(over_point, reflectv);
+
+  Vec3f color = lighting(w, reflect_ray);
+  return color * m_reflective;
 }
 
 Record& Material::record() { return TraceableDeco::record(); }

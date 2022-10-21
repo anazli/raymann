@@ -25,6 +25,7 @@ struct Record {
   Point3f point(const Ray &r) const { return r.position(t_min()); }
   Vec3f eye(const Ray &r) const { return -r.direction(); }
   bool inside = false;
+  Point3f over_point_from_refl_surf;
 };
 
 class Traceable {
