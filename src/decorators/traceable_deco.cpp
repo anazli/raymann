@@ -12,6 +12,11 @@ Vec3f TraceableDeco::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   return m_traceable->lighting(w, ray);
 }
 
+Vec3f TraceableDeco::reflectedColor(std::shared_ptr<Traceable> w,
+                                    const Ray& r) {
+  return m_traceable->reflectedColor(w, r);
+}
+
 std::string TraceableDeco::name() const { return m_traceable->name(); }
 
 Record& TraceableDeco::record() { return m_traceable->record(); }

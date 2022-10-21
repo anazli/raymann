@@ -53,6 +53,10 @@ Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   return ret_ambient + ret_diffuse + ret_specular;
 }
 
+Vec3f Material::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
+  return Vec3f();
+}
+
 std::string Material::name() const { return TraceableDeco::name(); }
 
 Record& Material::record() { return TraceableDeco::record(); }

@@ -14,10 +14,6 @@ bool Transformer::intersect(const Ray& r) {
   return TraceableDeco::intersect(r_transformed);
 }
 
-Vec3f Transformer::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
-  return TraceableDeco::lighting(w, ray);
-}
-
 std::string Transformer::name() const { return TraceableDeco::name(); }
 
 Record& Transformer::record() { return TraceableDeco::record(); }
