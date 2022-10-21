@@ -26,18 +26,18 @@ bool Material::intersect(const Ray& r) { return TraceableDeco::intersect(r); }
 
 Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Vec3f effective_color = m_color * w->getLight().intensity();
-  Point3f p =
+  Point3f over_point =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
-  Vec3f normal_vec = record().inside ? -normal(p) : normal(p);
-  Vec3f lightv = (w->getLight().position() - p).normalize();
+  Vec3f normal_vec = record().inside ? -normal(over_point) : normal(over_point);
+  Vec3f lightv = (w->getLight().position() - over_point).normalize();
 
   Vec3f ret_ambient = effective_color * m_ambient;
   Vec3f ret_diffuse;
   Vec3f ret_specular;
 
-  if (isShadowed(w, p)) return ret_ambient;
+  if (isShadowed(w, over_point)) return ret_ambient;
 
   float light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {
