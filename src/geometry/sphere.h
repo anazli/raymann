@@ -16,7 +16,7 @@ class Sphere : public Traceable {
   bool intersect(const Ray &r) override;
   bool isWorld() const override { return false; }
   std::string name() const override { return m_name; }
-  Record record() const override { return rec; }
+  Record &record() override { return rec; }
   Vec3f normal(const Point3f &p) const override {
     return (p - m_center).normalize();
   }

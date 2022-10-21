@@ -42,7 +42,7 @@ class Traceable {
   virtual bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p);
   virtual void setLight(const PointLight &l) {}
   virtual PointLight getLight() const;
-  virtual Record record() const;
+  virtual Record &record();
 
   void setParent(Traceable *t);
   Traceable *getParent() const;

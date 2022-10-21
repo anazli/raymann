@@ -24,7 +24,7 @@ bool Traceable::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
 
 PointLight Traceable::getLight() const { return PointLight(); }
 
-Record Traceable::record() const { return rec; }
+Record& Traceable::record() { return rec; }
 
 void Traceable::setParent(Traceable* t) { m_parent = t; }
 

@@ -14,7 +14,7 @@ Vec3f TraceableDeco::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
 
 std::string TraceableDeco::name() const { return m_traceable->name(); }
 
-Record TraceableDeco::record() const { return m_traceable->record(); }
+Record& TraceableDeco::record() { return m_traceable->record(); }
 
 Vec3f TraceableDeco::normal(const Point3f& p) const {
   return m_traceable->normal(p);

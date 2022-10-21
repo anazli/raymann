@@ -55,7 +55,7 @@ Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
 
 std::string Material::name() const { return TraceableDeco::name(); }
 
-Record Material::record() const { return TraceableDeco::record(); }
+Record& Material::record() { return TraceableDeco::record(); }
 
 Vec3f Material::normal(const Point3f& p) const {
   return TraceableDeco::normal(p);

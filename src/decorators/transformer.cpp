@@ -20,7 +20,7 @@ Vec3f Transformer::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
 
 std::string Transformer::name() const { return TraceableDeco::name(); }
 
-Record Transformer::record() const { return TraceableDeco::record(); }
+Record& Transformer::record() { return TraceableDeco::record(); }
 
 Vec3f Transformer::normal(const Point3f& p) const {
   Vec4f v4 = p;

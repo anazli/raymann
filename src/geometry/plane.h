@@ -18,7 +18,7 @@ class Plane : public Traceable {
   Vec3f normal(const Point3f &p) const override {
     return Vec3f(0.0f, 1.0f, 0.0f);
   }
-  Record record() const override { return rec; }
+  Record &record() override { return rec; }
   bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override {
     Vec3f v = p - w->getLight().position();
     float distance = v.length();
