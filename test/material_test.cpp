@@ -1,5 +1,6 @@
 #include "builder/shape_builder.h"
 #include "composite/scene_director.h"
+#include "composite/world.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"
 #include "tools/tools.h"
@@ -139,4 +140,56 @@ TEST_F(TMat, precomputingTheReflectionVector) {
 
   EXPECT_TRUE(reflection_vector ==
               Vec3f(0.f, sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));
+}
+
+TEST_F(TMat, strikeNonReflectiveSurface) {
+  PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
+  Properties prop;
+  TraceableBuilderPtr builder = std::make_shared<ShapeBuilder>();
+  SceneDirectorPtr direct = std::make_shared<StandardSphere>();
+  prop.setColor(Vec3f(0.8f, 1.f, 0.6f)).setDiffuse(0.7f).setSpecular(0.2f);
+  TraceablePtr s = direct->create(builder, prop);
+  prop.reset().setAmbient(1.f).setObjTrans(scale(0.5f, 0.5f, 0.5f));
+  TraceablePtr s1 = direct->create(builder, prop);
+  Ray r(Point3f(0.f, 0.f, 0.f), Vec3f(0.f, 0.f, 1.f));
+  TraceablePtr w = std::make_shared<World>();
+  w->setLight(light);
+  w->add(s);
+  w->add(s1);
+  s1->intersect(r);
+  Vec3f color = s1->reflectedColor(w, r);
+  ASSERT_TRUE(color == Vec3f(0.f, 0.f, 0.f));
+}
+
+TEST_F(TMat, strikeReflectiveSurface) {
+  PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
+  Properties prop;
+  TraceablePtr w = std::make_shared<World>();
+  TraceableBuilderPtr builder = std::make_shared<ShapeBuilder>();
+
+  SceneDirectorPtr direct = std::make_shared<StandardSphere>();
+  prop.setColor(Vec3f(0.8f, 1.f, 0.6f))
+      .setAmbient(0.1f)
+      .setDiffuse(0.7f)
+      .setSpecular(0.2f);
+  TraceablePtr s = direct->create(builder, prop);
+
+  SceneDirectorPtr direct1 = std::make_shared<StandardPlane>();
+  prop.reset()
+      .setColor(Vec3f(1.f, 1.f, 1.f))
+      .setReflection(0.5f)
+      .setObjTrans(transl(0.f, -1.f, 0.f));
+  TraceablePtr p = direct1->create(builder, prop);
+
+  Ray r(Point3f(0.f, 0.f, -3.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));
+  w->setLight(light);
+  w->add(s);
+  w->add(p);
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
+  ASSERT_TRUE(&t == p.get());
+  Vec3f color = t.reflectedColor(w, r);
+  ASSERT_EQ(color.x(), 0.19032f);
+  ASSERT_EQ(color.y(), 0.2379f);
+  ASSERT_EQ(color.z(), 0.14274f);
 }
