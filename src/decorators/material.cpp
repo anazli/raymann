@@ -57,8 +57,6 @@ Vec3f Material::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
   return Vec3f();
 }
 
-std::string Material::name() const { return TraceableDeco::name(); }
-
 Record& Material::record() { return TraceableDeco::record(); }
 
 Vec3f Material::normal(const Point3f& p) const {

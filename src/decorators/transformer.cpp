@@ -14,8 +14,6 @@ bool Transformer::intersect(const Ray& r) {
   return TraceableDeco::intersect(r_transformed);
 }
 
-std::string Transformer::name() const { return TraceableDeco::name(); }
-
 Record& Transformer::record() { return TraceableDeco::record(); }
 
 Vec3f Transformer::normal(const Point3f& p) const {
@@ -25,12 +23,4 @@ Vec3f Transformer::normal(const Point3f& p) const {
   Vec3f world_normal =
       m_transformer.inverse().transpose() * Vec4f(object_normal);
   return world_normal.normalize();
-}
-
-void Transformer::checkInside(const Ray& r) {
-  return TraceableDeco::checkInside(r);
-}
-
-bool Transformer::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
-  return TraceableDeco::isShadowed(w, p);
 }
