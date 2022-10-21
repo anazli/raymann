@@ -37,6 +37,7 @@ Vec3f Material::lighting(const PointLight& light, const Ray& ray) {
   Vec3f ret_diffuse;
   Vec3f ret_specular;
 
+  record().over_point_from_surf = over_point;
   record().ambient = ret_ambient;
 
   float light_normal = dot(lightv, normal_vec);

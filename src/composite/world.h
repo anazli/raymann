@@ -19,7 +19,7 @@ class World : public Traceable {
   void setLight(const PointLight &l) override { m_light = l; }
   PointLight getLight() const override { return m_light; }
   bool isShadowed(const Point3f &p) override;
-  Vec3f color_at(const Ray &ray, const int &rec) override;
+  Vec3f color_at(const Ray &ray, const int &rec = 5) override;
   Record &record() override;
 
  private:

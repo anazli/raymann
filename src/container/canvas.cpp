@@ -15,12 +15,7 @@ void Canvas::render(std::shared_ptr<Traceable> world, const Camera &c) {
       Vec3f color;
       for (int s = 0; s < num_samples; ++s) {
         Ray ray(c, i, j);
-        if (world->intersect(ray)) {
-          Traceable &closest = world->closestHit(ray);
-          color += closest.lighting(world->getLight(), ray);
-        } else {
-          color += Vec3f(0.0, 0.0, 0.0);
-        }
+        color += world->color_at(ray);
       }
       color = color / (float)num_samples;
       writePixel(i, j, color);

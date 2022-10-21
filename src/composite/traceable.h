@@ -26,7 +26,9 @@ struct Record {
   Vec3f eye(const Ray &r) const { return -r.direction(); }
   bool inside = false;
   Point3f over_point_from_refl_surf;
+  Point3f over_point_from_surf;
   Vec3f ambient;
+  bool in_shadow = false;
 };
 
 class Traceable {
