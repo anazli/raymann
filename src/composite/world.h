@@ -5,12 +5,13 @@
 #include "composite/traceable.h"
 #include "geometry/sphere.h"
 
-class World : public Traceable {
+class World : public Traceable, public std::enable_shared_from_this<Traceable> {
  public:
   World() {}
   World(const std::string &n);
   virtual ~World();
   bool intersect(const Ray &r) override;
+  Vec3f color_at(const Ray &ray) override;
   void add(std::shared_ptr<Traceable> item) override;
   void remove(std::shared_ptr<Traceable> item, bool del = true) override;
   bool isWorld() const override { return true; }

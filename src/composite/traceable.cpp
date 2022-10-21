@@ -6,6 +6,8 @@ Vec3f Traceable::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   return Vec3f();
 }
 
+Vec3f Traceable::color_at(const Ray& ray) { return Vec3f(); }
+
 Vec3f Traceable::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
   return Vec3f();
 }

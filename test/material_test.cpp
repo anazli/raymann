@@ -189,7 +189,8 @@ TEST_F(TMat, strikeReflectiveSurface) {
   Traceable &t = w->closestHit(r);
   ASSERT_TRUE(&t == p.get());
   Vec3f color = t.reflectedColor(w, r);
-  ASSERT_EQ(color.x(), 0.19032f);
-  ASSERT_EQ(color.y(), 0.2379f);
-  ASSERT_EQ(color.z(), 0.14274f);
+  float eps = 1.E-2f;
+  EXPECT_NEAR(color.x(), 0.19032f, eps);
+  EXPECT_NEAR(color.y(), 0.2379f, eps);
+  EXPECT_NEAR(color.z(), 0.14274f, eps);
 }

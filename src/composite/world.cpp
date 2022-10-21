@@ -18,6 +18,15 @@ bool World::intersect(const Ray &r) {
   return has_intersection;
 }
 
+Vec3f World::color_at(const Ray &ray) {
+  if (intersect(ray)) {
+    Traceable &t = closestHit(ray);
+    Vec3f color = t.lighting(shared_from_this(), ray);
+    return color;
+  }
+  return Vec3f(0.f, 0.f, 0.f);
+}
+
 void World::add(shared_ptr<Traceable> item) {
   m_traceable_list.push_back(item);
   item->setParent(this);
