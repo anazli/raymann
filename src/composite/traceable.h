@@ -26,15 +26,16 @@ struct Record {
   Vec3f eye(const Ray &r) const { return -r.direction(); }
   bool inside = false;
   Point3f over_point_from_refl_surf;
+  Vec3f ambient;
 };
 
 class Traceable {
  public:
   virtual ~Traceable();
   virtual bool intersect(const Ray &r) = 0;
-  virtual Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray);
-  virtual Vec3f color_at(const Ray &ray);
-  virtual Vec3f reflectedColor(std::shared_ptr<Traceable> w, const Ray &r);
+  virtual Vec3f lighting(const PointLight &light, const Ray &ray);
+  virtual Vec3f color_at(const Ray &ray, const int &rec = 5);
+  virtual Vec3f reflectedColor(const Ray &r, const int &rec = 5);
   virtual void add(std::shared_ptr<Traceable> item) {}
   virtual void remove(std::shared_ptr<Traceable> item, bool del = true) {}
   virtual bool isWorld() const;
@@ -42,7 +43,7 @@ class Traceable {
   virtual std::string name() const;
   virtual Traceable &closestHit(const Ray &r);
   virtual void checkInside(const Ray &r);
-  virtual bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p);
+  virtual bool isShadowed(const Point3f &p);
   virtual void setLight(const PointLight &l) {}
   virtual PointLight getLight() const;
   virtual Record &record();

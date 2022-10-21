@@ -317,7 +317,7 @@ TEST_F(Tworld, ShadingAnIntersection) {
   t.checkInside(r);
 
   PointLight l(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(w, r);
+  Vec3f color = t.lighting(w->getLight(), r);
 
   ASSERT_TRUE(&t == s1.get());
 
@@ -352,7 +352,7 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
   t.checkInside(r);
 
   PointLight l(Point3f(0.0f, 0.25f, 0.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(w, r);
+  Vec3f color = t.lighting(w->getLight(), r);
 
   ASSERT_TRUE(&t == s2.get());
 
@@ -387,7 +387,7 @@ TEST_F(Tworld, colorWhenRayMisses) {
 
   PointLight l(Point3f(0.0f, 0.00f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f));
   w->setLight(l);
-  Vec3f color = t.lighting(w, r);
+  Vec3f color = t.lighting(w->getLight(), r);
 
   ASSERT_EQ(color.x(), 0.0f);
   ASSERT_EQ(color.y(), 0.0f);
@@ -418,7 +418,7 @@ TEST_F(Tworld, colorWhenRayHits) {
   Traceable &t = w->closestHit(r);
 
   PointLight l(Point3f(-10.0f, 10.00f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(w, r);
+  Vec3f color = t.lighting(w->getLight(), r);
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.38066f, eps);
@@ -459,7 +459,7 @@ TEST_F(Tworld, noShadowWhenNothingCollinear) {
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
   Traceable &t = w->closestHit(r);
-  ASSERT_FALSE(t.isShadowed(w, p));
+  ASSERT_FALSE(w->isShadowed(p));
 }
 
 TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
@@ -470,7 +470,7 @@ TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
   Traceable &t = w->closestHit(r);
-  ASSERT_TRUE(t.isShadowed(w, p));
+  ASSERT_TRUE(w->isShadowed(p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindLight) {
@@ -481,7 +481,7 @@ TEST_F(Tworld, noShadowWhenObjectBehindLight) {
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
   Traceable &t = w->closestHit(r);
-  ASSERT_FALSE(t.isShadowed(w, p));
+  ASSERT_FALSE(w->isShadowed(p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
@@ -492,7 +492,7 @@ TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
   Traceable &t = w->closestHit(r);
-  ASSERT_FALSE(t.isShadowed(w, p));
+  ASSERT_FALSE(w->isShadowed(p));
 }
 
 TEST_F(Tworld, intersectionWithShadows) {
@@ -508,6 +508,6 @@ TEST_F(Tworld, intersectionWithShadows) {
   w->setLight(light);
   w->intersect(r);
   Traceable &t = w->closestHit(r);
-  Vec3f color = t.lighting(w, r);
+  Vec3f color = t.lighting(w->getLight(), r);
   ASSERT_TRUE(color == Vec3f(0.1f, 0.1f, 0.1f));
 }
