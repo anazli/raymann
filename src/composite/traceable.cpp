@@ -2,13 +2,13 @@
 
 Traceable::~Traceable() {}
 
-Vec3f Traceable::lighting(const PointLight& light, const Ray& ray) {
+Vec3f Traceable::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   return Vec3f();
 }
 
-Vec3f Traceable::color_at(const Ray& ray, const int& rec) { return Vec3f(); }
+Vec3f Traceable::color_at(const Ray& ray) { return Vec3f(); }
 
-Vec3f Traceable::reflectedColor(const Ray& r, const int& rec) {
+Vec3f Traceable::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
   return Vec3f();
 }
 
@@ -24,7 +24,9 @@ void Traceable::checkInside(const Ray& r) {
   if (dot(record().eye(r), normal(record().point(r))) < 0.0f) rec.inside = true;
 }
 
-bool Traceable::isShadowed(const Point3f& p) { return false; }
+bool Traceable::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
+  return false;
+}
 
 PointLight Traceable::getLight() const { return PointLight(); }
 

@@ -18,11 +18,11 @@ bool World::intersect(const Ray &r) {
   return has_intersection;
 }
 
-Vec3f World::color_at(const Ray &ray, const int &rec) {
+Vec3f World::color_at(const Ray &ray) {
   if (intersect(ray)) {
     Traceable &t = closestHit(ray);
-    t.record().light = getLight();
-    return t.color_at(ray, rec);
+    Vec3f color = t.lighting(shared_from_this(), ray);
+    return color;
   }
   return Vec3f(0.f, 0.f, 0.f);
 }
@@ -67,5 +67,3 @@ vector<float> World::intersectionsSorted() const {
   sort(ret.begin(), ret.end(), [](float f1, float f2) { return f1 < f2; });
   return ret;
 }
-
-Record &World::record() { return rec; }

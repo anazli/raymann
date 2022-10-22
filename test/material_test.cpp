@@ -157,7 +157,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   w->add(s);
   w->add(s1);
   s1->intersect(r);
-  Vec3f color = s1->reflectedColor(r);
+  Vec3f color = s1->reflectedColor(w, r);
   ASSERT_TRUE(color == Vec3f(0.f, 0.f, 0.f));
 }
 
@@ -174,21 +174,23 @@ TEST_F(TMat, strikeReflectiveSurface) {
       .setSpecular(0.2f);
   TraceablePtr s = direct->create(builder, prop);
 
-  SceneDirectorPtr direct2 = std::make_shared<StandardPlane>();
+  SceneDirectorPtr direct1 = std::make_shared<StandardPlane>();
   prop.reset()
       .setColor(Vec3f(1.f, 1.f, 1.f))
-      .setAmbient(0.1f)
       .setReflection(0.5f)
       .setObjTrans(transl(0.f, -1.f, 0.f));
-  TraceablePtr p = direct2->create(builder, prop);
+  TraceablePtr p = direct1->create(builder, prop);
 
   Ray r(Point3f(0.f, 0.f, -3.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));
   w->setLight(light);
   w->add(s);
   w->add(p);
-  Vec3f color = w->color_at(r);
+  w->intersect(r);
+  Traceable &t = w->closestHit(r);
+  ASSERT_TRUE(&t == p.get());
+  Vec3f color = t.reflectedColor(w, r);
   float eps = 1.E-2f;
-  EXPECT_NEAR(color.x(), 0.87677f, eps);
-  EXPECT_NEAR(color.y(), 0.92436f, eps);
-  EXPECT_NEAR(color.z(), 0.82918f, eps);
+  EXPECT_NEAR(color.x(), 0.19032f, eps);
+  EXPECT_NEAR(color.y(), 0.2379f, eps);
+  EXPECT_NEAR(color.z(), 0.14274f, eps);
 }

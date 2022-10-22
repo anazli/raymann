@@ -15,13 +15,13 @@ class Material : public TraceableDeco {
   virtual ~Material();
 
   bool intersect(const Ray &r) override;
-  Vec3f lighting(const PointLight &light, const Ray &ray) override;
-  Vec3f color_at(const Ray &ray, const int &rec = 5) override;
-  Vec3f reflectedColor(const Ray &r, const int &rec = 5) override;
+  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
+  Vec3f color_at(const Ray &ray) override;
+  Vec3f reflectedColor(std::shared_ptr<Traceable> w, const Ray &r) override;
   Record &record() override;
   Vec3f normal(const Point3f &p) const override;
   void checkInside(const Ray &r) override;
-  bool isShadowed(const Point3f &p) override;
+  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override;
 
  protected:
   Vec3f m_color = Vec3f(1.0f, 1.0f, 1.0f);
@@ -40,7 +40,7 @@ class StripePattern : public Material {
  public:
   StripePattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
                 const Mat4f &otrans, const Mat4f &ptrans);
-  Vec3f lighting(const PointLight &light, const Ray &ray) override;
+  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
   Vec3f m_color_a;
@@ -59,7 +59,7 @@ class GradientPattern : public Material {
  public:
   GradientPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
                   const Mat4f &otrans, const Mat4f &ptrans);
-  Vec3f lighting(const PointLight &light, const Ray &ray) override;
+  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
   Vec3f m_color_a;
@@ -78,7 +78,7 @@ class RingPattern : public Material {
  public:
   RingPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
               const Mat4f &otrans, const Mat4f &ptrans);
-  Vec3f lighting(const PointLight &light, const Ray &ray) override;
+  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
   Vec3f m_color_a;
@@ -97,7 +97,7 @@ class CheckerPattern : public Material {
  public:
   CheckerPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
                  const Mat4f &otrans, const Mat4f &ptrans);
-  Vec3f lighting(const PointLight &light, const Ray &ray) override;
+  Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
 
  private:
   Vec3f m_color_a;

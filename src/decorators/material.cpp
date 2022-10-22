@@ -24,22 +24,20 @@ Material::~Material() {}
 
 bool Material::intersect(const Ray& r) { return TraceableDeco::intersect(r); }
 
-Vec3f Material::lighting(const PointLight& light, const Ray& ray) {
-  Vec3f effective_color = m_color * light.intensity();
+Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+  Vec3f effective_color = m_color * w->getLight().intensity();
   Point3f over_point =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
   Vec3f normal_vec = record().inside ? -normal(over_point) : normal(over_point);
-  Vec3f lightv = (light.position() - over_point).normalize();
+  Vec3f lightv = (w->getLight().position() - over_point).normalize();
 
   Vec3f ret_ambient = effective_color * m_ambient;
   Vec3f ret_diffuse;
   Vec3f ret_specular;
 
-  if (isShadowed(over_point)) {
-    return ret_ambient;
-  }
+  if (isShadowed(w, over_point)) return ret_ambient;
 
   float light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {
@@ -48,23 +46,18 @@ Vec3f Material::lighting(const PointLight& light, const Ray& ray) {
     float reflect_dot_eye = dot(reflectv, record().eye(ray));
     if (reflect_dot_eye > 0.0f) {
       float factor = pow(reflect_dot_eye, m_shininess);
-      ret_specular = light.intensity() * m_specular * factor;
+      ret_specular = w->getLight().intensity() * m_specular * factor;
     }
   }
 
   return ret_ambient + ret_diffuse + ret_specular;
 }
 
-Vec3f Material::color_at(const Ray& ray, const int& rec) {
-  Vec3f surf_col = lighting(record().light, ray);
-  Vec3f refl_col = reflectedColor(ray, rec);
-  return surf_col + refl_col;
+Vec3f Material::color_at(const Ray& ray) {
+  return TraceableDeco::color_at(ray);
 }
 
-Vec3f Material::reflectedColor(const Ray& r, const int& rec) {
-  if (rec <= 0) {
-    return Vec3f(0.f, 0.f, 0.f);
-  }
+Vec3f Material::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
   if (m_reflective == 0.f) {
     return Vec3f(0.f, 0.f, 0.f);
   }
@@ -78,7 +71,7 @@ Vec3f Material::reflectedColor(const Ray& r, const int& rec) {
   record().over_point_from_refl_surf = over_point;
   Ray reflect_ray(over_point, reflectv);
 
-  Vec3f color = color_at(reflect_ray, rec - 1);
+  Vec3f color = w->color_at(reflect_ray);
   return color * m_reflective;
 }
 
@@ -92,14 +85,8 @@ void Material::checkInside(const Ray& r) {
   return TraceableDeco::checkInside(r);
 }
 
-bool Material::isShadowed(const Point3f& p) {
-  Vec3f v = p - record().light.position();
-  float distance = v.length();
-  Ray r(record().light.position(), v.normalize());
-  if (intersect(r)) {
-    if (record().t_min() >= 0.0f && record().t_min() < distance) return true;
-  }
-  return false;
+bool Material::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
+  return TraceableDeco::isShadowed(w, p);
 }
 
 //------------------------------------------------------------------------------
@@ -114,13 +101,13 @@ StripePattern::StripePattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
       m_pattern_trans(ptrans),
       m_object_trans(otrans) {}
 
-Vec3f StripePattern::lighting(const PointLight& light, const Ray& ray) {
+Vec3f StripePattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
   m_color = pattern_at(p);
-  return Material::lighting(light, ray);
+  return Material::lighting(w, ray);
 }
 
 Vec3f StripePattern::pattern_at(const Point3f& p) const {
@@ -142,13 +129,13 @@ GradientPattern::GradientPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
       m_pattern_trans(ptrans),
       m_object_trans(otrans) {}
 
-Vec3f GradientPattern::lighting(const PointLight& light, const Ray& ray) {
+Vec3f GradientPattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
   m_color = pattern_at(p);
-  return Material::lighting(light, ray);
+  return Material::lighting(w, ray);
 }
 
 Vec3f GradientPattern::pattern_at(const Point3f& p) const {
@@ -172,13 +159,13 @@ RingPattern::RingPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
       m_pattern_trans(ptrans),
       m_object_trans(otrans) {}
 
-Vec3f RingPattern::lighting(const PointLight& light, const Ray& ray) {
+Vec3f RingPattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
   m_color = pattern_at(p);
-  return Material::lighting(light, ray);
+  return Material::lighting(w, ray);
 }
 
 Vec3f RingPattern::pattern_at(const Point3f& p) const {
@@ -203,13 +190,13 @@ CheckerPattern::CheckerPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
       m_pattern_trans(ptrans),
       m_object_trans(otrans) {}
 
-Vec3f CheckerPattern::lighting(const PointLight& light, const Ray& ray) {
+Vec3f CheckerPattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
   m_color = pattern_at(p);
-  return Material::lighting(light, ray);
+  return Material::lighting(w, ray);
 }
 
 Vec3f CheckerPattern::pattern_at(const Point3f& p) const {
