@@ -21,12 +21,8 @@ bool World::intersect(const Ray &r) {
 Vec3f World::color_at(const Ray &ray, const int &rec) {
   if (intersect(ray)) {
     Traceable &t = closestHit(ray);
-    Vec3f surf_col = t.lighting(getLight(), ray);
-    Vec3f refl_col = t.reflectedColor(ray, rec);
-    if (isShadowed(t.record().over_point_from_surf)) {
-      return t.record().ambient + refl_col;
-    }
-    return surf_col + refl_col;
+    t.record().light = getLight();
+    return t.color_at(ray, rec);
   }
   return Vec3f(0.f, 0.f, 0.f);
 }
@@ -70,15 +66,6 @@ vector<float> World::intersectionsSorted() const {
   }
   sort(ret.begin(), ret.end(), [](float f1, float f2) { return f1 < f2; });
   return ret;
-}
-
-bool World::isShadowed(const Point3f &p) {
-  Vec3f v = p - getLight().position();
-  float distance = v.length();
-  Ray r(getLight().position(), v.normalize());
-  Traceable &t = closestHit(r);
-  if (t.record().t_min() >= 0.0f && t.record().t_min() < distance) return true;
-  return false;
 }
 
 Record &World::record() { return rec; }

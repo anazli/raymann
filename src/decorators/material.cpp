@@ -37,8 +37,9 @@ Vec3f Material::lighting(const PointLight& light, const Ray& ray) {
   Vec3f ret_diffuse;
   Vec3f ret_specular;
 
-  record().over_point_from_surf = over_point;
-  record().ambient = ret_ambient;
+  if (isShadowed(over_point)) {
+    return ret_ambient;
+  }
 
   float light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {
@@ -55,7 +56,9 @@ Vec3f Material::lighting(const PointLight& light, const Ray& ray) {
 }
 
 Vec3f Material::color_at(const Ray& ray, const int& rec) {
-  return TraceableDeco::color_at(ray, rec);
+  Vec3f surf_col = lighting(record().light, ray);
+  Vec3f refl_col = reflectedColor(ray, rec);
+  return surf_col + refl_col;
 }
 
 Vec3f Material::reflectedColor(const Ray& r, const int& rec) {
@@ -75,7 +78,7 @@ Vec3f Material::reflectedColor(const Ray& r, const int& rec) {
   record().over_point_from_refl_surf = over_point;
   Ray reflect_ray(over_point, reflectv);
 
-  Vec3f color = TraceableDeco::color_at(reflect_ray, rec - 1);
+  Vec3f color = color_at(reflect_ray, rec - 1);
   return color * m_reflective;
 }
 
@@ -90,7 +93,13 @@ void Material::checkInside(const Ray& r) {
 }
 
 bool Material::isShadowed(const Point3f& p) {
-  return TraceableDeco::isShadowed(p);
+  Vec3f v = p - record().light.position();
+  float distance = v.length();
+  Ray r(record().light.position(), v.normalize());
+  if (intersect(r)) {
+    if (record().t_min() >= 0.0f && record().t_min() < distance) return true;
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------

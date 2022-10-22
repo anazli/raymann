@@ -174,20 +174,19 @@ TEST_F(TMat, strikeReflectiveSurface) {
       .setSpecular(0.2f);
   TraceablePtr s = direct->create(builder, prop);
 
-  SceneDirectorPtr direct1 = std::make_shared<StandardPlane>();
+  SceneDirectorPtr direct2 = std::make_shared<StandardPlane>();
   prop.reset()
       .setColor(Vec3f(1.f, 1.f, 1.f))
       .setAmbient(0.1f)
       .setReflection(0.5f)
       .setObjTrans(transl(0.f, -1.f, 0.f));
-  TraceablePtr p = direct1->create(builder, prop);
+  TraceablePtr p = direct2->create(builder, prop);
 
   Ray r(Point3f(0.f, 0.f, -3.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));
   w->setLight(light);
   w->add(s);
   w->add(p);
-  w->intersect(r);
-  Vec3f color = w->color_at(r, 5);
+  Vec3f color = w->color_at(r);
   float eps = 1.E-2f;
   EXPECT_NEAR(color.x(), 0.87677f, eps);
   EXPECT_NEAR(color.y(), 0.92436f, eps);

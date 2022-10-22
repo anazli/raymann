@@ -29,6 +29,7 @@ struct Record {
   Point3f over_point_from_surf;
   Vec3f ambient;
   bool in_shadow = false;
+  PointLight light;
 };
 
 class Traceable {
