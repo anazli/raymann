@@ -8,7 +8,7 @@ bool TraceableDeco::intersect(const Ray& r) {
   return m_traceable->intersect(r);
 }
 
-Vec3f TraceableDeco::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+Vec3f TraceableDeco::lighting(TraceablePtr w, const Ray& ray) {
   return m_traceable->lighting(w, ray);
 }
 
@@ -16,8 +16,7 @@ Vec3f TraceableDeco::colorAt(const Ray& ray) {
   return m_traceable->colorAt(ray);
 }
 
-Vec3f TraceableDeco::reflectedColor(std::shared_ptr<Traceable> w,
-                                    const Ray& r) {
+Vec3f TraceableDeco::reflectedColor(TraceablePtr w, const Ray& r) {
   return m_traceable->reflectedColor(w, r);
 }
 
@@ -33,6 +32,6 @@ void TraceableDeco::checkInside(const Ray& r) {
   return m_traceable->checkInside(r);
 }
 
-bool TraceableDeco::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
+bool TraceableDeco::isShadowed(TraceablePtr w, const Point3f& p) {
   return m_traceable->isShadowed(w, p);
 }

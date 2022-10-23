@@ -32,7 +32,7 @@ class Tworld : public Test {
 
 TEST_F(Tworld, createsWorldOfShere) {
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s = direct->create(builder, prop);
+  TraceablePtr s = direct->create(builder, prop);
   w->add(s);
   ASSERT_TRUE(s->getParent() == w.get());
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -42,10 +42,10 @@ TEST_F(Tworld, createsWorldOfShere) {
   ASSERT_EQ(s->record().t1, 4.0f);
   ASSERT_EQ(s->record().t2, 6.0f);
 
-  Traceable &closest = w->closestHit(r);
-  ASSERT_EQ(closest.record().t_min(), s->record().t_min());
-  ASSERT_EQ(closest.record().t1, s->record().t1);
-  ASSERT_EQ(closest.record().t2, s->record().t2);
+  TraceablePtr closest = w->closestHit(r);
+  ASSERT_EQ(closest->record().t_min(), s->record().t_min());
+  ASSERT_EQ(closest->record().t1, s->record().t1);
+  ASSERT_EQ(closest->record().t2, s->record().t2);
 
   w->remove(s, false);
   ASSERT_FALSE(s->getParent() == w.get());
@@ -55,7 +55,7 @@ TEST_F(Tworld, createsWorldOfShere) {
 TEST_F(Tworld, createsWorldOfTwoSpheres) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s = direct->create(builder, prop);
+  TraceablePtr s = direct->create(builder, prop);
   prop.setSphereCenter(Point3f(0.0f, 0.0f, 5.0f))
       .setColor(Vec3f(0.09f, 0.172f, 0.909f))
       .setAmbient(0.f)
@@ -63,7 +63,7 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
       .setSpecular(0.f)
       .setShininess(0.f);
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct2->create(builder, prop);
+  TraceablePtr s1 = direct2->create(builder, prop);
 
   w->add(s);
   w->add(s1);
@@ -78,10 +78,10 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   ASSERT_EQ(s1->record().t1, 9.0f);
   ASSERT_EQ(s1->record().t2, 11.0f);
 
-  Traceable &closest = w->closestHit(r);
-  ASSERT_EQ(closest.record().t_min(), s->record().t_min());
-  ASSERT_EQ(closest.record().t1, s->record().t1);
-  ASSERT_EQ(closest.record().t2, s->record().t2);
+  TraceablePtr closest = w->closestHit(r);
+  ASSERT_EQ(closest->record().t_min(), s->record().t_min());
+  ASSERT_EQ(closest->record().t1, s->record().t1);
+  ASSERT_EQ(closest->record().t2, s->record().t2);
 
   w->remove(s, false);
   w->remove(s1, false);
@@ -95,7 +95,7 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
 TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s = direct->create(builder, prop);
+  TraceablePtr s = direct->create(builder, prop);
   prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f))
       .setColor(Vec3f(0.09f, 0.172f, 0.909f))
       .setAmbient(0.f)
@@ -103,7 +103,7 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
       .setSpecular(0.f)
       .setShininess(0.f);
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct2->create(builder, prop);
+  TraceablePtr s1 = direct2->create(builder, prop);
 
   w->add(s);
   w->add(s1);
@@ -116,10 +116,10 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   ASSERT_EQ(s1->record().t1, -4.0f);
   ASSERT_EQ(s1->record().t2, -2.0f);
 
-  Traceable &closest = w->closestHit(r);
-  ASSERT_EQ(closest.record().t_min(), s->record().t_min());
-  ASSERT_EQ(closest.record().t1, s->record().t1);
-  ASSERT_EQ(closest.record().t2, s->record().t2);
+  TraceablePtr closest = w->closestHit(r);
+  ASSERT_EQ(closest->record().t_min(), s->record().t_min());
+  ASSERT_EQ(closest->record().t1, s->record().t1);
+  ASSERT_EQ(closest->record().t2, s->record().t2);
 }
 
 TEST_F(Tworld, createsWorldOfNegativeIntersections) {
@@ -131,11 +131,11 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
       .setDiffuse(0.f)
       .setSpecular(0.f)
       .setShininess(0.f);
-  shared_ptr<Traceable> s = direct->create(builder, prop);
+  TraceablePtr s = direct->create(builder, prop);
   prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f));
 
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct2->create(builder, prop);
+  TraceablePtr s1 = direct2->create(builder, prop);
 
   w->add(s);
   w->add(s1);
@@ -150,8 +150,8 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
 
   // ASSERT_DEATH(Traceable &closest = w.closestHit(), "");  // Running it with
   // valgrind results in signal 6 (SIGABRT)
-  Traceable &closest = w->closestHit(r);
-  ASSERT_TRUE(&closest == s.get());
+  TraceablePtr closest = w->closestHit(r);
+  ASSERT_TRUE(closest == s);
 }
 
 TEST_F(Tworld, createsWorldOfFourSpheres) {
@@ -164,19 +164,19 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
       .setShininess(0.f);
 
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s = direct->create(builder, prop);
+  TraceablePtr s = direct->create(builder, prop);
 
   prop.setSphereCenter(Point3f(0.0f, 0.0f, 0.0f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct2->create(builder, prop);
+  TraceablePtr s1 = direct2->create(builder, prop);
 
   prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f));
   SceneDirectorPtr direct3 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s2 = direct3->create(builder, prop);
+  TraceablePtr s2 = direct3->create(builder, prop);
 
   prop.setSphereCenter(Point3f(0.0f, 0.0f, 8.0f));
   SceneDirectorPtr direct4 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s3 = direct4->create(builder, prop);
+  TraceablePtr s3 = direct4->create(builder, prop);
 
   w->add(s);
   w->add(s1);
@@ -197,10 +197,10 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
   ASSERT_EQ(s3->record().t1, 12.0f);
   ASSERT_EQ(s3->record().t2, 14.0f);
 
-  Traceable &closest = w->closestHit(r);
-  ASSERT_EQ(closest.record().t_min(), s1->record().t_min());
-  ASSERT_EQ(closest.record().t1, s1->record().t1);
-  ASSERT_EQ(closest.record().t2, s1->record().t2);
+  TraceablePtr closest = w->closestHit(r);
+  ASSERT_EQ(closest->record().t_min(), s1->record().t_min());
+  ASSERT_EQ(closest->record().t1, s1->record().t1);
+  ASSERT_EQ(closest->record().t2, s1->record().t2);
 }
 
 TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
@@ -209,10 +209,10 @@ TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
+  TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
   ASSERT_TRUE(s1->getParent() == w.get());
@@ -225,10 +225,10 @@ TEST_F(Tworld, getsVectorOFIntersectionPoints) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
+  TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
@@ -249,16 +249,16 @@ TEST_F(Tworld, computesQuantitiesOfIntersection) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w->intersect(r);
-  Traceable &t = w->closestHit(r);
+  TraceablePtr t = w->closestHit(r);
 
-  ASSERT_TRUE(t.record().eye(r) == Vec3f(0.0f, 0.0f, -1.0f));
-  ASSERT_TRUE(t.record().point(r) == Point3f(0.0f, 0.0f, -1.0f));
-  ASSERT_TRUE(t.normal(t.record().point(r)) == Vec3f(0.0f, 0.0f, -1.0f));
+  ASSERT_TRUE(t->record().eye(r) == Vec3f(0.0f, 0.0f, -1.0f));
+  ASSERT_TRUE(t->record().point(r) == Point3f(0.0f, 0.0f, -1.0f));
+  ASSERT_TRUE(t->normal(t->record().point(r)) == Vec3f(0.0f, 0.0f, -1.0f));
 }
 
 TEST_F(Tworld, intersectionWhenHitOccursOutside) {
@@ -267,16 +267,16 @@ TEST_F(Tworld, intersectionWhenHitOccursOutside) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w->intersect(r);
 
-  Traceable &t = w->closestHit(r);
-  t.checkInside(r);
+  TraceablePtr t = w->closestHit(r);
+  t->checkInside(r);
 
-  ASSERT_FALSE(t.record().inside == true);
+  ASSERT_FALSE(t->record().inside == true);
 }
 
 TEST_F(Tworld, intersectionWhenHitOccursInside) {
@@ -285,16 +285,16 @@ TEST_F(Tworld, intersectionWhenHitOccursInside) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
 
   Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w->intersect(r);
 
-  Traceable &t = w->closestHit(r);
-  t.checkInside(r);
+  TraceablePtr t = w->closestHit(r);
+  t->checkInside(r);
 
-  ASSERT_TRUE(t.record().inside == true);
+  ASSERT_TRUE(t->record().inside == true);
 }
 
 TEST_F(Tworld, ShadingAnIntersection) {
@@ -303,23 +303,23 @@ TEST_F(Tworld, ShadingAnIntersection) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
+  TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w->intersect(r);
 
-  Traceable &t = w->closestHit(r);
-  t.checkInside(r);
+  TraceablePtr t = w->closestHit(r);
+  t->checkInside(r);
 
   PointLight l(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(w, r);
+  Vec3f color = t->lighting(w, r);
 
-  ASSERT_TRUE(&t == s1.get());
+  ASSERT_TRUE(t == s1);
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.38066f, eps);
@@ -333,7 +333,7 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
       .setAmbient(0.1f)
       .setDiffuse(0.9f)
@@ -341,20 +341,20 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
       .setShininess(200.f)
       .setObjTrans(scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
+  TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w->intersect(r);
 
-  Traceable &t = w->closestHit(r);
-  t.checkInside(r);
+  TraceablePtr t = w->closestHit(r);
+  t->checkInside(r);
 
   PointLight l(Point3f(0.0f, 0.25f, 0.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(w, r);
+  Vec3f color = t->lighting(w, r);
 
-  ASSERT_TRUE(&t == s2.get());
+  ASSERT_TRUE(t == s2);
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.90498f, eps);
@@ -368,7 +368,7 @@ TEST_F(Tworld, colorWhenRayMisses) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
       .setAmbient(0.1f)
       .setDiffuse(0.9f)
@@ -376,22 +376,17 @@ TEST_F(Tworld, colorWhenRayMisses) {
       .setShininess(200.f)
       .setObjTrans(scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
+  TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 1.0f, 0.0f));
   w->intersect(r);
 
-  Traceable &t = w->closestHit(r);
-
   PointLight l(Point3f(0.0f, 0.00f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f));
   w->setLight(l);
-  Vec3f color = t.lighting(w, r);
-
-  ASSERT_EQ(color.x(), 0.0f);
-  ASSERT_EQ(color.y(), 0.0f);
-  ASSERT_EQ(color.z(), 0.0f);
+  TraceablePtr t = w->closestHit(r);
+  ASSERT_FALSE(t);
 }
 
 TEST_F(Tworld, colorWhenRayHits) {
@@ -400,7 +395,7 @@ TEST_F(Tworld, colorWhenRayHits) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
       .setAmbient(0.1f)
       .setDiffuse(0.9f)
@@ -408,17 +403,17 @@ TEST_F(Tworld, colorWhenRayHits) {
       .setShininess(200.f)
       .setObjTrans(scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
+  TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   w->intersect(r);
 
-  Traceable &t = w->closestHit(r);
+  TraceablePtr t = w->closestHit(r);
 
   PointLight l(Point3f(-10.0f, 10.00f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t.lighting(w, r);
+  Vec3f color = t->lighting(w, r);
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.38066f, eps);
@@ -432,7 +427,7 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
       .setDiffuse(0.7f)
       .setSpecular(0.2f);
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
       .setAmbient(0.1f)
       .setDiffuse(0.9f)
@@ -440,64 +435,64 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
       .setShininess(200.f)
       .setObjTrans(scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s2 = direct2->create(builder, prop);
+  TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
 
   Ray r(Point3f(0.0f, 0.0f, 0.75f), Vec3f(0.0f, 0.0f, -1.0f));
   w->intersect(r);
-  Traceable &t = w->closestHit(r);
+  TraceablePtr t = w->closestHit(r);
 
-  ASSERT_TRUE(&t == s2.get());  // color of the inner sphere
+  ASSERT_TRUE(t == s2);  // color of the inner sphere
 }
 
 TEST_F(Tworld, noShadowWhenNothingCollinear) {
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
   Point3f p(0.0f, 10.0f, 0.0f);
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
-  Traceable &t = w->closestHit(r);
-  ASSERT_FALSE(t.isShadowed(w, p));
+  TraceablePtr t = w->closestHit(r);
+  ASSERT_FALSE(t);  // No hit -> no shadow
 }
 
 TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
   Point3f p(10.0f, -10.0f, 10.0f);
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
-  Traceable &t = w->closestHit(r);
-  ASSERT_TRUE(t.isShadowed(w, p));
+  TraceablePtr t = w->closestHit(r);
+  ASSERT_TRUE(t->isShadowed(w, p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindLight) {
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
   Point3f p(-20.0f, 20.0f, -20.0f);
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
-  Traceable &t = w->closestHit(r);
-  ASSERT_FALSE(t.isShadowed(w, p));
+  TraceablePtr t = w->closestHit(r);
+  ASSERT_FALSE(t->isShadowed(w, p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
   Point3f p(-2.0f, 2.0f, -2.0f);
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
-  Traceable &t = w->closestHit(r);
-  ASSERT_FALSE(t.isShadowed(w, p));
+  TraceablePtr t = w->closestHit(r);
+  ASSERT_FALSE(t);  // No hit -> now shadow
 }
 
 TEST_F(Tworld, intersectionWithShadows) {
   direct = make_shared<StandardSphere>();
-  shared_ptr<Traceable> s1 = direct->create(builder, prop);
+  TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
   prop.setObjTrans(transl(0.0f, 0.0f, 10.0f));
   direct2 = make_shared<StandardSphere>();
@@ -507,7 +502,7 @@ TEST_F(Tworld, intersectionWithShadows) {
   light = PointLight(Point3f(0.0f, 0.0f, 10.0f), Vec3f(1.0f, 1.0f, 1.0f));
   w->setLight(light);
   w->intersect(r);
-  Traceable &t = w->closestHit(r);
-  Vec3f color = t.lighting(w, r);
+  TraceablePtr t = w->closestHit(r);
+  Vec3f color = t->lighting(w, r);
   ASSERT_TRUE(color == Vec3f(0.1f, 0.1f, 0.1f));
 }

@@ -20,7 +20,7 @@ class Sphere : public Traceable {
   Vec3f normal(const Point3f &p) const override {
     return (p - m_center).normalize();
   }
-  bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) override;
+  bool isShadowed(TraceablePtr w, const Point3f &p) override;
   void setCenter(const Point3f &c) { m_center = c; }
   void setRadius(const float &r) { m_radius = r; }
   Point3f center() const { return m_center; }
@@ -48,7 +48,7 @@ inline bool Sphere::intersect(const Ray &r) {
   return false;
 }
 
-inline bool Sphere::isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) {
+inline bool Sphere::isShadowed(TraceablePtr w, const Point3f &p) {
   Vec3f v = p - w->getLight().position();
   float distance = v.length();
   Ray r(w->getLight().position(), v.normalize());

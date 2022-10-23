@@ -24,7 +24,7 @@ Material::~Material() {}
 
 bool Material::intersect(const Ray& r) { return TraceableDeco::intersect(r); }
 
-Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+Vec3f Material::lighting(TraceablePtr w, const Ray& ray) {
   Vec3f effective_color = m_color * w->getLight().intensity();
   Point3f over_point =
       record().point(ray) + (record().inside ? normal(record().point(ray))
@@ -55,7 +55,7 @@ Vec3f Material::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
 
 Vec3f Material::colorAt(const Ray& ray) { return TraceableDeco::colorAt(ray); }
 
-Vec3f Material::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
+Vec3f Material::reflectedColor(TraceablePtr w, const Ray& r) {
   if (m_reflective == 0.f) {
     return Vec3f(0.f, 0.f, 0.f);
   }
@@ -69,7 +69,7 @@ Vec3f Material::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
   record().over_point_from_refl_surf = over_point;
   Ray reflect_ray(over_point, reflectv);
 
-  Vec3f color = w->colorAt(reflect_ray);
+  Vec3f color = colorAt(reflect_ray);
   return color * m_reflective;
 }
 
@@ -83,7 +83,7 @@ void Material::checkInside(const Ray& r) {
   return TraceableDeco::checkInside(r);
 }
 
-bool Material::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
+bool Material::isShadowed(TraceablePtr w, const Point3f& p) {
   return TraceableDeco::isShadowed(w, p);
 }
 
@@ -99,7 +99,7 @@ StripePattern::StripePattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
       m_pattern_trans(ptrans),
       m_object_trans(otrans) {}
 
-Vec3f StripePattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+Vec3f StripePattern::lighting(TraceablePtr w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
@@ -127,7 +127,7 @@ GradientPattern::GradientPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
       m_pattern_trans(ptrans),
       m_object_trans(otrans) {}
 
-Vec3f GradientPattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+Vec3f GradientPattern::lighting(TraceablePtr w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
@@ -157,7 +157,7 @@ RingPattern::RingPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
       m_pattern_trans(ptrans),
       m_object_trans(otrans) {}
 
-Vec3f RingPattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+Vec3f RingPattern::lighting(TraceablePtr w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
@@ -188,7 +188,7 @@ CheckerPattern::CheckerPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
       m_pattern_trans(ptrans),
       m_object_trans(otrans) {}
 
-Vec3f CheckerPattern::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
+Vec3f CheckerPattern::lighting(TraceablePtr w, const Ray& ray) {
   Point3f p =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
