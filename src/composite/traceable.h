@@ -33,14 +33,14 @@ class Traceable {
   virtual ~Traceable();
   virtual bool intersect(const Ray &r) = 0;
   virtual Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray);
-  virtual Vec3f color_at(const Ray &ray);
+  virtual Vec3f colorAt(const Ray &ray);
   virtual Vec3f reflectedColor(std::shared_ptr<Traceable> w, const Ray &r);
   virtual void add(std::shared_ptr<Traceable> item) {}
   virtual void remove(std::shared_ptr<Traceable> item, bool del = true) {}
   virtual bool isWorld() const;
   virtual Vec3f normal(const Point3f &p) const;
   virtual std::string name() const;
-  virtual Traceable &closestHit(const Ray &r);
+  virtual std::shared_ptr<Traceable> closestHit(const Ray &r);
   virtual void checkInside(const Ray &r);
   virtual bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p);
   virtual void setLight(const PointLight &l) {}

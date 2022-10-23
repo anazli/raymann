@@ -6,7 +6,7 @@ Vec3f Traceable::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
   return Vec3f();
 }
 
-Vec3f Traceable::color_at(const Ray& ray) { return Vec3f(); }
+Vec3f Traceable::colorAt(const Ray& ray) { return Vec3f(); }
 
 Vec3f Traceable::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
   return Vec3f();
@@ -18,7 +18,9 @@ Vec3f Traceable::normal(const Point3f& p) const { return Vec3f(); }
 
 std::string Traceable::name() const { return m_name; }
 
-Traceable& Traceable::closestHit(const Ray& r) { return *this; }
+std::shared_ptr<Traceable> Traceable::closestHit(const Ray& r) {
+  return nullptr;
+}
 
 void Traceable::checkInside(const Ray& r) {
   if (dot(record().eye(r), normal(record().point(r))) < 0.0f) rec.inside = true;

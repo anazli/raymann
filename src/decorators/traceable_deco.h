@@ -7,7 +7,7 @@ class TraceableDeco : public Traceable {
   virtual ~TraceableDeco();
   bool intersect(const Ray &r) override;
   Vec3f lighting(std::shared_ptr<Traceable> w, const Ray &ray) override;
-  Vec3f color_at(const Ray &ray) override;
+  Vec3f colorAt(const Ray &ray) override;
   Vec3f reflectedColor(std::shared_ptr<Traceable> w, const Ray &r) override;
   std::string name() const override;
   Record &record() override;

@@ -8,7 +8,7 @@ using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(std::shared_ptr<Traceable> world, const Camera &c) {
+void Canvas::render(TraceablePtr world, const Camera &c) {
   int num_samples = 1;
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {
@@ -16,8 +16,7 @@ void Canvas::render(std::shared_ptr<Traceable> world, const Camera &c) {
       for (int s = 0; s < num_samples; ++s) {
         Ray ray(c, i, j);
         if (world->intersect(ray)) {
-          Traceable &closest = world->closestHit(ray);
-          color += closest.lighting(world, ray);
+          color += world->colorAt(ray);
         } else {
           color += Vec3f(0.0, 0.0, 0.0);
         }

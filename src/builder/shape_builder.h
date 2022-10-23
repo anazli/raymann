@@ -14,7 +14,7 @@ class ShapeBuilder : public TraceableBuilder {
   void addGradientPattern() override;
   void addRingPattern() override;
   void addCheckerPattern() override;
-  std::shared_ptr<Traceable> getTraceable() const override;
+  TraceablePtr getTraceable() const override;
 
  private:
   Traceable *m_currentTraceable;

@@ -24,8 +24,8 @@ class Plane : public Traceable {
     float distance = v.length();
     Ray r(w->getLight().position(), v.normalize());
     if (w->intersect(r)) {
-      Traceable &t = w->closestHit(r);
-      if (t.record().t_min() >= 0.0f && t.record().t_min() < distance)
+      TraceablePtr t = w->closestHit(r);
+      if (t->record().t_min() >= 0.0f && t->record().t_min() < distance)
         return true;
     }
     return false;
