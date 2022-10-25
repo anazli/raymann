@@ -6,7 +6,7 @@ class TraceableDeco : public Traceable {
   TraceableDeco(Traceable *tr);
   virtual ~TraceableDeco();
   bool intersect(const Ray &r) override;
-  Vec3f lighting(TraceablePtr w, const Ray &ray) override;
+  Vec3f lighting(const Ray &ray) override;
   Vec3f colorAt(const Ray &ray) override;
   Vec3f reflectedColor(TraceablePtr w, const Ray &r) override;
   std::string name() const override;
@@ -16,6 +16,8 @@ class TraceableDeco : public Traceable {
   bool isShadowed(const Point3f &p) override;
   void setParent(TraceablePtr t) override;
   TraceablePtr getParent() const override;
+  void setLight(const PointLight &l) override;
+  PointLight getLight() const override;
 
  protected:
   Traceable *m_traceable;

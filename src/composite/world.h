@@ -17,8 +17,6 @@ class World : public Traceable, public std::enable_shared_from_this<Traceable> {
   bool isWorld() const override { return true; }
   TraceablePtr closestHit(const Ray &r) override;
   std::vector<float> intersectionsSorted() const;
-  void setLight(const PointLight &l) override { m_light = l; }
-  PointLight getLight() const override { return m_light; }
   bool isShadowed(const Point3f &p) override;
 
  private:

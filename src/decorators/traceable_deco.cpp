@@ -8,8 +8,8 @@ bool TraceableDeco::intersect(const Ray& r) {
   return m_traceable->intersect(r);
 }
 
-Vec3f TraceableDeco::lighting(TraceablePtr w, const Ray& ray) {
-  return m_traceable->lighting(w, ray);
+Vec3f TraceableDeco::lighting(const Ray& ray) {
+  return m_traceable->lighting(ray);
 }
 
 Vec3f TraceableDeco::colorAt(const Ray& ray) {
@@ -41,3 +41,7 @@ void TraceableDeco::setParent(TraceablePtr t) { m_traceable->setParent(t); }
 TraceablePtr TraceableDeco::getParent() const {
   return m_traceable->getParent();
 }
+
+void TraceableDeco::setLight(const PointLight& l) { m_traceable->setLight(l); }
+
+PointLight TraceableDeco::getLight() const { return m_traceable->getLight(); }

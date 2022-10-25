@@ -24,7 +24,8 @@ bool World::intersect(const Ray &r) {
 
 Vec3f World::colorAt(const Ray &ray) {
   if (m_closest_hit) {
-    Vec3f color = m_closest_hit->lighting(shared_from_this(), ray);
+    m_closest_hit->setLight(getLight());
+    Vec3f color = m_closest_hit->lighting(ray);
     return color;
   }
   return Vec3f(0.f, 0.f, 0.f);

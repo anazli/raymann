@@ -2,9 +2,7 @@
 
 Traceable::~Traceable() {}
 
-Vec3f Traceable::lighting(std::shared_ptr<Traceable> w, const Ray& ray) {
-  return Vec3f();
-}
+Vec3f Traceable::lighting(const Ray& ray) { return Vec3f(); }
 
 Vec3f Traceable::colorAt(const Ray& ray) { return Vec3f(); }
 
@@ -35,7 +33,6 @@ bool Traceable::isShadowed(const Point3f& p) {
     if (w->intersect(r)) {
       TraceablePtr t = w->closestHit(r);
       if (t) {
-        w = nullptr;
         if (t->record().t_min() >= 0.0f && t->record().t_min() < distance)
           return true;
       }
@@ -44,7 +41,9 @@ bool Traceable::isShadowed(const Point3f& p) {
   return false;
 }
 
-PointLight Traceable::getLight() const { return PointLight(); }
+void Traceable::setLight(const PointLight& l) { m_light = l; }
+
+PointLight Traceable::getLight() const { return m_light; }
 
 Record& Traceable::record() { return rec; }
 
