@@ -34,7 +34,7 @@ class Traceable {
   virtual bool intersect(const Ray &r) = 0;
   virtual Vec3f lighting(const Ray &ray);
   virtual Vec3f colorAt(const Ray &ray);
-  virtual Vec3f reflectedColor(std::shared_ptr<Traceable> w, const Ray &r);
+  virtual Vec3f reflectedColor(const Ray &r);
   virtual void add(std::shared_ptr<Traceable> item) {}
   virtual void remove(std::shared_ptr<Traceable> item, bool del = true) {}
   virtual bool isWorld() const;

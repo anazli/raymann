@@ -17,7 +17,7 @@ class Material : public TraceableDeco {
   bool intersect(const Ray &r) override;
   Vec3f lighting(const Ray &ray) override;
   Vec3f colorAt(const Ray &ray) override;
-  Vec3f reflectedColor(TraceablePtr w, const Ray &r) override;
+  Vec3f reflectedColor(const Ray &r) override;
   Record &record() override;
   Vec3f normal(const Point3f &p) const override;
   void checkInside(const Ray &r) override;

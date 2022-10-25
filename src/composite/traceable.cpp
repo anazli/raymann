@@ -6,9 +6,7 @@ Vec3f Traceable::lighting(const Ray& ray) { return Vec3f(); }
 
 Vec3f Traceable::colorAt(const Ray& ray) { return Vec3f(); }
 
-Vec3f Traceable::reflectedColor(std::shared_ptr<Traceable> w, const Ray& r) {
-  return Vec3f();
-}
+Vec3f Traceable::reflectedColor(const Ray& r) { return Vec3f(); }
 
 bool Traceable::isWorld() const { return false; }
 

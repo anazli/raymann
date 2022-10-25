@@ -16,8 +16,8 @@ Vec3f TraceableDeco::colorAt(const Ray& ray) {
   return m_traceable->colorAt(ray);
 }
 
-Vec3f TraceableDeco::reflectedColor(TraceablePtr w, const Ray& r) {
-  return m_traceable->reflectedColor(w, r);
+Vec3f TraceableDeco::reflectedColor(const Ray& r) {
+  return m_traceable->reflectedColor(r);
 }
 
 std::string TraceableDeco::name() const { return m_traceable->name(); }

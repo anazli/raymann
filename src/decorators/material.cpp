@@ -55,7 +55,7 @@ Vec3f Material::lighting(const Ray& ray) {
 
 Vec3f Material::colorAt(const Ray& ray) { return TraceableDeco::colorAt(ray); }
 
-Vec3f Material::reflectedColor(TraceablePtr w, const Ray& r) {
+Vec3f Material::reflectedColor(const Ray& r) {
   if (m_reflective == 0.f) {
     return Vec3f(0.f, 0.f, 0.f);
   }
