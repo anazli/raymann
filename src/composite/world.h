@@ -11,7 +11,7 @@ class World : public Traceable, public std::enable_shared_from_this<Traceable> {
   World(const std::string &n);
   virtual ~World();
   bool intersect(const Ray &r) override;
-  Vec3f colorAt(const Ray &ray) override;
+  Vec3f colorAt(const Ray &ray, int rec = 5) override;
   void add(TraceablePtr item) override;
   void remove(TraceablePtr item, bool del = true) override;
   bool isWorld() const override { return true; }

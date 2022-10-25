@@ -30,6 +30,7 @@ Vec3f Material::lighting(const Ray& ray) {
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
+  record().over_point_from_refl_surf = over_point;
   Vec3f normal_vec = record().inside ? -normal(over_point) : normal(over_point);
   Vec3f lightv = (getLight().position() - over_point).normalize();
 
@@ -53,10 +54,17 @@ Vec3f Material::lighting(const Ray& ray) {
   return ret_ambient + ret_diffuse + ret_specular;
 }
 
-Vec3f Material::colorAt(const Ray& ray) { return TraceableDeco::colorAt(ray); }
+Vec3f Material::colorAt(const Ray& ray, int rec) {
+  Vec3f surf_col = lighting(ray);
+  Vec3f refl_col = reflectedColor(ray, rec);
+  return surf_col + refl_col;
+}
 
-Vec3f Material::reflectedColor(const Ray& r) {
-  if (m_reflective == 0.f) {
+Vec3f Material::reflectedColor(const Ray& r, int rec) {
+  if (rec <= 0) {
+    return Vec3f(0.f, 0.f, 0.f);
+  }
+  if (m_reflective <= 0.f) {
     return Vec3f(0.f, 0.f, 0.f);
   }
   Vec3f reflectv =
@@ -66,10 +74,9 @@ Vec3f Material::reflectedColor(const Ray& r) {
       record().point(r) + (record().inside ? normal(record().point(r))
                                            : normal(record().point(r))) *
                               0.02f;
-  record().over_point_from_refl_surf = over_point;
-  Ray reflect_ray(over_point, reflectv);
+  Ray reflect_ray(record().over_point_from_refl_surf, reflectv);
 
-  Vec3f color = colorAt(reflect_ray);
+  Vec3f color = colorAt(reflect_ray, rec - 1);
   return color * m_reflective;
 }
 
@@ -183,6 +190,16 @@ Vec3f RingPattern::pattern_at(const Point3f& p) const {
 CheckerPattern::CheckerPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
                                const Mat4f& otrans, const Mat4f& ptrans)
     : Material(tr),
+      m_color_a(a),
+      m_color_b(b),
+      m_pattern_trans(ptrans),
+      m_object_trans(otrans) {}
+
+CheckerPattern::CheckerPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
+                               const Mat4f& otrans, const Mat4f& ptrans,
+                               const Vec3f& c, float reflection, float am,
+                               float diff, float spec, float shi)
+    : Material(tr, c, reflection, am, diff, spec, shi),
       m_color_a(a),
       m_color_b(b),
       m_pattern_trans(ptrans),

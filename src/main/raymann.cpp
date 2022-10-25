@@ -15,7 +15,9 @@ int main() {
   TraceableBuilderPtr builder = make_shared<ShapeBuilder>();
   Properties prop;
   //----------------------Floor---------------------
-  prop.setPatColA(Vec3f(1.0f, 1.0f, 1.0f)).setPatColB(Vec3f(0.1f, 0.1f, 0.1f));
+  prop.setPatColA(Vec3f(1.0f, 1.0f, 1.0f))
+      .setPatColB(Vec3f(0.1f, 0.1f, 0.1f))
+      .setReflection(0.5f);
   SceneDirectorPtr fl_dir = make_shared<CheckerPlane>();
   TraceablePtr floor = fl_dir->create(builder, prop);
 

@@ -22,10 +22,10 @@ bool World::intersect(const Ray &r) {
   return has_intersection;
 }
 
-Vec3f World::colorAt(const Ray &ray) {
+Vec3f World::colorAt(const Ray &ray, int rec) {
   if (m_closest_hit) {
     m_closest_hit->setLight(getLight());
-    Vec3f color = m_closest_hit->lighting(ray);
+    Vec3f color = m_closest_hit->colorAt(ray, rec);
     return color;
   }
   return Vec3f(0.f, 0.f, 0.f);

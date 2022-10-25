@@ -4,9 +4,9 @@ Traceable::~Traceable() {}
 
 Vec3f Traceable::lighting(const Ray& ray) { return Vec3f(); }
 
-Vec3f Traceable::colorAt(const Ray& ray) { return Vec3f(); }
+Vec3f Traceable::colorAt(const Ray& ray, int rec) { return Vec3f(); }
 
-Vec3f Traceable::reflectedColor(const Ray& r) { return Vec3f(); }
+Vec3f Traceable::reflectedColor(const Ray& r, int rec) { return Vec3f(); }
 
 bool Traceable::isWorld() const { return false; }
 

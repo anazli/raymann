@@ -12,12 +12,12 @@ Vec3f TraceableDeco::lighting(const Ray& ray) {
   return m_traceable->lighting(ray);
 }
 
-Vec3f TraceableDeco::colorAt(const Ray& ray) {
+Vec3f TraceableDeco::colorAt(const Ray& ray, int rec) {
   return m_traceable->colorAt(ray);
 }
 
-Vec3f TraceableDeco::reflectedColor(const Ray& r) {
-  return m_traceable->reflectedColor(r);
+Vec3f TraceableDeco::reflectedColor(const Ray& r, int rec) {
+  return m_traceable->reflectedColor(r, rec);
 }
 
 std::string TraceableDeco::name() const { return m_traceable->name(); }

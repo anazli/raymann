@@ -16,8 +16,8 @@ class Material : public TraceableDeco {
 
   bool intersect(const Ray &r) override;
   Vec3f lighting(const Ray &ray) override;
-  Vec3f colorAt(const Ray &ray) override;
-  Vec3f reflectedColor(const Ray &r) override;
+  Vec3f colorAt(const Ray &ray, int rec = 5) override;
+  Vec3f reflectedColor(const Ray &r, int rec = 5) override;
   Record &record() override;
   Vec3f normal(const Point3f &p) const override;
   void checkInside(const Ray &r) override;
@@ -97,6 +97,9 @@ class CheckerPattern : public Material {
  public:
   CheckerPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
                  const Mat4f &otrans, const Mat4f &ptrans);
+  CheckerPattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
+                 const Mat4f &otrans, const Mat4f &ptrans, const Vec3f &c,
+                 float reflection, float am, float diff, float spec, float shi);
   Vec3f lighting(const Ray &ray) override;
 
  private:
