@@ -21,7 +21,7 @@ class Material : public TraceableDeco {
   Record &record() override;
   Vec3f normal(const Point3f &p) const override;
   void checkInside(const Ray &r) override;
-  bool isShadowed(TraceablePtr w, const Point3f &p) override;
+  bool isShadowed(const Point3f &p) override;
 
  protected:
   Vec3f m_color = Vec3f(1.0f, 1.0f, 1.0f);

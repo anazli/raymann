@@ -13,8 +13,8 @@ class TraceableDeco : public Traceable {
   Record &record() override;
   Vec3f normal(const Point3f &p) const override;
   void checkInside(const Ray &r) override;
-  bool isShadowed(TraceablePtr w, const Point3f &p) override;
-  void setParent(TraceablePtr t) override;;
+  bool isShadowed(const Point3f &p) override;
+  void setParent(TraceablePtr t) override;
   TraceablePtr getParent() const override;
 
  protected:

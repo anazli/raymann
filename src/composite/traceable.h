@@ -42,7 +42,7 @@ class Traceable {
   virtual std::string name() const;
   virtual std::shared_ptr<Traceable> closestHit(const Ray &r);
   virtual void checkInside(const Ray &r);
-  virtual bool isShadowed(std::shared_ptr<Traceable> w, const Point3f &p);
+  virtual bool isShadowed(const Point3f &p);
   virtual void setLight(const PointLight &l) {}
   virtual PointLight getLight() const;
   virtual Record &record();

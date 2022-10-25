@@ -37,7 +37,7 @@ Vec3f Material::lighting(TraceablePtr w, const Ray& ray) {
   Vec3f ret_diffuse;
   Vec3f ret_specular;
 
-  if (isShadowed(w, over_point)) return ret_ambient;
+  if (isShadowed(over_point)) return ret_ambient;
 
   float light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {
@@ -83,8 +83,8 @@ void Material::checkInside(const Ray& r) {
   return TraceableDeco::checkInside(r);
 }
 
-bool Material::isShadowed(TraceablePtr w, const Point3f& p) {
-  return TraceableDeco::isShadowed(w, p);
+bool Material::isShadowed(const Point3f& p) {
+  return TraceableDeco::isShadowed(p);
 }
 
 //------------------------------------------------------------------------------

@@ -65,10 +65,10 @@ vector<float> World::intersectionsSorted() const {
   return ret;
 }
 
-bool World::isShadowed(std::shared_ptr<Traceable> w, const Point3f &p) {
-  Vec3f v = p - w->getLight().position();
+bool World::isShadowed(const Point3f &p) {
+  Vec3f v = p - getLight().position();
   float distance = v.length();
-  Ray r(w->getLight().position(), v.normalize());
+  Ray r(getLight().position(), v.normalize());
   if (intersect(r)) {
     if (m_closest_hit) {
       if (m_closest_hit->record().t_min() >= 0.0f &&

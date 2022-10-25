@@ -32,8 +32,8 @@ void TraceableDeco::checkInside(const Ray& r) {
   return m_traceable->checkInside(r);
 }
 
-bool TraceableDeco::isShadowed(TraceablePtr w, const Point3f& p) {
-  return m_traceable->isShadowed(w, p);
+bool TraceableDeco::isShadowed(const Point3f& p) {
+  return m_traceable->isShadowed(p);
 }
 
 void TraceableDeco::setParent(TraceablePtr t) { m_traceable->setParent(t); }
