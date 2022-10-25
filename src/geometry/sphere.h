@@ -14,13 +14,9 @@ class Sphere : public Traceable {
 
   virtual ~Sphere() {}
   bool intersect(const Ray &r) override;
-  bool isWorld() const override { return false; }
-  std::string name() const override { return m_name; }
-  Record &record() override { return rec; }
   Vec3f normal(const Point3f &p) const override {
     return (p - m_center).normalize();
   }
-  bool isShadowed(TraceablePtr w, const Point3f &p) override;
   void setCenter(const Point3f &c) { m_center = c; }
   void setRadius(const float &r) { m_radius = r; }
   Point3f center() const { return m_center; }
@@ -44,18 +40,6 @@ inline bool Sphere::intersect(const Ray &r) {
     rec.t2 = t2;
     rec.count = 2;
     return true;
-  }
-  return false;
-}
-
-inline bool Sphere::isShadowed(TraceablePtr w, const Point3f &p) {
-  Vec3f v = p - w->getLight().position();
-  float distance = v.length();
-  Ray r(w->getLight().position(), v.normalize());
-  if (w->intersect(r)) {
-    TraceablePtr t = w->closestHit(r);
-    if (t->record().t_min() >= 0.0f && t->record().t_min() < distance)
-      return true;
   }
   return false;
 }

@@ -27,6 +27,14 @@ void Traceable::checkInside(const Ray& r) {
 }
 
 bool Traceable::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
+  Vec3f v = p - w->getLight().position();
+  float distance = v.length();
+  Ray r(w->getLight().position(), v.normalize());
+  if (w->intersect(r)) {
+    TraceablePtr t = w->closestHit(r);
+    if (t->record().t_min() >= 0.0f && t->record().t_min() < distance)
+      return true;
+  }
   return false;
 }
 
