@@ -47,13 +47,13 @@ class Traceable {
   virtual PointLight getLight() const;
   virtual Record &record();
 
-  void setParent(Traceable *t);
-  Traceable *getParent() const;
+  virtual void setParent(std::shared_ptr<Traceable> t);
+  virtual std::shared_ptr<Traceable> getParent() const;
 
  protected:
   Traceable() {}
   Traceable(const std::string &n);
-  Traceable *m_parent;
+  std::shared_ptr<Traceable> m_parent;
   std::string m_name;
   Record rec;
 };

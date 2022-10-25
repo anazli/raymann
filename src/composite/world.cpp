@@ -31,8 +31,8 @@ Vec3f World::colorAt(const Ray &ray) {
 }
 
 void World::add(TraceablePtr item) {
+  item->setParent(shared_from_this());
   m_traceable_list.push_back(item);
-  item->setParent(this);
 }
 
 void World::remove(TraceablePtr item, bool del) {

@@ -27,13 +27,17 @@ void Traceable::checkInside(const Ray& r) {
 }
 
 bool Traceable::isShadowed(std::shared_ptr<Traceable> w, const Point3f& p) {
-  Vec3f v = p - w->getLight().position();
-  float distance = v.length();
-  Ray r(w->getLight().position(), v.normalize());
-  if (w->intersect(r)) {
-    TraceablePtr t = w->closestHit(r);
-    if (t->record().t_min() >= 0.0f && t->record().t_min() < distance)
-      return true;
+  TraceablePtr wt = getParent();
+  if (wt) {
+    Vec3f v = p - wt->getLight().position();
+    float distance = v.length();
+    Ray r(wt->getLight().position(), v.normalize());
+    if (wt->intersect(r)) {
+      TraceablePtr t = wt->closestHit(r);
+      wt = nullptr;
+      if (t->record().t_min() >= 0.0f && t->record().t_min() < distance)
+        return true;
+    }
   }
   return false;
 }
@@ -42,6 +46,6 @@ PointLight Traceable::getLight() const { return PointLight(); }
 
 Record& Traceable::record() { return rec; }
 
-void Traceable::setParent(Traceable* t) { m_parent = t; }
+void Traceable::setParent(std::shared_ptr<Traceable> t) { m_parent = t; }
 
-Traceable* Traceable::getParent() const { return m_parent; }
+std::shared_ptr<Traceable> Traceable::getParent() const { return m_parent; }
