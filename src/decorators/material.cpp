@@ -30,7 +30,6 @@ Vec3f Material::lighting(const Ray& ray) {
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
-  record().over_point_from_refl_surf = over_point;
   Vec3f normal_vec = record().inside ? -normal(over_point) : normal(over_point);
   Vec3f lightv = (getLight().position() - over_point).normalize();
 
@@ -74,9 +73,10 @@ Vec3f Material::reflectedColor(const Ray& r, int rec) {
       record().point(r) + (record().inside ? normal(record().point(r))
                                            : normal(record().point(r))) *
                               0.02f;
-  Ray reflect_ray(record().over_point_from_refl_surf, reflectv);
+  record().over_point_from_refl_surf = over_point;
+  Ray reflect_ray(over_point, reflectv);
 
-  Vec3f color = colorAt(reflect_ray, rec - 1);
+  Vec3f color = getParent()->colorAt(reflect_ray, rec - 1);
   return color * m_reflective;
 }
 

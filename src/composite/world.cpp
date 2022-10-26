@@ -17,15 +17,15 @@ bool World::intersect(const Ray &r) {
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
     if ((*it)->intersect(r) && (*it)->record().t_min() >= 0.0f) {
       has_intersection = true;  // TODO: to be fixed for negative intersections
-      m_closest_hit = closestHit(r);
     }
   return has_intersection;
 }
 
 Vec3f World::colorAt(const Ray &ray, int rec) {
+  m_closest_hit = closestHit(ray);
   if (m_closest_hit) {
     m_closest_hit->setLight(getLight());
-    Vec3f color = m_closest_hit->colorAt(ray, rec);
+    Vec3f color = m_closest_hit->lighting(ray);
     return color;
   }
   return Vec3f(0.f, 0.f, 0.f);
