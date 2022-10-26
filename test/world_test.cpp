@@ -34,7 +34,7 @@ TEST_F(Tworld, createsWorldOfShere) {
   direct = make_shared<StandardSphere>();
   TraceablePtr s = direct->create(builder, prop);
   w->add(s);
-  ASSERT_TRUE(s->getParent() == w.get());
+  ASSERT_TRUE(s->getParent() == w);
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
 
   ASSERT_TRUE(w->intersect(r));
@@ -48,7 +48,7 @@ TEST_F(Tworld, createsWorldOfShere) {
   ASSERT_EQ(closest->record().t2, s->record().t2);
 
   w->remove(s, false);
-  ASSERT_FALSE(s->getParent() == w.get());
+  ASSERT_FALSE(s->getParent() == w);
   ASSERT_TRUE(s->getParent() == nullptr);
 }
 
@@ -67,8 +67,8 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
 
   w->add(s);
   w->add(s1);
-  ASSERT_TRUE(s->getParent() == w.get());
-  ASSERT_TRUE(s1->getParent() == w.get());
+  ASSERT_TRUE(s->getParent() == w);
+  ASSERT_TRUE(s1->getParent() == w);
   ASSERT_TRUE(w->intersect(r));
 
   ASSERT_EQ(s->record().count, 2);
@@ -86,9 +86,9 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   w->remove(s, false);
   w->remove(s1, false);
 
-  ASSERT_FALSE(s->getParent() == w.get());
+  ASSERT_FALSE(s->getParent() == w);
   ASSERT_TRUE(s->getParent() == nullptr);
-  ASSERT_FALSE(s1->getParent() == w.get());
+  ASSERT_FALSE(s1->getParent() == w);
   ASSERT_TRUE(s1->getParent() == nullptr);
 }
 
@@ -215,8 +215,8 @@ TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
   TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
   w->add(s2);
-  ASSERT_TRUE(s1->getParent() == w.get());
-  ASSERT_TRUE(s2->getParent() == w.get());
+  ASSERT_TRUE(s1->getParent() == w);
+  ASSERT_TRUE(s2->getParent() == w);
 }
 
 TEST_F(Tworld, getsVectorOFIntersectionPoints) {
@@ -317,7 +317,8 @@ TEST_F(Tworld, ShadingAnIntersection) {
   t->checkInside(r);
 
   PointLight l(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t->lighting(w, r);
+  t->setLight(l);
+  Vec3f color = t->lighting(r);
 
   ASSERT_TRUE(t == s1);
 
@@ -352,7 +353,8 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
   t->checkInside(r);
 
   PointLight l(Point3f(0.0f, 0.25f, 0.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t->lighting(w, r);
+  t->setLight(l);
+  Vec3f color = t->lighting(r);
 
   ASSERT_TRUE(t == s2);
 
@@ -413,7 +415,8 @@ TEST_F(Tworld, colorWhenRayHits) {
   TraceablePtr t = w->closestHit(r);
 
   PointLight l(Point3f(-10.0f, 10.00f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  Vec3f color = t->lighting(w, r);
+  t->setLight(l);
+  Vec3f color = t->lighting(r);
 
   float eps = 1E-3f;
   EXPECT_NEAR(color.x(), 0.38066f, eps);
@@ -465,7 +468,7 @@ TEST_F(Tworld, shadowWhenObjectBetweenLightAndPoint) {
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
   TraceablePtr t = w->closestHit(r);
-  ASSERT_TRUE(t->isShadowed(w, p));
+  ASSERT_TRUE(t->isShadowed(p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindLight) {
@@ -476,7 +479,7 @@ TEST_F(Tworld, noShadowWhenObjectBehindLight) {
   Ray r(p, (light.position() - p).normalize());
   w->intersect(r);
   TraceablePtr t = w->closestHit(r);
-  ASSERT_FALSE(t->isShadowed(w, p));
+  ASSERT_FALSE(t->isShadowed(p));
 }
 
 TEST_F(Tworld, noShadowWhenObjectBehindPoint) {
@@ -503,6 +506,7 @@ TEST_F(Tworld, intersectionWithShadows) {
   w->setLight(light);
   w->intersect(r);
   TraceablePtr t = w->closestHit(r);
-  Vec3f color = t->lighting(w, r);
+  t->setLight(light);
+  Vec3f color = t->lighting(r);
   ASSERT_TRUE(color == Vec3f(0.1f, 0.1f, 0.1f));
 }

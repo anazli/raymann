@@ -157,7 +157,8 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   w->add(s);
   w->add(s1);
   s1->intersect(r);
-  Vec3f color = s1->reflectedColor(w, r);
+  s1->setLight(light);
+  Vec3f color = s1->reflectedColor(r);
   ASSERT_TRUE(color == Vec3f(0.f, 0.f, 0.f));
 }
 
@@ -188,7 +189,8 @@ TEST_F(TMat, strikeReflectiveSurface) {
   w->intersect(r);
   TraceablePtr t = w->closestHit(r);
   ASSERT_TRUE(t == p);
-  Vec3f color = t->reflectedColor(w, r);
+  t->setLight(light);
+  Vec3f color = t->reflectedColor(r);
   float eps = 1.E-2f;
   EXPECT_NEAR(color.x(), 0.19032f, eps);
   EXPECT_NEAR(color.y(), 0.2379f, eps);
