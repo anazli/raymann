@@ -18,6 +18,8 @@ class TraceableDeco : public Traceable {
   TraceablePtr getParent() const override;
   void setLight(const PointLight &l) override;
   PointLight getLight() const override;
+  void setReflection(float ref) override;
+  float getReflection() const override;
 
  protected:
   Traceable *m_traceable;

@@ -45,3 +45,11 @@ TraceablePtr TraceableDeco::getParent() const {
 void TraceableDeco::setLight(const PointLight& l) { m_traceable->setLight(l); }
 
 PointLight TraceableDeco::getLight() const { return m_traceable->getLight(); }
+
+void TraceableDeco::setReflection(float ref) {
+  m_traceable->setReflection(ref);
+}
+
+float TraceableDeco::getReflection() const {
+  return m_traceable->getReflection();
+}

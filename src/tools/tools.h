@@ -15,5 +15,6 @@
 
 const float PI = acos(-1.);
 const float EPS = 0.0001f;
+const float EPS1 = 0.000002f;
 
 #endif  // TOOLS_H

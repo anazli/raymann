@@ -8,7 +8,9 @@ Material::Material(Traceable* tr, Vec3f& color)
     : TraceableDeco(tr), m_color(color) {}
 
 Material::Material(Traceable* tr, Vec3f& color, float reflection)
-    : TraceableDeco(tr), m_color(color), m_reflective(reflection) {}
+    : TraceableDeco(tr), m_color(color), m_reflective(reflection) {
+  setReflection(reflection);
+}
 
 Material::Material(Traceable* tr, const Vec3f& c, float reflection, float am,
                    float diff, float spec, float shi)
@@ -18,7 +20,9 @@ Material::Material(Traceable* tr, const Vec3f& c, float reflection, float am,
       m_ambient(am),
       m_diffuse(diff),
       m_specular(spec),
-      m_shininess(shi) {}
+      m_shininess(shi) {
+  setReflection(reflection);
+}
 
 Material::~Material() {}
 
@@ -29,7 +33,7 @@ Vec3f Material::lighting(const Ray& ray) {
   Point3f over_point =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
-                                0.02f;
+                                EPS1;
   Vec3f normal_vec = record().inside ? -normal(over_point) : normal(over_point);
   Vec3f lightv = (getLight().position() - over_point).normalize();
 
@@ -54,9 +58,17 @@ Vec3f Material::lighting(const Ray& ray) {
 }
 
 Vec3f Material::colorAt(const Ray& ray, int rec) {
-  Vec3f surf_col = lighting(ray);
-  Vec3f refl_col = reflectedColor(ray, rec);
-  return surf_col + refl_col;
+  TraceablePtr w = getParent();
+  if (w) {
+    TraceablePtr t = w->closestHit(ray);
+    if (t) {
+      t->setLight(w->getLight());
+      Vec3f surf_col = t->lighting(ray);
+      Vec3f refl_col = t->reflectedColor(ray, rec);
+      return surf_col + refl_col;
+    }
+  }
+  return Vec3f(0.f, 0.f, 0.f);
 }
 
 Vec3f Material::reflectedColor(const Ray& r, int rec) {
@@ -72,11 +84,11 @@ Vec3f Material::reflectedColor(const Ray& r, int rec) {
   Point3f over_point =
       record().point(r) + (record().inside ? normal(record().point(r))
                                            : normal(record().point(r))) *
-                              0.02f;
+                              EPS1;
   record().over_point_from_refl_surf = over_point;
   Ray reflect_ray(over_point, reflectv);
 
-  Vec3f color = getParent()->colorAt(reflect_ray, rec - 1);
+  Vec3f color = colorAt(reflect_ray, rec - 1);
   return color * m_reflective;
 }
 
@@ -93,6 +105,10 @@ void Material::checkInside(const Ray& r) {
 bool Material::isShadowed(const Point3f& p) {
   return TraceableDeco::isShadowed(p);
 }
+
+void Material::setReflection(float ref) { TraceableDeco::setReflection(ref); }
+
+float Material::getReflection() const { return TraceableDeco::getReflection(); }
 
 //------------------------------------------------------------------------------
 //---------------------------Stripe Pattern-------------------------------------

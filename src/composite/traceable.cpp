@@ -48,3 +48,7 @@ Record& Traceable::record() { return rec; }
 void Traceable::setParent(std::shared_ptr<Traceable> t) { m_parent = t; }
 
 std::shared_ptr<Traceable> Traceable::getParent() const { return m_parent; }
+
+void Traceable::setReflection(float ref) { m_reflection = ref; }
+
+float Traceable::getReflection() const { return m_reflection; }

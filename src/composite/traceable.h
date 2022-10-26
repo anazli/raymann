@@ -48,6 +48,8 @@ class Traceable {
   virtual Record &record();
   virtual void setParent(std::shared_ptr<Traceable> t);
   virtual std::shared_ptr<Traceable> getParent() const;
+  virtual void setReflection(float ref);
+  virtual float getReflection() const;
 
  protected:
   Traceable() {}
@@ -56,6 +58,7 @@ class Traceable {
   std::string m_name;
   Record rec;
   PointLight m_light;
+  float m_reflection = 0.f;  // TODO: move it from material here
 };
 
 typedef std::shared_ptr<Traceable> TraceablePtr;
