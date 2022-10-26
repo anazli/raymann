@@ -13,7 +13,7 @@ Vec3f TraceableDeco::lighting(const Ray& ray) {
 }
 
 Vec3f TraceableDeco::colorAt(const Ray& ray, int rec) {
-  return m_traceable->colorAt(ray);
+  return m_traceable->colorAt(ray, rec);
 }
 
 Vec3f TraceableDeco::reflectedColor(const Ray& r, int rec) {
