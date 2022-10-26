@@ -33,7 +33,7 @@ Vec3f Material::lighting(const Ray& ray) {
   Point3f over_point =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
-                                EPS1;
+                                0.02f;
   Vec3f normal_vec = record().inside ? -normal(over_point) : normal(over_point);
   Vec3f lightv = (getLight().position() - over_point).normalize();
 
