@@ -13,6 +13,7 @@ class TraceableBuilder {
   virtual void addGradientPattern() {}
   virtual void addRingPattern() {}
   virtual void addCheckerPattern() {}
+  virtual void addPerlinNoise() {}
   virtual std::shared_ptr<Traceable> getTraceable() const { return nullptr; };
 
   void setProperties(const Properties& prop) { m_prop = prop; }

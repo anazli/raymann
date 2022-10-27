@@ -114,3 +114,13 @@ std::ostream &operator<<(std::ostream &out, const Point3<T> &p) {
   out << "(" << p.x() << "," << p.y() << "," << p.z() << ")";
   return out;
 }
+
+template <typename T>
+Point3<T> operator*(const Point3<T> &v, const T &num) {
+  return Point3<T>(v.x() * num, v.y() * num, v.z() * num);
+}
+
+template <typename T>
+Point3<T> operator*(const T &num, const Point3<T> &v) {
+  return v * num;
+}

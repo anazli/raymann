@@ -14,6 +14,7 @@ class ShapeBuilder : public TraceableBuilder {
   void addGradientPattern() override;
   void addRingPattern() override;
   void addCheckerPattern() override;
+  void addPerlinNoise() override;
   TraceablePtr getTraceable() const override;
 
  private:
