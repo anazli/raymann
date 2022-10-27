@@ -40,9 +40,11 @@ int main() {
 
   //----------------------Middle sphere---------------------
   prop.reset()
-      .setColor(Vec3f(0.5f, 0.6f, 1.0f))
-      .setObjTrans(transl(-0.5f, 1.0f, 0.5f));
-  SceneDirectorPtr ms_dir = make_shared<StandardSphere>();
+      .setPatColA(Vec3f(0.1f, 0.1f, 1.0f))
+      .setPatColB(Vec3f(1.0f, 0.1f, 0.1f))
+      .setObjTrans(transl(-0.5f, 1.0f, 0.5f))
+      .setPatTrans(transl(-0.5f, 1.0f, 0.5f) * scale(0.05f, 0.05f, 0.05f));
+  SceneDirectorPtr ms_dir = make_shared<PerlinSphere>();
   TraceablePtr middle = ms_dir->create(builder, prop);
 
   //----------------------Right sphere---------------------
@@ -67,7 +69,7 @@ int main() {
   //----------------------------------------------------------------------------
   Canvas canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
-  Camera c(canvas.width(), canvas.height(), PI / 3.0f);
+  Camera c(canvas.width(), canvas.height(), PI / 4.0f);
   c.computePixelSize();
   Point3f from(0.0f, 2.0f, -7.0f);
   Point3f to(0.0f, 1.0f, 0.0f);
