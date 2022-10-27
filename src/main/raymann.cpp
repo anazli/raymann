@@ -23,30 +23,26 @@ int main() {
 
   //----------------------Left wall---------------------
   prop.reset()
-      .setPatColA(Vec3f(0.1f, 0.1f, 0.1f))
-      .setPatColB(Vec3f(0.1f, 1.0f, 0.1f))
-      .setPatTrans(transl(0.0f, 0.0f, 5.0f))
+      .setColor(Vec3f(0.4f, 0.4f, 0.4f))
+      .setReflection(0.3f)
       .setObjTrans(transl(0.0f, 0.0f, 5.0f) * rotX(-PI / 2.0f));
-  SceneDirectorPtr lw_dir = make_shared<CheckerPlane>();
+  SceneDirectorPtr lw_dir = make_shared<StandardPlane>();
   TraceablePtr left_wall = lw_dir->create(builder, prop);
 
   //----------------------Right wall---------------------
   prop.reset()
-      .setPatColA(Vec3f(0.1f, 0.1f, 0.1f))
-      .setPatColB(Vec3f(0.1f, 1.0f, 0.1f))
       .setObjTrans(transl(0.0f, 0.0f, 5.0f) * rotY(PI / 4.0f) *
                    rotX(-PI / 2.0f))
-      .setPatTrans(transl(0.0f, 2.0f, -0.5f) * scale(0.9f, 0.9f, 0.9f));
-  SceneDirectorPtr rw_dir = make_shared<RingPlane>();
+      .setColor(Vec3f(0.8f, 0.8f, 0.8f))
+      .setReflection(0.6f);
+  SceneDirectorPtr rw_dir = make_shared<StandardPlane>();
   TraceablePtr right_wall = rw_dir->create(builder, prop);
 
   //----------------------Middle sphere---------------------
   prop.reset()
-      .setPatColA(Vec3f(0.1f, 0.1f, 1.0f))
-      .setPatColB(Vec3f(1.0f, 0.1f, 0.1f))
-      .setObjTrans(transl(-0.5f, 1.0f, 0.5f))
-      .setPatTrans(transl(-0.5f, 1.0f, 0.5f) * scale(0.6f, 0.6f, 0.6f));
-  SceneDirectorPtr ms_dir = make_shared<CheckerSphere>();
+      .setColor(Vec3f(0.5f, 0.6f, 1.0f))
+      .setObjTrans(transl(-0.5f, 1.0f, 0.5f));
+  SceneDirectorPtr ms_dir = make_shared<StandardSphere>();
   TraceablePtr middle = ms_dir->create(builder, prop);
 
   //----------------------Right sphere---------------------
