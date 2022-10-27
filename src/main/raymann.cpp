@@ -34,7 +34,7 @@ int main() {
       .setObjTrans(transl(0.0f, 0.0f, 5.0f) * rotY(PI / 4.0f) *
                    rotX(-PI / 2.0f))
       .setColor(Vec3f(0.8f, 0.8f, 0.8f))
-      .setReflection(0.6f);
+      .setReflection(0.7f);
   SceneDirectorPtr rw_dir = make_shared<StandardPlane>();
   TraceablePtr right_wall = rw_dir->create(builder, prop);
 
@@ -53,8 +53,8 @@ int main() {
       .setPatColB(Vec3f(1.0f, 0.1f, 0.1f))
       .setObjTrans(transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) *
                    rotY(PI / 2.0f))
-      .setPatTrans(transl(1.5f, 0.5f, -0.5f) * scale(0.1f, 0.1f, 0.1f));
-  SceneDirectorPtr rs_dir = make_shared<RingSphere>();
+      .setPatTrans(transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f));
+  SceneDirectorPtr rs_dir = make_shared<CheckerSphere>();
   TraceablePtr right = rs_dir->create(builder, prop);
 
   //----------------------Left sphere---------------------
