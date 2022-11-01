@@ -38,15 +38,6 @@ std::shared_ptr<Traceable> GradientSphere::create(
   return builder->getTraceable();
 }
 
-std::shared_ptr<Traceable> PerlinSphere::create(
-    std::shared_ptr<TraceableBuilder> builder, const Properties &prop) {
-  builder->addTraceable(new Sphere(prop.sphereCenter(), prop.sphereRadius()));
-  builder->setProperties(prop);
-  builder->addTransformer();
-  builder->addPerlinNoise();
-  return builder->getTraceable();
-}
-
 std::shared_ptr<Traceable> StandardPlane::create(
     std::shared_ptr<TraceableBuilder> builder, const Properties &prop) {
   builder->addTraceable(new Plane);

@@ -36,12 +36,6 @@ class GradientSphere : public SceneDirector {
                                     const Properties &prop) override;
 };
 
-class PerlinSphere : public SceneDirector {
- public:
-  std::shared_ptr<Traceable> create(std::shared_ptr<TraceableBuilder> builder,
-                                    const Properties &prop) override;
-};
-
 class StandardPlane : public SceneDirector {
  public:
   std::shared_ptr<Traceable> create(std::shared_ptr<TraceableBuilder> builder,

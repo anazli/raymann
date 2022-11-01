@@ -43,9 +43,10 @@ int main() {
       .setPatColA(Vec3f(0.1f, 0.1f, 1.0f))
       .setPatColB(Vec3f(1.0f, 0.1f, 0.1f))
       .setObjTrans(transl(-0.5f, 1.0f, 0.5f))
-      .setPatTrans(transl(-0.5f, 1.0f, 0.5f) * scale(0.05f, 0.05f, 0.05f));
-  SceneDirectorPtr ms_dir = make_shared<PerlinSphere>();
+      .setPatTrans(transl(-0.5f, 1.0f, 0.5f) * scale(0.08f, 0.08f, 0.08f));
+  SceneDirectorPtr ms_dir = make_shared<CheckerSphere>();
   TraceablePtr middle = ms_dir->create(builder, prop);
+  middle->addPerlinNoise();
 
   //----------------------Right sphere---------------------
   prop.reset()
@@ -54,17 +55,19 @@ int main() {
       .setObjTrans(transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) *
                    rotY(PI / 2.0f))
       .setPatTrans(transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f));
-  SceneDirectorPtr rs_dir = make_shared<CheckerSphere>();
+  SceneDirectorPtr rs_dir = make_shared<GradientSphere>();
   TraceablePtr right = rs_dir->create(builder, prop);
+  right->addPerlinNoise();
 
   //----------------------Left sphere---------------------
   prop.reset()
       .setPatColA(Vec3f(0.1f, 0.1f, 1.0f))
       .setPatColB(Vec3f(1.0f, 0.1f, 0.1f))
       .setObjTrans(transl(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f))
-      .setPatTrans(transl(-1.5f, 0.33f, -0.75f) * scale(4.0f, 4.0f, 4.0f));
-  SceneDirectorPtr ls_dir = make_shared<GradientSphere>();
+      .setPatTrans(transl(-1.5f, 0.33f, -0.75f) * scale(0.3f, 0.3f, 0.3f));
+  SceneDirectorPtr ls_dir = make_shared<RingSphere>();
   TraceablePtr left = ls_dir->create(builder, prop);
+  left->addPerlinNoise();
 
   //----------------------------------------------------------------------------
   Canvas canvas(500, 500);

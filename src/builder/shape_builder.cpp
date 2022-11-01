@@ -39,13 +39,6 @@ void ShapeBuilder::addCheckerPattern() {
       m_prop.diffuse(), m_prop.specular(), m_prop.shininess());
 }
 
-void ShapeBuilder::addPerlinNoise() {
-  m_currentTraceable = new PerlinNoise(
-      m_currentTraceable, m_prop.patColA(), m_prop.patColB(), m_prop.objTrans(),
-      m_prop.patTrans(), m_prop.color(), m_prop.reflection(), m_prop.ambient(),
-      m_prop.diffuse(), m_prop.specular(), m_prop.shininess());
-}
-
 std::shared_ptr<Traceable> ShapeBuilder::getTraceable() const {
   std::shared_ptr<Traceable> ret(m_currentTraceable);
   return ret;

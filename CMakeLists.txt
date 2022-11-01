@@ -15,7 +15,8 @@ set(SOURCES src/main/raymann.cpp
             src/composite/world.cpp
             src/decorators/material.cpp
             src/decorators/traceable_deco.cpp
-            src/decorators/transformer.cpp)
+            src/decorators/transformer.cpp
+            src/textures/perlin.cpp)
 
 add_executable(${EXE} ${SOURCES})
 target_include_directories(${EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
@@ -45,7 +46,8 @@ if(BUILD_TESTING)
         src/composite/properties.cpp
         src/decorators/transformer.cpp
         src/decorators/material.cpp
-        src/decorators/traceable_deco.cpp)
+        src/decorators/traceable_deco.cpp
+        src/textures/perlin.cpp)
     target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
     target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
     set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})

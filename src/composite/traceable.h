@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include "textures/perlin.h"
 #include "tools/tools.h"
 
 //------------------------------------------------------------------------------
@@ -50,6 +51,7 @@ class Traceable {
   virtual std::shared_ptr<Traceable> getParent() const;
   virtual void setReflection(float ref);
   virtual float getReflection() const;
+  virtual void addPerlinNoise();
 
  protected:
   Traceable() {}
@@ -59,6 +61,7 @@ class Traceable {
   Record rec;
   PointLight m_light;
   float m_reflection = 0.f;  // TODO: move it from material here
+  std::shared_ptr<PerlinNoise> m_perlin = nullptr;
 };
 
 typedef std::shared_ptr<Traceable> TraceablePtr;
