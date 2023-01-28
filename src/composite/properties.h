@@ -35,6 +35,10 @@ class Properties {
   float reflection() const;
   Point3f sphereCenter() const;
   float sphereRadius() const;
+  bool setProperty(const std::string &name, const std::any &value);
+  bool addProperty(const std::string &name, const std::any &value);
+  bool removeProperty(const std::string &name);
+  bool hasProperty(const std::string &name);
 
  private:
   Mat4f m_object_trans = Mat4f();

@@ -102,3 +102,23 @@ float Properties::reflection() const { return m_reflective; }
 Point3f Properties::sphereCenter() const { return m_sphere_center; }
 
 float Properties::sphereRadius() const { return m_sphere_radius; }
+
+bool Properties::setProperty(const std::string& name, const std::any& value)
+{
+  return true;
+}
+
+bool Properties::addProperty(const std::string& name, const std::any& value)
+{
+  return true;
+}
+
+bool Properties::removeProperty(const std::string& name)
+{
+  return true;
+}
+
+bool Properties::hasProperty(const std::string& name)
+{
+  return true;
+}
