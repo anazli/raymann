@@ -19,15 +19,18 @@
 
 Properties& Properties::setProperty(const std::string& name,
                                     const std::any& value) {
-  if (!name.empty()) m_prop[name] = value;
+  if (!addProperty(name, value)) {
+    m_prop[name] = value;
+  }
   return *this;
 }
 
 bool Properties::addProperty(const std::string& name, const std::any& value) {
-  if (name.empty() || hasProperty(name)) return false;
-
-  m_prop[name] = value;
-  return true;
+  if (!hasProperty(name) && !name.empty()) {
+    m_prop[name] = value;
+    return true;
+  }
+  return false;
 }
 
 bool Properties::removeProperty(const std::string& name) { return true; }
