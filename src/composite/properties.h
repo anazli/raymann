@@ -6,32 +6,34 @@
 #include "tools/mat4.h"
 #include "tools/vec3.h"
 
-// objectTransformMatrix  Mat4f
-// patternTransformMatrix Mat4f
-// color         					Vec3f
-// patternColorA 					Vec3f
-// patternColorB 					Vec3f
-// ambient      					float
-// diffuse      					float
-// specular     					float
-// shininess    					float
-// reflection   					float
-// sphereCenter 					Point3f
-// sphereRadius 					float
+enum class PropertyNames {
+  COLOR = 10,                      // Vec3f
+  AMBIENT = 20,                    // float [0,1]
+  DIFFUSE = 30,                    // float [0,1]
+  SPECULAR = 40,                   // float [0,1]
+  SHININESS = 50,                  // float [0,1]
+  REFLECTION = 60,                 // float [0,1]
+  PATTERN_COLORA = 70,             // Vec3f
+  PATTERN_COLORB = 80,             // Vec3f
+  OBJECT_TRANSFROM_MATRIX = 90,    // Mat4f
+  PATTERN_TRANSFORM_MATRIX = 100,  // Mat4f
+  SPHERE_CENTER = 110,             // Point3f
+  SPHERE_RADIUS = 120              // float
+};
 
 class Properties {
  public:
-  Properties &setProperty(const std::string &name, const std::any &value);
-  bool addProperty(const std::string &name, const std::any &value);
-  bool removeProperty(const std::string &name);
-  bool hasProperty(const std::string &name);
-  std::any getPropertyAsAny(const std::string &name);
-  int getPropertyAsInt(const std::string &name);
-  float getPropertyAsFloat(const std::string &name);
-  Vec3f getPropertyAsVec3f(const std::string &name);
-  Mat4f getPropertyAsMat4f(const std::string &name);
-  Point3f getPropertyAsPoint3f(const std::string &name);
+  Properties &setProperty(const PropertyNames &name, const std::any &value);
+  bool addProperty(const PropertyNames &name, const std::any &value);
+  bool removeProperty(const PropertyNames &name);
+  bool hasProperty(const PropertyNames &name) const;
+  std::any getPropertyAsAny(const PropertyNames &name) const;
+  int getPropertyAsInt(const PropertyNames &name) const;
+  float getPropertyAsFloat(const PropertyNames &name) const;
+  Vec3f getPropertyAsVec3f(const PropertyNames &name) const;
+  Mat4f getPropertyAsMat4f(const PropertyNames &name) const;
+  Point3f getPropertyAsPoint3f(const PropertyNames &name) const;
 
  private:
-  std::map<std::string, std::any> m_prop;
+  std::map<PropertyNames, std::any> m_prop;
 };
