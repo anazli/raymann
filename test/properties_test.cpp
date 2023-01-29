@@ -34,27 +34,27 @@ TEST_F(Tprop, entityHasProperty) {
   EXPECT_FALSE(p.hasProperty(""));
 }
 
-TEST_F(Tprop, getPropertyAsInt) {
+TEST_F(Tprop, getsPropertyAsInt) {
   int new_value = 5;
   p.setProperty(name, new_value);
   EXPECT_EQ(p.getPropertyAsInt(""), 0);
   EXPECT_EQ(p.getPropertyAsInt(name), new_value);
 }
 
-TEST_F(Tprop, getPropertyAsFloat) {
+TEST_F(Tprop, getsPropertyAsFloat) {
   p.setProperty(name, value);
   EXPECT_EQ(p.getPropertyAsFloat(""), 0.f);
   EXPECT_EQ(p.getPropertyAsFloat(name), any_cast<float>(value));
 }
 
-TEST_F(Tprop, getPropertyAsVec3f) {
+TEST_F(Tprop, getsPropertyAsVec3f) {
   Vec3f new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
   EXPECT_EQ(p.getPropertyAsVec3f(""), Vec3f());
   EXPECT_EQ(p.getPropertyAsVec3f(name), new_value);
 }
 
-TEST_F(Tprop, getPropertyAsMat4f) {
+TEST_F(Tprop, getsPropertyAsMat4f) {
   Mat4f new_value(Vec4<float>(1.36f, 1.28f, 0.85f, -7.f),
                   Vec4<float>(1.5f, 0.f, -6.58f, 1.f),
                   Vec4<float>(4.5f, 0.f, -3.f, 10.f),
@@ -64,9 +64,15 @@ TEST_F(Tprop, getPropertyAsMat4f) {
   EXPECT_EQ(p.getPropertyAsMat4f(name), new_value);
 }
 
-TEST_F(Tprop, getPropertyAsPoint3f) {
+TEST_F(Tprop, getsPropertyAsPoint3f) {
   Point3f new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
   EXPECT_EQ(p.getPropertyAsPoint3f(""), Point3f());
   EXPECT_EQ(p.getPropertyAsPoint3f(name), new_value);
+}
+
+TEST_F(Tprop, removesProperty) {
+  p.setProperty(name, value);
+  EXPECT_TRUE(p.removeProperty(name));
+  EXPECT_FALSE(p.removeProperty(name));
 }

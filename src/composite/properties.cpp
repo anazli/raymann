@@ -16,7 +16,14 @@ bool Properties::addProperty(const std::string& name, const std::any& value) {
   return false;
 }
 
-bool Properties::removeProperty(const std::string& name) { return true; }
+bool Properties::removeProperty(const std::string& name) {
+  if (m_prop.empty()) return false;
+  if (hasProperty(name)) {
+    m_prop.erase(name);
+    return true;
+  }
+  return false;
+}
 
 bool Properties::hasProperty(const std::string& name) {
   auto it = m_prop.find(name);
