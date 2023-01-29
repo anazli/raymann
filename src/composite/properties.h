@@ -11,7 +11,7 @@ enum class PropertyNames {
   AMBIENT = 20,                    // float [0,1]
   DIFFUSE = 30,                    // float [0,1]
   SPECULAR = 40,                   // float [0,1]
-  SHININESS = 50,                  // float [0,1]
+  SHININESS = 50,                  // float [0,..]
   REFLECTION = 60,                 // float [0,1]
   PATTERN_COLORA = 70,             // Vec3f
   PATTERN_COLORB = 80,             // Vec3f
