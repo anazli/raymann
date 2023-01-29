@@ -4,7 +4,9 @@
 
 std::shared_ptr<Traceable> StandardSphere::create(
     std::shared_ptr<TraceableBuilder> builder, const Properties &prop) {
-  builder->addTraceable(new Sphere(prop.sphereCenter(), prop.sphereRadius()));
+  builder->addTraceable(
+      new Sphere(prop.getPropertyAsPoint3f(PropertyNames::SPHERE_CENTER),
+                 prop.getPropertyAsFloat(PropertyNames::SPHERE_RADIUS)));
   builder->setProperties(prop);
   builder->addTransformer();
   builder->addMaterial();
@@ -13,7 +15,9 @@ std::shared_ptr<Traceable> StandardSphere::create(
 
 std::shared_ptr<Traceable> CheckerSphere::create(
     std::shared_ptr<TraceableBuilder> builder, const Properties &prop) {
-  builder->addTraceable(new Sphere(prop.sphereCenter(), prop.sphereRadius()));
+  builder->addTraceable(
+      new Sphere(prop.getPropertyAsPoint3f(PropertyNames::SPHERE_CENTER),
+                 prop.getPropertyAsFloat(PropertyNames::SPHERE_RADIUS)));
   builder->setProperties(prop);
   builder->addTransformer();
   builder->addCheckerPattern();
@@ -22,7 +26,9 @@ std::shared_ptr<Traceable> CheckerSphere::create(
 
 std::shared_ptr<Traceable> RingSphere::create(
     std::shared_ptr<TraceableBuilder> builder, const Properties &prop) {
-  builder->addTraceable(new Sphere(prop.sphereCenter(), prop.sphereRadius()));
+  builder->addTraceable(
+      new Sphere(prop.getPropertyAsPoint3f(PropertyNames::SPHERE_CENTER),
+                 prop.getPropertyAsFloat(PropertyNames::SPHERE_RADIUS)));
   builder->setProperties(prop);
   builder->addTransformer();
   builder->addRingPattern();
@@ -31,7 +37,9 @@ std::shared_ptr<Traceable> RingSphere::create(
 
 std::shared_ptr<Traceable> GradientSphere::create(
     std::shared_ptr<TraceableBuilder> builder, const Properties &prop) {
-  builder->addTraceable(new Sphere(prop.sphereCenter(), prop.sphereRadius()));
+  builder->addTraceable(
+      new Sphere(prop.getPropertyAsPoint3f(PropertyNames::SPHERE_CENTER),
+                 prop.getPropertyAsFloat(PropertyNames::SPHERE_RADIUS)));
   builder->setProperties(prop);
   builder->addTransformer();
   builder->addGradientPattern();
