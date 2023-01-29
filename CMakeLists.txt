@@ -35,9 +35,10 @@ if(BUILD_TESTING)
   include(GoogleTest)
 
 
-  MACRO(TESTCASE NAME SOURCES)
+  MACRO(TESTCASE NAME TEST_SOURCES)
     set(TEST_EXE ${NAME}_test)
-    add_executable(${TEST_EXE} test/${NAME}_test.cpp ${SOURCES})
+    message("" ${TEST_SOURCES})
+    add_executable(${TEST_EXE} test/${NAME}_test.cpp ${TEST_SOURCES})
     target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
     target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
     set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
@@ -53,30 +54,29 @@ if(BUILD_TESTING)
   TESTCASE(tools ${testSources})
   set(testSources src/container/canvas.cpp)
   TESTCASE(canvas ${testSources})
-  set(testSources src/decorators/transformer.cpp)
-  TESTCASE(transformer ${testSources})
-  set(testSources src/decorators/transformer.cpp)
+  set(testSources src/tools/ray.h)
   TESTCASE(ray ${testSources})
-  set(testSources src/geometry/sphere.h)
-  TESTCASE(sphere ${testSources})
+  set(testSources src/camera/camera.h)
+  TESTCASE(camera ${testSources})
+  set(testSources src/composite/properties.cpp)
+  TESTCASE(properties ${testSources})
+  set(testSources src/composite/traceable.cpp
+      src/decorators/transformer.cpp
+      src/decorators/traceable_deco.cpp
+      src/textures/perlin.cpp)
+  TESTCASE(sphere "${testSources}")
+  TESTCASE(plane "${testSources}")
   set(testSources
       src/composite/traceable.cpp
       src/builder/shape_builder.cpp
-      src/container/canvas.cpp
-      src/composite/world.cpp
       src/composite/scene_director.cpp
       src/composite/properties.cpp
-      src/decorators/transformer.cpp
+      src/composite/world.cpp
       src/decorators/material.cpp
       src/decorators/traceable_deco.cpp
+      src/decorators/transformer.cpp
       src/textures/perlin.cpp)
-  TESTCASE(world ${testSources})
-  set(testSources src/decorators/material.cpp)
-  TESTCASE(material ${testSources})
-  set(testSources src/camera/camera.h)
-  TESTCASE(camera ${testSources})
-  set(testSources src/geometry/plane.h)
-  TESTCASE(plane ${testSources})
-  set(testSources src/composite/properties.cpp)
-  TESTCASE(properties ${testSources})
+  TESTCASE(material "${testSources}")
+  TESTCASE(transformer "${testSources}")
+  TESTCASE(world "${testSources}")
 endif()
