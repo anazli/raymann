@@ -23,6 +23,7 @@ enum class PropertyNames {
 
 class Properties {
  public:
+  Properties();
   Properties &setProperty(const PropertyNames &name, const std::any &value);
   bool addProperty(const PropertyNames &name, const std::any &value);
   bool removeProperty(const PropertyNames &name);

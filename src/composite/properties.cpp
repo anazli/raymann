@@ -1,5 +1,14 @@
 #include "composite/properties.h"
 
+Properties::Properties() {
+  setProperty(PropertyNames::SPHERE_CENTER, Point3f(0.f, 0.f, 0.f))
+      .setProperty(PropertyNames::SPHERE_RADIUS, 1.0f)
+      .setProperty(PropertyNames::AMBIENT, 0.1f)
+      .setProperty(PropertyNames::DIFFUSE, 0.9f)
+      .setProperty(PropertyNames::SPECULAR, 0.9f)
+      .setProperty(PropertyNames::SHININESS, 200.f);
+}
+
 Properties& Properties::setProperty(const PropertyNames& name,
                                     const std::any& value) {
   if (!addProperty(name, value)) {

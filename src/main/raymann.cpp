@@ -14,10 +14,6 @@ using namespace std;
 int main() {
   TraceableBuilderPtr builder = make_shared<ShapeBuilder>();
   Properties prop;
-  prop.setProperty(PropertyNames::AMBIENT, 0.1f)
-      .setProperty(PropertyNames::DIFFUSE, 0.9f)
-      .setProperty(PropertyNames::SPECULAR, 0.9f)
-      .setProperty(PropertyNames::SHININESS, 200.f);
   //----------------------Floor---------------------
   prop.setProperty(PropertyNames::PATTERN_COLORA, Vec3f(1.0f, 1.0f, 1.0f))
       .setProperty(PropertyNames::PATTERN_COLORB, Vec3f(0.1f, 0.1f, 0.1f))
@@ -48,7 +44,8 @@ int main() {
       .setProperty(PropertyNames::OBJECT_TRANSFROM_MATRIX,
                    transl(-0.5f, 1.0f, 0.5f))
       .setProperty(PropertyNames::PATTERN_TRANSFORM_MATRIX,
-                   transl(-0.5f, 1.0f, 0.5f) * scale(0.08f, 0.08f, 0.08f));
+                   transl(-0.5f, 1.0f, 0.5f) * scale(0.08f, 0.08f, 0.08f))
+      .setProperty(PropertyNames::REFLECTION, 0.f);
   SceneDirectorPtr ms_dir = make_shared<CheckerSphere>();
   TraceablePtr middle = ms_dir->create(builder, prop);
   middle->addPerlinNoise();
