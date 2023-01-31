@@ -10,6 +10,7 @@
 //---------------------------Helper Struct--------------------------------------
 //------------------------------------------------------------------------------
 
+// TODO: find better alternative
 struct Record {
   int count = 0;
   float t1 = -1.0f;
@@ -29,6 +30,8 @@ struct Record {
   Point3f over_point_from_refl_surf;
 };
 
+// TODO: Maybe a constructor for DI, to provide all the properties for objects
+// like sphere and materials/tranformers, instead of having this ugly interface
 class Traceable {
  public:
   virtual ~Traceable();

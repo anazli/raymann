@@ -5,6 +5,7 @@
 //---------------------------Material-------------------------------------------
 //------------------------------------------------------------------------------
 
+// TODO: Add interface abstract and inherit from abstract deco and that.
 class Material : public TraceableDeco {
  public:
   Material(Traceable *tr, Vec3f &color);
@@ -38,6 +39,7 @@ class Material : public TraceableDeco {
 //---------------------------Stripe Pattern Decorator---------------------------
 //------------------------------------------------------------------------------
 
+// TODO: find better solution instead of subclassing
 class StripePattern : public Material {
  public:
   StripePattern(Traceable *tr, const Vec3f &a, const Vec3f &b,
