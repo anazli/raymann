@@ -9,19 +9,16 @@ using std::list;
 using std::ofstream;
 
 void Canvas::render(TraceablePtr world, const Camera &c) {
-  int num_samples = 1;
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {
       Vec3f color;
-      for (int s = 0; s < num_samples; ++s) {
-        Ray ray(c, i, j);
-        if (world->intersect(ray)) {
-          color += world->colorAt(ray);
-        } else {
-          color += Vec3f(0.0, 0.0, 0.0);
-        }
+      Ray ray(c, i, j);
+      if (world->intersect(ray)) {
+        color += world->colorAt(ray);
+      } else {
+        color += Vec3f(0.0, 0.0, 0.0);
       }
-      color = color / (float)num_samples;
+      color = color;
       writePixel(i, j, color);
     }
   }
