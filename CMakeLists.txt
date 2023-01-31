@@ -37,7 +37,6 @@ if(BUILD_TESTING)
 
   MACRO(TESTCASE NAME TEST_SOURCES)
     set(TEST_EXE ${NAME}_test)
-    message("" ${TEST_SOURCES})
     add_executable(${TEST_EXE} test/${NAME}_test.cpp ${TEST_SOURCES})
     target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
     target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
