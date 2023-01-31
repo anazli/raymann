@@ -9,8 +9,7 @@ Properties::Properties() {
       .setProperty(Props::SHININESS, 200.f);
 }
 
-Properties& Properties::setProperty(const Props& name,
-                                    const std::any& value) {
+Properties& Properties::setProperty(const Props& name, const std::any& value) {
   if (!addProperty(name, value)) {
     m_prop[name] = value;
   }
@@ -35,8 +34,7 @@ bool Properties::removeProperty(const Props& name) {
 }
 
 bool Properties::hasProperty(const Props& name) const {
-  auto it = m_prop.find(name);
-  if (it != m_prop.end()) return true;
+  if (auto it{m_prop.find(name)}; it != m_prop.end()) return true;
   return false;
 }
 

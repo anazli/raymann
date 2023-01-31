@@ -7,18 +7,18 @@
 #include "tools/vec3.h"
 
 enum class Props {
-  COLOR = 10,                      // Vec3f
-  AMBIENT = 20,                    // float [0,1]
-  DIFFUSE = 30,                    // float [0,1]
-  SPECULAR = 40,                   // float [0,1]
-  SHININESS = 50,                  // float [0,..]
-  REFLECTION = 60,                 // float [0,1]
-  PATTERN_COLORA = 70,             // Vec3f
-  PATTERN_COLORB = 80,             // Vec3f
-  OBJECT_TRANSFROM_MATRIX = 90,    // Mat4f
-  PATTERN_TRANSFORM_MATRIX = 100,  // Mat4f
-  SPHERE_CENTER = 110,             // Point3f
-  SPHERE_RADIUS = 120              // float
+  COLOR,                     // Vec3f
+  AMBIENT,                   // float [0,1]
+  DIFFUSE,                   // float [0,1]
+  SPECULAR,                  // float [0,1]
+  SHININESS,                 // float [0,..]
+  REFLECTION,                // float [0,1]
+  PATTERN_COLORA,            // Vec3f
+  PATTERN_COLORB,            // Vec3f
+  OBJECT_TRANSFROM_MATRIX,   // Mat4f
+  PATTERN_TRANSFORM_MATRIX,  // Mat4f
+  SPHERE_CENTER,             // Point3f
+  SPHERE_RADIUS              // float
 };
 
 class Properties {

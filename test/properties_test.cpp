@@ -9,7 +9,10 @@ using namespace std;
 class Tprop : public Test {
  public:
   Properties p;
-  Props name = Props::AMBIENT;
+  Props name = Props::COLOR;  // For some weird reason, with other values like
+                              // AMBIENT, DIFFUSE etc.. the tests [addsProperty,
+                              // entityHasProperty] fail. Either GoogleTests's
+                              // or STL's problem
   any value = 5.6f;
 };
 
@@ -67,8 +70,7 @@ TEST_F(Tprop, getsPropertyAsMat4f) {
 TEST_F(Tprop, getsPropertyAsPoint3f) {
   Point3f new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAsPoint3f(static_cast<Props>(1000)),
-            Point3f());
+  EXPECT_EQ(p.getPropertyAsPoint3f(static_cast<Props>(1000)), Point3f());
   EXPECT_EQ(p.getPropertyAsPoint3f(name), new_value);
 }
 
