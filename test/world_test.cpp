@@ -56,12 +56,12 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   direct = make_shared<StandardSphere>();
   TraceablePtr s = direct->create(builder, prop);
-  prop.setSphereCenter(Point3f(0.0f, 0.0f, 5.0f))
-      .setColor(Vec3f(0.09f, 0.172f, 0.909f))
-      .setAmbient(0.f)
-      .setDiffuse(0.f)
-      .setSpecular(0.f)
-      .setShininess(0.f);
+  prop.setProperty(Props::SPHERE_CENTER, Point3f(0.0f, 0.0f, 5.0f))
+      .setProperty(Props::COLOR, Vec3f(0.09f, 0.172f, 0.909f))
+      .setProperty(Props::AMBIENT, 0.f)
+      .setProperty(Props::DIFFUSE, 0.f)
+      .setProperty(Props::SPECULAR, 0.f)
+      .setProperty(Props::SHININESS, 0.f);
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s1 = direct2->create(builder, prop);
 
@@ -96,12 +96,12 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   direct = make_shared<StandardSphere>();
   TraceablePtr s = direct->create(builder, prop);
-  prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f))
-      .setColor(Vec3f(0.09f, 0.172f, 0.909f))
-      .setAmbient(0.f)
-      .setDiffuse(0.f)
-      .setSpecular(0.f)
-      .setShininess(0.f);
+  prop.setProperty(Props::SPHERE_CENTER, Point3f(0.0f, 0.0f, -8.0f))
+      .setProperty(Props::COLOR, Vec3f(0.09f, 0.172f, 0.909f))
+      .setProperty(Props::AMBIENT, 0.f)
+      .setProperty(Props::DIFFUSE, 0.f)
+      .setProperty(Props::SPECULAR, 0.f)
+      .setProperty(Props::SHININESS, 0.f);
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s1 = direct2->create(builder, prop);
 
@@ -125,14 +125,14 @@ TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
 TEST_F(Tworld, createsWorldOfNegativeIntersections) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   direct = make_shared<StandardSphere>();
-  prop.setSphereCenter(Point3f(0.0f, 0.0f, -11.0f))
-      .setColor(Vec3f(0.09f, 0.172f, 0.909f))
-      .setAmbient(0.f)
-      .setDiffuse(0.f)
-      .setSpecular(0.f)
-      .setShininess(0.f);
+  prop.setProperty(Props::SPHERE_CENTER, Point3f(0.0f, 0.0f, -11.0f))
+      .setProperty(Props::COLOR, Vec3f(0.09f, 0.172f, 0.909f))
+      .setProperty(Props::AMBIENT, 0.f)
+      .setProperty(Props::DIFFUSE, 0.f)
+      .setProperty(Props::SPECULAR, 0.f)
+      .setProperty(Props::SHININESS, 0.f);
   TraceablePtr s = direct->create(builder, prop);
-  prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f));
+  prop.setProperty(Props::SPHERE_CENTER, Point3f(0.0f, 0.0f, -8.0f));
 
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s1 = direct2->create(builder, prop);
@@ -156,25 +156,25 @@ TEST_F(Tworld, createsWorldOfNegativeIntersections) {
 
 TEST_F(Tworld, createsWorldOfFourSpheres) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  prop.setSphereCenter(Point3f(0.0f, 0.0f, 5.0f))
-      .setColor(Vec3f(0.09f, 0.172f, 0.909f))
-      .setAmbient(0.f)
-      .setDiffuse(0.f)
-      .setSpecular(0.f)
-      .setShininess(0.f);
+  prop.setProperty(Props::SPHERE_CENTER, Point3f(0.f, 0.f, 5.f))
+      .setProperty(Props::COLOR, Vec3f(0.09f, 0.172f, 0.909f))
+      .setProperty(Props::AMBIENT, 0.f)
+      .setProperty(Props::DIFFUSE, 0.f)
+      .setProperty(Props::SPECULAR, 0.f)
+      .setProperty(Props::SHININESS, 0.f);
 
   direct = make_shared<StandardSphere>();
   TraceablePtr s = direct->create(builder, prop);
 
-  prop.setSphereCenter(Point3f(0.0f, 0.0f, 0.0f));
+  prop.setProperty(Props::SPHERE_CENTER, Point3f(0.0f, 0.0f, 0.0f));
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s1 = direct2->create(builder, prop);
 
-  prop.setSphereCenter(Point3f(0.0f, 0.0f, -8.0f));
+  prop.setProperty(Props::SPHERE_CENTER, Point3f(0.0f, 0.0f, -8.0f));
   SceneDirectorPtr direct3 = make_shared<StandardSphere>();
   TraceablePtr s2 = direct3->create(builder, prop);
 
-  prop.setSphereCenter(Point3f(0.0f, 0.0f, 8.0f));
+  prop.setProperty(Props::SPHERE_CENTER, Point3f(0.0f, 0.0f, 8.0f));
   SceneDirectorPtr direct4 = make_shared<StandardSphere>();
   TraceablePtr s3 = direct4->create(builder, prop);
 
@@ -204,13 +204,13 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
 }
 
 TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
-  prop.setColor(Vec3f(0.8f, 1.0f, 0.6f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.7f)
-      .setSpecular(0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.0f, 0.6f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
-  prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
+  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
@@ -220,13 +220,13 @@ TEST_F(Tworld, createsDefaultWorldForTheNextTests) {
 }
 
 TEST_F(Tworld, getsVectorOFIntersectionPoints) {
-  prop.setColor(Vec3f(0.8f, 1.0f, 0.6f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.7f)
-      .setSpecular(0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.0f, 0.6f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
-  prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
+  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
@@ -244,10 +244,10 @@ TEST_F(Tworld, getsVectorOFIntersectionPoints) {
 }
 
 TEST_F(Tworld, computesQuantitiesOfIntersection) {
-  prop.setColor(Vec3f(0.8f, 1.0f, 0.6f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.7f)
-      .setSpecular(0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.0f, 0.6f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
@@ -262,10 +262,10 @@ TEST_F(Tworld, computesQuantitiesOfIntersection) {
 }
 
 TEST_F(Tworld, intersectionWhenHitOccursOutside) {
-  prop.setColor(Vec3f(0.8f, 1.0f, 0.6f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.7f)
-      .setSpecular(0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.0f, 0.6f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
@@ -280,10 +280,10 @@ TEST_F(Tworld, intersectionWhenHitOccursOutside) {
 }
 
 TEST_F(Tworld, intersectionWhenHitOccursInside) {
-  prop.setColor(Vec3f(0.8f, 1.0f, 0.6f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.7f)
-      .setSpecular(0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.0f, 0.6f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
@@ -298,13 +298,13 @@ TEST_F(Tworld, intersectionWhenHitOccursInside) {
 }
 
 TEST_F(Tworld, ShadingAnIntersection) {
-  prop.setColor(Vec3f(0.8f, 1.0f, 0.6f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.7f)
-      .setSpecular(0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.0f, 0.6f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
-  prop.setObjTrans(scale(0.5f, 0.5f, 0.5f));
+  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
@@ -329,18 +329,18 @@ TEST_F(Tworld, ShadingAnIntersection) {
 }
 
 TEST_F(Tworld, ShadingAnInsideIntersection) {
-  prop.setColor(Vec3f(0.8f, 1.0f, 0.6f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.7f)
-      .setSpecular(0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.0f, 0.6f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
-  prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.9f)
-      .setSpecular(0.9f)
-      .setShininess(200.f)
-      .setObjTrans(scale(0.5f, 0.5f, 0.5f));
+  prop.setProperty(Props::COLOR, Vec3f(1.0f, 1.0f, 1.0f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.9f)
+      .setProperty(Props::SPECULAR, 0.9f)
+      .setProperty(Props::SHININESS, 200.f)
+      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
@@ -365,18 +365,18 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
 }
 
 TEST_F(Tworld, colorWhenRayMisses) {
-  prop.setColor(Vec3f(0.8f, 1.0f, 0.6f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.7f)
-      .setSpecular(0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.0f, 0.6f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
-  prop.setColor(Vec3f(1.0f, 1.0f, 1.0f))
-      .setAmbient(0.1f)
-      .setDiffuse(0.9f)
-      .setSpecular(0.9f)
-      .setShininess(200.f)
-      .setObjTrans(scale(0.5f, 0.5f, 0.5f));
+  prop.setProperty(Props::COLOR, Vec3f(1.0f, 1.0f, 1.0f))
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.9f)
+      .setProperty(Props::SPECULAR, 0.9f)
+      .setProperty(Props::SHININESS, 200.f)
+      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
@@ -403,8 +403,7 @@ TEST_F(Tworld, colorWhenRayHits) {
       .setProperty(Props::DIFFUSE, 0.9f)
       .setProperty(Props::SPECULAR, 0.9f)
       .setProperty(Props::SHININESS, 200.f)
-      .setProperty(Props::OBJECT_TRANSFROM_MATRIX,
-                   scale(0.5f, 0.5f, 0.5f));
+      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
@@ -437,8 +436,7 @@ TEST_F(Tworld, colorWithAnIntersectionBehind) {
       .setProperty(Props::DIFFUSE, 0.9f)
       .setProperty(Props::SPECULAR, 0.9f)
       .setProperty(Props::SHININESS, 200.f)
-      .setProperty(Props::OBJECT_TRANSFROM_MATRIX,
-                   scale(0.5f, 0.5f, 0.5f));
+      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
   direct2 = make_shared<StandardSphere>();
   TraceablePtr s2 = direct2->create(builder, prop);
   w->add(s1);
@@ -499,8 +497,7 @@ TEST_F(Tworld, intersectionWithShadows) {
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
   w->add(s1);
-  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX,
-                   transl(0.0f, 0.0f, 10.0f));
+  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, transl(0.0f, 0.0f, 10.0f));
   direct2 = make_shared<StandardSphere>();
   shared_ptr<Traceable> s2 = direct2->create(builder, prop);
   w->add(s2);
