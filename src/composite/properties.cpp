@@ -1,15 +1,15 @@
 #include "composite/properties.h"
 
 Properties::Properties() {
-  setProperty(PropertyNames::SPHERE_CENTER, Point3f(0.f, 0.f, 0.f))
-      .setProperty(PropertyNames::SPHERE_RADIUS, 1.0f)
-      .setProperty(PropertyNames::AMBIENT, 0.1f)
-      .setProperty(PropertyNames::DIFFUSE, 0.9f)
-      .setProperty(PropertyNames::SPECULAR, 0.9f)
-      .setProperty(PropertyNames::SHININESS, 200.f);
+  setProperty(Props::SPHERE_CENTER, Point3f(0.f, 0.f, 0.f))
+      .setProperty(Props::SPHERE_RADIUS, 1.0f)
+      .setProperty(Props::AMBIENT, 0.1f)
+      .setProperty(Props::DIFFUSE, 0.9f)
+      .setProperty(Props::SPECULAR, 0.9f)
+      .setProperty(Props::SHININESS, 200.f);
 }
 
-Properties& Properties::setProperty(const PropertyNames& name,
+Properties& Properties::setProperty(const Props& name,
                                     const std::any& value) {
   if (!addProperty(name, value)) {
     m_prop[name] = value;
@@ -17,7 +17,7 @@ Properties& Properties::setProperty(const PropertyNames& name,
   return *this;
 }
 
-bool Properties::addProperty(const PropertyNames& name, const std::any& value) {
+bool Properties::addProperty(const Props& name, const std::any& value) {
   if (!hasProperty(name)) {
     m_prop[name] = value;
     return true;
@@ -25,7 +25,7 @@ bool Properties::addProperty(const PropertyNames& name, const std::any& value) {
   return false;
 }
 
-bool Properties::removeProperty(const PropertyNames& name) {
+bool Properties::removeProperty(const Props& name) {
   if (m_prop.empty()) return false;
   if (hasProperty(name)) {
     m_prop.erase(name);
@@ -34,20 +34,20 @@ bool Properties::removeProperty(const PropertyNames& name) {
   return false;
 }
 
-bool Properties::hasProperty(const PropertyNames& name) const {
+bool Properties::hasProperty(const Props& name) const {
   auto it = m_prop.find(name);
   if (it != m_prop.end()) return true;
   return false;
 }
 
-std::any Properties::getPropertyAsAny(const PropertyNames& name) const {
+std::any Properties::getPropertyAsAny(const Props& name) const {
   if (hasProperty(name)) {
     return m_prop.at(name);
   }
   return std::any();
 }
 
-int Properties::getPropertyAsInt(const PropertyNames& name) const {
+int Properties::getPropertyAsInt(const Props& name) const {
   if (hasProperty(name)) {
     try {
       return std::any_cast<int>(m_prop.at(name));
@@ -58,7 +58,7 @@ int Properties::getPropertyAsInt(const PropertyNames& name) const {
   return 0;
 }
 
-float Properties::getPropertyAsFloat(const PropertyNames& name) const {
+float Properties::getPropertyAsFloat(const Props& name) const {
   if (hasProperty(name)) {
     try {
       return std::any_cast<float>(m_prop.at(name));
@@ -69,7 +69,7 @@ float Properties::getPropertyAsFloat(const PropertyNames& name) const {
   return 0.f;
 }
 
-Vec3f Properties::getPropertyAsVec3f(const PropertyNames& name) const {
+Vec3f Properties::getPropertyAsVec3f(const Props& name) const {
   if (hasProperty(name)) {
     try {
       return std::any_cast<Vec3f>(m_prop.at(name));
@@ -80,7 +80,7 @@ Vec3f Properties::getPropertyAsVec3f(const PropertyNames& name) const {
   return Vec3f();
 }
 
-Mat4f Properties::getPropertyAsMat4f(const PropertyNames& name) const {
+Mat4f Properties::getPropertyAsMat4f(const Props& name) const {
   if (hasProperty(name)) {
     try {
       return std::any_cast<Mat4f>(m_prop.at(name));
@@ -91,7 +91,7 @@ Mat4f Properties::getPropertyAsMat4f(const PropertyNames& name) const {
   return Mat4f();
 }
 
-Point3f Properties::getPropertyAsPoint3f(const PropertyNames& name) const {
+Point3f Properties::getPropertyAsPoint3f(const Props& name) const {
   if (hasProperty(name)) {
     return std::any_cast<Point3f>(m_prop.at(name));
     try {

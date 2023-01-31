@@ -147,12 +147,12 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   Properties prop;
   TraceableBuilderPtr builder = std::make_shared<ShapeBuilder>();
   SceneDirectorPtr direct = std::make_shared<StandardSphere>();
-  prop.setProperty(PropertyNames::COLOR, Vec3f(0.8f, 1.f, 0.6f))
-      .setProperty(PropertyNames::DIFFUSE, 0.7f)
-      .setProperty(PropertyNames::SPECULAR, 0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.f, 0.6f))
+      .setProperty(Props::DIFFUSE, 0.7f)
+      .setProperty(Props::SPECULAR, 0.2f);
   TraceablePtr s = direct->create(builder, prop);
-  prop.setProperty(PropertyNames::AMBIENT, 1.f)
-      .setProperty(PropertyNames::OBJECT_TRANSFROM_MATRIX,
+  prop.setProperty(Props::AMBIENT, 1.f)
+      .setProperty(Props::OBJECT_TRANSFROM_MATRIX,
                    scale(0.5f, 0.5f, 0.5f));
   TraceablePtr s1 = direct->create(builder, prop);
   Ray r(Point3f(0.f, 0.f, 0.f), Vec3f(0.f, 0.f, 1.f));
@@ -173,16 +173,13 @@ TEST_F(TMat, strikeReflectiveSurface) {
   TraceableBuilderPtr builder = std::make_shared<ShapeBuilder>();
 
   SceneDirectorPtr direct = std::make_shared<StandardSphere>();
-  prop.setProperty(PropertyNames::COLOR, Vec3f(0.8f, 1.f, 0.6f))
-      .setProperty(PropertyNames::AMBIENT, 0.1f)
-      .setProperty(PropertyNames::DIFFUSE, 0.7f)
-      .setProperty(PropertyNames::SPECULAR, 0.2f);
+  prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.f, 0.6f));
   TraceablePtr s = direct->create(builder, prop);
 
   SceneDirectorPtr direct1 = std::make_shared<StandardPlane>();
-  prop.setProperty(PropertyNames::COLOR, Vec3f(1.f, 1.f, 1.f))
-      .setProperty(PropertyNames::REFLECTION, 0.5f)
-      .setProperty(PropertyNames::OBJECT_TRANSFROM_MATRIX,
+  prop.setProperty(Props::COLOR, Vec3f(1.f, 1.f, 1.f))
+      .setProperty(Props::REFLECTION, 0.5f)
+      .setProperty(Props::OBJECT_TRANSFROM_MATRIX,
                    transl(0.f, -1.f, 0.f));
   TraceablePtr p = direct1->create(builder, prop);
 

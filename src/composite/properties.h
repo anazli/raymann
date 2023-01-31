@@ -6,7 +6,7 @@
 #include "tools/mat4.h"
 #include "tools/vec3.h"
 
-enum class PropertyNames {
+enum class Props {
   COLOR = 10,                      // Vec3f
   AMBIENT = 20,                    // float [0,1]
   DIFFUSE = 30,                    // float [0,1]
@@ -24,17 +24,17 @@ enum class PropertyNames {
 class Properties {
  public:
   Properties();
-  Properties &setProperty(const PropertyNames &name, const std::any &value);
-  bool addProperty(const PropertyNames &name, const std::any &value);
-  bool removeProperty(const PropertyNames &name);
-  bool hasProperty(const PropertyNames &name) const;
-  std::any getPropertyAsAny(const PropertyNames &name) const;
-  int getPropertyAsInt(const PropertyNames &name) const;
-  float getPropertyAsFloat(const PropertyNames &name) const;
-  Vec3f getPropertyAsVec3f(const PropertyNames &name) const;
-  Mat4f getPropertyAsMat4f(const PropertyNames &name) const;
-  Point3f getPropertyAsPoint3f(const PropertyNames &name) const;
+  Properties &setProperty(const Props &name, const std::any &value);
+  bool addProperty(const Props &name, const std::any &value);
+  bool removeProperty(const Props &name);
+  bool hasProperty(const Props &name) const;
+  std::any getPropertyAsAny(const Props &name) const;
+  int getPropertyAsInt(const Props &name) const;
+  float getPropertyAsFloat(const Props &name) const;
+  Vec3f getPropertyAsVec3f(const Props &name) const;
+  Mat4f getPropertyAsMat4f(const Props &name) const;
+  Point3f getPropertyAsPoint3f(const Props &name) const;
 
  private:
-  std::map<PropertyNames, std::any> m_prop;
+  std::map<Props, std::any> m_prop;
 };
