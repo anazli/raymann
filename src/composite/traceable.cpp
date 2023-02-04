@@ -52,5 +52,3 @@ std::shared_ptr<Traceable> Traceable::getParent() const { return m_parent; }
 void Traceable::setReflection(float ref) { m_reflection = ref; }
 
 float Traceable::getReflection() const { return m_reflection; }
-
-void Traceable::addPerlinNoise() { m_perlin = std::make_shared<PerlinNoise>(); }

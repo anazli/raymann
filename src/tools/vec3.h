@@ -81,7 +81,7 @@ class Vec3 {
   Vec3<T>& operator*=(const T& num);
 
   Vec3<T>& normalize();
-  double length() const { return sqrt(x() * x() + y() * y() + z() * z()); }
+  T length() const { return sqrt(x() * x() + y() * y() + z() * z()); }
 
   bool isValid() {
     if (m_x * 0. != m_x * 0.) {
@@ -285,7 +285,7 @@ Vec3<T> cross(const Vec3<T>& v1, const Vec3<T>& v2) {
 
 template <typename T>
 Vec3<T> getUnitVectorOf(const Vec3<T>& v) {
-  return v / (v.length() + 1.E-30);
+  return v / (v.length() + static_cast<T>(1.E-30));
 }
 
 template <typename T>

@@ -18,11 +18,7 @@ int main() {
   //----------------------Floor---------------------
   prop.setProperty(Props::REFLECTION, 0.5f);
   world->createPlane();
-  world->applyMaterial(
-      make_shared<CheckerTexture>(
-          make_shared<ConstantTexture>(Vec3f(1.0f, 1.0f, 1.0f)),
-          make_shared<ConstantTexture>(Vec3f(0.1f, 0.1f, 0.1f))),
-      prop);
+  world->applyMaterial(make_shared<PerlinTexture>(0.8f), prop);
   world->addElement();
 
   //----------------------Left wall---------------------
@@ -44,7 +40,7 @@ int main() {
   world->createPlane();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.8f, 0.8f, 0.8f)),
+  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.5f, 0.5f, 0.5f)),
                        prop);
   world->addElement();
 
@@ -54,11 +50,7 @@ int main() {
   world->createSphere();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyMaterial(
-      make_shared<CheckerTexture>(
-          make_shared<ConstantTexture>(Vec3f(0.1f, 0.1f, 1.0f)),
-          make_shared<ConstantTexture>(Vec3f(1.0f, 0.1f, 0.1f))),
-      prop);
+  world->applyMaterial(make_shared<PerlinTexture>(0.8f), prop);
   world->addElement();
 
   //----------------------Right sphere---------------------
@@ -68,8 +60,7 @@ int main() {
   world->createSphere();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.1f, 0.1f, 1.0f)),
-                       prop);
+  world->applyMaterial(make_shared<PerlinTexture>(0.9f), prop);
   world->addElement();
 
   //----------------------Left sphere---------------------
@@ -78,12 +69,11 @@ int main() {
   world->createSphere();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(1.0f, 0.1f, 0.1f)),
-                       prop);
+  world->applyMaterial(make_shared<PerlinTexture>(0.6f), prop);
   world->addElement();
 
   //----------------------------------------------------------------------------
-  Canvas canvas(500, 500);
+  Canvas canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
   Camera camera(canvas.width(), canvas.height(), PI / 4.0f);
   camera.computePixelSize();
