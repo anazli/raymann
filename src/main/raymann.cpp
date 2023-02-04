@@ -5,6 +5,7 @@
 #include "container/canvas.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
+#include "textures/texture.h"
 #include "tools/tools.h"
 
 using namespace std;
@@ -15,74 +16,70 @@ int main() {
   world->createWorld(light);
   Properties prop;
   //----------------------Floor---------------------
-  prop.setProperty(Props::PATTERN_COLORA, Vec3f(1.0f, 1.0f, 1.0f))
-      .setProperty(Props::PATTERN_COLORB, Vec3f(0.1f, 0.1f, 0.1f))
-      .setProperty(Props::REFLECTION, 0.5f);
+  prop.setProperty(Props::REFLECTION, 0.5f);
   world->createPlane();
-  world->applyCheckerPattern(prop);
+  world->applyMaterial(
+      make_shared<CheckerTexture>(
+          make_shared<ConstantTexture>(Vec3f(1.0f, 1.0f, 1.0f)),
+          make_shared<ConstantTexture>(Vec3f(0.1f, 0.1f, 0.1f))),
+      prop);
   world->addElement();
 
   //----------------------Left wall---------------------
-  prop.setProperty(Props::COLOR, Vec3f(0.4f, 0.4f, 0.4f))
-      .setProperty(Props::REFLECTION, 0.3f)
+  prop.setProperty(Props::REFLECTION, 0.3f)
       .setProperty(Props::OBJECT_TRANSFROM_MATRIX,
                    transl(0.0f, 0.0f, 5.0f) * rotX(-PI / 2.0f));
   world->createPlane();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyMaterial(prop);
+  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.4f, 0.4f, 0.4f)),
+                       prop);
   world->addElement();
 
   //----------------------Right wall---------------------
   prop.setProperty(
           Props::OBJECT_TRANSFROM_MATRIX,
           transl(0.0f, 0.0f, 5.0f) * rotY(PI / 4.0f) * rotX(-PI / 2.0f))
-      .setProperty(Props::COLOR, Vec3f(0.8f, 0.8f, 0.8f))
       .setProperty(Props::REFLECTION, 0.7f);
   world->createPlane();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyMaterial(prop);
+  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.8f, 0.8f, 0.8f)),
+                       prop);
   world->addElement();
 
   //----------------------Middle sphere---------------------
-  prop.setProperty(Props::PATTERN_COLORA, Vec3f(0.1f, 0.1f, 1.0f))
-      .setProperty(Props::PATTERN_COLORB, Vec3f(1.0f, 0.1f, 0.1f))
-      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, transl(-0.5f, 1.0f, 0.5f))
-      .setProperty(Props::PATTERN_TRANSFORM_MATRIX,
-                   transl(-0.5f, 1.0f, 0.5f) * scale(0.08f, 0.08f, 0.08f))
+  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, transl(-0.5f, 1.0f, 0.5f))
       .setProperty(Props::REFLECTION, 0.f);
   world->createSphere();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyCheckerPattern(prop);
+  world->applyMaterial(
+      make_shared<CheckerTexture>(
+          make_shared<ConstantTexture>(Vec3f(0.1f, 0.1f, 1.0f)),
+          make_shared<ConstantTexture>(Vec3f(1.0f, 0.1f, 0.1f))),
+      prop);
   world->addElement();
 
   //----------------------Right sphere---------------------
-  prop.setProperty(Props::PATTERN_COLORA, Vec3f(0.1f, 0.1f, 1.0f))
-      .setProperty(Props::PATTERN_COLORB, Vec3f(1.0f, 0.1f, 0.1f))
-      .setProperty(
-          Props::OBJECT_TRANSFROM_MATRIX,
-          transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) * rotY(PI / 2.0f))
-      .setProperty(Props::PATTERN_TRANSFORM_MATRIX,
-                   transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f));
+  prop.setProperty(
+      Props::OBJECT_TRANSFROM_MATRIX,
+      transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) * rotY(PI / 2.0f));
   world->createSphere();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyGradientPattern(prop);
+  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.1f, 0.1f, 1.0f)),
+                       prop);
   world->addElement();
 
   //----------------------Left sphere---------------------
-  prop.setProperty(Props::PATTERN_COLORA, Vec3f(0.1f, 0.1f, 1.0f))
-      .setProperty(Props::PATTERN_COLORB, Vec3f(1.0f, 0.1f, 0.1f))
-      .setProperty(Props::OBJECT_TRANSFROM_MATRIX,
-                   transl(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f))
-      .setProperty(Props::PATTERN_TRANSFORM_MATRIX,
-                   transl(-1.5f, 0.33f, -0.75f) * scale(0.3f, 0.3f, 0.3f));
+  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX,
+                   transl(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f));
   world->createSphere();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyRingPattern(prop);
+  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(1.0f, 0.1f, 0.1f)),
+                       prop);
   world->addElement();
 
   //----------------------------------------------------------------------------

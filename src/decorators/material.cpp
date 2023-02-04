@@ -1,41 +1,26 @@
 #include "decorators/material.h"
 
-//------------------------------------------------------------------------------
-//---------------------------Material-------------------------------------------
-//------------------------------------------------------------------------------
-
-Material::Material(Traceable* tr, Vec3f& color)
-    : TraceableDeco(tr), m_color(color) {}
-
-Material::Material(Traceable* tr, Vec3f& color, float reflection)
-    : TraceableDeco(tr), m_color(color), m_reflective(reflection) {
-  setReflection(reflection);
+Material::Material(Traceable* tr, TexturePtr tex, const Properties& prop)
+    : TraceableDeco(tr), m_tex(tex), m_prop(prop) {
+  setReflection(m_prop.getPropertyAsFloat(Props::REFLECTION));
+  m_ambient = m_prop.getPropertyAsFloat(Props::AMBIENT);
+  m_diffuse = m_prop.getPropertyAsFloat(Props::DIFFUSE);
+  m_specular = m_prop.getPropertyAsFloat(Props::SPECULAR);
+  m_shininess = m_prop.getPropertyAsFloat(Props::SHININESS);
 }
-
-Material::Material(Traceable* tr, const Vec3f& c, float reflection, float am,
-                   float diff, float spec, float shi)
-    : TraceableDeco(tr),
-      m_color(c),
-      m_reflective(reflection),
-      m_ambient(am),
-      m_diffuse(diff),
-      m_specular(spec),
-      m_shininess(shi) {
-  setReflection(reflection);
-}
-
-Material::~Material() {}
 
 bool Material::intersect(const Ray& r) { return TraceableDeco::intersect(r); }
 
 Vec3f Material::lighting(const Ray& ray) {
-  Vec3f effective_color = m_color * getLight().intensity();
   Point3f over_point =
       record().point(ray) + (record().inside ? normal(record().point(ray))
                                              : normal(record().point(ray))) *
                                 0.02f;
   Vec3f normal_vec = record().inside ? -normal(over_point) : normal(over_point);
   Vec3f lightv = (getLight().position() - over_point).normalize();
+
+  Vec3f effective_color =
+      m_tex->value(0, 0, Vec3f(over_point)) * getLight().intensity();
 
   Vec3f ret_ambient = effective_color * m_ambient;
   Vec3f ret_diffuse;
@@ -109,144 +94,3 @@ bool Material::isShadowed(const Point3f& p) {
 void Material::setReflection(float ref) { TraceableDeco::setReflection(ref); }
 
 float Material::getReflection() const { return TraceableDeco::getReflection(); }
-
-//------------------------------------------------------------------------------
-//---------------------------Stripe Pattern-------------------------------------
-//------------------------------------------------------------------------------
-
-StripePattern::StripePattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                             const Mat4f& otrans, const Mat4f& ptrans)
-    : Material(tr),
-      m_color_a(a),
-      m_color_b(b),
-      m_pattern_trans(ptrans),
-      m_object_trans(otrans) {}
-
-Vec3f StripePattern::lighting(const Ray& ray) {
-  Point3f p =
-      record().point(ray) + (record().inside ? normal(record().point(ray))
-                                             : normal(record().point(ray))) *
-                                0.02f;
-  if (m_perlin) {
-    p = p * m_perlin->noise(p.x(), p.y(), p.z());
-  }
-  m_color = pattern_at(p);
-  return Material::lighting(ray);
-}
-
-Vec3f StripePattern::pattern_at(const Point3f& p) const {
-  Point3f object_p = m_object_trans.inverse() * Vec4f(p);
-  Point3f res_p = m_pattern_trans.inverse() * Vec4f(object_p);
-  if (fmod(floor(res_p.x()), 2.0f) == 0.0f) return m_color_a;
-  return m_color_b;
-}
-
-//------------------------------------------------------------------------------
-//---------------------------Gradient Pattern-----------------------------------
-//------------------------------------------------------------------------------
-
-GradientPattern::GradientPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                                 const Mat4f& otrans, const Mat4f& ptrans)
-    : Material(tr),
-      m_color_a(a),
-      m_color_b(b),
-      m_pattern_trans(ptrans),
-      m_object_trans(otrans) {}
-
-Vec3f GradientPattern::lighting(const Ray& ray) {
-  Point3f p =
-      record().point(ray) + (record().inside ? normal(record().point(ray))
-                                             : normal(record().point(ray))) *
-                                0.02f;
-  if (m_perlin) {
-    p = p * m_perlin->noise(p.x(), p.y(), p.z());
-  }
-  m_color = pattern_at(p);
-  return Material::lighting(ray);
-}
-
-Vec3f GradientPattern::pattern_at(const Point3f& p) const {
-  Point3f object_p = m_object_trans.inverse() * Vec4f(p);
-  Point3f res_p = m_pattern_trans.inverse() * Vec4f(object_p);
-
-  Vec3f distance = m_color_b - m_color_a;
-  float fraction = res_p.x() - floor(res_p.x());
-  return m_color_a + distance * fraction;
-}
-
-//------------------------------------------------------------------------------
-//---------------------------Ring Pattern---------------------------------------
-//------------------------------------------------------------------------------
-
-RingPattern::RingPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                         const Mat4f& otrans, const Mat4f& ptrans)
-    : Material(tr),
-      m_color_a(a),
-      m_color_b(b),
-      m_pattern_trans(ptrans),
-      m_object_trans(otrans) {}
-
-Vec3f RingPattern::lighting(const Ray& ray) {
-  Point3f p =
-      record().point(ray) + (record().inside ? normal(record().point(ray))
-                                             : normal(record().point(ray))) *
-                                0.02f;
-  if (m_perlin) {
-    p = p * m_perlin->noise(p.x(), p.y(), p.z());
-  }
-  m_color = pattern_at(p);
-  return Material::lighting(ray);
-}
-
-Vec3f RingPattern::pattern_at(const Point3f& p) const {
-  Point3f object_p = m_object_trans.inverse() * Vec4f(p);
-  Point3f res_p = m_pattern_trans.inverse() * Vec4f(object_p);
-
-  if (fmod(floor(sqrt(res_p.x() * res_p.x() + res_p.z() * res_p.z())), 2.) ==
-      0.)
-    return m_color_a;
-  return m_color_b;
-}
-
-//------------------------------------------------------------------------------
-//---------------------------Checker Pattern------------------------------------
-//------------------------------------------------------------------------------
-
-CheckerPattern::CheckerPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                               const Mat4f& otrans, const Mat4f& ptrans)
-    : Material(tr),
-      m_color_a(a),
-      m_color_b(b),
-      m_pattern_trans(ptrans),
-      m_object_trans(otrans) {}
-
-CheckerPattern::CheckerPattern(Traceable* tr, const Vec3f& a, const Vec3f& b,
-                               const Mat4f& otrans, const Mat4f& ptrans,
-                               const Vec3f& c, float reflection, float am,
-                               float diff, float spec, float shi)
-    : Material(tr, c, reflection, am, diff, spec, shi),
-      m_color_a(a),
-      m_color_b(b),
-      m_pattern_trans(ptrans),
-      m_object_trans(otrans) {}
-
-Vec3f CheckerPattern::lighting(const Ray& ray) {
-  Point3f p =
-      record().point(ray) + (record().inside ? normal(record().point(ray))
-                                             : normal(record().point(ray))) *
-                                0.02f;
-  if (m_perlin) {
-    p = p * m_perlin->noise(p.x(), p.y(), p.z());
-  }
-  m_color = pattern_at(p);
-  return Material::lighting(ray);
-}
-
-Vec3f CheckerPattern::pattern_at(const Point3f& p) const {
-  Point3f object_p = m_object_trans.inverse() * Vec4f(p);
-  Point3f res_p = m_pattern_trans.inverse() * Vec4f(object_p);
-
-  if (fmod(floor(res_p.x()) + floor(res_p.y()) + floor(res_p.z()), 2.) == 0.)
-    return m_color_a;
-  return m_color_b;
-}

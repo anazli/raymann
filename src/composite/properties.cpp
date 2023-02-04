@@ -6,7 +6,8 @@ Properties::Properties() {
       .setProperty(Props::AMBIENT, 0.1f)
       .setProperty(Props::DIFFUSE, 0.9f)
       .setProperty(Props::SPECULAR, 0.9f)
-      .setProperty(Props::SHININESS, 200.f);
+      .setProperty(Props::SHININESS, 200.f)
+      .setProperty(Props::REFLECTION, 0.f);
 }
 
 Properties& Properties::setProperty(const Props& name, const std::any& value) {
