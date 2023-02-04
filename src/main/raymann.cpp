@@ -1,9 +1,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "builder/shape_builder.h"
-#include "composite/scene_director.h"
-#include "composite/world.h"
+#include "composite/builder.h"
 #include "container/canvas.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
@@ -12,22 +10,28 @@
 using namespace std;
 
 int main() {
-  TraceableBuilderPtr builder = make_shared<ShapeBuilder>();
+  PointLight light(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
+  BuilderPtr world = make_shared<WorldBuilder>();
+  world->createWorld(light);
   Properties prop;
   //----------------------Floor---------------------
   prop.setProperty(Props::PATTERN_COLORA, Vec3f(1.0f, 1.0f, 1.0f))
       .setProperty(Props::PATTERN_COLORB, Vec3f(0.1f, 0.1f, 0.1f))
       .setProperty(Props::REFLECTION, 0.5f);
-  SceneDirectorPtr fl_dir = make_shared<CheckerPlane>();
-  TraceablePtr floor = fl_dir->create(builder, prop);
+  world->createPlane();
+  world->applyCheckerPattern(prop);
+  world->addElement();
 
   //----------------------Left wall---------------------
   prop.setProperty(Props::COLOR, Vec3f(0.4f, 0.4f, 0.4f))
       .setProperty(Props::REFLECTION, 0.3f)
       .setProperty(Props::OBJECT_TRANSFROM_MATRIX,
                    transl(0.0f, 0.0f, 5.0f) * rotX(-PI / 2.0f));
-  SceneDirectorPtr lw_dir = make_shared<StandardPlane>();
-  TraceablePtr left_wall = lw_dir->create(builder, prop);
+  world->createPlane();
+  world->applyTransformation(
+      prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
+  world->applyMaterial(prop);
+  world->addElement();
 
   //----------------------Right wall---------------------
   prop.setProperty(
@@ -35,20 +39,24 @@ int main() {
           transl(0.0f, 0.0f, 5.0f) * rotY(PI / 4.0f) * rotX(-PI / 2.0f))
       .setProperty(Props::COLOR, Vec3f(0.8f, 0.8f, 0.8f))
       .setProperty(Props::REFLECTION, 0.7f);
-  SceneDirectorPtr rw_dir = make_shared<StandardPlane>();
-  TraceablePtr right_wall = rw_dir->create(builder, prop);
+  world->createPlane();
+  world->applyTransformation(
+      prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
+  world->applyMaterial(prop);
+  world->addElement();
 
   //----------------------Middle sphere---------------------
   prop.setProperty(Props::PATTERN_COLORA, Vec3f(0.1f, 0.1f, 1.0f))
       .setProperty(Props::PATTERN_COLORB, Vec3f(1.0f, 0.1f, 0.1f))
-      .setProperty(Props::OBJECT_TRANSFROM_MATRIX,
-                   transl(-0.5f, 1.0f, 0.5f))
+      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, transl(-0.5f, 1.0f, 0.5f))
       .setProperty(Props::PATTERN_TRANSFORM_MATRIX,
                    transl(-0.5f, 1.0f, 0.5f) * scale(0.08f, 0.08f, 0.08f))
       .setProperty(Props::REFLECTION, 0.f);
-  SceneDirectorPtr ms_dir = make_shared<CheckerSphere>();
-  TraceablePtr middle = ms_dir->create(builder, prop);
-  middle->addPerlinNoise();
+  world->createSphere();
+  world->applyTransformation(
+      prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
+  world->applyCheckerPattern(prop);
+  world->addElement();
 
   //----------------------Right sphere---------------------
   prop.setProperty(Props::PATTERN_COLORA, Vec3f(0.1f, 0.1f, 1.0f))
@@ -58,9 +66,11 @@ int main() {
           transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f) * rotY(PI / 2.0f))
       .setProperty(Props::PATTERN_TRANSFORM_MATRIX,
                    transl(1.5f, 0.5f, -0.5f) * scale(0.5f, 0.5f, 0.5f));
-  SceneDirectorPtr rs_dir = make_shared<GradientSphere>();
-  TraceablePtr right = rs_dir->create(builder, prop);
-  right->addPerlinNoise();
+  world->createSphere();
+  world->applyTransformation(
+      prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
+  world->applyGradientPattern(prop);
+  world->addElement();
 
   //----------------------Left sphere---------------------
   prop.setProperty(Props::PATTERN_COLORA, Vec3f(0.1f, 0.1f, 1.0f))
@@ -69,31 +79,22 @@ int main() {
                    transl(-1.5f, 0.33f, -0.75f) * scale(0.33f, 0.33f, 0.33f))
       .setProperty(Props::PATTERN_TRANSFORM_MATRIX,
                    transl(-1.5f, 0.33f, -0.75f) * scale(0.3f, 0.3f, 0.3f));
-  SceneDirectorPtr ls_dir = make_shared<RingSphere>();
-  TraceablePtr left = ls_dir->create(builder, prop);
-  left->addPerlinNoise();
+  world->createSphere();
+  world->applyTransformation(
+      prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
+  world->applyRingPattern(prop);
+  world->addElement();
 
   //----------------------------------------------------------------------------
   Canvas canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
-  Camera c(canvas.width(), canvas.height(), PI / 4.0f);
-  c.computePixelSize();
+  Camera camera(canvas.width(), canvas.height(), PI / 4.0f);
+  camera.computePixelSize();
   Point3f from(0.0f, 2.0f, -7.0f);
   Point3f to(0.0f, 1.0f, 0.0f);
   Vec3f up(0.0f, 1.0f, 0.0f);
-  c.setTransform(view_transform(from, to, up));
-
-  PointLight light(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  shared_ptr<Traceable> w = make_shared<World>();
-  w->setLight(light);
-  w->add(floor);
-  w->add(left_wall);
-  w->add(right_wall);
-  w->add(middle);
-  w->add(right);
-  w->add(left);
-
-  canvas.render(w, c);
+  camera.setTransform(view_transform(from, to, up));
+  canvas.render(world->getProduct(), camera);
   canvas.save();
 
   return 0;

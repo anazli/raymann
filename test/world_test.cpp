@@ -2,7 +2,7 @@
 
 #include "builder/shape_builder.h"
 #include "composite/properties.h"
-#include "composite/scene_director.h"
+#include "composite/builder.h"
 #include "composite/traceable.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"

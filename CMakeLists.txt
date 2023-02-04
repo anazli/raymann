@@ -7,9 +7,8 @@ set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(EXE raymann)
 
 set(SOURCES src/main/raymann.cpp
-            src/builder/shape_builder.cpp
+            src/composite/builder.cpp
             src/composite/traceable.cpp
-            src/composite/scene_director.cpp
             src/composite/properties.cpp
             src/container/canvas.cpp
             src/composite/world.cpp
@@ -21,6 +20,7 @@ set(SOURCES src/main/raymann.cpp
 add_executable(${EXE} ${SOURCES})
 target_include_directories(${EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
 set_target_properties(${EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
+target_compile_options(${EXE} PRIVATE "-g")
 
 
 if(BUILD_TESTING)
