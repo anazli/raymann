@@ -11,7 +11,7 @@
 using namespace std;
 
 int main() {
-  PointLight light(Point3f(-10.0f, 10.0f, -10.0f), Vec3f(1.0f, 1.0f, 1.0f));
+  PointLight light(Point3f(10.0f, 10.0f, -9.0f), Vec3f(1.0f, 1.0f, 1.0f));
   BuilderPtr world = make_shared<WorldBuilder>();
   world->createWorld(light);
   Properties prop;
@@ -36,7 +36,7 @@ int main() {
   prop.setProperty(
           Props::OBJECT_TRANSFROM_MATRIX,
           transl(0.0f, 0.0f, 5.0f) * rotY(PI / 4.0f) * rotX(-PI / 2.0f))
-      .setProperty(Props::REFLECTION, 0.7f);
+      .setProperty(Props::REFLECTION, 0.4f);
   world->createPlane();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
@@ -50,7 +50,7 @@ int main() {
   world->createSphere();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyMaterial(make_shared<PerlinTexture>(0.8f), prop);
+  world->applyMaterial(make_shared<PerlinTexture>(1.2f), prop);
   world->addElement();
 
   //----------------------Right sphere---------------------
@@ -60,7 +60,7 @@ int main() {
   world->createSphere();
   world->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
-  world->applyMaterial(make_shared<PerlinTexture>(0.9f), prop);
+  world->applyMaterial(make_shared<PerlinTexture>(1.2f), prop);
   world->addElement();
 
   //----------------------Left sphere---------------------
