@@ -19,7 +19,8 @@ int main() {
   //----------------------Floor---------------------
   prop.setProperty(Props::REFLECTION, 0.5f);
   world->createPlane();
-  world->applyMaterial(make_shared<PerlinTexture>(0.8f), prop);
+  world->applyMaterial(
+      make_shared<PerlinTexture>(0.8f, Vec3f(0.1f, 0.1f, 0.1f)), prop);
   world->addElement();
 
   //----------------------Left wall---------------------

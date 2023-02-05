@@ -45,9 +45,10 @@ class CheckerTexture : public Texture {
 class PerlinTexture : public Texture {
  public:
   PerlinTexture() = default;
-  PerlinTexture(float scale) : m_scale(scale) {}
+  PerlinTexture(float scale, const Vec3f &color = Vec3f(1.f, 1.f, 1.f))
+      : m_scale(scale), m_color(color) {}
   Vec3f value(float u, float v, const Vec3f &p) const override {
-    return Vec3f(1.f, 1.f, 1.f) * 0.5f *
+    return m_color * 0.5f *
            static_cast<float>(
                1.f + sin(m_scale * p.x() + 5.f * m_noise.turb(m_scale * p)));
   }
@@ -56,4 +57,5 @@ class PerlinTexture : public Texture {
  private:
   Perlin m_noise;
   float m_scale;
+  Vec3f m_color;
 };
