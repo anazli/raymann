@@ -41,6 +41,7 @@ if(BUILD_TESTING)
     target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
     target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
     set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
+    target_compile_options(${TEST_EXE} PRIVATE "-g")
     add_test(${TEST_EXE} ${RUN_TEST_DIR}/${TEST_EXE})
     gtest_discover_tests(${TEST_EXE})
   ENDMACRO(TESTCASE)
@@ -67,8 +68,7 @@ if(BUILD_TESTING)
   TESTCASE(plane "${testSources}")
   set(testSources
       src/composite/traceable.cpp
-      src/builder/shape_builder.cpp
-      src/composite/scene_director.cpp
+      src/composite/builder.cpp
       src/composite/properties.cpp
       src/composite/world.cpp
       src/decorators/material.cpp

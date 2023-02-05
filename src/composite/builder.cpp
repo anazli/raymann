@@ -44,3 +44,8 @@ void WorldBuilder::applyMaterial(TexturePtr tex, const Properties& prop) {
 }
 
 TraceablePtr WorldBuilder::getProduct() { return m_product; }
+
+TraceablePtr WorldBuilder::getCurrentElement() const {
+  TraceablePtr ret(m_currentTraceable);
+  return ret;
+}

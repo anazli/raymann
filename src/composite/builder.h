@@ -16,7 +16,8 @@ class Builder {
   virtual void createPlane() = 0;
   virtual void applyTransformation(const Mat4f &trans) = 0;
   virtual void applyMaterial(TexturePtr tex, const Properties &prop) = 0;
-  virtual std::shared_ptr<Traceable> getProduct() = 0;
+  virtual TraceablePtr getProduct() = 0;
+  virtual TraceablePtr getCurrentElement() const = 0;
 };
 
 typedef std::shared_ptr<Builder> BuilderPtr;
@@ -32,7 +33,8 @@ class WorldBuilder : public Builder {
   void createPlane() override;
   void applyTransformation(const Mat4f &trans) override;
   void applyMaterial(TexturePtr tex, const Properties &prop) override;
-  std::shared_ptr<Traceable> getProduct() override;
+  TraceablePtr getProduct() override;
+  TraceablePtr getCurrentElement() const override;
 
  private:
   Traceable *m_currentTraceable;
