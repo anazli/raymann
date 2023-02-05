@@ -6,7 +6,7 @@ class Ray {
  public:
   Ray() {}
   Ray(const Point3f &ori, const Vec3f &dir) : m_ori(ori), m_dir(dir) {}
-  Ray(const Camera &c, int pixel_x, int pixel_y) {
+  Ray(const Camera &c, float pixel_x, float pixel_y) {
     setForPixel(c, pixel_x, pixel_y);
   }
 
@@ -30,9 +30,9 @@ class Ray {
     return ret;
   }
 
-  void setForPixel(const Camera &c, int pixel_x, int pixel_y) {
-    float xoffset = (static_cast<float>(pixel_x) + 0.5f) * c.pixelSize();
-    float yoffset = (static_cast<float>(pixel_y) + 0.5f) * c.pixelSize();
+  void setForPixel(const Camera &c, float pixel_x, float pixel_y) {
+    float xoffset = (pixel_x + 0.5f) * c.pixelSize();
+    float yoffset = (pixel_y + 0.5f) * c.pixelSize();
     float world_x = c.halfWidth() - xoffset;
     float world_y = c.halfHeight() - yoffset;
     Mat4f inversed = c.transform().inverse();

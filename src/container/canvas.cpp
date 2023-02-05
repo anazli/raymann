@@ -12,7 +12,7 @@ void Canvas::render(TraceablePtr world, const Camera &c) {
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {
       Vec3f color;
-      Ray ray(c, i, j);
+      Ray ray(c, static_cast<float>(i), static_cast<float>(j));
       if (world->intersect(ray)) {
         color += world->colorAt(ray);
       } else {

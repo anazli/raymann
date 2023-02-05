@@ -1,3 +1,4 @@
+#include <chrono>
 #include <fstream>
 #include <iostream>
 
@@ -73,7 +74,7 @@ int main() {
   world->addElement();
 
   //----------------------------------------------------------------------------
-  Canvas canvas(600, 600);
+  Canvas canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   Camera camera(canvas.width(), canvas.height(), PI / 4.0f);
   camera.computePixelSize();
@@ -81,8 +82,14 @@ int main() {
   Point3f to(0.0f, 1.0f, 0.0f);
   Vec3f up(0.0f, 1.0f, 0.0f);
   camera.setTransform(view_transform(from, to, up));
+
   canvas.render(world->getProduct(), camera);
   canvas.save();
+  /*chrono::time_point<chrono::steady_clock> start =
+  chrono::steady_clock::now(); chrono::time_point<chrono::steady_clock> end =
+  chrono::steady_clock::now(); chrono::duration<double> elapsed = (end - start)
+  / (60.); cout << "...................." << endl; cout << "Elapsed time:" <<
+  elapsed.count() << " min." << endl; cout << "...................." << endl;*/
 
   return 0;
 }
