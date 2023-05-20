@@ -1,7 +1,7 @@
 #include "decorators/material.h"
 
-Material::Material(Traceable* tr, TexturePtr tex, const Properties& prop)
-    : TraceableDeco(tr), m_tex(tex), m_prop(prop) {
+Material::Material(Element* tr, TexturePtr tex, const Properties& prop)
+    : ElementDeco(tr), m_tex(tex), m_prop(prop) {
   setReflection(m_prop.getPropertyAsFloat(Props::REFLECTION));
   m_ambient = m_prop.getPropertyAsFloat(Props::AMBIENT);
   m_diffuse = m_prop.getPropertyAsFloat(Props::DIFFUSE);
@@ -9,7 +9,7 @@ Material::Material(Traceable* tr, TexturePtr tex, const Properties& prop)
   m_shininess = m_prop.getPropertyAsFloat(Props::SHININESS);
 }
 
-bool Material::intersect(const Ray& r) { return TraceableDeco::intersect(r); }
+bool Material::intersect(const Ray& r) { return ElementDeco::intersect(r); }
 
 Vec3f Material::lighting(const Ray& ray) {
   Point3f over_point =
@@ -43,9 +43,9 @@ Vec3f Material::lighting(const Ray& ray) {
 }
 
 Vec3f Material::colorAt(const Ray& ray, int rec) {
-  TraceablePtr w = getParent();
+  ElementPtr w = getParent();
   if (w) {
-    TraceablePtr t = w->closestHit(ray);
+    ElementPtr t = w->closestHit(ray);
     if (t) {
       t->setLight(w->getLight());
       Vec3f surf_col = t->lighting(ray);
@@ -77,20 +77,20 @@ Vec3f Material::reflectedColor(const Ray& r, int rec) {
   return color * m_reflective;
 }
 
-Record& Material::record() { return TraceableDeco::record(); }
+Record& Material::record() { return ElementDeco::record(); }
 
 Vec3f Material::normal(const Point3f& p) const {
-  return TraceableDeco::normal(p);
+  return ElementDeco::normal(p);
 }
 
 void Material::checkInside(const Ray& r) {
-  return TraceableDeco::checkInside(r);
+  return ElementDeco::checkInside(r);
 }
 
 bool Material::isShadowed(const Point3f& p) {
-  return TraceableDeco::isShadowed(p);
+  return ElementDeco::isShadowed(p);
 }
 
-void Material::setReflection(float ref) { TraceableDeco::setReflection(ref); }
+void Material::setReflection(float ref) { ElementDeco::setReflection(ref); }
 
-float Material::getReflection() const { return TraceableDeco::getReflection(); }
+float Material::getReflection() const { return ElementDeco::getReflection(); }

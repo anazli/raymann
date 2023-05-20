@@ -1,8 +1,8 @@
 #pragma once
 
-#include "composite/traceable.h"
+#include "composite/element.h"
 
-class Plane : public Traceable {
+class Plane : public Element {
  public:
   Plane() = default;
   virtual ~Plane() {}

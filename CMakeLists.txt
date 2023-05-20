@@ -8,12 +8,12 @@ set(EXE raymann)
 
 set(SOURCES src/main/raymann.cpp
             src/composite/builder.cpp
-            src/composite/traceable.cpp
+            src/composite/element.cpp
             src/composite/properties.cpp
             src/container/canvas.cpp
             src/composite/world.cpp
             src/decorators/material.cpp
-            src/decorators/traceable_deco.cpp
+            src/decorators/element_deco.cpp
             src/decorators/transformer.cpp
             src/textures/perlin.cpp)
 
@@ -60,19 +60,19 @@ if(BUILD_TESTING)
   TESTCASE(camera ${testSources})
   set(testSources src/composite/properties.cpp)
   TESTCASE(properties ${testSources})
-  set(testSources src/composite/traceable.cpp
+  set(testSources src/composite/element.cpp
       src/decorators/transformer.cpp
-      src/decorators/traceable_deco.cpp
+      src/decorators/element_deco.cpp
       src/textures/perlin.cpp)
   TESTCASE(sphere "${testSources}")
   TESTCASE(plane "${testSources}")
   set(testSources
-      src/composite/traceable.cpp
+      src/composite/element.cpp
       src/composite/builder.cpp
       src/composite/properties.cpp
       src/composite/world.cpp
       src/decorators/material.cpp
-      src/decorators/traceable_deco.cpp
+      src/decorators/element_deco.cpp
       src/decorators/transformer.cpp
       src/textures/perlin.cpp)
   TESTCASE(material "${testSources}")

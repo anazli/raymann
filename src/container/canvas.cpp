@@ -8,7 +8,7 @@ using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(TraceablePtr world, const Camera &c) {
+void Canvas::render(ElementPtr world, const Camera &c) {
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {
       Vec3f color;

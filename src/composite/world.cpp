@@ -13,7 +13,7 @@ World::~World() {}
 
 bool World::intersect(const Ray &r) {
   bool has_intersection = false;
-  list<TraceablePtr>::iterator it;
+  list<ElementPtr>::iterator it;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it)
     if ((*it)->intersect(r) && (*it)->record().t_min() >= 0.0f) {
       has_intersection = true;  // TODO: to be fixed for negative intersections
@@ -35,7 +35,7 @@ Vec3f World::colorAt(const Ray &ray, int rec) {
 }
 
 Vec3f World::reflectedColor(const Ray &r, int rec) {
-  TraceablePtr closest_refl = closestHit(r);
+  ElementPtr closest_refl = closestHit(r);
   if (closest_refl) {
     if (rec <= 0) {
       return Vec3f(0.f, 0.f, 0.f);
@@ -63,19 +63,19 @@ Vec3f World::reflectedColor(const Ray &r, int rec) {
   return Vec3f(0.f, 0.f, 0.f);
 }
 
-void World::add(TraceablePtr item) {
+void World::add(ElementPtr item) {
   item->setParent(shared_from_this());
   m_traceable_list.push_back(item);
 }
 
-void World::remove(TraceablePtr item, bool del) {
+void World::remove(ElementPtr item, bool del) {
   m_traceable_list.remove(item);
   item->setParent(nullptr);
   if (del) item.reset();
 }
 
-TraceablePtr World::closestHit(const Ray &r) {
-  list<TraceablePtr>::const_iterator it;
+ElementPtr World::closestHit(const Ray &r) {
+  list<ElementPtr>::const_iterator it;
   float min_hit = MAXFLOAT;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it) {
     if ((*it)->intersect(r) && (*it)->record().t_min() >= 0.0f &&
@@ -89,7 +89,7 @@ TraceablePtr World::closestHit(const Ray &r) {
 
 vector<float> World::intersectionsSorted() const {
   vector<float> ret;
-  list<TraceablePtr>::const_iterator it;
+  list<ElementPtr>::const_iterator it;
   for (it = m_traceable_list.begin(); it != m_traceable_list.end(); ++it) {
     ret.push_back((*it)->record().t1);
     ret.push_back((*it)->record().t2);

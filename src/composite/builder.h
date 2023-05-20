@@ -2,8 +2,8 @@
 
 #include <memory>
 
+#include "composite/element.h"
 #include "composite/properties.h"
-#include "composite/traceable.h"
 #include "textures/texture.h"
 
 class Builder {
@@ -16,8 +16,8 @@ class Builder {
   virtual void createPlane() = 0;
   virtual void applyTransformation(const Mat4f &trans) = 0;
   virtual void applyMaterial(TexturePtr tex, const Properties &prop) = 0;
-  virtual TraceablePtr getProduct() = 0;
-  virtual TraceablePtr getCurrentElement() const = 0;
+  virtual ElementPtr getProduct() = 0;
+  virtual ElementPtr getCurrentElement() const = 0;
 };
 
 typedef std::shared_ptr<Builder> BuilderPtr;
@@ -33,10 +33,10 @@ class WorldBuilder : public Builder {
   void createPlane() override;
   void applyTransformation(const Mat4f &trans) override;
   void applyMaterial(TexturePtr tex, const Properties &prop) override;
-  TraceablePtr getProduct() override;
-  TraceablePtr getCurrentElement() const override;
+  ElementPtr getProduct() override;
+  ElementPtr getCurrentElement() const override;
 
  private:
-  Traceable *m_currentTraceable;
-  TraceablePtr m_product;
+  Element *m_currentElement;
+  ElementPtr m_product;
 };

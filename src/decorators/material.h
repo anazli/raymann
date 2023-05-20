@@ -1,16 +1,15 @@
 #pragma once
 #include "composite/properties.h"
-#include "decorators/traceable_deco.h"
+#include "decorators/element_deco.h"
 #include "textures/texture.h"
 
 //------------------------------------------------------------------------------
 //---------------------------Material-------------------------------------------
 //------------------------------------------------------------------------------
 
-class Material : public TraceableDeco {
+class Material : public ElementDeco {
  public:
-  Material(Traceable *tr, TexturePtr tex,
-           const Properties &prop = Properties());
+  Material(Element *tr, TexturePtr tex, const Properties &prop = Properties());
   bool intersect(const Ray &r) override;
   Vec3f lighting(const Ray &ray) override;
   Vec3f colorAt(const Ray &ray, int rec = 5) override;

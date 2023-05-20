@@ -6,7 +6,7 @@
 #include "geometry/plane.h"
 
 WorldBuilder::WorldBuilder()
-    : m_product(nullptr), m_currentTraceable(nullptr) {}
+    : m_product(nullptr), m_currentElement(nullptr) {}
 
 void WorldBuilder::createWorld(const PointLight& light) {
   m_product.reset();
@@ -21,31 +21,31 @@ void WorldBuilder::addWorld(const PointLight& light) {
 }
 
 void WorldBuilder::createSphere(const Point3f& c, const float& r) {
-  m_currentTraceable = new Sphere(c, r);
+  m_currentElement = new Sphere(c, r);
 }
 
 void WorldBuilder::addElement() {
   if (m_product) {
-    TraceablePtr elem(m_currentTraceable);
+    ElementPtr elem(m_currentElement);
     m_product->add(elem);
-    m_currentTraceable = nullptr;
+    m_currentElement = nullptr;
   }
 }
 
-void WorldBuilder::createPlane() { m_currentTraceable = new Plane(); }
+void WorldBuilder::createPlane() { m_currentElement = new Plane(); }
 
 void WorldBuilder::applyTransformation(const Mat4f& trans) {
-  if (m_currentTraceable)
-    m_currentTraceable = new Transformer(m_currentTraceable, trans);
+  if (m_currentElement)
+    m_currentElement = new Transformer(m_currentElement, trans);
 }
 
 void WorldBuilder::applyMaterial(TexturePtr tex, const Properties& prop) {
-  m_currentTraceable = new Material(m_currentTraceable, tex, prop);
+  m_currentElement = new Material(m_currentElement, tex, prop);
 }
 
-TraceablePtr WorldBuilder::getProduct() { return m_product; }
+ElementPtr WorldBuilder::getProduct() { return m_product; }
 
-TraceablePtr WorldBuilder::getCurrentElement() const {
-  TraceablePtr ret(m_currentTraceable);
+ElementPtr WorldBuilder::getCurrentElement() const {
+  ElementPtr ret(m_currentElement);
   return ret;
 }

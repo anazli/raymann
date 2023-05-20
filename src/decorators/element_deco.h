@@ -1,10 +1,10 @@
 #pragma once
-#include "composite/traceable.h"
+#include "composite/element.h"
 
-class TraceableDeco : public Traceable {
+class ElementDeco : public Element {
  public:
-  TraceableDeco(Traceable *tr);
-  virtual ~TraceableDeco();
+  ElementDeco(Element *tr);
+  virtual ~ElementDeco();
   bool intersect(const Ray &r) override;
   Vec3f lighting(const Ray &ray) override;
   Vec3f colorAt(const Ray &ray, int rec = 5) override;
@@ -14,13 +14,13 @@ class TraceableDeco : public Traceable {
   Vec3f normal(const Point3f &p) const override;
   void checkInside(const Ray &r) override;
   bool isShadowed(const Point3f &p) override;
-  void setParent(TraceablePtr t) override;
-  TraceablePtr getParent() const override;
+  void setParent(ElementPtr t) override;
+  ElementPtr getParent() const override;
   void setLight(const PointLight &l) override;
   PointLight getLight() const override;
   void setReflection(float ref) override;
   float getReflection() const override;
 
  protected:
-  Traceable *m_traceable;
+  Element *m_element;
 };

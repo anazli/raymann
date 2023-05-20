@@ -212,8 +212,8 @@ TEST_F(Ttrans, appliesTransformationChaining) {
 }
 
 TEST_F(Ttrans, computesNormalOfTranslatedSphere) {
-  Traceable *s = new Sphere();
-  Traceable *t = new Transformer(s, transl(0.0f, 1.0f, 0.0f));
+  Element *s = new Sphere();
+  Element *t = new Transformer(s, transl(0.0f, 1.0f, 0.0f));
   Vec3f norm = t->normal(Point3f(0.0f, 1.70711f, -0.70711));
 
   Vec3f tn(0.0f, 0.70711f, -0.70711f);
@@ -228,8 +228,8 @@ TEST_F(Ttrans, computesNormalOfTranslatedSphere) {
 }
 
 TEST_F(Ttrans, computesNormalOfRotatedSphere) {
-  Traceable *s = new Sphere();
-  Traceable *t = new Transformer(new Transformer(s, rotZ(PI / 5.0f)),
+  Element *s = new Sphere();
+  Element *t = new Transformer(new Transformer(s, rotZ(PI / 5.0f)),
                                  scale(1.0f, 0.5f, 1.0f));
 
   Vec3f norm = t->normal(Point3f(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));

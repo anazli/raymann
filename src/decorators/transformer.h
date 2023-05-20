@@ -1,10 +1,10 @@
 #pragma once
-#include "decorators/traceable_deco.h"
+#include "decorators/element_deco.h"
 
-class Transformer : public TraceableDeco {
+class Transformer : public ElementDeco {
  public:
-  Transformer(Traceable *tr);
-  Transformer(Traceable *tr, const Mat4f &m);
+  Transformer(Element *tr);
+  Transformer(Element *tr, const Mat4f &m);
   virtual ~Transformer();
   bool intersect(const Ray &r) override;
   Record &record() override;

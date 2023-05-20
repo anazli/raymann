@@ -31,37 +31,37 @@ struct Record {
 
 // TODO: Maybe a constructor for DI, to provide all the properties for objects
 // like sphere and materials/tranformers, instead of having this ugly interface
-class Traceable {
+class Element {
  public:
-  virtual ~Traceable();
+  virtual ~Element();
   virtual bool intersect(const Ray &r) = 0;
   virtual Vec3f lighting(const Ray &ray);
   virtual Vec3f colorAt(const Ray &ray, int rec = 5);
   virtual Vec3f reflectedColor(const Ray &r, int rec = 5);
-  virtual void add(std::shared_ptr<Traceable> item) {}
-  virtual void remove(std::shared_ptr<Traceable> item, bool del = true) {}
+  virtual void add(std::shared_ptr<Element> item) {}
+  virtual void remove(std::shared_ptr<Element> item, bool del = true) {}
   virtual bool isWorld() const;
   virtual Vec3f normal(const Point3f &p) const;
   virtual std::string name() const;
-  virtual std::shared_ptr<Traceable> closestHit(const Ray &r);
+  virtual std::shared_ptr<Element> closestHit(const Ray &r);
   virtual void checkInside(const Ray &r);
   virtual bool isShadowed(const Point3f &p);
   virtual void setLight(const PointLight &l);
   virtual PointLight getLight() const;
   virtual Record &record();
-  virtual void setParent(std::shared_ptr<Traceable> t);
-  virtual std::shared_ptr<Traceable> getParent() const;
+  virtual void setParent(std::shared_ptr<Element> t);
+  virtual std::shared_ptr<Element> getParent() const;
   virtual void setReflection(float ref);
   virtual float getReflection() const;
 
  protected:
-  Traceable() {}
-  Traceable(const std::string &n);
-  std::shared_ptr<Traceable> m_parent;
+  Element() {}
+  Element(const std::string &n);
+  std::shared_ptr<Element> m_parent;
   std::string m_name;
   Record rec;
   PointLight m_light;
   float m_reflection = 0.f;  // TODO: move it from material here
 };
 
-typedef std::shared_ptr<Traceable> TraceablePtr;
+typedef std::shared_ptr<Element> ElementPtr;

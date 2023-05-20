@@ -136,7 +136,7 @@ TEST_F(TMat, precomputingTheReflectionVector) {
   Properties prop;
   BuilderPtr builder = std::make_shared<WorldBuilder>();
   builder->createPlane();
-  TraceablePtr plane = builder->getCurrentElement();
+  ElementPtr plane = builder->getCurrentElement();
   Ray r(Point3f(0.f, 1.f, -1.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r);
   Vec3f reflection_vector =
@@ -157,14 +157,14 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
       .setProperty(Props::SPECULAR, 0.2f);
   tex->setColor(prop.getPropertyAsVec3f(Props::COLOR));
   builder->applyMaterial(tex, prop);
-  TraceablePtr s = builder->getCurrentElement();
+  ElementPtr s = builder->getCurrentElement();
   prop.setProperty(Props::AMBIENT, 1.f)
       .setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
   builder->createSphere();
   builder->applyMaterial(tex, prop);
-  TraceablePtr s1 = builder->getCurrentElement();
+  ElementPtr s1 = builder->getCurrentElement();
   Ray r(Point3f(0.f, 0.f, 0.f), Vec3f(0.f, 0.f, 1.f));
-  TraceablePtr w = std::make_shared<World>();
+  ElementPtr w = std::make_shared<World>();
   w->setLight(light);
   w->add(s);
   w->add(s1);
@@ -187,7 +187,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   builder->createSphere();
   tex->setColor(prop.getPropertyAsVec3f(Props::COLOR));
   builder->applyMaterial(tex, prop);
-  TraceablePtr s = builder->getCurrentElement();
+  ElementPtr s = builder->getCurrentElement();
   builder->addElement();
 
   prop.setProperty(Props::COLOR, Vec3f(1.f, 1.f, 1.f))
@@ -198,14 +198,14 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
   tex->setColor(prop.getPropertyAsVec3f(Props::COLOR));
   builder->applyMaterial(tex, prop);
-  TraceablePtr p = builder->getCurrentElement();
+  ElementPtr p = builder->getCurrentElement();
   builder->addElement();
 
-  TraceablePtr w = builder->getProduct();
+  ElementPtr w = builder->getProduct();
 
   Ray r(Point3f(0.f, 0.f, -3.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));
   w->intersect(r);
-  TraceablePtr t = w->closestHit(r);
+  ElementPtr t = w->closestHit(r);
   if (t) ASSERT_TRUE(t == p);
   Vec3f color = w->colorAt(r);
   float eps = 1.E-2f;
