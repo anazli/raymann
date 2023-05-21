@@ -1,15 +1,16 @@
 #pragma once
 
+#include <list>
 #include <memory>
 #include <string>
 
 #include "tools/tools.h"
 
-//------------------------------------------------------------------------------
-//---------------------------Helper Struct--------------------------------------
-//------------------------------------------------------------------------------
+// TODO: implement base SceneElement class and GeometricalElement base class.
+// We have the composite which has geometrical elements asigned to each of Scene
+// elements which accepts also the rendering algorithm and
+// materials/transformations as visitor. The rendering algos could be strategy.
 
-// TODO: find better alternative
 struct Record {
   int count = 0;
   float t1 = -1.0f;
@@ -29,28 +30,19 @@ struct Record {
   Point3f over_point_from_refl_surf;
 };
 
-// TODO: Maybe a constructor for DI, to provide all the properties for objects
-// like sphere and materials/tranformers, instead of having this ugly interface
 class Element {
  public:
   virtual ~Element();
   virtual bool intersect(const Ray &r) = 0;
   virtual Vec3f lighting(const Ray &ray);
-  virtual Vec3f colorAt(const Ray &ray, int rec = 5);
   virtual Vec3f reflectedColor(const Ray &r, int rec = 5);
-  virtual void add(std::shared_ptr<Element> item) {}
-  virtual void remove(std::shared_ptr<Element> item, bool del = true) {}
   virtual bool isWorld() const;
   virtual Vec3f normal(const Point3f &p) const;
-  virtual std::string name() const;
   virtual std::shared_ptr<Element> closestHit(const Ray &r);
   virtual void checkInside(const Ray &r);
   virtual bool isShadowed(const Point3f &p);
   virtual void setLight(const PointLight &l);
   virtual PointLight getLight() const;
-  virtual Record &record();
-  virtual void setParent(std::shared_ptr<Element> t);
-  virtual std::shared_ptr<Element> getParent() const;
   virtual void setReflection(float ref);
   virtual float getReflection() const;
 
@@ -65,3 +57,53 @@ class Element {
 };
 
 typedef std::shared_ptr<Element> ElementPtr;
+
+class SceneElement;
+
+class BaseGeomElement {
+ public:
+  virtual bool intersect(const Ray &r) = 0;
+  virtual Vec3f normal(const Point3f &p) const = 0;
+  virtual void visitSceneElement(
+      std::shared_ptr<SceneElement> sceneElem) const {}
+};
+
+class SceneElement {
+ public:
+  virtual void add(std::shared_ptr<SceneElement> item) = 0;
+  virtual void remove(std::shared_ptr<SceneElement> item, bool del = true) = 0;
+  virtual Vec3f colorAt(const Ray &ray, int rec = 5) const = 0;
+  virtual Record &record() = 0;
+  virtual void setParent(std::shared_ptr<SceneElement> t);
+  virtual std::shared_ptr<SceneElement> getParent() const = 0;
+};
+
+typedef std::shared_ptr<SceneElement> SceneElementPtr;
+
+class SceneElementLeaf : public SceneElement {
+ public:
+  void add(std::shared_ptr<SceneElement> item) override;
+  void remove(std::shared_ptr<SceneElement> item, bool del = true) override;
+  Vec3f colorAt(const Ray &ray, int rec = 5) const override;
+  Record &record() override;
+  void setParent(std::shared_ptr<SceneElement> t) override;
+  std::shared_ptr<SceneElement> getParent() const override;
+
+ private:
+  std::shared_ptr<BaseGeomElement> m_geom_elem;
+};
+
+typedef std::shared_ptr<SceneElement> SceneElementLeafPtr;
+
+class World : public SceneElement {
+ public:
+  void add(std::shared_ptr<SceneElement> item) override;
+  void remove(std::shared_ptr<SceneElement> item, bool del = true) override;
+  Vec3f colorAt(const Ray &ray, int rec = 5) const override;
+  Record &record() override;
+  void setParent(std::shared_ptr<SceneElement> t) override;
+  std::shared_ptr<SceneElement> getParent() const override;
+
+ private:
+  std::list<SceneElement> m_scene_elem_list;
+};
