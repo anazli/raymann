@@ -2,6 +2,7 @@
 #include "composite/world.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"
+#include "renderers/renderer.h"
 #include "tools/tools.h"
 
 using namespace testing;
@@ -133,14 +134,14 @@ TEST_F(TMat, lightingWithSurfaceInShadow) {
 }
 
 TEST_F(TMat, precomputingTheReflectionVector) {
-  Properties prop;
+  MaterialProperties prop;
   BuilderPtr builder = std::make_shared<WorldBuilder>();
   builder->createPlane();
-  ElementPtr plane = builder->getCurrentElement();
+  SceneElementPtr plane = builder->getCurrentElement();
   Ray r(Point3f(0.f, 1.f, -1.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r);
   Vec3f reflection_vector =
-      reflect(r.direction(), plane->normal(plane->record().point(r)));
+      reflect(r.direction(), plane->normal(plane->getRecord().point(r)));
 
   EXPECT_TRUE(reflection_vector ==
               Vec3f(0.f, sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));
@@ -148,7 +149,7 @@ TEST_F(TMat, precomputingTheReflectionVector) {
 
 TEST_F(TMat, strikeNonReflectiveSurface) {
   PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
-  Properties prop;
+  MaterialProperties prop;
   BuilderPtr builder = std::make_shared<WorldBuilder>();
   builder->createSphere();
   TexturePtr tex = std::make_shared<ConstantTexture>();
@@ -157,20 +158,20 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
       .setProperty(Props::SPECULAR, 0.2f);
   tex->setColor(prop.getPropertyAsVec3f(Props::COLOR));
   builder->applyMaterial(tex, prop);
-  ElementPtr s = builder->getCurrentElement();
-  prop.setProperty(Props::AMBIENT, 1.f)
-      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, scale(0.5f, 0.5f, 0.5f));
+  SceneElementPtr s = builder->getCurrentElement();
+  prop.setProperty(Props::AMBIENT, 1.f);
   builder->createSphere();
   builder->applyMaterial(tex, prop);
-  ElementPtr s1 = builder->getCurrentElement();
+  SceneElementPtr s1 = builder->getCurrentElement();
   Ray r(Point3f(0.f, 0.f, 0.f), Vec3f(0.f, 0.f, 1.f));
-  ElementPtr w = std::make_shared<World>();
+  SceneElementPtr w = std::make_shared<World>();
+  PhongModel pm;
   w->setLight(light);
   w->add(s);
   w->add(s1);
   s1->intersect(r);
-  s1->setLight(light);
-  Vec3f color = s1->reflectedColor(r);
+  pm.visitSceneElementComposite(w, r);
+  Vec3f color = pm.reflectedColor(w, r);
   ASSERT_TRUE(color == Vec3f(0.f, 0.f, 0.f));
 }
 

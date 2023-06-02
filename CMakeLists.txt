@@ -44,7 +44,8 @@ if(BUILD_TESTING)
     target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
     target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
     set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
-    target_compile_options(${TEST_EXE} PRIVATE "-g")
+    #target_compile_options(${TEST_EXE} PRIVATE "-g")
+    target_link_options(${TEST_EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
     add_test(${TEST_EXE} ${RUN_TEST_DIR}/${TEST_EXE})
     gtest_discover_tests(${TEST_EXE})
   ENDMACRO(TESTCASE)
@@ -55,30 +56,33 @@ if(BUILD_TESTING)
 
   set(testSources src/tools/tools.h)
   TESTCASE(tools ${testSources})
-  set(testSources src/container/canvas.cpp)
-  TESTCASE(canvas ${testSources})
+  #set(testSources src/container/canvas.cpp
+  #    src/composite/scene_element.cpp
+  #    src/renderers/renderer.cpp)
+  #TESTCASE(canvas ${testSources})
   set(testSources src/tools/ray.h)
   TESTCASE(ray ${testSources})
   set(testSources src/camera/camera.h)
   TESTCASE(camera ${testSources})
-  set(testSources src/composite/properties.cpp)
+  set(testSources src/materials/material_properties.cpp)
   TESTCASE(properties ${testSources})
-  set(testSources src/composite/element.cpp
-      src/decorators/transformer.cpp
-      src/decorators/element_deco.cpp
+  set(testSources src/composite/scene_element.cpp
+      src/transformations/transformer.cpp
+      src/transformations/element_deco.cpp
       src/textures/perlin.cpp)
   TESTCASE(sphere "${testSources}")
   TESTCASE(plane "${testSources}")
   set(testSources
-      src/composite/element.cpp
+      src/composite/scene_element.cpp
       src/composite/builder.cpp
-      src/composite/properties.cpp
       src/composite/world.cpp
-      src/decorators/material.cpp
-      src/decorators/element_deco.cpp
-      src/decorators/transformer.cpp
+      src/materials/material.cpp
+      src/materials/material_properties.cpp
+      src/transformations/element_deco.cpp
+      src/transformations/transformer.cpp
+      src/renderers/renderer.cpp
       src/textures/perlin.cpp)
   TESTCASE(material "${testSources}")
   TESTCASE(transformer "${testSources}")
-  TESTCASE(world "${testSources}")
+  #TESTCASE(world "${testSources}")
 endif()

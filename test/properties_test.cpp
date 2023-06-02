@@ -1,6 +1,5 @@
-#include "composite/properties.h"
-
 #include "gtest/gtest.h"
+#include "materials/material_properties.h"
 #include "tools/tools.h"
 
 using namespace testing;
@@ -8,7 +7,7 @@ using namespace std;
 
 class Tprop : public Test {
  public:
-  Properties p;
+  MaterialProperties p;
   Props name = Props::COLOR;  // For some weird reason, with other values like
                               // AMBIENT, DIFFUSE etc.. the tests [addsProperty,
                               // entityHasProperty] fail. Either GoogleTests's

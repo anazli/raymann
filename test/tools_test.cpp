@@ -1,5 +1,6 @@
-#include "gtest/gtest.h"
 #include "tools/tools.h"
+
+#include "gtest/gtest.h"
 
 using namespace testing;
 
@@ -1086,9 +1087,9 @@ TEST_F(point3, createsPoint) {
 }
 
 TEST_F(point3, subtractsPointFromPoint) {
-  p = Point3i(1, 0, 4);
-  Point3i p1 = Point3i(0, 2, 4);
-  Vec3i v = p1 - p;
+  Point3f pf = Point3f(1, 0, 4);
+  Point3f p1 = Point3f(0, 2, 4);
+  Vec3f v = p1 - pf;
   ASSERT_EQ(v.x(), -1);
   ASSERT_EQ(v.y(), 2);
   ASSERT_EQ(v.z(), 0);

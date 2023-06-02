@@ -10,7 +10,7 @@ using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(SceneElementPtr world, const Camera &c) {
+void Canvas::render(const SceneElementPtr &world, const Camera &c) {
   BaseRendererPtr renderer = std::make_shared<PhongModel>();
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {

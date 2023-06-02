@@ -1,4 +1,5 @@
 #include "geometry/plane.h"
+
 #include "gtest/gtest.h"
 #include "tools/ray.h"
 
@@ -25,28 +26,28 @@ TEST_F(Tplane, intersectRayParallelToThePlane) {
   p = Plane();
   r = Ray(Point3f(0.0f, 10.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
   ASSERT_FALSE(p.intersect(r));
-  ASSERT_TRUE(p.record().count == 0);
+  ASSERT_TRUE(p.getRecord().count == 0);
 }
 
 TEST_F(Tplane, intersectWithACoplanarRay) {
   p = Plane();
   r = Ray(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
   ASSERT_FALSE(p.intersect(r));
-  ASSERT_TRUE(p.record().count == 0);
+  ASSERT_TRUE(p.getRecord().count == 0);
 }
 
 TEST_F(Tplane, rayIntersectingPlaneFromAbove) {
   p = Plane();
   r = Ray(Point3f(0.0f, 1.0f, 0.0f), Vec3f(0.0f, -1.0f, 0.0f));
   ASSERT_TRUE(p.intersect(r));
-  ASSERT_TRUE(p.record().count == 1);
-  ASSERT_TRUE(p.record().t_min() == 1.0f);
+  ASSERT_TRUE(p.getRecord().count == 1);
+  ASSERT_TRUE(p.getRecord().t_min() == 1.0f);
 }
 
 TEST_F(Tplane, rayIntersectingPlaneFromBelow) {
   p = Plane();
   r = Ray(Point3f(0.0f, -1.0f, 0.0f), Vec3f(0.0f, 1.0f, 0.0f));
   ASSERT_TRUE(p.intersect(r));
-  ASSERT_TRUE(p.record().count == 1);
-  ASSERT_TRUE(p.record().t_min() == 1.0f);
+  ASSERT_TRUE(p.getRecord().count == 1);
+  ASSERT_TRUE(p.getRecord().t_min() == 1.0f);
 }
