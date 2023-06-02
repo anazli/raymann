@@ -29,6 +29,7 @@ class IntersectionRecord {
   Vec3f eye(const Ray &r) const { return -r.direction(); }
   bool inside = false;
   Point3f over_point_from_refl_surf;
+  Vec3f normal;
 };
 
 class BaseRenderer;
