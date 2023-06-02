@@ -1,7 +1,6 @@
 #pragma once
 
 #include "composite/scene_element.h"
-#include "visitors/renderer.h"
 
 class Plane : public SceneElement {
  public:

@@ -1,6 +1,6 @@
 #include "composite/scene_element.h"
 
-#include "visitors/renderer.h"
+#include "renderers/renderer.h"
 
 bool SceneElement::isWorld() const { return false; }
 

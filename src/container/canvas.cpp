@@ -4,7 +4,7 @@
 #include <fstream>
 #include <list>
 
-#include "visitors/renderer.h"
+#include "renderers/renderer.h"
 
 using std::endl;
 using std::list;

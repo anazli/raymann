@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "visitors/renderer.h"
+#include "renderers/renderer.h"
 
 using std::list;
 using std::shared_ptr;
