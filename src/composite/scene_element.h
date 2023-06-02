@@ -46,12 +46,12 @@ class SceneElement {
     return std::list<std::shared_ptr<SceneElement>>();
   }
 
-  void setRecord(const IntersectionRecord &rec);
-  IntersectionRecord &getRecord();
-  void setMaterial(BaseMaterialPtr mat);
-  BaseMaterialPtr getMaterial() const;
-  void setParent(std::shared_ptr<SceneElement> t);
-  std::shared_ptr<SceneElement> getParent() const;
+  virtual void setRecord(const IntersectionRecord &rec);
+  virtual IntersectionRecord &getRecord();
+  virtual void setMaterial(BaseMaterialPtr mat);
+  virtual BaseMaterialPtr getMaterial() const;
+  virtual void setParent(std::shared_ptr<SceneElement> t);
+  virtual std::shared_ptr<SceneElement> getParent() const;
 
  protected:
   SceneElement() {}

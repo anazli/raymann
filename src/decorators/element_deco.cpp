@@ -23,3 +23,25 @@ bool ElementDeco::isWorld() const { return m_element->isWorld(); }
 void ElementDeco::accept(BaseRendererPtr& renderer, const Ray& ray) {
   m_element->accept(renderer, ray);
 }
+
+void ElementDeco::setRecord(const IntersectionRecord& rec) {
+  m_element->setRecord(rec);
+}
+
+IntersectionRecord& ElementDeco::getRecord() { return m_element->getRecord(); }
+
+void ElementDeco::setMaterial(BaseMaterialPtr mat) {
+  m_element->setMaterial(mat);
+}
+
+BaseMaterialPtr ElementDeco::getMaterial() const {
+  return m_element->getMaterial();
+}
+
+void ElementDeco::setParent(std::shared_ptr<SceneElement> t) {
+  m_element->setParent(t);
+}
+
+std::shared_ptr<SceneElement> ElementDeco::getParent() const {
+  return m_element->getParent();
+}

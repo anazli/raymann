@@ -12,6 +12,13 @@ class ElementDeco : public SceneElement {
   bool isWorld() const override;
   void accept(BaseRendererPtr &renderer, const Ray &ray) override;
 
+  void setRecord(const IntersectionRecord &rec) override;
+  IntersectionRecord &getRecord() override;
+  void setMaterial(BaseMaterialPtr mat) override;
+  BaseMaterialPtr getMaterial() const override;
+  void setParent(std::shared_ptr<SceneElement> t) override;
+  std::shared_ptr<SceneElement> getParent() const override;
+
  protected:
   SceneElement *m_element;
 };

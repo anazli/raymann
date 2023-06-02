@@ -13,6 +13,13 @@ class Transformer : public ElementDeco {
   bool isWorld() const override;
   void accept(BaseRendererPtr &renderer, const Ray &ray) override;
 
+  void setRecord(const IntersectionRecord &rec) override;
+  IntersectionRecord &getRecord() override;
+  void setMaterial(BaseMaterialPtr mat) override;
+  BaseMaterialPtr getMaterial() const override;
+  void setParent(std::shared_ptr<SceneElement> t) override;
+  std::shared_ptr<SceneElement> getParent() const override;
+
  private:
   Mat4f m_transformer;
 };

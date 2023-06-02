@@ -36,3 +36,27 @@ bool Transformer::isWorld() const { return ElementDeco::isWorld(); }
 void Transformer::accept(BaseRendererPtr& renderer, const Ray& ray) {
   ElementDeco::accept(renderer, ray);
 }
+
+void Transformer::setRecord(const IntersectionRecord& rec) {
+  ElementDeco::setRecord(rec);
+}
+
+IntersectionRecord& Transformer::getRecord() {
+  return ElementDeco::getRecord();
+}
+
+void Transformer::setMaterial(BaseMaterialPtr mat) {
+  ElementDeco::setMaterial(mat);
+}
+
+BaseMaterialPtr Transformer::getMaterial() const {
+  return ElementDeco::getMaterial();
+}
+
+void Transformer::setParent(std::shared_ptr<SceneElement> t) {
+  SceneElement::setParent(t);
+}
+
+std::shared_ptr<SceneElement> Transformer::getParent() const {
+  return ElementDeco::getParent();
+}
