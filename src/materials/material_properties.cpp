@@ -5,7 +5,9 @@ MaterialProperties::MaterialProperties() {
       .setProperty(Props::DIFFUSE, 0.9f)
       .setProperty(Props::SPECULAR, 0.9f)
       .setProperty(Props::SHININESS, 200.f)
-      .setProperty(Props::REFLECTION, 0.f);
+      .setProperty(Props::REFLECTION, 0.f)
+      .setProperty(Props::TRANSPARENCY, 0.f)
+      .setProperty(Props::REFRACTIVE_INDEX, 1.f);
 }
 
 MaterialProperties& MaterialProperties::setProperty(const Props& name,

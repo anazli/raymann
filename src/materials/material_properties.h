@@ -6,14 +6,14 @@
 #include "tools/tools.h"
 
 enum class Props {
-  COLOR,           // Vec3f
-  AMBIENT,         // float [0,1]
-  DIFFUSE,         // float [0,1]
-  SPECULAR,        // float [0,1]
-  SHININESS,       // float [0,..]
-  REFLECTION,      // float [0,1]
-  PATTERN_COLORA,  // Vec3f
-  PATTERN_COLORB,  // Vec3f
+  COLOR,            // Vec3f
+  AMBIENT,          // float [0,1]
+  DIFFUSE,          // float [0,1]
+  SPECULAR,         // float [0,1]
+  SHININESS,        // float [0,..]
+  REFLECTION,       // float [0,1]
+  TRANSPARENCY,     // float [0,1]
+  REFRACTIVE_INDEX  // float [0,..]
 };
 
 class MaterialProperties {

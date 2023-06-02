@@ -78,3 +78,8 @@ TEST_F(Tprop, removesProperty) {
   EXPECT_TRUE(p.removeProperty(name));
   EXPECT_FALSE(p.removeProperty(name));
 }
+
+TEST_F(Tprop, defaultTransparencyAndRefractiveIndexTest) {
+  EXPECT_EQ(p.getPropertyAsFloat(Props::TRANSPARENCY), 0.f);
+  EXPECT_EQ(p.getPropertyAsFloat(Props::REFRACTIVE_INDEX), 1.f);
+}
