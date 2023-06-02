@@ -1,4 +1,4 @@
-#include "decorators/element_deco.h"
+#include "transformations/element_deco.h"
 
 ElementDeco::ElementDeco(SceneElement* tr) : m_element(tr) {}
 

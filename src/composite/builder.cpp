@@ -1,9 +1,9 @@
 #include "composite/builder.h"
 
 #include "composite/world.h"
-#include "decorators/transformer.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
+#include "transformations//transformer.h"
 
 WorldBuilder::WorldBuilder() : m_product(nullptr), m_currentElement(nullptr) {}
 
