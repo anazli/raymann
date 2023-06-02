@@ -1,18 +1,14 @@
 #pragma once
 
-#include "composite/element.h"
+#include "composite/scene_element.h"
 
-class Sphere : public Element {
+class Sphere : public SceneElement {
  public:
   Sphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
       : m_center(c), m_radius(r) {
     setParent(nullptr);
-    std::stringstream ss;
-    ss << center();
-    m_name = "Sphere:" + ss.str();  // TODO:Translation can change the name
   }
 
-  virtual ~Sphere() {}
   bool intersect(const Ray &r) override;
   Vec3f normal(const Point3f &p) const override {
     return (p - m_center).normalize();
@@ -36,9 +32,9 @@ inline bool Sphere::intersect(const Ray &r) {
   if (discr >= 0.0f) {
     float t1 = (-b - sqrt(discr)) / (2. * a);
     float t2 = (-b + sqrt(discr)) / (2. * a);
-    rec.t1 = t1;
-    rec.t2 = t2;
-    rec.count = 2;
+    m_rec.t1 = t1;
+    m_rec.t2 = t2;
+    m_rec.count = 2;
     return true;
   }
   return false;

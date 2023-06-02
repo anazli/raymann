@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(raymann VERSION   3.14159 LANGUAGES CXX)
+project(raymann VERSION 3.14159 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
@@ -8,19 +8,22 @@ set(EXE raymann)
 
 set(SOURCES src/main/raymann.cpp
             src/composite/builder.cpp
-            src/composite/element.cpp
-            src/composite/properties.cpp
+            src/composite/scene_element.cpp
             src/container/canvas.cpp
             src/composite/world.cpp
-            src/decorators/material.cpp
+            src/materials/material.cpp
+            src/materials/material_properties.h
+            src/materials/material_properties.cpp
             src/decorators/element_deco.cpp
             src/decorators/transformer.cpp
+            src/visitors/renderer.cpp
             src/textures/perlin.cpp)
 
 add_executable(${EXE} ${SOURCES})
 target_include_directories(${EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
 set_target_properties(${EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
 target_compile_options(${EXE} PRIVATE "-g")
+target_link_options(${EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
 
 
 if(BUILD_TESTING)

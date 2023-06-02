@@ -499,7 +499,7 @@ TEST_F(Tworld, intersectionWithShadows) {
   w->add(s1);
   prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, transl(0.0f, 0.0f, 10.0f));
   direct2 = make_shared<StandardSphere>();
-  shared_ptr<Element> s2 = direct2->create(builder, prop);
+  shared_ptr<SceneElement> s2 = direct2->create(builder, prop);
   w->add(s2);
   Ray r(Point3f(0.0f, 0.0f, 5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   light = PointLight(Point3f(0.0f, 0.0f, 10.0f), Vec3f(1.0f, 1.0f, 1.0f));

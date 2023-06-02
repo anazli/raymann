@@ -2,27 +2,42 @@
 
 #include <list>
 
-#include "composite/element.h"
-#include "geometry/sphere.h"
+#include "composite/scene_element.h"
 
-class World : public Element, public std::enable_shared_from_this<Element> {
+class World : public SceneElement,
+              public std::enable_shared_from_this<SceneElement> {
+  friend class WorldIterator;
+
  public:
-  World();
-  World(const std::string &n);
+  World() = default;
   virtual ~World();
   bool intersect(const Ray &r) override;
-  Vec3f lighting(const Ray &ray) override;
-  Vec3f colorAt(const Ray &ray, int rec = 5) override;
-  Vec3f reflectedColor(const Ray &r, int rec = 5) override;
-  void add(ElementPtr item) override;
-  void remove(ElementPtr item, bool del = true) override;
-  bool isWorld() const override { return true; }
-  ElementPtr closestHit(const Ray &r) override;
-  std::vector<float> intersectionsSorted() const;
-  bool isShadowed(const Point3f &p) override;
+  void add(SceneElementPtr item) override;
+  void remove(SceneElementPtr item, bool del = true) override;
+  bool isWorld() const override;
+  Vec3f normal(const Point3f &p) const override;
+  void accept(BaseRendererPtr &renderer, const Ray &ray) override;
+  std::list<std::shared_ptr<SceneElement>> getWorldList() override;
 
  private:
-  std::list<ElementPtr> m_traceable_list;
-  ElementPtr m_closest_hit;
-  PointLight m_light;
+  std::list<SceneElementPtr> m_scene_elem_list;
+};
+
+class WorldIterator {
+ public:
+  WorldIterator(const std::list<SceneElementPtr> &world) : m_list(world) {}
+  bool first() {
+    m_current = m_list.begin();
+    if (*m_current)
+      return true;
+    else
+      return false;
+  }
+  void advance() { m_current++; }
+  bool notDone() { return m_current != m_list.end(); }
+  SceneElementPtr currentElement() { return *m_current; }
+
+ private:
+  std::list<SceneElementPtr>::const_iterator m_current;
+  std::list<SceneElementPtr> m_list;
 };

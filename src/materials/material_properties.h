@@ -3,27 +3,23 @@
 #include <any>
 #include <map>
 
-#include "tools/mat4.h"
-#include "tools/vec3.h"
+#include "tools/tools.h"
 
 enum class Props {
-  COLOR,                    // Vec3f
-  AMBIENT,                  // float [0,1]
-  DIFFUSE,                  // float [0,1]
-  SPECULAR,                 // float [0,1]
-  SHININESS,                // float [0,..]
-  REFLECTION,               // float [0,1]
-  PATTERN_COLORA,           // Vec3f
-  PATTERN_COLORB,           // Vec3f
-  OBJECT_TRANSFROM_MATRIX,  // Mat4f
-  SPHERE_CENTER,            // Point3f
-  SPHERE_RADIUS             // float
+  COLOR,           // Vec3f
+  AMBIENT,         // float [0,1]
+  DIFFUSE,         // float [0,1]
+  SPECULAR,        // float [0,1]
+  SHININESS,       // float [0,..]
+  REFLECTION,      // float [0,1]
+  PATTERN_COLORA,  // Vec3f
+  PATTERN_COLORB,  // Vec3f
 };
 
-class Properties {
+class MaterialProperties {
  public:
-  Properties();
-  Properties &setProperty(const Props &name, const std::any &value);
+  MaterialProperties();
+  MaterialProperties &setProperty(const Props &name, const std::any &value);
   bool addProperty(const Props &name, const std::any &value);
   bool removeProperty(const Props &name);
   bool hasProperty(const Props &name) const;

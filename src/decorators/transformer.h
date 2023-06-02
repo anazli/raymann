@@ -3,12 +3,15 @@
 
 class Transformer : public ElementDeco {
  public:
-  Transformer(Element *tr);
-  Transformer(Element *tr, const Mat4f &m);
+  Transformer(SceneElement *tr);
+  Transformer(SceneElement *tr, const Mat4f &m);
   virtual ~Transformer();
   bool intersect(const Ray &r) override;
-  Record &record() override;
   Vec3f normal(const Point3f &p) const override;
+  void add(std::shared_ptr<SceneElement> item) override;
+  void remove(std::shared_ptr<SceneElement> item, bool del = true) override;
+  bool isWorld() const override;
+  void accept(BaseRendererPtr &renderer, const Ray &ray) override;
 
  private:
   Mat4f m_transformer;

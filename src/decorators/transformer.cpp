@@ -1,10 +1,10 @@
 #include "decorators/transformer.h"
 
-Transformer::Transformer(Element* tr) : ElementDeco(tr) {
+Transformer::Transformer(SceneElement* tr) : ElementDeco(tr) {
   m_transformer.identity();
 }
 
-Transformer::Transformer(Element* tr, const Mat4f& m)
+Transformer::Transformer(SceneElement* tr, const Mat4f& m)
     : ElementDeco(tr), m_transformer(m) {}
 
 Transformer::~Transformer() {}
@@ -14,8 +14,6 @@ bool Transformer::intersect(const Ray& r) {
   return ElementDeco::intersect(r_transformed);
 }
 
-Record& Transformer::record() { return ElementDeco::record(); }
-
 Vec3f Transformer::normal(const Point3f& p) const {
   Vec4f v4 = p;
   Point3f object_point = m_transformer.inverse() * v4;
@@ -23,4 +21,18 @@ Vec3f Transformer::normal(const Point3f& p) const {
   Vec3f world_normal =
       m_transformer.inverse().transpose() * Vec4f(object_normal);
   return world_normal.normalize();
+}
+
+void Transformer::add(std::shared_ptr<SceneElement> item) {
+  ElementDeco::add(item);
+}
+
+void Transformer::remove(std::shared_ptr<SceneElement> item, bool del) {
+  ElementDeco::remove(item, del);
+}
+
+bool Transformer::isWorld() const { return ElementDeco::isWorld(); }
+
+void Transformer::accept(BaseRendererPtr& renderer, const Ray& ray) {
+  ElementDeco::accept(renderer, ray);
 }

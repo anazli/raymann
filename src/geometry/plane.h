@@ -1,17 +1,17 @@
 #pragma once
 
-#include "composite/element.h"
+#include "composite/scene_element.h"
+#include "visitors/renderer.h"
 
-class Plane : public Element {
+class Plane : public SceneElement {
  public:
   Plane() = default;
-  virtual ~Plane() {}
   bool intersect(const Ray &r) override {
     if (fabs(r.direction().y()) < EPS) {
       return false;
     }
-    rec.t1 = -r.origin().y() / r.direction().y();
-    rec.count = 1;
+    m_rec.t1 = -r.origin().y() / r.direction().y();
+    m_rec.count = 1;
     return true;
   }
   Vec3f normal(const Point3f &p) const override {
