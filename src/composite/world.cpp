@@ -35,3 +35,7 @@ void World::accept(BaseRendererPtr& renderer, const Ray& ray) {
 std::list<std::shared_ptr<SceneElement> > World::getWorldList() {
   return m_scene_elem_list;
 }
+
+void World::setLight(const PointLight& light) { m_light = light; }
+
+PointLight World::getLight() const { return m_light; }

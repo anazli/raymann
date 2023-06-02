@@ -7,9 +7,10 @@
 
 WorldBuilder::WorldBuilder() : m_product(nullptr), m_currentElement(nullptr) {}
 
-void WorldBuilder::createWorld() {
+void WorldBuilder::createWorld(const PointLight& light) {
   m_product.reset();
   m_product = std::make_shared<World>();
+  m_product->setLight(light);
 }
 
 void WorldBuilder::addWorld() {
@@ -22,10 +23,9 @@ void WorldBuilder::createSphere(const Point3f& c, const float& r) {
   m_currentElement = new Sphere(c, r);
 }
 
-void WorldBuilder::addElement(const PointLight& light) {
+void WorldBuilder::addElement() {
   if (m_product) {
     SceneElementPtr elem(m_currentElement);
-    elem->getRecord().light = light;
     m_product->add(elem);
     m_currentElement = nullptr;
   }

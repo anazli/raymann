@@ -8,9 +8,9 @@
 
 class Builder {
  public:
-  virtual void createWorld() = 0;
+  virtual void createWorld(const PointLight &light) = 0;
   virtual void addWorld() = 0;
-  virtual void addElement(const PointLight &light) = 0;
+  virtual void addElement() = 0;
   virtual void createSphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
                             const float &r = 1.0f) = 0;
   virtual void createPlane() = 0;
@@ -26,9 +26,9 @@ typedef std::shared_ptr<Builder> BuilderPtr;
 class WorldBuilder : public Builder {
  public:
   WorldBuilder();
-  void createWorld() override;
+  void createWorld(const PointLight &light) override;
   void addWorld() override;
-  void addElement(const PointLight &light) override;
+  void addElement() override;
   void createSphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
                     const float &r = 1.0f) override;
   void createPlane() override;

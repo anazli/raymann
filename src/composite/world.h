@@ -18,9 +18,12 @@ class World : public SceneElement,
   Vec3f normal(const Point3f &p) const override;
   void accept(BaseRendererPtr &renderer, const Ray &ray) override;
   std::list<std::shared_ptr<SceneElement>> getWorldList() override;
+  void setLight(const PointLight &light) override;
+  PointLight getLight() const override;
 
  private:
   std::list<SceneElementPtr> m_scene_elem_list;
+  PointLight m_light;
 };
 
 class WorldIterator {

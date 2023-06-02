@@ -29,7 +29,6 @@ class IntersectionRecord {
   Vec3f eye(const Ray &r) const { return -r.direction(); }
   bool inside = false;
   Point3f over_point_from_refl_surf;
-  PointLight light;
 };
 
 class BaseRenderer;
@@ -52,6 +51,8 @@ class SceneElement {
   virtual BaseMaterialPtr getMaterial() const;
   virtual void setParent(std::shared_ptr<SceneElement> t);
   virtual std::shared_ptr<SceneElement> getParent() const;
+  virtual void setLight(const PointLight &light) {}
+  virtual PointLight getLight() const { return PointLight(); }
 
  protected:
   SceneElement() {}

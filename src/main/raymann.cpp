@@ -14,14 +14,13 @@ using namespace std;
 int main() {
   PointLight light(Point3f(10.0f, 10.0f, -9.0f), Vec3f(1.0f, 1.0f, 1.0f));
   BuilderPtr world = make_shared<WorldBuilder>();
-  world->createWorld();
+  world->createWorld(light);
   MaterialProperties prop;
   //----------------------Floor---------------------
   prop.setProperty(Props::REFLECTION, 0.5f);
   world->createPlane();
-  world->applyMaterial(
-      make_shared<PerlinTexture>(0.8f, Vec3f(0.1f, 0.1f, 0.1f)), prop);
-  world->addElement(light);
+  world->applyMaterial(make_shared<PerlinTexture>(0.8f), prop);
+  world->addElement();
 
   //----------------------Left wall---------------------
   prop.setProperty(Props::REFLECTION, 0.3f);
@@ -29,7 +28,7 @@ int main() {
   world->applyTransformation(transl(0.0f, 0.0f, 5.0f) * rotX(-PI / 2.0f));
   world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.4f, 0.4f, 0.4f)),
                        prop);
-  world->addElement(light);
+  world->addElement();
 
   //----------------------Right wall---------------------
   prop.setProperty(Props::REFLECTION, 0.4f);
@@ -38,28 +37,28 @@ int main() {
                              rotX(-PI / 2.0f));
   world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.5f, 0.5f, 0.5f)),
                        prop);
-  world->addElement(light);
+  world->addElement();
 
   //----------------------Middle sphere---------------------
   prop.setProperty(Props::REFLECTION, 0.f);
   world->createSphere();
   world->applyTransformation(transl(-0.5f, 1.0f, 0.5f));
   world->applyMaterial(make_shared<PerlinTexture>(1.2f), prop);
-  world->addElement(light);
+  world->addElement();
 
   //----------------------Right sphere---------------------
   world->createSphere();
   world->applyTransformation(transl(1.5f, 0.5f, -0.5f) *
                              scale(0.5f, 0.5f, 0.5f) * rotY(PI / 2.0f));
   world->applyMaterial(make_shared<PerlinTexture>(1.2f), prop);
-  world->addElement(light);
+  world->addElement();
 
   //----------------------Left sphere---------------------
   world->createSphere();
   world->applyTransformation(transl(-1.5f, 0.33f, -0.75f) *
                              scale(0.33f, 0.33f, 0.33f));
   world->applyMaterial(make_shared<PerlinTexture>(0.6f), prop);
-  world->addElement(light);
+  world->addElement();
 
   //----------------------------------------------------------------------------
   Canvas canvas(500, 500);

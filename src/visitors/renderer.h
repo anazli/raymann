@@ -19,5 +19,5 @@ class PhongModel : public BaseRenderer {
   Vec3f reflectedColor(const SceneElementPtr &world, const Ray &r, int rec = 5);
   void checkInside(const Ray &r);
   bool isShadowed(const SceneElementPtr &world, const Point3f &p);
-  void findClosestHit(const SceneElementPtr &world, const Ray &r);
+  SceneElementPtr findClosestHit(const SceneElementPtr &world, const Ray &r);
 };
