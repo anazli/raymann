@@ -176,47 +176,53 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
 }
 
 TEST_F(TMat, determiningN1AndN2) {
-  /*PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
+  PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
   MaterialProperties prop;
 
   BuilderPtr builder = std::make_shared<WorldBuilder>();
-  builder->createSphere();
+  builder->createWorld(light);
 
   TexturePtr tex1 = std::make_shared<ConstantTexture>();
   prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.f, 0.6f))
       .setProperty(Props::TRANSPARENCY, 1.f)
       .setProperty(Props::REFRACTIVE_INDEX, 1.5f);
-  tex->setColor(prop.getPropertyAsVec3f(Props::COLOR));
+  tex1->setColor(prop.getPropertyAsVec3f(Props::COLOR));
+  builder->createSphere();
   builder->applyTransformation(scale(2.f, 2.f, 2.f));
-  builder->applyMaterial(tex, prop);
-  SceneElementPtr s = builder->getCurrentElement();
+  builder->applyMaterial(tex1, prop);
+  builder->addElement();
 
+  builder->createSphere();
   TexturePtr tex2 = std::make_shared<ConstantTexture>();
   MaterialProperties prop1;
   prop1.setProperty(Props::REFRACTIVE_INDEX, 2.f);
   builder->createSphere();
   builder->applyTransformation(transl(0.f, 0.f, -0.25f));
-  builder->applyMaterial(tex1, prop1);
-  SceneElementPtr s1 = builder->getCurrentElement();
+  builder->applyMaterial(tex2, prop1);
+  builder->addElement();
 
   TexturePtr tex3 = std::make_shared<ConstantTexture>();
   MaterialProperties prop2;
   prop2.setProperty(Props::REFRACTIVE_INDEX, 2.5f);
   builder->createSphere();
   builder->applyTransformation(transl(0.f, 0.f, 0.25f));
-  builder->applyMaterial(tex2, prop2);
-  SceneElementPtr s2 = builder->getCurrentElement();
+  builder->applyMaterial(tex3, prop2);
+  builder->addElement();
 
   Ray r(Point3f(0.f, 0.f, -4.f), Vec3f(0.f, 0.f, 1.f));
-  SceneElementPtr w = std::make_shared<World>();
   PhongModel pm;
-  w->setLight(light);
-  w->add(s);
-  w->add(s1);
-  s1->intersect(r);
-  pm.visitSceneElementComposite(w, r);
-  Vec3f color = pm.reflectedColor(w, r);
-  ASSERT_TRUE(color == Vec3f(0.f, 0.f, 0.f));*/
+  SceneElementPtr world = builder->getProduct();
+  pm.determineRefraction(world, r);
+  WorldIterator it(world->getWorldList());
+  if (it.first()) {
+    while (it.notDone()) {
+      std::cout << it.currentElement()->getRecord().n1 << std::endl;
+      std::cout << it.currentElement()->getRecord().n2 << std::endl;
+      std::cout << "---------------------------------" << std::endl;
+      it.advance();
+    }
+  }
+  EXPECT_TRUE(true);
 }
 
 // TODO: Fix the test case

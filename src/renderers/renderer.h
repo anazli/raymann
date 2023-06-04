@@ -14,6 +14,7 @@ class PhongModel : public BaseRenderer {
                                   const Ray &ray) override;
 
   Vec3f reflectedColor(const SceneElementPtr &world, const Ray &r, int rec = 5);
+  void determineRefraction(const SceneElementPtr &world, const Ray &r);
 
  private:
   Vec3f computeColor(const SceneElementPtr &world, const Ray &ray,
