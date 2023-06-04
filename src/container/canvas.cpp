@@ -4,19 +4,20 @@
 #include <fstream>
 #include <list>
 
+#include "camera/camera.h"
 #include "renderers/renderer.h"
 
 using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(const SceneElementPtr &world, const Camera &c) {
-  BaseRendererPtr renderer = std::make_shared<PhongModel>();
+void Canvas::render(const SceneElementPtr &world, const BaseCamera &c) {
+  BaseRendererPtr renderer = std::make_shared<BasicPathTracer>(c);
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {
       Vec3f color;
-      Ray ray(c, static_cast<float>(i), static_cast<float>(j));
-      world->accept(renderer, ray);
+      renderer->setPixelInfo(i, j);
+      world->accept(renderer, c.getRay(i, j));
       color = renderer->getColor();
       writePixel(i, j, color);
     }

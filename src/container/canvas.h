@@ -6,6 +6,8 @@
 #include "composite/scene_element.h"
 #include "tools/tools.h"
 
+class BaseCamera;
+
 class Canvas {
  public:
   Canvas(const int &w = 0, const int &h = 0) : m_width(w), m_height(h) {
@@ -18,7 +20,7 @@ class Canvas {
   // void setHeight(const int &h) { m_height = h; }
   void setFileName(const std::string &fn) { m_fileName = fn; }
 
-  void render(const SceneElementPtr &world, const Camera &c);
+  void render(const SceneElementPtr &world, const BaseCamera &c);
   void writePixel(const int &x, const int &y, const Vec3f &color) {
     m_pixels[x][y] = color;
   }

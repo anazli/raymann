@@ -7,11 +7,11 @@ using namespace testing;
 
 class Tcam : public Test {
  public:
-  Camera c;
+  RayTracingChalengeCamera c;
 };
 
 TEST_F(Tcam, createsCamera) {
-  c = Camera();
+  c = RayTracingChalengeCamera();
   c.setHSize(160);
   c.setVSize(120);
   c.setFieldOfView(PI / 2.0f);
@@ -23,19 +23,19 @@ TEST_F(Tcam, createsCamera) {
 }
 
 TEST_F(Tcam, pixelSizeForHorCanvas) {
-  c = Camera(200, 125, PI / 2.0f);
+  c = RayTracingChalengeCamera(200, 125, PI / 2.0f);
   c.computePixelSize();
   ASSERT_EQ(c.pixelSize(), 0.01f);
 }
 
 TEST_F(Tcam, pixelSizeForVerCanvas) {
-  c = Camera(125, 200, PI / 2.0f);
+  c = RayTracingChalengeCamera(125, 200, PI / 2.0f);
   c.computePixelSize();
   ASSERT_EQ(c.pixelSize(), 0.01f);
 }
 
 TEST_F(Tcam, rayThroughTheCenterOfCanvas) {
-  c = Camera(201, 101, PI / 2.0f);
+  c = RayTracingChalengeCamera(201, 101, PI / 2.0f);
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
   float eps = 1.E-6;
@@ -48,7 +48,7 @@ TEST_F(Tcam, rayThroughTheCenterOfCanvas) {
 }
 
 TEST_F(Tcam, rayThroughCornerOfCanvas) {
-  c = Camera(201, 101, PI / 2.0f);
+  c = RayTracingChalengeCamera(201, 101, PI / 2.0f);
   c.computePixelSize();
   Ray r = c.getRay(0, 0);
   float eps = 1.E-5;
@@ -61,7 +61,7 @@ TEST_F(Tcam, rayThroughCornerOfCanvas) {
 }
 
 TEST_F(Tcam, rayWhenCameraIsTransformed) {
-  c = Camera(201, 101, PI / 2.0f);
+  c = RayTracingChalengeCamera(201, 101, PI / 2.0f);
   c.setTransform(rotY(PI / 4.0f) * transl(0.0f, -2.0f, 5.0f));
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
