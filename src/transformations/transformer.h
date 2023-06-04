@@ -11,7 +11,7 @@ class Transformer : public ElementDeco {
   void add(std::shared_ptr<SceneElement> item) override;
   void remove(std::shared_ptr<SceneElement> item, bool del = true) override;
   bool isWorld() const override;
-  void accept(BaseRendererPtr &renderer, const Ray &ray) override;
+  void accept(BaseRenderer &renderer, const Ray &ray) override;
 
   void setRecord(const IntersectionRecord &rec) override;
   IntersectionRecord &getRecord() override;

@@ -41,7 +41,7 @@ class SceneElement {
   virtual void remove(std::shared_ptr<SceneElement> item, bool del = true) {}
   virtual bool isWorld() const;
   virtual Vec3f normal(const Point3f &p) const;
-  virtual void accept(std::shared_ptr<BaseRenderer> &renderer, const Ray &ray);
+  virtual void accept(BaseRenderer &renderer, const Ray &ray);
   virtual std::list<std::shared_ptr<SceneElement>> getWorldList() {
     return std::list<std::shared_ptr<SceneElement>>();
   }
@@ -73,11 +73,17 @@ class BaseRenderer {
                              int rec = 5) = 0;
 
   Vec3f getColor() const { return m_out_color; }
+  void setPixelInfo(const int &x, const int y) {
+    m_x = static_cast<float>(x);
+    m_y = static_cast<float>(y);
+  }
 
  protected:
   SceneElementPtr m_closestHit;
   Vec3f m_out_color;
   float m_tmin = MAXFLOAT;
+  float m_x;
+  float m_y;
 };
 
 typedef std::shared_ptr<BaseRenderer> BaseRendererPtr;

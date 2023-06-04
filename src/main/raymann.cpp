@@ -2,10 +2,12 @@
 #include <fstream>
 #include <iostream>
 
+#include "camera/camera.h"
 #include "composite/builder.h"
 #include "container/canvas.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
+#include "renderers/renderer.h"
 #include "textures/texture.h"
 #include "tools/tools.h"
 
@@ -63,14 +65,16 @@ int main() {
   //----------------------------------------------------------------------------
   Canvas canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
-  Camera camera(canvas.width(), canvas.height(), PI / 4.0f);
-  camera.computePixelSize();
+  BaseCameraPtr camera = make_shared<RayTracingChalengeCamera>(
+      canvas.width(), canvas.height(), PI / 4.0f);
+  camera->computePixelSize();
   Point3f from(0.0f, 2.0f, -7.0f);
   Point3f to(0.0f, 1.0f, 0.0f);
   Vec3f up(0.0f, 1.0f, 0.0f);
-  camera.setTransform(view_transform(from, to, up));
+  camera->setTransform(view_transform(from, to, up));
 
-  canvas.render(world->getProduct(), camera);
+  BaseRendererPtr renderer = make_shared<PhongModel>();
+  canvas.render(world->getProduct(), *camera, *renderer);
   canvas.save();
   /*chrono::time_point<chrono::steady_clock> start =
   chrono::steady_clock::now(); chrono::time_point<chrono::steady_clock> end =

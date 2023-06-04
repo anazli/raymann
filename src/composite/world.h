@@ -16,7 +16,7 @@ class World : public SceneElement,
   void remove(SceneElementPtr item, bool del = true) override;
   bool isWorld() const override;
   Vec3f normal(const Point3f &p) const override;
-  void accept(BaseRendererPtr &renderer, const Ray &ray) override;
+  void accept(BaseRenderer &renderer, const Ray &ray) override;
   std::list<std::shared_ptr<SceneElement>> getWorldList() override;
   void setLight(const PointLight &light) override;
   PointLight getLight() const override;

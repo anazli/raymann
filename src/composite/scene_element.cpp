@@ -6,9 +6,8 @@ bool SceneElement::isWorld() const { return false; }
 
 Vec3f SceneElement::normal(const Point3f& p) const { return Vec3f(); }
 
-void SceneElement::accept(std::shared_ptr<BaseRenderer>& renderer,
-                          const Ray& ray) {
-  renderer->visitSceneElement(*this, ray);
+void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
+  renderer.visitSceneElement(*this, ray);
 }
 
 void SceneElement::setRecord(const IntersectionRecord& rec) { m_rec = rec; }

@@ -40,30 +40,25 @@ class Material : public BaseMaterial {
 
 class Lambertian : public BaseMaterial {
  public:
-  Lambertian(const Vec3f& a, TexturePtr tex,
+  Lambertian(TexturePtr tex,
              const MaterialProperties& prop = MaterialProperties());
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
                Vec3f& attenuation, Ray& scattered) const override;
-
- private:
-  Vec3f m_albedo;
 };
 
 class Metal : public BaseMaterial {
  public:
-  Metal(const Vec3f& a, double f, TexturePtr tex,
-        const MaterialProperties& prop);
+  Metal(float f, TexturePtr tex, const MaterialProperties& prop);
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
                Vec3f& attenuation, Ray& scattered) const override;
 
  private:
-  Vec3f m_albedo;
   float m_fuzz;
 };
 
 class Dielectric : public BaseMaterial {
  public:
-  Dielectric(double ri, TexturePtr tex, const MaterialProperties& prop);
+  Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop);
 
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
                Vec3f& attenuation, Ray& scattered) const override;

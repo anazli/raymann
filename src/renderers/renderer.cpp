@@ -148,3 +148,73 @@ SceneElementPtr PhongModel::findClosestHit(const SceneElementPtr& world,
   }
   return m_closestHit;
 }
+
+BasicPathTracer::BasicPathTracer(const BaseCamera& cam) : m_cam(cam) {}
+
+void BasicPathTracer::visitSceneElement(SceneElement& elementLeaf,
+                                        const Ray& ray) {}
+
+void BasicPathTracer::visitSceneElementComposite(
+    const SceneElementPtr& elementComp, const Ray& ray) {
+  /*for (int i = 0; i < 20; ++i) {
+  float u = float(m_x + drand48()) / float(m_cam.hSize());
+  float v = float(m_y + drand48()) / float(m_cam.vSize());
+  Vec3f ww = getUnitVectorOf(m_cam.getFromPoint() - m_cam.getToPoint());
+  Vec3f uu = getUnitVectorOf(cross(m_cam.getUpVector(), ww));
+  Vec3f vv = cross(ww, uu);
+  float focus_dist = 30.f;
+  Vec3f lower_left_corner =
+      Vec3f(ray.origin()) - m_cam.halfWidth() * focus_dist * uu -
+      m_cam.halfHeight() * focus_dist * vv - focus_dist * ww;
+  Vec3f horizontal = 2 * m_cam.halfWidth() * focus_dist * u;
+  Vec3f vertical = 2 * m_cam.halfHeight() * focus_dist * v;
+  Vec3f rd = randomInUnitDisk() * m_cam.pixelSize();
+  Vec3f offset = rd.x() + rd.y();
+  Ray r(ray.origin() + offset, lower_left_corner + u * horizontal +
+                                   v * vertical - ray.origin() - offset);
+  m_out_color += computeColor(elementComp, ray, 5);
+  }
+  m_out_color = m_out_color / 20.f;
+  m_out_color = Vec3f(sqrt(m_out_color.x()), sqrt(m_out_color.y()),
+                    sqrt(m_out_color.z()));*/
+  // m_out_color = computeColor(elementComp, ray, 5);
+}
+
+Vec3f BasicPathTracer::computeColor(const SceneElementPtr& world,
+                                    const Ray& ray, int rec) {
+  findClosestHit(world, ray);
+  if (m_closestHit) {
+    m_closestHit->getRecord().normal =
+        m_closestHit->normal(m_closestHit->getRecord().point(ray));
+    Ray scattered;
+    Vec3f attenuation;
+    if (rec < 50 &&
+        m_closestHit->getMaterial()->scatter(ray, m_closestHit->getRecord(),
+                                             attenuation, scattered)) {
+      return attenuation * computeColor(world, scattered, rec + 1);
+    } else {
+      return Vec3f(0.f, 0.f, 0.f);
+    }
+  }
+  Vec3 unit_direction = getUnitVectorOf(ray.direction());
+  float t = 0.5f * (unit_direction.y() + 1.f);
+  return (1.f - t) * Vec3f(1.0, 1.0, 1.0) + t * Vec3f(0.2f, 0.7f, 1.0f);
+}
+
+SceneElementPtr BasicPathTracer::findClosestHit(const SceneElementPtr& world,
+                                                const Ray& r) {
+  WorldIterator it(world->getWorldList());
+  m_tmin = MAXFLOAT;
+  if (it.first()) {
+    while (it.notDone()) {
+      if (it.currentElement()->intersect(r) &&
+          it.currentElement()->getRecord().t_min() >= 0.0f &&
+          it.currentElement()->getRecord().t_min() < m_tmin) {
+        m_closestHit = it.currentElement();
+        m_tmin = it.currentElement()->getRecord().t_min();
+      }
+      it.advance();
+    }
+  }
+  return m_closestHit;
+}

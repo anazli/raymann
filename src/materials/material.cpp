@@ -64,22 +64,20 @@ bool Material::scatter(const Ray& r_in, const IntersectionRecord& rec,
   return false;
 }
 
-Lambertian::Lambertian(const Vec3f& a, TexturePtr tex,
-                       const MaterialProperties& prop)
-    : m_albedo(a), BaseMaterial(tex, prop) {}
+Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
+    : BaseMaterial(tex, prop) {}
 
 bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
                          Vec3f& attenuation, Ray& scattered) const {
   Vec3f target =
       Vec3f(rec.point(r_in)) + randomVectorOnUnitSphere() + rec.normal;
   scattered = Ray(rec.point(r_in), target - rec.point(r_in));
-  attenuation = m_albedo;
+  attenuation = m_tex->value(0, 0, Vec3f());
   return true;
 }
 
-Metal::Metal(const Vec3f& a, double f, TexturePtr tex,
-             const MaterialProperties& prop)
-    : m_albedo(a), m_fuzz(f), BaseMaterial(tex, prop) {
+Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
+    : m_fuzz(f), BaseMaterial(tex, prop) {
   if (f < 1.f)
     m_fuzz = f;
   else
@@ -91,12 +89,11 @@ bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
   Vec3 reflected = reflect(getUnitVectorOf(r_in.direction()), rec.normal);
   scattered =
       Ray(rec.point(r_in), reflected + m_fuzz * randomVectorOnUnitSphere());
-  attenuation = m_albedo;
+  attenuation = m_tex->value(0, 0, Vec3f());
   return (dot(scattered.direction(), rec.normal) > 0);
 }
 
-Dielectric::Dielectric(double ri, TexturePtr tex,
-                       const MaterialProperties& prop)
+Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
     : ref_idx(ri), BaseMaterial(tex, prop) {}
 
 bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,

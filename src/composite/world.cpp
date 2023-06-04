@@ -28,8 +28,8 @@ bool World::isWorld() const { return true; }
 
 Vec3f World::normal(const Point3f& p) const { return Vec3f(); }
 
-void World::accept(BaseRendererPtr& renderer, const Ray& ray) {
-  renderer->visitSceneElementComposite(shared_from_this(), ray);
+void World::accept(BaseRenderer& renderer, const Ray& ray) {
+  renderer.visitSceneElementComposite(shared_from_this(), ray);
 }
 
 std::list<std::shared_ptr<SceneElement> > World::getWorldList() {

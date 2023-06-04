@@ -33,7 +33,7 @@ void Transformer::remove(std::shared_ptr<SceneElement> item, bool del) {
 
 bool Transformer::isWorld() const { return ElementDeco::isWorld(); }
 
-void Transformer::accept(BaseRendererPtr& renderer, const Ray& ray) {
+void Transformer::accept(BaseRenderer& renderer, const Ray& ray) {
   ElementDeco::accept(renderer, ray);
 }
 

@@ -20,7 +20,7 @@ void ElementDeco::remove(std::shared_ptr<SceneElement> item, bool del) {
 
 bool ElementDeco::isWorld() const { return m_element->isWorld(); }
 
-void ElementDeco::accept(BaseRendererPtr& renderer, const Ray& ray) {
+void ElementDeco::accept(BaseRenderer& renderer, const Ray& ray) {
   m_element->accept(renderer, ray);
 }
 

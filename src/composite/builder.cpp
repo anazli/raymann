@@ -43,6 +43,21 @@ void WorldBuilder::applyMaterial(TexturePtr tex,
   BaseMaterialPtr matptr = std::make_shared<Material>(tex, prop);
   m_currentElement->setMaterial(matptr);
 }
+void WorldBuilder::applyLambertianMaterial(TexturePtr tex,
+                                           const MaterialProperties& prop) {
+  BaseMaterialPtr matptr = std::make_shared<Lambertian>(tex, prop);
+  m_currentElement->setMaterial(matptr);
+}
+void WorldBuilder::applyMetalMaterial(const float& f, TexturePtr tex,
+                                      const MaterialProperties& prop) {
+  BaseMaterialPtr matptr = std::make_shared<Metal>(f, tex, prop);
+  m_currentElement->setMaterial(matptr);
+}
+void WorldBuilder::applyDielectricMaterial(const float& ri, TexturePtr tex,
+                                           const MaterialProperties& prop) {
+  BaseMaterialPtr matptr = std::make_shared<Dielectric>(ri, tex, prop);
+  m_currentElement->setMaterial(matptr);
+}
 
 SceneElementPtr WorldBuilder::getProduct() { return m_product; }
 

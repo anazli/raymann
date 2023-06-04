@@ -11,14 +11,14 @@ using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(const SceneElementPtr &world, const BaseCamera &c) {
-  BaseRendererPtr renderer = std::make_shared<BasicPathTracer>(c);
+void Canvas::render(const SceneElementPtr &world, const BaseCamera &c,
+                    BaseRenderer &renderer) {
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {
       Vec3f color;
-      renderer->setPixelInfo(i, j);
+      renderer.setPixelInfo(i, j);
       world->accept(renderer, c.getRay(i, j));
-      color = renderer->getColor();
+      color = renderer.getColor();
       writePixel(i, j, color);
     }
   }
