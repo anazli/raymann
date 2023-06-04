@@ -1,4 +1,5 @@
 #include "camera/camera.h"
+
 #include "gtest/gtest.h"
 #include "tools/tools.h"
 
@@ -36,7 +37,7 @@ TEST_F(Tcam, pixelSizeForVerCanvas) {
 TEST_F(Tcam, rayThroughTheCenterOfCanvas) {
   c = Camera(201, 101, PI / 2.0f);
   c.computePixelSize();
-  Ray r = Ray(c, 100, 50);
+  Ray r = c.getRay(100, 50);
   float eps = 1.E-6;
   EXPECT_NEAR(r.origin().x(), 0.0f, eps);
   EXPECT_NEAR(r.origin().y(), 0.0f, eps);
@@ -49,7 +50,7 @@ TEST_F(Tcam, rayThroughTheCenterOfCanvas) {
 TEST_F(Tcam, rayThroughCornerOfCanvas) {
   c = Camera(201, 101, PI / 2.0f);
   c.computePixelSize();
-  Ray r = Ray(c, 0, 0);
+  Ray r = c.getRay(0, 0);
   float eps = 1.E-5;
   EXPECT_NEAR(r.origin().x(), 0.0f, eps);
   EXPECT_NEAR(r.origin().y(), 0.0f, eps);
@@ -63,7 +64,7 @@ TEST_F(Tcam, rayWhenCameraIsTransformed) {
   c = Camera(201, 101, PI / 2.0f);
   c.setTransform(rotY(PI / 4.0f) * transl(0.0f, -2.0f, 5.0f));
   c.computePixelSize();
-  Ray r = Ray(c, 100, 50);
+  Ray r = c.getRay(100, 50);
   float eps = 1.E-5;
   EXPECT_NEAR(r.origin().x(), 0.0f, eps);
   EXPECT_NEAR(r.origin().y(), 2.0f, eps);

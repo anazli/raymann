@@ -1,14 +1,11 @@
 #pragma once
 
-#include "camera/camera.h"
+#include "tools/tools.h"
 
 class Ray {
  public:
   Ray() {}
   Ray(const Point3f &ori, const Vec3f &dir) : m_ori(ori), m_dir(dir) {}
-  Ray(const Camera &c, float pixel_x, float pixel_y) {
-    setForPixel(c, pixel_x, pixel_y);
-  }
 
   void setOrigin(const Point3f &ori) { m_ori = ori; }
   void setDirection(const Vec3f &dir) { m_dir = dir; }
@@ -28,17 +25,6 @@ class Ray {
     Vec4f new_d = v4;
     ret.setDirection(new_d);
     return ret;
-  }
-
-  void setForPixel(const Camera &c, float pixel_x, float pixel_y) {
-    float xoffset = (pixel_x + 0.5f) * c.pixelSize();
-    float yoffset = (pixel_y + 0.5f) * c.pixelSize();
-    float world_x = c.halfWidth() - xoffset;
-    float world_y = c.halfHeight() - yoffset;
-    Mat4f inversed = c.transform().inverse();
-    Point3f pixel = inversed * Vec4f(world_x, world_y, -1.0f, 1.0f);
-    m_ori = inversed * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-    m_dir = (Point3f(pixel.x(), pixel.y(), pixel.z()) - m_ori).normalize();
   }
 
  private:
