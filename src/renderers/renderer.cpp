@@ -177,7 +177,7 @@ void BasicPathTracer::visitSceneElementComposite(
   m_out_color = m_out_color / 20.f;
   m_out_color = Vec3f(sqrt(m_out_color.x()), sqrt(m_out_color.y()),
                     sqrt(m_out_color.z()));*/
-  // m_out_color = computeColor(elementComp, ray, 5);
+  m_out_color = computeColor(elementComp, ray, 5);
 }
 
 Vec3f BasicPathTracer::computeColor(const SceneElementPtr& world,

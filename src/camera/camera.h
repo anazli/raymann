@@ -74,7 +74,7 @@ class RayTracingChalengeCamera : public BaseCamera {
     return ray;
   }
 
- private:
+ protected:
   int m_hsize;
   int m_vsize;
   float m_field_of_view;
@@ -87,32 +87,10 @@ class RayTracingChalengeCamera : public BaseCamera {
   Vec3f m_up;
 };
 
-class RayTracingInOneWeekendCamera : public BaseCamera {
+class RayTracingInOneWeekendCamera : public RayTracingChalengeCamera {
  public:
-  RayTracingInOneWeekendCamera(
-      Vec3f lookfrom, Vec3f lookat, Vec3f vup, float vfov, float aspect,
-      float aperture,
-      float focus_dist) {  // vfov is top to bottom in degrees
-
-    lens_radius = aperture / 2.f;
-    float theta = vfov * M_PI / 180.f;
-    float half_height = tan(theta / 2.f);
-    float half_width = aspect * half_height;
-    origin = lookfrom;
-    w = getUnitVectorOf(lookfrom - lookat);
-    u = getUnitVectorOf(cross(vup, w));
-    v = cross(w, u);
-    lower_left_corner = origin - half_width * focus_dist * u -
-                        half_height * focus_dist * v - focus_dist * w;
-    horizontal = 2 * half_width * focus_dist * u;
-    vertical = 2 * half_height * focus_dist * v;
-  }
-
-  void setTransform(const Mat4f &m) override {}
-
-  int hSize() const override { return 0; }
-  int vSize() const override { return 0; }
-  void computePixelSize() override {}
+  RayTracingInOneWeekendCamera(const int &hs, const int &vs, const float &fv)
+      : RayTracingChalengeCamera(hs, vs, fv) {}
 
   Vec3f randomInUnitDisk() const {
     Vec3f p;
@@ -124,17 +102,20 @@ class RayTracingInOneWeekendCamera : public BaseCamera {
   }
 
   Ray getRay(const int &pixel_x, const int &pixel_y) const override {
-    Vec3 rd = lens_radius * randomInUnitDisk();
-    Vec3 offset = u * rd.x() + v * rd.y();
-    return Ray(Point3f(origin + offset),
+    Vec3 rd = pixelSize() * randomInUnitDisk();
+    Vec3f w = getUnitVectorOf(m_from - m_to);
+    Vec3f u = getUnitVectorOf(cross(m_up, w));
+    Vec3f v = cross(w, u);
+    Vec3f offset = u * rd.x() + v * rd.y();
+    Vec3f lower_left_corner =
+        Vec3f(m_from - m_half_width * focus_dist * u -
+              m_half_height * focus_dist * v - focus_dist * w);
+    Vec3f horizontal = 2 * m_half_width * focus_dist * u;
+    Vec3f vertical = 2 * m_half_height * focus_dist * v;
+    return Ray(Point3f(m_from + offset),
                lower_left_corner + static_cast<float>(pixel_x) * horizontal +
-                   static_cast<float>(pixel_y) * vertical - origin - offset);
+                   static_cast<float>(pixel_y) * vertical - m_from - offset);
   }
 
-  Vec3f origin;
-  Vec3f lower_left_corner;
-  Vec3f horizontal;
-  Vec3f vertical;
-  Vec3f u, v, w;
-  float lens_radius;
+  float focus_dist = 30.f;
 };
