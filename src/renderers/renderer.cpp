@@ -1,5 +1,7 @@
 #include "renderers/renderer.h"
 
+#include <algorithm>
+
 #include "composite/world.h"
 
 PhongModel::PhongModel() {}
@@ -31,12 +33,10 @@ Vec3f PhongModel::computeColor(const SceneElementPtr& world, const Ray& ray,
 }
 
 Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
+  Vec3f normal = m_closestHit->normal(m_closestHit->getRecord().point(ray));
+  Point3f point = m_closestHit->getRecord().point(ray);
   Point3f over_point =
-      m_closestHit->getRecord().point(ray) +
-      (m_closestHit->getRecord().inside
-           ? m_closestHit->normal(m_closestHit->getRecord().point(ray))
-           : m_closestHit->normal(m_closestHit->getRecord().point(ray))) *
-          0.02f;
+      point + (m_closestHit->getRecord().inside ? normal : normal) * 0.02f;
   Vec3f normal_vec = m_closestHit->getRecord().inside
                          ? -m_closestHit->normal(over_point)
                          : m_closestHit->normal(over_point);
@@ -45,6 +45,8 @@ Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
   Vec3f effective_color = m_closestHit->getMaterial()->getTexture()->value(
                               0, 0, Vec3f(over_point)) *
                           world->getLight().intensity();
+
+  m_closestHit->getRecord().under_point_from_refrac_surf = point - normal * EPS;
 
   Vec3f ret_ambient =
       effective_color *
@@ -113,49 +115,57 @@ Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& r,
   return Vec3f(0.f, 0.f, 0.f);
 }
 
+Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& r) {
+  SceneElementPtr closest_refract = findClosestHit(world, r);
+  if (closest_refract->getMaterial()->getProperties().getPropertyAsFloat(
+          Props::TRANSPARENCY) <= 0.f) {
+    return Vec3f(0.f, 0.f, 0.f);
+  }
+  return Vec3f(1.f, 1.f, 1.f);
+}
+
 void PhongModel::determineRefraction(const SceneElementPtr& world,
                                      const Ray& r) {
-  WorldIterator it(world->getWorldList());
+  std::map<size_t, std::pair<size_t, float>> intersections =
+      intersectionsSorted(world);
+  std::map<size_t, std::pair<size_t, float>>::const_iterator iter;
   std::list<SceneElementPtr> container;
-  m_tmin = MAXFLOAT;
-  if (it.first()) {
-    while (it.notDone()) {
-      if (it.currentElement()->intersect(r) &&
-          it.currentElement()->getRecord().t_min() < m_tmin) {
-        if (container.empty()) {
-          it.currentElement()->getRecord().n1 = 1.f;
-        } else {
-          float temp = container.back()
-                           ->getMaterial()
-                           ->getProperties()
-                           .getPropertyAsFloat(Props::REFRACTIVE_INDEX);
-
-          it.currentElement()->getRecord().n1 = temp;
-        }
-        for (std::list<SceneElementPtr>::const_iterator iter =
-                 container.begin();
-             iter != container.end(); ++iter) {
-          if (iter->get() == it.currentElement().get()) {
-            container.remove(it.currentElement());
-          } else {
-            container.emplace_back(it.currentElement());
-          }
-        }
-        if (container.empty()) {
-          it.currentElement()->getRecord().n2 = 1.f;
-        } else {
-          float temp = container.back()
-                           ->getMaterial()
-                           ->getProperties()
-                           .getPropertyAsFloat(Props::REFRACTIVE_INDEX);
-
-          it.currentElement()->getRecord().n2 = temp;
-        }
-        m_tmin = it.currentElement()->getRecord().t_min();
-      }
-      it.advance();
+  for (const auto& [key, value] : intersections) {
+    SceneElementPtr current_elem = findSceneElementById(value.first, world);
+    float n1 = 0, n2 = 0;
+    if (container.empty()) {
+      n1 = 1.f;
+    } else {
+      n1 = container.back()->getMaterial()->getProperties().getPropertyAsFloat(
+          Props::REFRACTIVE_INDEX);
     }
+
+    bool is_in = false;
+    std::remove_if(container.begin(), container.end(),
+                   [&](const SceneElementPtr& elem) {
+                     if (elem.get() == current_elem.get()) {
+                       is_in = true;
+                       return true;
+                     } else {
+                       return false;
+                     }
+                   });
+    if (!is_in) {
+      container.emplace_back(current_elem);
+    }
+
+    if (container.empty()) {
+      n2 = 1.f;
+    } else {
+      n2 = container.back()->getMaterial()->getProperties().getPropertyAsFloat(
+          Props::REFRACTIVE_INDEX);
+    }
+    m_refract_index_collection[key] = std::make_pair(n1, n2);
   }
+}
+
+std::map<size_t, std::pair<float, float>> PhongModel::getContainer() const {
+  return m_refract_index_collection;
 }
 
 void PhongModel::checkInside(const Ray& r) {}
@@ -192,6 +202,39 @@ SceneElementPtr PhongModel::findClosestHit(const SceneElementPtr& world,
     }
   }
   return m_closestHit;
+}
+
+std::map<size_t, std::pair<size_t, float>> PhongModel::intersectionsSorted(
+    const SceneElementPtr& world) const {
+  std::map<size_t, std::pair<size_t, float>> ret;
+  size_t count = 0;
+  WorldIterator iter(world->getWorldList());
+  if (iter.first()) {
+    while (iter.notDone()) {
+      ret[count] = std::make_pair(iter.currentElement()->getId(),
+                                  iter.currentElement()->getRecord().t1);
+      count++;
+      ret[count] = std::make_pair(iter.currentElement()->getId(),
+                                  iter.currentElement()->getRecord().t2);
+      iter.advance();
+      count++;
+    }
+  }
+
+  // sort(ret.begin(), ret.end(), [](float f1, float f2) { return f1 < f2; });
+  return ret;
+}
+
+SceneElementPtr PhongModel::findSceneElementById(const size_t& id,
+                                                 const SceneElementPtr& world) {
+  WorldIterator it(world->getWorldList());
+  std::list<SceneElementPtr>::const_iterator ret_iter = std::find_if(
+      it.begin(), it.end(),
+      [&id](const SceneElementPtr& elem) { return elem->getId() == id; });
+  if (ret_iter != it.end()) {
+    return *ret_iter;
+  }
+  return *it.begin();
 }
 
 BasicPathTracer::BasicPathTracer(const BaseCamera& cam) : m_cam(cam) {}

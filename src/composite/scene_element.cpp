@@ -2,6 +2,8 @@
 
 #include "renderers/renderer.h"
 
+size_t SceneElement::m_next_id = 0;
+
 bool SceneElement::isWorld() const { return false; }
 
 Vec3f SceneElement::normal(const Point3f& p) const { return Vec3f(); }
@@ -21,4 +23,11 @@ void SceneElement::setParent(std::shared_ptr<SceneElement> t) { m_parent = t; }
 
 std::shared_ptr<SceneElement> SceneElement::getParent() const {
   return m_parent;
+}
+
+size_t SceneElement::getId() const { return m_id; }
+
+SceneElement::SceneElement() {
+  m_id = m_next_id;
+  m_next_id++;
 }

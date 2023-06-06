@@ -102,20 +102,26 @@ class RayTracingInOneWeekendCamera : public RayTracingChalengeCamera {
   }
 
   Ray getRay(const int &pixel_x, const int &pixel_y) const override {
-    Vec3 rd = pixelSize() * randomInUnitDisk();
+    float lens_radius = aperture / 2.;
+    float theta = 80.f * PI / 180.f;
+    float half_height = tan(theta / 2.);
+    float half_width = m_hsize / m_vsize * half_height;
     Vec3f w = getUnitVectorOf(m_from - m_to);
     Vec3f u = getUnitVectorOf(cross(m_up, w));
     Vec3f v = cross(w, u);
-    Vec3f offset = u * rd.x() + v * rd.y();
     Vec3f lower_left_corner =
-        Vec3f(m_from - m_half_width * focus_dist * u -
-              m_half_height * focus_dist * v - focus_dist * w);
-    Vec3f horizontal = 2 * m_half_width * focus_dist * u;
-    Vec3f vertical = 2 * m_half_height * focus_dist * v;
-    return Ray(Point3f(m_from + offset),
-               lower_left_corner + static_cast<float>(pixel_x) * horizontal +
-                   static_cast<float>(pixel_y) * vertical - m_from - offset);
+        Vec3f(m_from - half_width * focus_dist * u -
+              half_height * focus_dist * v - focus_dist * w);
+    Vec3f horizontal = 2 * half_width * focus_dist * u;
+    Vec3f vertical = 2 * half_height * focus_dist * v;
+    Vec3 rd = lens_radius * randomInUnitDisk();
+    Vec3 offset = u * rd.x() + v * rd.y();
+    // return Ray(m_from + offset,
+    //            lower_left_corner + static_cast<float>(pixel_x) * horizontal +
+    //                static_cast<float>(pixel_y) * vertical - m_from - offset);
+    return RayTracingChalengeCamera::getRay(pixel_x, pixel_y);
   }
 
   float focus_dist = 30.f;
+  float aperture = 2.f;
 };

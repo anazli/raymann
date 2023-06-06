@@ -36,6 +36,12 @@ class WorldIterator {
     else
       return false;
   }
+  std::list<SceneElementPtr>::const_iterator begin() const {
+    return m_list.begin();
+  }
+  std::list<SceneElementPtr>::const_iterator end() const {
+    return m_list.end();
+  }
   void advance() { m_current++; }
   bool notDone() { return m_current != m_list.end(); }
   SceneElementPtr currentElement() { return *m_current; }

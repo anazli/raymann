@@ -4,7 +4,7 @@
 
 class Plane : public SceneElement {
  public:
-  Plane() = default;
+  Plane(){};
   bool intersect(const Ray &r) override {
     if (fabs(r.direction().y()) < EPS) {
       return false;
