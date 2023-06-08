@@ -209,9 +209,8 @@ TEST_F(TMat, determiningN1AndN2) {
   Ray r(Point3f(0.f, 0.f, -4.f), Vec3f(0.f, 0.f, 1.f));
   PhongModel pm;
   SceneElementPtr world = builder->getProduct();
-  pm.determineRefraction(world, r);
+  pm.determineRefractionIndices(world, r);
   std::map<size_t, std::pair<float, float>> container = pm.getContainer();
-  std::map<size_t, std::pair<float, float>>::const_iterator iter;
   EXPECT_EQ(container[0].first, 1.f);
   EXPECT_EQ(container[0].second, 1.5f);
   EXPECT_EQ(container[1].first, 1.5f);
@@ -264,11 +263,11 @@ TEST_F(TMat, findingRefractedColorOfOpaqueObject) {
   builder->createWorld(light);
 
   TexturePtr tex1 = std::make_shared<ConstantTexture>();
-  MaterialProperties prop1;
-  tex1->setColor(prop1.getPropertyAsVec3f(Props::COLOR));
+  MaterialProperties prop;
+  prop.setProperty(Props::TRANSPARENCY, 0.f);
   builder->createSphere();
   builder->applyTransformation(transl(0.f, 0.f, 1.f));
-  builder->applyMaterial(tex1, prop1);
+  builder->applyMaterial(tex1, prop);
   builder->addElement();
   Ray r(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f));
   PhongModel pm;
@@ -278,6 +277,81 @@ TEST_F(TMat, findingRefractedColorOfOpaqueObject) {
   EXPECT_EQ(color.y(), 0.f);
   EXPECT_EQ(color.z(), 0.f);
 }
+
+TEST_F(TMat, whenRecursionIsZeroThenRefractiveColorIsBlack) {
+  PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
+
+  BuilderPtr builder = std::make_shared<WorldBuilder>();
+  builder->createWorld(light);
+
+  TexturePtr tex1 = std::make_shared<ConstantTexture>();
+  MaterialProperties prop;
+  prop.setProperty(Props::TRANSPARENCY, 1.f)
+      .setProperty(Props::REFRACTIVE_INDEX, 1.5f);
+  builder->createSphere();
+  builder->applyTransformation(transl(0.f, 0.f, 1.f));
+  builder->applyMaterial(tex1, prop);
+  builder->addElement();
+  Ray r(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f));
+  PhongModel pm;
+  SceneElementPtr world = builder->getProduct();
+  Vec3f color = pm.refractedColor(world, r, 0);
+  EXPECT_EQ(color.x(), 0.f);
+  EXPECT_EQ(color.y(), 0.f);
+  EXPECT_EQ(color.z(), 0.f);
+}
+
+/*TEST_F(TMat, findRefractedColorUnderTotalReflection) {
+  PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
+
+  BuilderPtr builder = std::make_shared<WorldBuilder>();
+  builder->createWorld(light);
+
+  TexturePtr tex1 = std::make_shared<ConstantTexture>();
+  MaterialProperties prop;
+  prop.setProperty(Props::TRANSPARENCY, 1.f)
+      .setProperty(Props::REFRACTIVE_INDEX, 1.5f)
+      .setProperty(Props::COLOR, Vec3f(0.8f, 1.f, 0.6f))
+      .setProperty(Props::SPECULAR, 0.2f)
+      .setProperty(Props::DIFFUSE, 0.7f);
+  builder->createSphere();
+  builder->applyTransformation(scale(0.5f, 0.5f, 0.5f));
+  builder->applyMaterial(tex1, prop);
+  builder->addElement();
+  Ray r(Point3f(0.f, 0.f, sqrt(2.f) / 2.f), Vec3f(0.f, 1.f, 0.f));
+  PhongModel pm;
+  SceneElementPtr world = builder->getProduct();
+  Vec3f color = pm.refractedColor(world, r, 0);
+  EXPECT_EQ(color.x(), 0.f);
+  EXPECT_EQ(color.y(), 0.f);
+  EXPECT_EQ(color.z(), 0.f);
+}
+
+TEST_F(TMat, findingRefractedColor) {
+  PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
+
+  BuilderPtr builder = std::make_shared<WorldBuilder>();
+  builder->createWorld(light);
+
+  TexturePtr tex1 = std::make_shared<ConstantTexture>();
+  MaterialProperties prop;
+  prop.setProperty(Props::TRANSPARENCY, 1.f)
+      .setProperty(Props::REFRACTIVE_INDEX, 1.5f)
+      .setProperty(Props::COLOR, Vec3f(0.8f, 1.f, 0.6f))
+      .setProperty(Props::SPECULAR, 0.2f)
+      .setProperty(Props::DIFFUSE, 0.7f);
+  builder->createSphere();
+  builder->applyTransformation(scale(0.5f, 0.5f, 0.5f));
+  builder->applyMaterial(tex1, prop);
+  builder->addElement();
+  Ray r(Point3f(0.f, 0.f, 1.f), Vec3f(0.f, 1.f, 0.f));
+  PhongModel pm;
+  SceneElementPtr world = builder->getProduct();
+  Vec3f color = pm.refractedColor(world, r, 0);
+  EXPECT_EQ(color.x(), 0.f);
+  EXPECT_EQ(color.y(), 0.f);
+  EXPECT_EQ(color.z(), 0.f);
+}*/
 
 // TODO: Fix the test case
 /*TEST_F(TMat, strikeReflectiveSurface) {

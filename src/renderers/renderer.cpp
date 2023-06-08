@@ -27,7 +27,8 @@ Vec3f PhongModel::computeColor(const SceneElementPtr& world, const Ray& ray,
   if (m_closestHit && m_closestHit->intersect(ray)) {
     Vec3f surf_col = lighting(world, ray);
     Vec3f refl_col = reflectedColor(world, ray, rec);
-    return surf_col + refl_col;
+    Vec3f refract_col = refractedColor(world, ray, rec);
+    return surf_col + refl_col + refract_col;
   }
   return Vec3f(0.f, 0.f, 0.f);
 }
@@ -45,8 +46,6 @@ Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
   Vec3f effective_color = m_closestHit->getMaterial()->getTexture()->value(
                               0, 0, Vec3f(over_point)) *
                           world->getLight().intensity();
-
-  m_closestHit->getRecord().under_point_from_refrac_surf = point - normal * EPS;
 
   Vec3f ret_ambient =
       effective_color *
@@ -85,13 +84,14 @@ Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
 Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& r,
                                  int rec) {
   SceneElementPtr closest_refl = findClosestHit(world, r);
+  Vec3f black(0.f, 0.f, 0.f);
   if (closest_refl) {
     if (rec <= 0) {
-      return Vec3f(0.f, 0.f, 0.f);
+      return black;
     }
     if (closest_refl->getMaterial()->getProperties().getPropertyAsFloat(
             Props::REFLECTION) <= 0.f) {
-      return Vec3f(0.f, 0.f, 0.f);
+      return black;
     }
     Vec3f reflectv = reflect(
         r.direction(),
@@ -112,20 +112,43 @@ Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& r,
            closest_refl->getMaterial()->getProperties().getPropertyAsFloat(
                Props::REFLECTION);
   }
-  return Vec3f(0.f, 0.f, 0.f);
+  return black;
 }
 
-Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& r) {
+Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& r,
+                                 int rec) {
   SceneElementPtr closest_refract = findClosestHit(world, r);
+  Vec3f black(0.f, 0.f, 0.f);
   if (closest_refract->getMaterial()->getProperties().getPropertyAsFloat(
-          Props::TRANSPARENCY) <= 0.f) {
-    return Vec3f(0.f, 0.f, 0.f);
+          Props::TRANSPARENCY) <= 0.f ||
+      rec == 0) {
+    return black;
   }
-  return Vec3f(1.f, 1.f, 1.f);
+
+  determineRefractionIndices(world, r);
+  findClosestHit(world, r);
+  findRefractionIndicesForClosestHit(world);
+  IntersectionRecord record = m_closestHit->getRecord();
+  Vec3f normal_vec = record.inside ? -m_closestHit->normal(record.point(r))
+                                   : m_closestHit->normal(record.point(r));
+  m_closestHit->getRecord().under_point_from_refrac_surf =
+      record.point(r) - normal_vec * EPS;
+  std::cout << record.n1 << " " << record.n2 << std::endl;
+  float ratio = 1.f / 1.5f;
+  float cosi = dot(record.eye(r), normal_vec);
+  float sin2_t = ratio * ratio * (1.f - cosi * cosi);
+  if (sin2_t > 1.f) return black;  // total reflection
+  float cos_t = sqrt(1.f - sin2_t);
+  Vec3f direction = normal_vec * (ratio * cosi - cos_t) - record.eye(r) * ratio;
+  Ray refracted = Ray(record.under_point_from_refrac_surf, direction);
+
+  return computeColor(world, refracted, rec - 1) *
+         m_closestHit->getMaterial()->getProperties().getPropertyAsFloat(
+             Props::TRANSPARENCY);
 }
 
-void PhongModel::determineRefraction(const SceneElementPtr& world,
-                                     const Ray& r) {
+void PhongModel::determineRefractionIndices(const SceneElementPtr& world,
+                                            const Ray& r) {
   std::map<size_t, std::pair<size_t, float>> intersections =
       intersectionsSorted(world);
   std::map<size_t, std::pair<size_t, float>>::const_iterator iter;
@@ -161,6 +184,8 @@ void PhongModel::determineRefraction(const SceneElementPtr& world,
           Props::REFRACTIVE_INDEX);
     }
     m_refract_index_collection[key] = std::make_pair(n1, n2);
+    current_elem->getRecord().n1 = n1;
+    current_elem->getRecord().n2 = n2;
   }
 }
 
@@ -221,7 +246,6 @@ std::map<size_t, std::pair<size_t, float>> PhongModel::intersectionsSorted(
     }
   }
 
-  // sort(ret.begin(), ret.end(), [](float f1, float f2) { return f1 < f2; });
   return ret;
 }
 
@@ -235,6 +259,19 @@ SceneElementPtr PhongModel::findSceneElementById(const size_t& id,
     return *ret_iter;
   }
   return *it.begin();
+}
+
+void PhongModel::findRefractionIndicesForClosestHit(
+    const SceneElementPtr& world) {
+  std::map<size_t, std::pair<size_t, float>> intersections =
+      intersectionsSorted(world);
+  for (const auto& [key, value] : intersections) {
+    if (m_closestHit->getRecord().t_min() == value.second) {
+      m_closestHit->getRecord().n1 = m_refract_index_collection[key].first;
+      m_closestHit->getRecord().n2 = m_refract_index_collection[key].second;
+      break;
+    }
+  }
 }
 
 BasicPathTracer::BasicPathTracer(const BaseCamera& cam) : m_cam(cam) {}

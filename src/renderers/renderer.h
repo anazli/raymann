@@ -14,8 +14,8 @@ class PhongModel : public BaseRenderer {
                                   const Ray &ray) override;
 
   Vec3f reflectedColor(const SceneElementPtr &world, const Ray &r, int rec = 5);
-  Vec3f refractedColor(const SceneElementPtr &world, const Ray &r);
-  void determineRefraction(const SceneElementPtr &world, const Ray &r);
+  Vec3f refractedColor(const SceneElementPtr &world, const Ray &r, int rec = 5);
+  void determineRefractionIndices(const SceneElementPtr &world, const Ray &r);
 
   std::map<size_t, std::pair<float, float>> getContainer() const;
 
@@ -30,6 +30,7 @@ class PhongModel : public BaseRenderer {
       const SceneElementPtr &world) const;
   SceneElementPtr findSceneElementById(const size_t &id,
                                        const SceneElementPtr &world);
+  void findRefractionIndicesForClosestHit(const SceneElementPtr &world);
 
   std::map<size_t, std::pair<float, float>> m_refract_index_collection;
 };

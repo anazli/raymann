@@ -50,12 +50,18 @@ int main() {
 
   //----------------------Right sphere---------------------
   world->createSphere();
+  prop.setProperty(Props::TRANSPARENCY, 1.f)
+      .setProperty(Props::REFRACTIVE_INDEX, 1.5f);
   world->applyTransformation(transl(1.5f, 0.5f, -0.5f) *
                              scale(0.5f, 0.5f, 0.5f) * rotY(PI / 2.0f));
-  world->applyMaterial(make_shared<PerlinTexture>(1.2f), prop);
+  world->applyMaterial(
+      make_shared<ConstantTexture>(prop.getPropertyAsVec3f(Props::COLOR)),
+      prop);
   world->addElement();
 
   //----------------------Left sphere---------------------
+  prop.setProperty(Props::TRANSPARENCY, 0.f)
+      .setProperty(Props::REFRACTIVE_INDEX, 1.f);
   world->createSphere();
   world->applyTransformation(transl(-1.5f, 0.33f, -0.75f) *
                              scale(0.33f, 0.33f, 0.33f));

@@ -11,8 +11,8 @@ Vec3f randomVectorOnUnitSphere() {
   uniform_real_distribution<float> rand(0.f, 1.f);
   float xi1, xi2, dsq = 2.f;
   while (dsq >= 1.f) {
-    xi1 = 1.f - 2. * rand(gen);
-    xi2 = 1.f - 2. * rand(gen);
+    xi1 = 1.f - 2.f * rand(gen);
+    xi2 = 1.f - 2.f * rand(gen);
     dsq = xi1 * xi1 + xi2 * xi2;
   }
 
