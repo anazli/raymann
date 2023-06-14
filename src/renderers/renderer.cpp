@@ -133,7 +133,6 @@ Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& r,
                                    : m_closestHit->normal(record.point(r));
   m_closestHit->getRecord().under_point_from_refrac_surf =
       record.point(r) - normal_vec * EPS;
-  std::cout << record.n1 << " " << record.n2 << std::endl;
   float ratio = 1.f / 1.5f;
   float cosi = dot(record.eye(r), normal_vec);
   float sin2_t = ratio * ratio * (1.f - cosi * cosi);
