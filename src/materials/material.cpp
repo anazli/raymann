@@ -10,7 +10,7 @@ std::mt19937 gen(13759327u);
 
 Vec3f randomVectorOnUnitSphere() {
   uniform_real_distribution<float> rand(0.f, 1.f);
-  float xi1, xi2, dsq = 2.f;
+  float xi1{0.f}, xi2{0.f}, dsq{2.f};
   while (dsq >= 1.f) {
     xi1 = 1.f - 2.f * rand(gen);
     xi2 = 1.f - 2.f * rand(gen);
@@ -22,8 +22,7 @@ Vec3f randomVectorOnUnitSphere() {
   float dmy = xi2 * ranh;
   float dmz = 1.f - 2.f * dsq;
 
-  Vec3f ret(dmx, dmy, dmz);
-  return ret;
+  return Vec3f(dmx, dmy, dmz);
 }
 
 float schlick(float cosine, float ref_idx) {
@@ -70,8 +69,8 @@ Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
 
 bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
                          Vec3f& attenuation, Ray& scattered) const {
-  Vec3f target =
-      Vec3f(rec.point(r_in)) + randomVectorOnUnitSphere() + rec.normal;
+  Point3f target = rec.point(r_in) + randomVectorOnUnitSphere() +
+                   rec.object->normal(rec.point(r_in));
   scattered = Ray(rec.point(r_in), target - rec.point(r_in));
   attenuation = m_tex->value(0, 0, Vec3f());
   return true;
@@ -91,7 +90,7 @@ bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
   scattered =
       Ray(rec.point(r_in), reflected + m_fuzz * randomVectorOnUnitSphere());
   attenuation = m_tex->value(0, 0, Vec3f());
-  return (dot(scattered.direction(), rec.normal) > 0);
+  return (dot(scattered.direction(), rec.object->normal(rec.point(r_in))) > 0);
 }
 
 Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
@@ -106,15 +105,16 @@ bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
   Vec3f refracted;
   float reflect_prob;
   float cosine;
-  if (dot(r_in.direction(), rec.normal) > 0) {
-    outward_normal = -rec.normal;
+  Vec3f normal = rec.object->normal(rec.point(r_in));
+  if (dot(r_in.direction(), normal) > 0) {
+    outward_normal = -normal;
     ni_over_nt = ref_idx;
-    cosine = dot(r_in.direction(), rec.normal) / r_in.direction().length();
+    cosine = dot(r_in.direction(), normal) / r_in.direction().length();
     cosine = sqrt(1.f - ref_idx * ref_idx * (1.f - cosine * cosine));
   } else {
-    outward_normal = rec.normal;
+    outward_normal = normal;
     ni_over_nt = 1.f / ref_idx;
-    cosine = -dot(r_in.direction(), rec.normal) / r_in.direction().length();
+    cosine = -dot(r_in.direction(), normal) / r_in.direction().length();
   }
 
   if (refract(r_in.direction(), outward_normal, ni_over_nt, refracted))
