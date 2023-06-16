@@ -81,9 +81,9 @@ Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
   return ret_ambient + ret_diffuse + ret_specular;
 }
 
-Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& r,
+Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& ray,
                                  int rec) {
-  IntersectionRecord closest_refl = findClosestHit(world, r);
+  IntersectionRecord closest_refl = findClosestHit(world, ray);
   Vec3f black(0.f, 0.f, 0.f);
   if (closest_refl.object) {
     if (rec <= 0) {
@@ -94,15 +94,15 @@ Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& r,
       return black;
     }
     Vec3f reflectv =
-        reflect(r.direction(),
+        reflect(ray.direction(),
                 (closest_refl.inside
-                     ? closest_refl.object->normal(closest_refl.point(r))
-                     : closest_refl.object->normal(closest_refl.point(r))));
+                     ? closest_refl.object->normal(closest_refl.point(ray))
+                     : closest_refl.object->normal(closest_refl.point(ray))));
     Point3f over_point =
-        closest_refl.point(r) +
+        closest_refl.point(ray) +
         (closest_refl.inside
-             ? closest_refl.object->normal(closest_refl.point(r))
-             : closest_refl.object->normal(closest_refl.point(r))) *
+             ? closest_refl.object->normal(closest_refl.point(ray))
+             : closest_refl.object->normal(closest_refl.point(ray))) *
             EPS1;
     closest_refl.over_point_from_refl_surf = over_point;
     Ray reflect_ray(over_point, reflectv);
@@ -115,42 +115,47 @@ Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& r,
   return black;
 }
 
-Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& r,
+Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& ray,
                                  int rec) {
-  /*SceneElementPtr closest_refract = findClosestHit(world, r);
+  IntersectionRecord closest_refract = findClosestHit(world, ray);
   Vec3f black(0.f, 0.f, 0.f);
-  if (closest_refract->getMaterial()->getProperties().getPropertyAsFloat(
+  if (closest_refract.object->getMaterial()->getProperties().getPropertyAsFloat(
           Props::TRANSPARENCY) <= 0.f ||
       rec == 0) {
     return black;
   }
 
-  determineRefractionIndices(world, r);
-  findClosestHit(world, r);
-  findRefractionIndicesForClosestHit(world);
-  IntersectionRecord record = m_closestHit->getRecord();
-  Vec3f normal_vec = record.inside ? -m_closestHit->normal(record.point(r))
-                                   : m_closestHit->normal(record.point(r));
-  m_closestHit->getRecord().under_point_from_refrac_surf =
-      record.point(r) - normal_vec * EPS;
-  float ratio = 1.f / 1.5f;
-  float cosi = dot(record.eye(r), normal_vec);
+  // determineRefractionIndices(world, ray);
+  // findRefractionIndicesForClosestHit(world, ray);
+  Vec3f normal_vec =
+      closest_refract.inside
+          ? -closest_refract.object->normal(closest_refract.point(ray))
+          : closest_refract.object->normal(closest_refract.point(ray));
+  closest_refract.under_point_from_refrac_surf =
+      closest_refract.point(ray) - normal_vec * EPS;
+  float ratio =
+      1. /
+      closest_refract.object->getMaterial()->getProperties().getPropertyAsFloat(
+          Props::REFRACTIVE_INDEX);
+  float cosi = dot(closest_refract.eye(ray), normal_vec);
   float sin2_t = ratio * ratio * (1.f - cosi * cosi);
   if (sin2_t > 1.f) return black;  // total reflection
   float cos_t = sqrt(1.f - sin2_t);
-  Vec3f direction = normal_vec * (ratio * cosi - cos_t) - record.eye(r) * ratio;
-  Ray refracted = Ray(record.under_point_from_refrac_surf, direction);
+  Vec3f direction =
+      normal_vec * (ratio * cosi - cos_t) - closest_refract.eye(ray) * ratio;
+  Ray refracted = Ray(closest_refract.under_point_from_refrac_surf, direction);
 
   return computeColor(world, refracted, rec - 1) *
-         m_closestHit->getMaterial()->getProperties().getPropertyAsFloat(
-             Props::TRANSPARENCY);*/
+         closest_refract.object->getMaterial()
+             ->getProperties()
+             .getPropertyAsFloat(Props::TRANSPARENCY);
   return Vec3f(0.f, 0.f, 0.f);
 }
 
 void PhongModel::determineRefractionIndices(const SceneElementPtr& world,
-                                            const Ray& r) {
-  /*std::map<size_t, std::pair<size_t, float>> intersections =
-      intersectionsSorted(world);
+                                            const Ray& ray) {
+  std::map<size_t, std::pair<size_t, float>> intersections =
+      intersectionsSorted(world, ray);
   std::map<size_t, std::pair<size_t, float>>::const_iterator iter;
   std::list<SceneElementPtr> container;
   for (const auto& [key, value] : intersections) {
@@ -184,9 +189,7 @@ void PhongModel::determineRefractionIndices(const SceneElementPtr& world,
           Props::REFRACTIVE_INDEX);
     }
     m_refract_index_collection[key] = std::make_pair(n1, n2);
-    current_elem->getRecord().n1 = n1;
-    current_elem->getRecord().n2 = n2;
-  }*/
+  }
 }
 
 std::map<size_t, std::pair<float, float>> PhongModel::getContainer() const {
@@ -211,13 +214,13 @@ bool PhongModel::isShadowed(const SceneElementPtr& world, const Point3f& p) {
 }
 
 IntersectionRecord PhongModel::findClosestHit(const SceneElementPtr& world,
-                                              const Ray& r) {
+                                              const Ray& ray) {
   WorldIterator it(world->getWorldList());
   m_tmin = MAXFLOAT;
   if (it.first()) {
     while (it.notDone()) {
       IntersectionRecord record;
-      if (it.currentElement()->intersect(r, record)) {
+      if (it.currentElement()->intersect(ray, record)) {
         if (record.t_min() > 0.0f && record.t_min() < m_tmin) {
           m_closestHit = record;
           m_closestHit.object = it.currentElement();
@@ -231,25 +234,26 @@ IntersectionRecord PhongModel::findClosestHit(const SceneElementPtr& world,
 }
 
 std::map<size_t, std::pair<size_t, float>> PhongModel::intersectionsSorted(
-    const SceneElementPtr& world) const {
+    const SceneElementPtr& world, const Ray& ray) const {
   std::map<size_t, std::pair<size_t, float>> ret;
-  /*size_t count = 0;
+  size_t count = 0;
   WorldIterator iter(world->getWorldList());
   if (iter.first()) {
     while (iter.notDone()) {
-      if (iter.currentElement()->getRecord().t1 != -MAXFLOAT) {
-        ret[count] = std::make_pair(iter.currentElement()->getId(),
-                                    iter.currentElement()->getRecord().t1);
-        count++;
-      }
-      if (iter.currentElement()->getRecord().t2 != -MAXFLOAT) {
-        ret[count] = std::make_pair(iter.currentElement()->getId(),
-                                    iter.currentElement()->getRecord().t2);
+      IntersectionRecord record;
+      if (iter.currentElement()->intersect(ray, record))
+        if (record.t1 != -MAXFLOAT) {
+          ret[count] =
+              std::make_pair(iter.currentElement()->getId(), record.t1);
+          count++;
+        }
+      if (record.t2 != -MAXFLOAT) {
+        ret[count] = std::make_pair(iter.currentElement()->getId(), record.t2);
       }
       iter.advance();
       count++;
     }
-  }*/
+  }
 
   return ret;
 }
@@ -267,14 +271,14 @@ SceneElementPtr PhongModel::findSceneElementById(const size_t& id,
 }
 
 void PhongModel::findRefractionIndicesForClosestHit(
-    const SceneElementPtr& world) {
-  /* std::map<size_t, std::pair<size_t, float>> intersections =
-       intersectionsSorted(world);
-   for (const auto& [key, value] : intersections) {
-     if (m_closestHit->getRecord().t_min() == value.second) {
-       m_closestHit->getRecord().n1 = m_refract_index_collection[key].first;
-       m_closestHit->getRecord().n2 = m_refract_index_collection[key].second;
-       break;
-     }
-   }*/
+    const SceneElementPtr& world, const Ray& ray) {
+  std::map<size_t, std::pair<size_t, float>> intersections =
+      intersectionsSorted(world, ray);
+  for (const auto& [key, value] : intersections) {
+    if (m_closestHit.t_min() == value.second) {
+      m_closestHit.n1 = m_refract_index_collection[key].first;
+      m_closestHit.n2 = m_refract_index_collection[key].second;
+      break;
+    }
+  }
 }

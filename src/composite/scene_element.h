@@ -11,32 +11,6 @@
 //---------------------------Helper Struct--------------------------------------
 //------------------------------------------------------------------------------
 
-class SceneElement;
-
-class IntersectionRecord {
- public:
-  int count = 0;
-  float t1 = -MAXFLOAT;
-  float t2 = -MAXFLOAT;
-  float t_min() const {
-    if (t1 <= 0.0f && t2 > 0.0f)
-      return t2;
-    else if (t2 <= 0.0f && t1 > 0.0f)
-      return t1;
-    else if (t1 > 0.0f && t2 > 0.0f)
-      return std::min(t1, t2);
-    return -1.0f;  // TODO: to be fixed for negative intersections
-  }
-  Point3f point(const Ray &r) const { return r.position(t_min()); }
-  Vec3f eye(const Ray &r) const { return -r.direction(); }
-  bool inside = false;
-  Point3f over_point_from_refl_surf;
-  Point3f under_point_from_refrac_surf;
-  Vec3f normal;
-  float n1, n2;
-  std::shared_ptr<SceneElement> object = nullptr;
-};
-
 class BaseRenderer;
 
 class SceneElement {
