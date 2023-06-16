@@ -125,18 +125,15 @@ Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& ray,
     return black;
   }
 
-  // determineRefractionIndices(world, ray);
-  // findRefractionIndicesForClosestHit(world, ray);
+  determineRefractionIndices(world, ray);
+  findRefractionIndicesForClosestHit(world, ray);
   Vec3f normal_vec =
       closest_refract.inside
           ? -closest_refract.object->normal(closest_refract.point(ray))
           : closest_refract.object->normal(closest_refract.point(ray));
   closest_refract.under_point_from_refrac_surf =
       closest_refract.point(ray) - normal_vec * EPS;
-  float ratio =
-      1. /
-      closest_refract.object->getMaterial()->getProperties().getPropertyAsFloat(
-          Props::REFRACTIVE_INDEX);
+  float ratio = m_closestHit.n1 / m_closestHit.n2;
   float cosi = dot(closest_refract.eye(ray), normal_vec);
   float sin2_t = ratio * ratio * (1.f - cosi * cosi);
   if (sin2_t > 1.f) return black;  // total reflection
