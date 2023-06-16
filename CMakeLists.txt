@@ -16,7 +16,8 @@ set(SOURCES src/main/raymann.cpp
             src/materials/material_properties.cpp
             src/transformations/element_deco.cpp
             src/transformations/transformer.cpp
-            src/renderers/renderer.cpp
+            src/renderers/phong_model.cpp
+            src/renderers/path_tracer.cpp
             src/textures/perlin.cpp)
 
 add_executable(${EXE} ${SOURCES})

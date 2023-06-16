@@ -6,47 +6,26 @@
 #include "composite/scene_element.h"
 #include "tools/tools.h"
 
-class PhongModel : public BaseRenderer {
+class BaseRenderer {
  public:
-  PhongModel();
-  void visitSceneElement(SceneElement &elementLeaf, const Ray &ray) override;
-  void visitSceneElementComposite(const SceneElementPtr &elementComp,
-                                  const Ray &ray) override;
+  virtual void visitSceneElement(SceneElement &elementLeaf, const Ray &ray) = 0;
+  virtual void visitSceneElementComposite(const SceneElementPtr &elementComp,
+                                          const Ray &ray) = 0;
+  virtual Vec3f computeColor(const SceneElementPtr &world, const Ray &ray,
+                             int rec = 5) = 0;
 
-  Vec3f reflectedColor(const SceneElementPtr &world, const Ray &r, int rec = 5);
-  Vec3f refractedColor(const SceneElementPtr &world, const Ray &r, int rec = 5);
-  void determineRefractionIndices(const SceneElementPtr &world, const Ray &r);
+  Vec3f getColor() const { return m_out_color; }
+  void setPixelInfo(const int &x, const int y) {
+    m_x = static_cast<float>(x);
+    m_y = static_cast<float>(y);
+  }
 
-  std::map<size_t, std::pair<float, float>> getContainer() const;
-
- private:
-  Vec3f computeColor(const SceneElementPtr &world, const Ray &ray,
-                     int rec = 5) override;
-  Vec3f lighting(const SceneElementPtr &world, const Ray &ray);
-  void checkInside(const Ray &r);
-  bool isShadowed(const SceneElementPtr &world, const Point3f &p);
-  IntersectionRecord findClosestHit(const SceneElementPtr &world, const Ray &r);
-  std::map<size_t, std::pair<size_t, float>> intersectionsSorted(
-      const SceneElementPtr &world) const;
-  SceneElementPtr findSceneElementById(const size_t &id,
-                                       const SceneElementPtr &world);
-  void findRefractionIndicesForClosestHit(const SceneElementPtr &world);
-
-  std::map<size_t, std::pair<float, float>> m_refract_index_collection;
+ protected:
+  IntersectionRecord m_closestHit;
+  Vec3f m_out_color;
+  float m_tmin = MAXFLOAT;
+  float m_x;
+  float m_y;
 };
 
-/*class BasicPathTracer : public BaseRenderer {
- public:
-  BasicPathTracer(const BaseCamera &cam);
-  void visitSceneElement(SceneElement &elementLeaf, const Ray &ray) override;
-  void visitSceneElementComposite(const SceneElementPtr &elementComp,
-                                  const Ray &ray) override;
-
-  Vec3f computeColor(const SceneElementPtr &world, const Ray &ray,
-                     int rec = 5) override;
-
- private:
-  SceneElementPtr findClosestHit(const SceneElementPtr &world, const Ray &r);
-  BaseCamera m_cam;
-};
-*/
+typedef std::shared_ptr<BaseRenderer> BaseRendererPtr;

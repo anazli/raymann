@@ -7,7 +7,7 @@
 #include "container/canvas.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
-#include "renderers/renderer.h"
+#include "renderers/phong_model.h"
 #include "textures/texture.h"
 #include "tools/tools.h"
 
