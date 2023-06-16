@@ -25,7 +25,7 @@ class PhongModel : public BaseRenderer {
   Vec3f lighting(const SceneElementPtr &world, const Ray &ray);
   void checkInside(const Ray &r);
   bool isShadowed(const SceneElementPtr &world, const Point3f &p);
-  SceneElementPtr findClosestHit(const SceneElementPtr &world, const Ray &r);
+  IntersectionRecord findClosestHit(const SceneElementPtr &world, const Ray &r);
   std::map<size_t, std::pair<size_t, float>> intersectionsSorted(
       const SceneElementPtr &world) const;
   SceneElementPtr findSceneElementById(const size_t &id,
@@ -35,7 +35,7 @@ class PhongModel : public BaseRenderer {
   std::map<size_t, std::pair<float, float>> m_refract_index_collection;
 };
 
-class BasicPathTracer : public BaseRenderer {
+/*class BasicPathTracer : public BaseRenderer {
  public:
   BasicPathTracer(const BaseCamera &cam);
   void visitSceneElement(SceneElement &elementLeaf, const Ray &ray) override;
@@ -49,3 +49,4 @@ class BasicPathTracer : public BaseRenderer {
   SceneElementPtr findClosestHit(const SceneElementPtr &world, const Ray &r);
   BaseCamera m_cam;
 };
+*/

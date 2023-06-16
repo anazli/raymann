@@ -9,9 +9,9 @@ Transformer::Transformer(SceneElement* tr, const Mat4f& m)
 
 Transformer::~Transformer() {}
 
-bool Transformer::intersect(const Ray& r) {
+bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
   Ray r_transformed = r.transform(m_transformer.inverse());
-  return ElementDeco::intersect(r_transformed);
+  return ElementDeco::intersect(r_transformed, record);
 }
 
 Vec3f Transformer::normal(const Point3f& p) const {
@@ -35,14 +35,6 @@ bool Transformer::isWorld() const { return ElementDeco::isWorld(); }
 
 void Transformer::accept(BaseRenderer& renderer, const Ray& ray) {
   ElementDeco::accept(renderer, ray);
-}
-
-void Transformer::setRecord(const IntersectionRecord& rec) {
-  ElementDeco::setRecord(rec);
-}
-
-IntersectionRecord& Transformer::getRecord() {
-  return ElementDeco::getRecord();
 }
 
 void Transformer::setMaterial(BaseMaterialPtr mat) {

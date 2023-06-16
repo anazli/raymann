@@ -9,7 +9,7 @@ class Sphere : public SceneElement {
     setParent(nullptr);
   }
 
-  bool intersect(const Ray &r) override;
+  bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override {
     return (p - m_center).normalize();
   }
@@ -23,7 +23,7 @@ class Sphere : public SceneElement {
   float m_radius;
 };
 
-inline bool Sphere::intersect(const Ray &r) {
+inline bool Sphere::intersect(const Ray &r, IntersectionRecord &record) {
   Vec3f co = r.origin() - m_center;
   float a = dot(r.direction(), r.direction());
   float b = 2.0f * dot(r.direction(), co);
@@ -32,9 +32,9 @@ inline bool Sphere::intersect(const Ray &r) {
   if (discr >= 0.0f) {
     float t1 = (-b - sqrt(discr)) / (2. * a);
     float t2 = (-b + sqrt(discr)) / (2. * a);
-    m_rec.t1 = t1;
-    m_rec.t2 = t2;
-    m_rec.count = 2;
+    record.t1 = t1;
+    record.t2 = t2;
+    record.count = 2;
     return true;
   }
   return false;

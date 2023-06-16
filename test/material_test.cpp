@@ -233,7 +233,8 @@ TEST_F(TMat, computingUnderPoint) {
 
   TexturePtr tex1 = std::make_shared<ConstantTexture>();
   MaterialProperties prop1;
-  prop1.setProperty(Props::REFRACTIVE_INDEX, 1.5f);
+  prop1.setProperty(Props::REFRACTIVE_INDEX, 1.5f)
+      .setProperty(Props::TRANSPARENCY, 0.5f);
   tex1->setColor(prop1.getPropertyAsVec3f(Props::COLOR));
   builder->createSphere();
   builder->applyTransformation(transl(0.f, 0.f, 1.f));

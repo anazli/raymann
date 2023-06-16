@@ -6,15 +6,13 @@ class Transformer : public ElementDeco {
   Transformer(SceneElement *tr);
   Transformer(SceneElement *tr, const Mat4f &m);
   virtual ~Transformer();
-  bool intersect(const Ray &r) override;
+  bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override;
   void add(std::shared_ptr<SceneElement> item) override;
   void remove(std::shared_ptr<SceneElement> item, bool del = true) override;
   bool isWorld() const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
 
-  void setRecord(const IntersectionRecord &rec) override;
-  IntersectionRecord &getRecord() override;
   void setMaterial(BaseMaterialPtr mat) override;
   BaseMaterialPtr getMaterial() const override;
   void setParent(std::shared_ptr<SceneElement> t) override;

@@ -4,7 +4,9 @@ ElementDeco::ElementDeco(SceneElement* tr) : m_element(tr) {}
 
 ElementDeco::~ElementDeco() { delete m_element; }
 
-bool ElementDeco::intersect(const Ray& r) { return m_element->intersect(r); }
+bool ElementDeco::intersect(const Ray& r, IntersectionRecord& record) {
+  return m_element->intersect(r, record);
+}
 
 Vec3f ElementDeco::normal(const Point3f& p) const {
   return m_element->normal(p);
@@ -23,12 +25,6 @@ bool ElementDeco::isWorld() const { return m_element->isWorld(); }
 void ElementDeco::accept(BaseRenderer& renderer, const Ray& ray) {
   m_element->accept(renderer, ray);
 }
-
-void ElementDeco::setRecord(const IntersectionRecord& rec) {
-  m_element->setRecord(rec);
-}
-
-IntersectionRecord& ElementDeco::getRecord() { return m_element->getRecord(); }
 
 void ElementDeco::setMaterial(BaseMaterialPtr mat) {
   m_element->setMaterial(mat);

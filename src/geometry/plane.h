@@ -5,12 +5,12 @@
 class Plane : public SceneElement {
  public:
   Plane(){};
-  bool intersect(const Ray &r) override {
+  bool intersect(const Ray &r, IntersectionRecord &record) override {
     if (fabs(r.direction().y()) < EPS) {
       return false;
     }
-    m_rec.t1 = -r.origin().y() / r.direction().y();
-    m_rec.count = 1;
+    record.t1 = -r.origin().y() / r.direction().y();
+    record.count = 1;
     return true;
   }
   Vec3f normal(const Point3f &p) const override {

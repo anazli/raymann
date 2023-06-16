@@ -11,7 +11,9 @@ using std::vector;
 
 World::~World() {}
 
-bool World::intersect(const Ray& r) { return false; }
+bool World::intersect(const Ray& r, IntersectionRecord& record) {
+  return false;
+}
 
 void World::add(SceneElementPtr item) {
   item->setParent(shared_from_this());

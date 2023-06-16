@@ -11,7 +11,7 @@ class World : public SceneElement,
  public:
   World() = default;
   virtual ~World();
-  bool intersect(const Ray &r) override;
+  bool intersect(const Ray &r, IntersectionRecord &record) override;
   void add(SceneElementPtr item) override;
   void remove(SceneElementPtr item, bool del = true) override;
   bool isWorld() const override;

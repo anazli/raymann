@@ -144,7 +144,7 @@ int main() {
   world->addElement();
 
   //----------------------------------------------------------------------------
-  Canvas canvas(300, 300);
+  Canvas canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   BaseCameraPtr camera = make_shared<RayTracingChalengeCamera>(
       canvas.width(), canvas.height(), 1.152f);

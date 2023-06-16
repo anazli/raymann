@@ -11,11 +11,13 @@
 //---------------------------Helper Struct--------------------------------------
 //------------------------------------------------------------------------------
 
+class SceneElement;
+
 class IntersectionRecord {
  public:
   int count = 0;
-  float t1 = -1.0f;
-  float t2 = -1.0f;
+  float t1 = -MAXFLOAT;
+  float t2 = -MAXFLOAT;
   float t_min() const {
     if (t1 <= 0.0f && t2 > 0.0f)
       return t2;
@@ -32,13 +34,16 @@ class IntersectionRecord {
   Point3f under_point_from_refrac_surf;
   Vec3f normal;
   float n1, n2;
+  std::shared_ptr<SceneElement> object = nullptr;
 };
 
 class BaseRenderer;
 
 class SceneElement {
  public:
-  virtual bool intersect(const Ray &r) { return false; }
+  virtual bool intersect(const Ray &r, IntersectionRecord &record) {
+    return false;
+  }
   virtual void add(std::shared_ptr<SceneElement> item) {}
   virtual void remove(std::shared_ptr<SceneElement> item, bool del = true) {}
   virtual bool isWorld() const;
@@ -48,8 +53,6 @@ class SceneElement {
     return std::list<std::shared_ptr<SceneElement>>();
   }
 
-  virtual void setRecord(const IntersectionRecord &rec);
-  virtual IntersectionRecord &getRecord();
   virtual void setMaterial(BaseMaterialPtr mat);
   virtual BaseMaterialPtr getMaterial() const;
   virtual void setParent(std::shared_ptr<SceneElement> t);
@@ -61,7 +64,6 @@ class SceneElement {
  protected:
   SceneElement();
   std::shared_ptr<SceneElement> m_parent;
-  IntersectionRecord m_rec;
   BaseMaterialPtr m_material;
   size_t m_id;
   static size_t m_next_id;
@@ -84,7 +86,7 @@ class BaseRenderer {
   }
 
  protected:
-  SceneElementPtr m_closestHit;
+  IntersectionRecord m_closestHit;
   Vec3f m_out_color;
   float m_tmin = MAXFLOAT;
   float m_x;

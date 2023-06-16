@@ -12,9 +12,6 @@ void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElement(*this, ray);
 }
 
-void SceneElement::setRecord(const IntersectionRecord& rec) { m_rec = rec; }
-IntersectionRecord& SceneElement::getRecord() { return m_rec; }
-
 void SceneElement::setMaterial(BaseMaterialPtr mat) { m_material = mat; }
 
 BaseMaterialPtr SceneElement::getMaterial() const { return m_material; }

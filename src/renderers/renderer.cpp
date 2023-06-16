@@ -24,7 +24,7 @@ void PhongModel::visitSceneElementComposite(const SceneElementPtr& elementComp,
 Vec3f PhongModel::computeColor(const SceneElementPtr& world, const Ray& ray,
                                int rec) {
   findClosestHit(world, ray);
-  if (m_closestHit && m_closestHit->intersect(ray)) {
+  if (m_closestHit.object) {
     Vec3f surf_col = lighting(world, ray);
     Vec3f refl_col = reflectedColor(world, ray, rec);
     Vec3f refract_col = refractedColor(world, ray, rec);
@@ -34,22 +34,22 @@ Vec3f PhongModel::computeColor(const SceneElementPtr& world, const Ray& ray,
 }
 
 Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
-  Vec3f normal = m_closestHit->normal(m_closestHit->getRecord().point(ray));
-  Point3f point = m_closestHit->getRecord().point(ray);
-  Point3f over_point =
-      point + (m_closestHit->getRecord().inside ? normal : normal) * 0.02f;
-  Vec3f normal_vec = m_closestHit->getRecord().inside
-                         ? -m_closestHit->normal(over_point)
-                         : m_closestHit->normal(over_point);
+  Vec3f normal = m_closestHit.object->normal(m_closestHit.point(ray));
+  Point3f point = m_closestHit.point(ray);
+  Point3f over_point = point + (m_closestHit.inside ? normal : normal) * 0.02f;
+  Vec3f normal_vec = m_closestHit.inside
+                         ? -m_closestHit.object->normal(over_point)
+                         : m_closestHit.object->normal(over_point);
   Vec3f lightv = (world->getLight().position() - over_point).normalize();
 
-  Vec3f effective_color = m_closestHit->getMaterial()->getTexture()->value(
-                              0, 0, Vec3f(over_point)) *
-                          world->getLight().intensity();
+  Vec3f effective_color =
+      m_closestHit.object->getMaterial()->getTexture()->value(
+          0, 0, Vec3f(over_point)) *
+      world->getLight().intensity();
 
   Vec3f ret_ambient =
       effective_color *
-      m_closestHit->getMaterial()->getProperties().getPropertyAsFloat(
+      m_closestHit.object->getMaterial()->getProperties().getPropertyAsFloat(
           Props::AMBIENT);
   Vec3f ret_diffuse;
   Vec3f ret_specular;
@@ -60,21 +60,21 @@ Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
   if (light_normal > 0.0f) {
     ret_diffuse =
         effective_color *
-        m_closestHit->getMaterial()->getProperties().getPropertyAsFloat(
+        m_closestHit.object->getMaterial()->getProperties().getPropertyAsFloat(
             Props::DIFFUSE) *
         light_normal;
     Vec3f reflectv = reflect(-lightv, normal_vec);
-    float reflect_dot_eye = dot(reflectv, m_closestHit->getRecord().eye(ray));
+    float reflect_dot_eye = dot(reflectv, m_closestHit.eye(ray));
     if (reflect_dot_eye > 0.0f) {
       float factor =
-          pow(reflect_dot_eye,
-              m_closestHit->getMaterial()->getProperties().getPropertyAsFloat(
-                  Props::SHININESS));
-      ret_specular =
-          world->getLight().intensity() *
-          m_closestHit->getMaterial()->getProperties().getPropertyAsFloat(
-              Props::SPECULAR) *
-          factor;
+          pow(reflect_dot_eye, m_closestHit.object->getMaterial()
+                                   ->getProperties()
+                                   .getPropertyAsFloat(Props::SHININESS));
+      ret_specular = world->getLight().intensity() *
+                     m_closestHit.object->getMaterial()
+                         ->getProperties()
+                         .getPropertyAsFloat(Props::SPECULAR) *
+                     factor;
     }
   }
 
@@ -83,41 +83,41 @@ Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
 
 Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& r,
                                  int rec) {
-  SceneElementPtr closest_refl = findClosestHit(world, r);
+  IntersectionRecord closest_refl = findClosestHit(world, r);
   Vec3f black(0.f, 0.f, 0.f);
-  if (closest_refl) {
+  if (closest_refl.object) {
     if (rec <= 0) {
       return black;
     }
-    if (closest_refl->getMaterial()->getProperties().getPropertyAsFloat(
+    if (closest_refl.object->getMaterial()->getProperties().getPropertyAsFloat(
             Props::REFLECTION) <= 0.f) {
       return black;
     }
-    Vec3f reflectv = reflect(
-        r.direction(),
-        (closest_refl->getRecord().inside
-             ? closest_refl->normal(closest_refl->getRecord().point(r))
-             : closest_refl->normal(closest_refl->getRecord().point(r))));
+    Vec3f reflectv =
+        reflect(r.direction(),
+                (closest_refl.inside
+                     ? closest_refl.object->normal(closest_refl.point(r))
+                     : closest_refl.object->normal(closest_refl.point(r))));
     Point3f over_point =
-        closest_refl->getRecord().point(r) +
-        (closest_refl->getRecord().inside
-             ? closest_refl->normal(closest_refl->getRecord().point(r))
-             : closest_refl->normal(closest_refl->getRecord().point(r))) *
+        closest_refl.point(r) +
+        (closest_refl.inside
+             ? closest_refl.object->normal(closest_refl.point(r))
+             : closest_refl.object->normal(closest_refl.point(r))) *
             EPS1;
-    closest_refl->getRecord().over_point_from_refl_surf = over_point;
+    closest_refl.over_point_from_refl_surf = over_point;
     Ray reflect_ray(over_point, reflectv);
 
     Vec3f color = computeColor(world, reflect_ray, rec - 1);
-    return color *
-           closest_refl->getMaterial()->getProperties().getPropertyAsFloat(
-               Props::REFLECTION);
+    return color * closest_refl.object->getMaterial()
+                       ->getProperties()
+                       .getPropertyAsFloat(Props::REFLECTION);
   }
   return black;
 }
 
 Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& r,
                                  int rec) {
-  SceneElementPtr closest_refract = findClosestHit(world, r);
+  /*SceneElementPtr closest_refract = findClosestHit(world, r);
   Vec3f black(0.f, 0.f, 0.f);
   if (closest_refract->getMaterial()->getProperties().getPropertyAsFloat(
           Props::TRANSPARENCY) <= 0.f ||
@@ -143,12 +143,13 @@ Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& r,
 
   return computeColor(world, refracted, rec - 1) *
          m_closestHit->getMaterial()->getProperties().getPropertyAsFloat(
-             Props::TRANSPARENCY);
+             Props::TRANSPARENCY);*/
+  return Vec3f(0.f, 0.f, 0.f);
 }
 
 void PhongModel::determineRefractionIndices(const SceneElementPtr& world,
                                             const Ray& r) {
-  std::map<size_t, std::pair<size_t, float>> intersections =
+  /*std::map<size_t, std::pair<size_t, float>> intersections =
       intersectionsSorted(world);
   std::map<size_t, std::pair<size_t, float>>::const_iterator iter;
   std::list<SceneElementPtr> container;
@@ -185,7 +186,7 @@ void PhongModel::determineRefractionIndices(const SceneElementPtr& world,
     m_refract_index_collection[key] = std::make_pair(n1, n2);
     current_elem->getRecord().n1 = n1;
     current_elem->getRecord().n2 = n2;
-  }
+  }*/
 }
 
 std::map<size_t, std::pair<float, float>> PhongModel::getContainer() const {
@@ -195,32 +196,33 @@ std::map<size_t, std::pair<float, float>> PhongModel::getContainer() const {
 void PhongModel::checkInside(const Ray& r) {}
 
 bool PhongModel::isShadowed(const SceneElementPtr& world, const Point3f& p) {
-  if (m_closestHit) {
+  if (m_closestHit.object) {
     PointLight light = world->getLight().position();
     Vec3f v = p - light.position();
     float distance = v.length();
     Ray r(light.position(), v.normalize());
-    SceneElementPtr closest_shad = findClosestHit(world, r);
-    if (closest_shad) {
-      if (closest_shad->getRecord().t_min() >= 0.0f &&
-          closest_shad->getRecord().t_min() < distance)
+    IntersectionRecord closest_shad = findClosestHit(world, r);
+    if (closest_shad.object) {
+      if (closest_shad.t_min() > 0.0f && closest_shad.t_min() < distance)
         return true;
     }
   }
   return false;
 }
 
-SceneElementPtr PhongModel::findClosestHit(const SceneElementPtr& world,
-                                           const Ray& r) {
+IntersectionRecord PhongModel::findClosestHit(const SceneElementPtr& world,
+                                              const Ray& r) {
   WorldIterator it(world->getWorldList());
   m_tmin = MAXFLOAT;
   if (it.first()) {
     while (it.notDone()) {
-      if (it.currentElement()->intersect(r) &&
-          it.currentElement()->getRecord().t_min() >= 0.0f &&
-          it.currentElement()->getRecord().t_min() < m_tmin) {
-        m_closestHit = it.currentElement();
-        m_tmin = it.currentElement()->getRecord().t_min();
+      IntersectionRecord record;
+      if (it.currentElement()->intersect(r, record)) {
+        if (record.t_min() > 0.0f && record.t_min() < m_tmin) {
+          m_closestHit = record;
+          m_closestHit.object = it.currentElement();
+          m_tmin = m_closestHit.t_min();
+        }
       }
       it.advance();
     }
@@ -231,19 +233,23 @@ SceneElementPtr PhongModel::findClosestHit(const SceneElementPtr& world,
 std::map<size_t, std::pair<size_t, float>> PhongModel::intersectionsSorted(
     const SceneElementPtr& world) const {
   std::map<size_t, std::pair<size_t, float>> ret;
-  size_t count = 0;
+  /*size_t count = 0;
   WorldIterator iter(world->getWorldList());
   if (iter.first()) {
     while (iter.notDone()) {
-      ret[count] = std::make_pair(iter.currentElement()->getId(),
-                                  iter.currentElement()->getRecord().t1);
-      count++;
-      ret[count] = std::make_pair(iter.currentElement()->getId(),
-                                  iter.currentElement()->getRecord().t2);
+      if (iter.currentElement()->getRecord().t1 != -MAXFLOAT) {
+        ret[count] = std::make_pair(iter.currentElement()->getId(),
+                                    iter.currentElement()->getRecord().t1);
+        count++;
+      }
+      if (iter.currentElement()->getRecord().t2 != -MAXFLOAT) {
+        ret[count] = std::make_pair(iter.currentElement()->getId(),
+                                    iter.currentElement()->getRecord().t2);
+      }
       iter.advance();
       count++;
     }
-  }
+  }*/
 
   return ret;
 }
@@ -262,18 +268,18 @@ SceneElementPtr PhongModel::findSceneElementById(const size_t& id,
 
 void PhongModel::findRefractionIndicesForClosestHit(
     const SceneElementPtr& world) {
-  std::map<size_t, std::pair<size_t, float>> intersections =
-      intersectionsSorted(world);
-  for (const auto& [key, value] : intersections) {
-    if (m_closestHit->getRecord().t_min() == value.second) {
-      m_closestHit->getRecord().n1 = m_refract_index_collection[key].first;
-      m_closestHit->getRecord().n2 = m_refract_index_collection[key].second;
-      break;
-    }
-  }
+  /* std::map<size_t, std::pair<size_t, float>> intersections =
+       intersectionsSorted(world);
+   for (const auto& [key, value] : intersections) {
+     if (m_closestHit->getRecord().t_min() == value.second) {
+       m_closestHit->getRecord().n1 = m_refract_index_collection[key].first;
+       m_closestHit->getRecord().n2 = m_refract_index_collection[key].second;
+       break;
+     }
+   }*/
 }
 
-BasicPathTracer::BasicPathTracer(const BaseCamera& cam) : m_cam(cam) {}
+/*BasicPathTracer::BasicPathTracer(const BaseCamera& cam) : m_cam(cam) {}
 
 void BasicPathTracer::visitSceneElement(SceneElement& elementLeaf,
                                         const Ray& ray) {}
@@ -328,3 +334,4 @@ SceneElementPtr BasicPathTracer::findClosestHit(const SceneElementPtr& world,
   }
   return m_closestHit;
 }
+*/
