@@ -14,11 +14,11 @@
 using namespace std;
 
 int main() {
-  PointLight light(Point3f(-4.9f, 4.9f, -1.f), Vec3f(1.0f, 1.0f, 1.0f));
-  BuilderPtr world = make_shared<WorldBuilder>();
+  auto light = PointLight(Point3f(-4.9f, 4.9f, -1.f), Vec3f(1.0f, 1.0f, 1.0f));
+  auto world = make_shared<WorldBuilder>();
   world->createWorld(light);
   //----------------------Floor---------------------
-  MaterialProperties prop_floor;
+  auto prop_floor = MaterialProperties{};
   prop_floor.setProperty(Props::SPECULAR, 0.f)
       .setProperty(Props::REFLECTION, 0.4f);
   world->createPlane();
@@ -28,7 +28,7 @@ int main() {
   world->addElement();
 
   //----------------------Ceiling---------------------
-  MaterialProperties prop_ceil;
+  auto prop_ceil = MaterialProperties{};
   prop_ceil.setProperty(Props::AMBIENT, 0.3f).setProperty(Props::SPECULAR, 0.f);
   world->createPlane();
   world->applyTransformation(transl(0.f, 5.f, 0.f));
@@ -37,7 +37,7 @@ int main() {
   world->addElement();
 
   //----------------------West Wall---------------------
-  MaterialProperties prop_west;
+  auto prop_west = MaterialProperties{};
   prop_west.setProperty(Props::AMBIENT, 0.f)
       .setProperty(Props::DIFFUSE, 0.4f)
       .setProperty(Props::SPECULAR, 0.f)
@@ -70,7 +70,7 @@ int main() {
   world->addElement();
 
   //----------------------Background Spheres----------------
-  MaterialProperties prop_back;
+  auto prop_back = MaterialProperties{};
   prop_back.setProperty(Props::SHININESS, 50.f);
   world->createSphere();
   world->applyTransformation(transl(4.6f, 0.4f, 1.f) * scale(0.4f, 0.4f, 0.4f));
@@ -101,7 +101,7 @@ int main() {
 
   //----------------------Background Spheres----------------
   //----------------------Red Sphere----------------
-  MaterialProperties prop_red;
+  auto prop_red = MaterialProperties{};
   prop_red.setProperty(Props::SPECULAR, 0.4f)
       .setProperty(Props::SHININESS, 5.f);
   prop_red.setProperty(Props::SHININESS, 50.f);
@@ -112,7 +112,7 @@ int main() {
   world->addElement();
 
   //----------------------Blue glass Sphere----------------
-  MaterialProperties prop_blue;
+  auto prop_blue = MaterialProperties{};
   prop_blue.setProperty(Props::SHININESS, 300.f)
       .setProperty(Props::AMBIENT, 0.f)
       .setProperty(Props::DIFFUSE, 0.4f)
@@ -128,7 +128,7 @@ int main() {
   world->addElement();
 
   //----------------------Green glass Sphere----------------
-  MaterialProperties prop_green;
+  auto prop_green = MaterialProperties{};
   prop_green.setProperty(Props::SHININESS, 300.f)
       .setProperty(Props::AMBIENT, 0.f)
       .setProperty(Props::DIFFUSE, 0.4f)
@@ -144,14 +144,14 @@ int main() {
   world->addElement();
 
   //----------------------------------------------------------------------------
-  Canvas canvas(500, 500);
+  auto canvas = Canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   BaseCameraPtr camera = make_shared<RayTracingChalengeCamera>(
       canvas.width(), canvas.height(), 1.152f);
   camera->computePixelSize();
-  Point3f from(-2.6f, 1.5f, -3.9f);
-  Point3f to(-0.6f, 1.0f, -0.8f);
-  Vec3f up(0.0f, 1.0f, 0.0f);
+  auto from = Point3f(-2.6f, 1.5f, -3.9f);
+  auto to = Point3f(-0.6f, 1.0f, -0.8f);
+  auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
   BaseRendererPtr renderer = make_shared<PhongModel>();

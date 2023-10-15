@@ -46,8 +46,8 @@ class RayTracingChalengeCamera : public BaseCamera {
   Vec3f getUpVector() const { return m_up; }
 
   void computePixelSize() override {
-    float half_view = tan(m_field_of_view / 2.0f);
-    float aspect = static_cast<float>(m_hsize) / m_vsize;
+    auto half_view = tan(m_field_of_view / 2.0f);
+    auto aspect = static_cast<float>(m_hsize) / m_vsize;
     if (aspect >= 1.0f) {
       m_half_width = half_view;
       m_half_height = half_view / aspect;
@@ -59,13 +59,13 @@ class RayTracingChalengeCamera : public BaseCamera {
   }
 
   Ray getRay(const int &pixel_x, const int &pixel_y) const override {
-    float fpixel_x = static_cast<float>(pixel_x);
-    float fpixel_y = static_cast<float>(pixel_y);
+    auto fpixel_x = static_cast<float>(pixel_x);
+    auto fpixel_y = static_cast<float>(pixel_y);
     Ray ray;
-    float xoffset = (fpixel_x + 0.5f) * pixelSize();
-    float yoffset = (fpixel_y + 0.5f) * pixelSize();
-    float world_x = halfWidth() - xoffset;
-    float world_y = halfHeight() - yoffset;
+    auto xoffset = (fpixel_x + 0.5f) * pixelSize();
+    auto yoffset = (fpixel_y + 0.5f) * pixelSize();
+    auto world_x = halfWidth() - xoffset;
+    auto world_y = halfHeight() - yoffset;
     Mat4f inversed = transform().inverse();
     Point3f pixel = inversed * Vec4f(world_x, world_y, -1.0f, 1.0f);
     ray.setOrigin(inversed * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));

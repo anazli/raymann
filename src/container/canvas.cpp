@@ -15,7 +15,7 @@ void Canvas::render(const SceneElementPtr &world, const BaseCamera &c,
                     BaseRenderer &renderer) {
   for (int j = 0; j < c.vSize(); ++j) {
     for (int i = 0; i < c.hSize(); ++i) {
-      Vec3f color;
+      auto color = Vec3f{};
       renderer.setPixelInfo(i, j);
       world->accept(renderer, c.getRay(i, j));
       color = renderer.getColor();

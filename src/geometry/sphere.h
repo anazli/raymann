@@ -25,14 +25,14 @@ class Sphere : public SceneElement {
 };
 
 inline bool Sphere::intersect(const Ray &r, IntersectionRecord &record) {
-  Vec3f co = r.origin() - m_center;
-  float a = dot(r.direction(), r.direction());
-  float b = 2.0f * dot(r.direction(), co);
-  float c = dot(co, co) - m_radius * m_radius;
-  float discr = b * b - 4.0f * a * c;
+  auto co = r.origin() - m_center;
+  auto a = dot(r.direction(), r.direction());
+  auto b = 2.0f * dot(r.direction(), co);
+  auto c = dot(co, co) - m_radius * m_radius;
+  auto discr = b * b - 4.0f * a * c;
   if (discr >= 0.0f) {
-    float t1 = (-b - sqrt(discr)) / (2. * a);
-    float t2 = (-b + sqrt(discr)) / (2. * a);
+    auto t1 = (-b - sqrt(discr)) / (2. * a);
+    auto t2 = (-b + sqrt(discr)) / (2. * a);
     record.t1 = t1;
     record.t2 = t2;
     record.count = 2;
