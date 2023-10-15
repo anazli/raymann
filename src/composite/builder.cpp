@@ -5,8 +5,6 @@
 #include "geometry/sphere.h"
 #include "transformations//transformer.h"
 
-WorldBuilder::WorldBuilder() : m_product(nullptr), m_currentElement(nullptr) {}
-
 void WorldBuilder::createWorld(const PointLight& light) {
   m_product.reset();
   m_product = std::make_shared<World>();

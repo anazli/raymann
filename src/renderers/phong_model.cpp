@@ -4,8 +4,6 @@
 
 #include "composite/world.h"
 
-PhongModel::PhongModel() {}
-
 void PhongModel::visitSceneElement(SceneElement& elementLeaf, const Ray& ray) {
   /*if (elementLeaf.intersect(ray) && elementLeaf.getRecord().t_min() > 0. &&
       elementLeaf.getRecord().t_min() < m_tmin) {

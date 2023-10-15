@@ -4,7 +4,6 @@
 
 class PhongModel : public BaseRenderer {
  public:
-  PhongModel();
   void visitSceneElement(SceneElement &elementLeaf, const Ray &ray) override;
   void visitSceneElementComposite(const SceneElementPtr &elementComp,
                                   const Ray &ray) override;

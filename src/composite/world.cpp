@@ -9,8 +9,6 @@ using std::shared_ptr;
 using std::sort;
 using std::vector;
 
-World::~World() {}
-
 bool World::intersect(const Ray& r, IntersectionRecord& record) {
   return false;
 }

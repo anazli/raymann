@@ -19,7 +19,6 @@ typedef std::shared_ptr<BaseCamera> BaseCameraPtr;
 
 class RayTracingChalengeCamera : public BaseCamera {
  public:
-  RayTracingChalengeCamera() = default;
   RayTracingChalengeCamera(const int &hs, const int &vs, const float &fv)
       : m_hsize(hs), m_vsize(vs), m_field_of_view(fv) {}
 
@@ -85,43 +84,4 @@ class RayTracingChalengeCamera : public BaseCamera {
   Point3f m_from;
   Point3f m_to;
   Vec3f m_up;
-};
-
-class RayTracingInOneWeekendCamera : public RayTracingChalengeCamera {
- public:
-  RayTracingInOneWeekendCamera(const int &hs, const int &vs, const float &fv)
-      : RayTracingChalengeCamera(hs, vs, fv) {}
-
-  Vec3f randomInUnitDisk() const {
-    Vec3f p;
-    do {
-      p = 2.f * Vec3f(drand48(), drand48(), 0.f) - Vec3f(1.f, 1.f, 0.f);
-    } while (dot(p, p) >= 1.f);
-
-    return p;
-  }
-
-  Ray getRay(const int &pixel_x, const int &pixel_y) const override {
-    float lens_radius = aperture / 2.;
-    float theta = 80.f * PI / 180.f;
-    float half_height = tan(theta / 2.);
-    float half_width = m_hsize / m_vsize * half_height;
-    Vec3f w = getUnitVectorOf(m_from - m_to);
-    Vec3f u = getUnitVectorOf(cross(m_up, w));
-    Vec3f v = cross(w, u);
-    Vec3f lower_left_corner =
-        Vec3f(m_from - half_width * focus_dist * u -
-              half_height * focus_dist * v - focus_dist * w);
-    Vec3f horizontal = 2 * half_width * focus_dist * u;
-    Vec3f vertical = 2 * half_height * focus_dist * v;
-    Vec3 rd = lens_radius * randomInUnitDisk();
-    Vec3 offset = u * rd.x() + v * rd.y();
-    // return Ray(m_from + offset,
-    //            lower_left_corner + static_cast<float>(pixel_x) * horizontal +
-    //                static_cast<float>(pixel_y) * vertical - m_from - offset);
-    return RayTracingChalengeCamera::getRay(pixel_x, pixel_y);
-  }
-
-  float focus_dist = 30.f;
-  float aperture = 2.f;
 };

@@ -31,7 +31,6 @@ typedef std::shared_ptr<Builder> BuilderPtr;
 
 class WorldBuilder : public Builder {
  public:
-  WorldBuilder();
   void createWorld(const PointLight &light) override;
   void addWorld() override;
   void addElement() override;

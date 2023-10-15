@@ -5,7 +5,6 @@ class Transformer : public ElementDeco {
  public:
   Transformer(SceneElement *tr);
   Transformer(SceneElement *tr, const Mat4f &m);
-  virtual ~Transformer();
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override;
   void add(std::shared_ptr<SceneElement> item) override;

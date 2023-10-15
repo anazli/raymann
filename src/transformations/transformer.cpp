@@ -7,10 +7,8 @@ Transformer::Transformer(SceneElement* tr) : ElementDeco(tr) {
 Transformer::Transformer(SceneElement* tr, const Mat4f& m)
     : ElementDeco(tr), m_transformer(m) {}
 
-Transformer::~Transformer() {}
-
 bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
-  Ray r_transformed = r.transform(m_transformer.inverse());
+  auto r_transformed = r.transform(m_transformer.inverse());
   return ElementDeco::intersect(r_transformed, record);
 }
 
