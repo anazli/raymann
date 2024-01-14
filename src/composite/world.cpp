@@ -15,11 +15,11 @@ bool World::intersect(const Ray& r, IntersectionRecord& record) {
 
 void World::add(SceneElementPtr item) {
   item->setParent(shared_from_this());
-  m_scene_elem_list.push_back(item);
+  m_sceneElementContainer.push_back(item);
 }
 
 void World::remove(SceneElementPtr item, bool del) {
-  m_scene_elem_list.remove(item);
+  m_sceneElementContainer.remove(item);
   item->setParent(nullptr);
   if (del) item.reset();
 }
@@ -32,9 +32,7 @@ void World::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementComposite(shared_from_this(), ray);
 }
 
-std::list<std::shared_ptr<SceneElement> > World::getWorldList() {
-  return m_scene_elem_list;
-}
+SceneElementContainer World::getWorldList() { return m_sceneElementContainer; }
 
 void World::setLight(const PointLight& light) { m_light = light; }
 
