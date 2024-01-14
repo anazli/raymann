@@ -8,7 +8,9 @@
 
 class BaseRenderer {
  public:
-  virtual void visitSceneElement(const SceneElementRawPtr elementLeaf, const Ray &ray) = 0;
+  virtual ~BaseRenderer() = default;
+  virtual void visitSceneElement(const SceneElementRawPtr elementLeaf,
+                                 const Ray &ray) = 0;
   virtual void visitSceneElementComposite(const SceneElementRawPtr elementComp,
                                           const Ray &ray) = 0;
   virtual Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
@@ -28,4 +30,4 @@ class BaseRenderer {
   float m_y;
 };
 
-using BaseRendererPtr = std::unique_ptr<BaseRenderer> ;
+using BaseRendererPtr = std::unique_ptr<BaseRenderer>;

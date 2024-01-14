@@ -49,6 +49,6 @@ class WorldBuilder : public Builder {
   SceneElementPtr getCurrentElement() const override;
 
  private:
-  SceneElement *m_currentElement;
+  SceneElementRawPtr m_currentElement;
   SceneElementPtr m_product;
 };

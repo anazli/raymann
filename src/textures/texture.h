@@ -11,7 +11,7 @@ class Texture {
   virtual void setColor(const Vec3f &col) = 0;
 };
 
-typedef std::shared_ptr<Texture> TexturePtr;
+using TexturePtr = std::shared_ptr<Texture>;
 
 class ConstantTexture : public Texture {
  public:

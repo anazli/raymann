@@ -24,7 +24,7 @@ class BaseMaterial {
   MaterialProperties m_prop;
 };
 
-typedef std::shared_ptr<BaseMaterial> BaseMaterialPtr;
+using BaseMaterialPtr = std::shared_ptr<BaseMaterial>;
 
 class Material : public BaseMaterial {
  public:

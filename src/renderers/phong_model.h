@@ -4,7 +4,9 @@
 
 class PhongModel : public BaseRenderer {
  public:
-  void visitSceneElement(const SceneElementRawPtr elementLeaf, const Ray &ray) override;
+  ~PhongModel() override = default;
+  void visitSceneElement(const SceneElementRawPtr elementLeaf,
+                         const Ray &ray) override;
   void visitSceneElementComposite(const SceneElementRawPtr elementComp,
                                   const Ray &ray) override;
   Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
@@ -27,5 +29,5 @@ class PhongModel : public BaseRenderer {
   //                                          const Ray &ray);
   // std::map<size_t, std::pair<float, float>> getContainer() const;
 
-  //std::map<size_t, std::pair<float, float>> m_refract_index_collection;
+  // std::map<size_t, std::pair<float, float>> m_refract_index_collection;
 };
