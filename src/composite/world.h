@@ -45,7 +45,7 @@ class WorldIterator {
   }
   void advance() { m_current++; }
   bool notDone() { return m_current != m_sceneElementContainer.end(); }
-  SceneElementPtr currentElement() { return *m_current; }
+  SceneElementRawPtr currentElement() { return (*m_current).get(); }
 
  private:
   SceneElementContainer::const_iterator m_current;

@@ -128,7 +128,7 @@ int main() {
   //----------------------------------------------------------------------------
   auto canvas = Canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
-  BaseCameraPtr camera = make_shared<RayTracingChalengeCamera>(
+  BaseCameraPtr camera = make_unique<RayTracingChalengeCamera>(
       canvas.width(), canvas.height(), 1.152f);
   camera->computePixelSize();
   auto from = Point3f(-2.6f, 1.5f, -3.9f);
@@ -136,8 +136,8 @@ int main() {
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
-  BaseRendererPtr renderer = make_shared<PhongModel>();
-  canvas.render(world->getProduct(), *camera, *renderer);
+  BaseRendererPtr renderer = make_unique<PhongModel>();
+  canvas.render(world->getProduct(), move(camera), move(renderer));
   canvas.save();
   /*chrono::time_point<chrono::steady_clock> start =
   chrono::steady_clock::now(); chrono::time_point<chrono::steady_clock> end =

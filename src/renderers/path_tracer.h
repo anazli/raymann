@@ -2,7 +2,7 @@
 
 #include "renderers/renderer.h"
 
-class BasicPathTracer : public BaseRenderer {
+/*class BasicPathTracer : public BaseRenderer {
  public:
   BasicPathTracer(const BaseCameraPtr &cam);
   void visitSceneElement(SceneElement &elementLeaf, const Ray &ray) override;
@@ -15,4 +15,4 @@ class BasicPathTracer : public BaseRenderer {
  private:
   IntersectionRecord findClosestHit(const SceneElementPtr &world, const Ray &r);
   BaseCameraPtr m_cam;
-};
+};*/

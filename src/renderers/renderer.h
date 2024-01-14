@@ -28,4 +28,4 @@ class BaseRenderer {
   float m_y;
 };
 
-typedef std::shared_ptr<BaseRenderer> BaseRendererPtr;
+using BaseRendererPtr = std::unique_ptr<BaseRenderer> ;

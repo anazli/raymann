@@ -3,7 +3,9 @@
 #include <string>
 #include <vector>
 
+#include "camera/camera.h"
 #include "composite/scene_element.h"
+#include "renderers/renderer.h"
 #include "tools/tools.h"
 
 class BaseCamera;
@@ -20,8 +22,8 @@ class Canvas {
   // void setHeight(const int &h) { m_height = h; }
   void setFileName(const std::string &fn) { m_fileName = fn; }
 
-  void render(const SceneElementPtr &world, const BaseCamera &c,
-              BaseRenderer &renderer);
+  void render(const SceneElementPtr &world, BaseCameraPtr camera,
+              BaseRendererPtr renderer);
   void writePixel(const int &x, const int &y, const Vec3f &color) {
     m_pixels[x][y] = color;
   }

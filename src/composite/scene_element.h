@@ -43,7 +43,8 @@ class SceneElement {
   static size_t m_next_id;
 };
 
-typedef std::shared_ptr<SceneElement> SceneElementPtr;
+using SceneElementPtr = std::shared_ptr<SceneElement>;
+using SceneElementRawPtr = SceneElement*;
 
 class IntersectionRecord {
  public:
@@ -66,5 +67,5 @@ class IntersectionRecord {
   Point3f under_point_from_refrac_surf;
   Vec3f normal;
   float n1, n2;
-  SceneElementPtr object = nullptr;
+  SceneElementRawPtr object = nullptr;
 };

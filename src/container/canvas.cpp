@@ -4,21 +4,18 @@
 #include <fstream>
 #include <list>
 
-#include "camera/camera.h"
-#include "renderers/renderer.h"
-
 using std::endl;
 using std::list;
 using std::ofstream;
 
-void Canvas::render(const SceneElementPtr &world, const BaseCamera &c,
-                    BaseRenderer &renderer) {
-  for (int j = 0; j < c.vSize(); ++j) {
-    for (int i = 0; i < c.hSize(); ++i) {
+void Canvas::render(const SceneElementPtr &world, BaseCameraPtr camera,
+                    BaseRendererPtr renderer) {
+  for (int j = 0; j < camera->vSize(); ++j) {
+    for (int i = 0; i < camera->hSize(); ++i) {
       auto color = Vec3f{};
-      renderer.setPixelInfo(i, j);
-      world->accept(renderer, c.getRay(i, j));
-      color = renderer.getColor();
+      renderer->setPixelInfo(i, j);
+      world->accept(*renderer, camera->getRay(i, j));
+      color = renderer->getColor();
       writePixel(i, j, color);
     }
   }

@@ -15,7 +15,7 @@ class BaseCamera {
   virtual void setTransform(const Mat4f &m) {}
 };
 
-typedef std::shared_ptr<BaseCamera> BaseCameraPtr;
+using BaseCameraPtr = std::unique_ptr<BaseCamera>;
 
 class RayTracingChalengeCamera : public BaseCamera {
  public:

@@ -2,7 +2,7 @@
 
 #include "composite/world.h"
 
-BasicPathTracer::BasicPathTracer(const BaseCameraPtr& cam) : m_cam(cam) {}
+/*BasicPathTracer::BasicPathTracer(const BaseCameraPtr& cam) : m_cam(cam) {}
 
 void BasicPathTracer::visitSceneElement(SceneElement& elementLeaf,
                                         const Ray& ray) {}
@@ -56,4 +56,4 @@ IntersectionRecord BasicPathTracer::findClosestHit(const SceneElementPtr& world,
     }
   }
   return m_closestHit;
-}
+}*/
