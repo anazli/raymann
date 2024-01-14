@@ -31,7 +31,7 @@ bool World::intersect(const Ray& r, IntersectionRecord& record) {
 }
 
 void World::add(SceneElementPtr item) {
-  item->setParent(shared_from_this());
+  item->setParent(this);
   m_sceneElementContainer.push_back(item);
 }
 

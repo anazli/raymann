@@ -14,8 +14,8 @@ class ElementDeco : public SceneElement {
 
   void setMaterial(BaseMaterialPtr mat) override;
   BaseMaterialPtr getMaterial() const override;
-  void setParent(std::shared_ptr<SceneElement> t) override;
-  std::shared_ptr<SceneElement> getParent() const override;
+  void setParent(SceneElementRawPtr parent) override;
+  SceneElementRawPtr getParent() const override;
 
  protected:
   SceneElement *m_element;

@@ -14,8 +14,8 @@ class Transformer : public ElementDeco {
 
   void setMaterial(BaseMaterialPtr mat) override;
   BaseMaterialPtr getMaterial() const override;
-  void setParent(std::shared_ptr<SceneElement> t) override;
-  std::shared_ptr<SceneElement> getParent() const override;
+  void setParent(SceneElementRawPtr parent) override;
+  SceneElementRawPtr getParent() const override;
 
  private:
   Mat4f m_transformer;

@@ -34,10 +34,10 @@ BaseMaterialPtr ElementDeco::getMaterial() const {
   return m_element->getMaterial();
 }
 
-void ElementDeco::setParent(std::shared_ptr<SceneElement> t) {
-  m_element->setParent(t);
+void ElementDeco::setParent(SceneElementRawPtr parent) {
+  m_element->setParent(parent);
 }
 
-std::shared_ptr<SceneElement> ElementDeco::getParent() const {
+SceneElementRawPtr ElementDeco::getParent() const {
   return m_element->getParent();
 }

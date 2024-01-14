@@ -43,10 +43,10 @@ BaseMaterialPtr Transformer::getMaterial() const {
   return ElementDeco::getMaterial();
 }
 
-void Transformer::setParent(std::shared_ptr<SceneElement> t) {
-  SceneElement::setParent(t);
+void Transformer::setParent(SceneElementRawPtr parent) {
+  SceneElement::setParent(parent);
 }
 
-std::shared_ptr<SceneElement> Transformer::getParent() const {
+SceneElementRawPtr Transformer::getParent() const {
   return ElementDeco::getParent();
 }

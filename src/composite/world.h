@@ -6,8 +6,7 @@
 
 using SceneElementContainer = std::list<SceneElementPtr>;
 
-class World : public SceneElement,
-              public std::enable_shared_from_this<SceneElement> {
+class World : public SceneElement {
   friend class WorldIterator;
 
  public:

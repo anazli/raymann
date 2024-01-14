@@ -12,15 +12,17 @@ void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElement(this, ray);
 }
 
+std::list<std::shared_ptr<SceneElement>> SceneElement::getWorldList() {
+  return std::list<std::shared_ptr<SceneElement>>();
+}
+
 void SceneElement::setMaterial(BaseMaterialPtr mat) { m_material = mat; }
 
 BaseMaterialPtr SceneElement::getMaterial() const { return m_material; }
 
-void SceneElement::setParent(std::shared_ptr<SceneElement> t) { m_parent = t; }
+void SceneElement::setParent(SceneElement* parent) { m_parent = parent; }
 
-std::shared_ptr<SceneElement> SceneElement::getParent() const {
-  return m_parent;
-}
+SceneElement* SceneElement::getParent() const { return m_parent; }
 
 size_t SceneElement::getId() const { return m_id; }
 
