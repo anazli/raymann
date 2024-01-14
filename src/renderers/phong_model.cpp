@@ -4,7 +4,7 @@
 
 #include "composite/world.h"
 
-void PhongModel::visitSceneElement(SceneElement& elementLeaf, const Ray& ray) {
+void PhongModel::visitSceneElement(const SceneElementRawPtr elementLeaf, const Ray& ray) {
   /*if (elementLeaf.intersect(ray) && elementLeaf.getRecord().t_min() > 0. &&
       elementLeaf.getRecord().t_min() < m_tmin) {
     m_closestHit = std::make_shared<SceneElement>(elementLeaf);
@@ -12,14 +12,14 @@ void PhongModel::visitSceneElement(SceneElement& elementLeaf, const Ray& ray) {
   }*/
 }
 
-void PhongModel::visitSceneElementComposite(const SceneElementPtr& elementComp,
+void PhongModel::visitSceneElementComposite(const SceneElementRawPtr elementComp,
                                             const Ray& ray) {
   if (elementComp->isWorld()) {
     m_out_color = computeColor(elementComp, ray);
   }
 }
 
-Vec3f PhongModel::computeColor(const SceneElementPtr& world, const Ray& ray,
+Vec3f PhongModel::computeColor(const SceneElementRawPtr world, const Ray& ray,
                                int rec) {
   if (world->intersect(ray, m_closestHit)) {
     if (m_closestHit.object) {
@@ -32,7 +32,7 @@ Vec3f PhongModel::computeColor(const SceneElementPtr& world, const Ray& ray,
   return Vec3f(0.f, 0.f, 0.f);
 }
 
-Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
+Vec3f PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
   auto normal = m_closestHit.object->normal(m_closestHit.point(ray));
   auto point = m_closestHit.point(ray);
   auto over_point = point + (m_closestHit.inside ? normal : normal) * 0.02f;
@@ -80,7 +80,7 @@ Vec3f PhongModel::lighting(const SceneElementPtr& world, const Ray& ray) {
   return ret_ambient + ret_diffuse + ret_specular;
 }
 
-Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& ray,
+Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
                                  int rec) {
   auto closestReflectedHit = IntersectionRecord{};
   auto black = Vec3f(0.f, 0.f, 0.f);
@@ -198,7 +198,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementPtr& world, const Ray& ray,
 
 void PhongModel::checkInside(const Ray& r) {}
 
-bool PhongModel::isShadowed(const SceneElementPtr& world, const Point3f& p) {
+bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3f& p) {
   if (m_closestHit.object) {
     auto light = world->getLight();
     auto v = p - light.position();

@@ -8,10 +8,10 @@
 
 class BaseRenderer {
  public:
-  virtual void visitSceneElement(SceneElement &elementLeaf, const Ray &ray) = 0;
-  virtual void visitSceneElementComposite(const SceneElementPtr &elementComp,
+  virtual void visitSceneElement(const SceneElementRawPtr elementLeaf, const Ray &ray) = 0;
+  virtual void visitSceneElementComposite(const SceneElementRawPtr elementComp,
                                           const Ray &ray) = 0;
-  virtual Vec3f computeColor(const SceneElementPtr &world, const Ray &ray,
+  virtual Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
                              int rec = 5) = 0;
 
   Vec3f getColor() const { return m_out_color; }

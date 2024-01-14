@@ -9,7 +9,7 @@ bool SceneElement::isWorld() const { return false; }
 Vec3f SceneElement::normal(const Point3f& p) const { return Vec3f(); }
 
 void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
-  renderer.visitSceneElement(*this, ray);
+  renderer.visitSceneElement(this, ray);
 }
 
 void SceneElement::setMaterial(BaseMaterialPtr mat) { m_material = mat; }

@@ -46,7 +46,7 @@ bool World::isWorld() const { return true; }
 Vec3f World::normal(const Point3f& p) const { return Vec3f(); }
 
 void World::accept(BaseRenderer& renderer, const Ray& ray) {
-  renderer.visitSceneElementComposite(shared_from_this(), ray);
+  renderer.visitSceneElementComposite(this, ray);
 }
 
 SceneElementContainer World::getWorldList() { return m_sceneElementContainer; }
