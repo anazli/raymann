@@ -10,7 +10,24 @@ using std::sort;
 using std::vector;
 
 bool World::intersect(const Ray& r, IntersectionRecord& record) {
-  return false;
+  WorldIterator it(getWorldList());
+  float minHitParam = MAXFLOAT;
+  bool hitFound = false;
+  if (it.first()) {
+    while (it.notDone()) {
+      auto rec = IntersectionRecord{};
+      if (it.currentElement()->intersect(r, rec)) {
+        hitFound = true;
+        if (rec.t_min() > 0.0f && rec.t_min() < minHitParam) {
+          rec.object = it.currentElement();
+          minHitParam = rec.t_min();
+          record = rec;
+        }
+      }
+      it.advance();
+    }
+  }
+  return hitFound;
 }
 
 void World::add(SceneElementPtr item) {

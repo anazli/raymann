@@ -111,36 +111,18 @@ int main() {
                        prop_red);
   world->addElement();
 
-  //----------------------Blue glass Sphere----------------
-  auto prop_blue = MaterialProperties{};
-  prop_blue.setProperty(Props::SHININESS, 300.f)
-      .setProperty(Props::AMBIENT, 0.f)
-      .setProperty(Props::DIFFUSE, 0.4f)
-      .setProperty(Props::SPECULAR, 0.9f)
-      .setProperty(Props::REFLECTION, 0.9f)
-      .setProperty(Props::TRANSPARENCY, 0.9f)
-      .setProperty(Props::REFRACTIVE_INDEX, 1.5f);
+  //----------------------Perlin Sphere1----------------
   world->createSphere();
   world->applyTransformation(transl(0.6f, 0.7f, -0.6f) *
                              scale(0.7f, 0.7f, 0.7f));
-  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.f, 0.f, 0.2f)),
-                       prop_blue);
+  world->applyMaterial(make_shared<PerlinTexture>(1.2f), MaterialProperties{});
   world->addElement();
 
-  //----------------------Green glass Sphere----------------
-  auto prop_green = MaterialProperties{};
-  prop_green.setProperty(Props::SHININESS, 300.f)
-      .setProperty(Props::AMBIENT, 0.f)
-      .setProperty(Props::DIFFUSE, 0.4f)
-      .setProperty(Props::SPECULAR, 0.9f)
-      .setProperty(Props::REFLECTION, 0.9f)
-      .setProperty(Props::TRANSPARENCY, 0.9f)
-      .setProperty(Props::REFRACTIVE_INDEX, 1.5f);
+  //----------------------Perlin Sphere2----------------
   world->createSphere();
   world->applyTransformation(transl(-0.7f, 0.5f, -0.8f) *
                              scale(0.5f, 0.5f, 0.5f));
-  world->applyMaterial(make_shared<ConstantTexture>(Vec3f(0.f, 0.2f, 0.f)),
-                       prop_green);
+  world->applyMaterial(make_shared<PerlinTexture>(0.6f), MaterialProperties{});
   world->addElement();
 
   //----------------------------------------------------------------------------
