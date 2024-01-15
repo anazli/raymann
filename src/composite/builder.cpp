@@ -27,6 +27,7 @@ void WorldBuilder::addElement() {
     m_product->add(elem);
     m_currentElement = nullptr;
   }
+  // TODO: Assert that world is already created
 }
 
 void WorldBuilder::createPlane() { m_currentElement = new Plane(); }

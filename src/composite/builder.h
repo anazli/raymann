@@ -8,6 +8,7 @@
 
 class Builder {
  public:
+  virtual ~Builder() = default;
   virtual void createWorld(const PointLight &light) = 0;
   virtual void addWorld() = 0;
   virtual void addElement() = 0;
@@ -31,6 +32,7 @@ typedef std::unique_ptr<Builder> BuilderPtr;
 
 class WorldBuilder : public Builder {
  public:
+  ~WorldBuilder() override = default;
   void createWorld(const PointLight &light) override;
   void addWorld() override;
   void addElement() override;

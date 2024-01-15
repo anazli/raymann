@@ -57,10 +57,10 @@ if(BUILD_TESTING)
 
   set(testSources src/tools/tools.h)
   TESTCASE(tools ${testSources})
-  #set(testSources src/container/canvas.cpp
-  #    src/composite/scene_element.cpp
-  #    src/renderers/renderer.cpp)
-  #TESTCASE(canvas ${testSources})
+  set(testSources src/container/canvas.cpp
+      src/composite/scene_element.cpp
+     )
+  TESTCASE(canvas ${testSources})
   set(testSources src/tools/ray.h)
   TESTCASE(ray ${testSources})
   set(testSources src/camera/camera.h)
@@ -81,8 +81,8 @@ if(BUILD_TESTING)
       src/materials/material_properties.cpp
       src/transformations/element_deco.cpp
       src/transformations/transformer.cpp
-      src/renderers/renderer.cpp
-      src/textures/perlin.cpp)
+      src/textures/perlin.cpp
+      src/renderers/phong_model.cpp)
   TESTCASE(material "${testSources}")
   TESTCASE(transformer "${testSources}")
   #TESTCASE(world "${testSources}")

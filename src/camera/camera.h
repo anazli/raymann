@@ -19,6 +19,7 @@ using BaseCameraPtr = std::unique_ptr<BaseCamera>;
 
 class RayTracingChalengeCamera : public BaseCamera {
  public:
+  RayTracingChalengeCamera() = default;
   RayTracingChalengeCamera(const int &hs, const int &vs, const float &fv)
       : m_hsize(hs), m_vsize(vs), m_field_of_view(fv) {}
 
