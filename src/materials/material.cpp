@@ -48,12 +48,16 @@ bool refract(const Vec3f& v, const Vec3f& n, float ni_over_nt,
     return false;
 }
 
+MaterialProperties BaseMaterial::getProperties() const {
+  return MaterialProperties();
+}
+
 Material::Material(TexturePtr tex, const MaterialProperties& prop)
-    : BaseMaterial(tex, prop) {}
+    : BaseMaterial(std::move(tex), prop) {}
 
-void Material::setTexture(TexturePtr tex) { m_tex = tex; }
+void Material::setTexture(TexturePtr tex) { m_tex = std::move(tex); }
 
-TexturePtr Material::getTexture() const { return m_tex; }
+TextureRawPtr Material::getTexture() const { return m_tex.get(); }
 
 void Material::setProperties(const MaterialProperties& prop) { m_prop = prop; }
 
@@ -65,7 +69,7 @@ bool Material::scatter(const Ray& r_in, const IntersectionRecord& rec,
 }
 
 Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
-    : BaseMaterial(tex, prop) {}
+    : BaseMaterial(std::move(tex), prop) {}
 
 bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
                          Vec3f& attenuation, Ray& scattered) const {
@@ -77,7 +81,7 @@ bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
 }
 
 Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
-    : m_fuzz(f), BaseMaterial(tex, prop) {
+    : m_fuzz(f), BaseMaterial(std::move(tex), prop) {
   if (f < 1.f)
     m_fuzz = f;
   else
@@ -86,7 +90,7 @@ Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
 
 bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
                     Vec3f& attenuation, Ray& scattered) const {
-  Vec3 reflected = reflect(getUnitVectorOf(r_in.direction()), rec.normal);
+  Vec3f reflected = reflect(getUnitVectorOf(r_in.direction()), rec.normal);
   scattered =
       Ray(rec.point(r_in), reflected + m_fuzz * randomVectorOnUnitSphere());
   attenuation = m_tex->value(0, 0, Vec3f());
@@ -94,7 +98,7 @@ bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
 }
 
 Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
-    : ref_idx(ri), BaseMaterial(tex, prop) {}
+    : ref_idx(ri), BaseMaterial(std::move(tex), prop) {}
 
 bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
                          Vec3f& attenuation, Ray& scattered) const {

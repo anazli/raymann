@@ -8,18 +8,16 @@ class IntersectionRecord;
 class BaseMaterial {
  public:
   virtual void setTexture(TexturePtr tex) {}
-  virtual TexturePtr getTexture() const { return nullptr; }
+  virtual TextureRawPtr getTexture() const { return nullptr; }
   virtual void setProperties(const MaterialProperties& prop) {}
-  virtual MaterialProperties getProperties() const {
-    return MaterialProperties();
-  }
+  virtual MaterialProperties getProperties() const;
   virtual bool scatter(const Ray& r_in, const IntersectionRecord& rec,
                        Vec3f& attenuation, Ray& scattered) const = 0;
 
  protected:
   BaseMaterial(TexturePtr tex,
                const MaterialProperties& prop = MaterialProperties())
-      : m_tex(tex), m_prop(prop) {}
+      : m_tex(std::move(tex)), m_prop(prop) {}
   TexturePtr m_tex;
   MaterialProperties m_prop;
 };
@@ -31,7 +29,7 @@ class Material : public BaseMaterial {
   Material(TexturePtr tex,
            const MaterialProperties& prop = MaterialProperties());
   void setTexture(TexturePtr tex) override;
-  TexturePtr getTexture() const override;
+  TextureRawPtr getTexture() const override;
   void setProperties(const MaterialProperties& prop) override;
   MaterialProperties getProperties() const override;
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,

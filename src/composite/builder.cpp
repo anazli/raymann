@@ -38,22 +38,23 @@ void WorldBuilder::applyTransformation(const Mat4f& trans) {
 
 void WorldBuilder::applyMaterial(TexturePtr tex,
                                  const MaterialProperties& prop) {
-  BaseMaterialPtr matptr = std::make_shared<Material>(tex, prop);
+  BaseMaterialPtr matptr = std::make_shared<Material>(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyLambertianMaterial(TexturePtr tex,
                                            const MaterialProperties& prop) {
-  BaseMaterialPtr matptr = std::make_shared<Lambertian>(tex, prop);
+  BaseMaterialPtr matptr = std::make_shared<Lambertian>(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyMetalMaterial(const float& f, TexturePtr tex,
                                       const MaterialProperties& prop) {
-  BaseMaterialPtr matptr = std::make_shared<Metal>(f, tex, prop);
+  BaseMaterialPtr matptr = std::make_shared<Metal>(f, std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyDielectricMaterial(const float& ri, TexturePtr tex,
                                            const MaterialProperties& prop) {
-  BaseMaterialPtr matptr = std::make_shared<Dielectric>(ri, tex, prop);
+  BaseMaterialPtr matptr =
+      std::make_shared<Dielectric>(ri, std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 

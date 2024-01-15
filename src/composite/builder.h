@@ -27,7 +27,7 @@ class Builder {
   virtual SceneElementPtr getCurrentElement() const = 0;
 };
 
-typedef std::shared_ptr<Builder> BuilderPtr;
+typedef std::unique_ptr<Builder> BuilderPtr;
 
 class WorldBuilder : public Builder {
  public:
