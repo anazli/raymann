@@ -126,7 +126,7 @@ int main() {
   world->addElement();
 
   //----------------------------------------------------------------------------
-  auto canvas = Canvas(50, 50);
+  auto canvas = Canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   BaseCameraPtr camera = make_unique<RayTracingChalengeCamera>(
       canvas.width(), canvas.height(), 1.152f);
