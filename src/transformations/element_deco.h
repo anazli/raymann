@@ -4,7 +4,7 @@
 class ElementDeco : public SceneElement {
  public:
   ElementDeco(SceneElement *tr);
-  virtual ~ElementDeco();
+  ~ElementDeco() override;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override;
   void add(std::shared_ptr<SceneElement> item) override;

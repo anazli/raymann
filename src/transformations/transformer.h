@@ -3,6 +3,7 @@
 
 class Transformer : public ElementDeco {
  public:
+  ~Transformer() override = default;
   Transformer(SceneElement *tr);
   Transformer(SceneElement *tr, const Mat4f &m);
   bool intersect(const Ray &r, IntersectionRecord &record) override;

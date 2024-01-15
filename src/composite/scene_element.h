@@ -15,6 +15,7 @@ class BaseRenderer;
 
 class SceneElement {
  public:
+  virtual ~SceneElement() = default;
   virtual bool intersect(const Ray &r, IntersectionRecord &record) {
     return false;
   }

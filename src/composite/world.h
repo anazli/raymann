@@ -10,6 +10,7 @@ class World : public SceneElement {
   friend class WorldIterator;
 
  public:
+  ~World() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   void add(SceneElementPtr item) override;
   void remove(SceneElementPtr item, bool del = true) override;

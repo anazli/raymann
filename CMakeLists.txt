@@ -23,7 +23,7 @@ set(SOURCES src/main/raymann.cpp
 add_executable(${EXE} ${SOURCES})
 target_include_directories(${EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
 set_target_properties(${EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
-target_compile_options(${EXE} PRIVATE "-g")
+#target_compile_options(${EXE} PRIVATE "-g")
 target_link_options(${EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
 
 
