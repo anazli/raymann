@@ -57,3 +57,37 @@ TEST_F(TBox, rayIntersectsCube) {
     EXPECT_EQ(rec.t1, 4.f);
     EXPECT_EQ(rec.t2, 6.f);
 }
+
+TEST_F(TBox, rayMissesCube) {
+    box = make_shared<BoundingBox>();
+
+    ray = Ray(Point3f(-2.f, 0.f, 0.f), Vec3f(0.2673f, 0.5345f, 0.8018f));
+    auto rec = IntersectionRecord{};
+    EXPECT_FALSE(box->intersect(ray, rec));
+    EXPECT_TRUE(rec.count == 0);
+
+    ray = Ray(Point3f(0.f, -2.f, 0.f), Vec3f(0.8018f, 0.2673f, 0.5345f));
+    rec = IntersectionRecord{};
+    EXPECT_FALSE(box->intersect(ray, rec));
+    EXPECT_TRUE(rec.count == 0);
+
+    ray = Ray(Point3f(0.f, 0.f, -2.f), Vec3f(0.5345f, 0.8018f, 0.2673f));
+    rec = IntersectionRecord{};
+    EXPECT_FALSE(box->intersect(ray, rec));
+    EXPECT_TRUE(rec.count == 0);
+
+    ray = Ray(Point3f(2.f, 0.f, 2.f), Vec3f(0.f, 0.f, -1.f));
+    rec = IntersectionRecord{};
+    EXPECT_FALSE(box->intersect(ray, rec));
+    EXPECT_TRUE(rec.count == 0);
+
+    ray = Ray(Point3f(0.f, 2.f, 2.f), Vec3f(0.f, -1.f, 0.f));
+    rec = IntersectionRecord{};
+    EXPECT_FALSE(box->intersect(ray, rec));
+    EXPECT_TRUE(rec.count == 0);
+
+    ray = Ray(Point3f(2.f, 2.f, 0.f), Vec3f(-1.f, 0.f, 0.f));
+    rec = IntersectionRecord{};
+    EXPECT_FALSE(box->intersect(ray, rec));
+    EXPECT_TRUE(rec.count == 0);
+}

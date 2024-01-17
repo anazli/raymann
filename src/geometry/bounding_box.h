@@ -8,12 +8,6 @@ class BoundingBox : public SceneElement {
  public:
   ~BoundingBox() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override {
-    hitBox(r, record);
-    return m_hitFound;
-  }
-
- private:
-  void hitBox(const Ray &r, IntersectionRecord &record) {
     std::pair<float, float> xMinMax =
         hitAxis(r.origin().x(), r.direction().x());
     std::pair<float, float> yMinMax =
@@ -21,13 +15,22 @@ class BoundingBox : public SceneElement {
     std::pair<float, float> zMinMax =
         hitAxis(r.origin().z(), r.direction().z());
 
-    record.t1 = std::max(std::max(xMinMax.first, yMinMax.first), zMinMax.first);
-    record.t2 =
+    float tmin =
+        std::max(std::max(xMinMax.first, yMinMax.first), zMinMax.first);
+    float tmax =
         std::min(std::min(xMinMax.second, yMinMax.second), zMinMax.second);
 
+    if (tmin > tmax) {
+      return false;
+    }
+
+    record.t1 = tmin;
+    record.t2 = tmax;
     record.count = 2;
+    return true;
   }
 
+ private:
   std::pair<float, float> hitAxis(float origin, float direction) {
     float tmin_numerator = (-1.f - origin);
     float tmax_numerator = (1.f - origin);
@@ -36,7 +39,6 @@ class BoundingBox : public SceneElement {
     if (fabs(direction) >= EPS) {
       tmin = tmin_numerator / direction;
       tmax = tmax_numerator / direction;
-      m_hitFound = true;
     } else {
       tmin = tmin_numerator * std::numeric_limits<float>::infinity();
       tmax = tmax_numerator * std::numeric_limits<float>::infinity();
@@ -48,6 +50,4 @@ class BoundingBox : public SceneElement {
 
     return std::make_pair(tmin, tmax);
   }
-
-  bool m_hitFound = false;
 };
