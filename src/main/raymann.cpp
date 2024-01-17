@@ -37,36 +37,36 @@ int main() {
   world->addElement();
 
   //----------------------West Wall---------------------
-  auto prop_west = MaterialProperties{};
-  prop_west.setProperty(Props::AMBIENT, 0.f)
+  auto prop_wall = MaterialProperties{};
+  prop_wall.setProperty(Props::AMBIENT, 0.f)
       .setProperty(Props::DIFFUSE, 0.4f)
       .setProperty(Props::SPECULAR, 0.f)
       .setProperty(Props::REFLECTION, 0.3f);
   world->createPlane();
   world->applyTransformation(transl(-5.f, 0.f, 0.f) * rotZ(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
-                       prop_west);
+                       prop_wall);
   world->addElement();
 
   //----------------------East Wall---------------------
   world->createPlane();
   world->applyTransformation(transl(5.f, 0.f, 0.f) * rotZ(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
-                       prop_west);
+                       prop_wall);
   world->addElement();
 
   //----------------------North Wall---------------------
   world->createPlane();
   world->applyTransformation(transl(0.f, 0.f, 5.f) * rotX(-1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
-                       prop_west);
+                       prop_wall);
   world->addElement();
 
   //----------------------South Wall---------------------
   world->createPlane();
   world->applyTransformation(transl(0.f, 0.f, -5.f) * rotX(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
-                       prop_west);
+                       prop_wall);
   world->addElement();
 
   //----------------------Background Spheres----------------
@@ -99,7 +99,6 @@ int main() {
                        prop_back);
   world->addElement();
 
-  //----------------------Background Spheres----------------
   //----------------------Red Sphere----------------
   auto prop_red = MaterialProperties{};
   prop_red.setProperty(Props::SPECULAR, 0.4f)
@@ -125,13 +124,20 @@ int main() {
   world->applyMaterial(make_unique<PerlinTexture>(0.6f), MaterialProperties{});
   world->addElement();
 
+  //----------------------Perlin Box----------------
+  world->createBox();
+  world->applyTransformation(transl(-2.5f, 0.5f, 0.8f) *
+                             scale(0.5f, 0.5f, 0.5f));
+  world->applyMaterial(make_unique<PerlinTexture>(1.1f), MaterialProperties{});
+  world->addElement();
+
   //----------------------------------------------------------------------------
-  auto canvas = Canvas(500, 500);
+  auto canvas = Canvas(800, 600);
   canvas.setFileName("scenes/scene.ppm");
   BaseCameraPtr camera = make_unique<RayTracingChalengeCamera>(
       canvas.width(), canvas.height(), 1.152f);
   camera->computePixelSize();
-  auto from = Point3f(-2.6f, 1.5f, -3.9f);
+  auto from = Point3f(-2.6f, 3.5f, -4.9f);
   auto to = Point3f(-0.6f, 1.0f, -0.8f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));

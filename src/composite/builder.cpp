@@ -1,9 +1,10 @@
 #include "composite/builder.h"
 
 #include "composite/world.h"
+#include "geometry/bounding_box.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
-#include "transformations//transformer.h"
+#include "transformations/transformer.h"
 
 void WorldBuilder::createWorld(const PointLight& light) {
   m_product.reset();
@@ -31,6 +32,8 @@ void WorldBuilder::addElement() {
 }
 
 void WorldBuilder::createPlane() { m_currentElement = new Plane(); }
+
+void WorldBuilder::createBox() { m_currentElement = new BoundingBox(); }
 
 void WorldBuilder::applyTransformation(const Mat4f& trans) {
   if (m_currentElement)

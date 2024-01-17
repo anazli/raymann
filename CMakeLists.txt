@@ -17,7 +17,7 @@ set(SOURCES src/main/raymann.cpp
             src/materials/material.cpp
             src/materials/material_properties.h
             src/materials/material_properties.cpp
-            src/transformations/element_deco.cpp
+            src/transformations/scene_element_decorator.cpp
             src/transformations/transformer.cpp
             src/renderers/phong_model.cpp
             src/renderers/path_tracer.cpp
@@ -75,7 +75,7 @@ if(BUILD_TESTING)
       src/geometry/sphere.h
       src/geometry/plane.h
       src/transformations/transformer.cpp
-      src/transformations/element_deco.cpp
+      src/transformations/scene_element_decorator.cpp
       src/textures/perlin.cpp)
   TESTCASE(sphere "${testSources}")
   TESTCASE(plane "${testSources}")
@@ -86,7 +86,7 @@ if(BUILD_TESTING)
       src/composite/world.cpp
       src/materials/material.cpp
       src/materials/material_properties.cpp
-      src/transformations/element_deco.cpp
+      src/transformations/scene_element_decorator.cpp
       src/transformations/transformer.cpp
       src/textures/perlin.cpp
       src/renderers/phong_model.cpp)
