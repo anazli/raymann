@@ -5,7 +5,7 @@
 class PhongModel : public BaseRenderer {
  public:
   ~PhongModel() override = default;
-  void visitSceneElement(const SceneElementRawPtr elementLeaf,
+  void visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
                          const Ray &ray) override;
   void visitSceneElementComposite(const SceneElementRawPtr elementComp,
                                   const Ray &ray) override;

@@ -61,7 +61,6 @@ void WorldBuilder::applyDielectricMaterial(const float& ri, TexturePtr tex,
 
 SceneElementPtr WorldBuilder::getProduct() { return m_product; }
 
-SceneElementPtr WorldBuilder::getCurrentElement() const {
-  SceneElementPtr ret(m_currentElement);
-  return ret;
+SceneElementRawPtr WorldBuilder::getCurrentElement() const {
+  return m_currentElement;
 }

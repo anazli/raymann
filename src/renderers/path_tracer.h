@@ -6,7 +6,7 @@
  public:
   BasicPathTracer(const BaseCameraPtr &cam);
   ~BasicPathTracer() override = default;
-  void visitSceneElement(SceneElement &elementLeaf, const Ray &ray) override;
+  void visitSceneElementLeaf(SceneElement &elementLeaf, const Ray &ray) override;
   void visitSceneElementComposite(const SceneElementPtr &elementComp,
                                   const Ray &ray) override;
 

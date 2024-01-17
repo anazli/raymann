@@ -16,11 +16,9 @@ class BaseRenderer;
 class SceneElement {
  public:
   virtual ~SceneElement() = default;
-  virtual bool intersect(const Ray &r, IntersectionRecord &record) {
-    return false;
-  }
+  virtual bool intersect(const Ray &r, IntersectionRecord &record);
   virtual void add(std::shared_ptr<SceneElement> item) {}
-  virtual void remove(std::shared_ptr<SceneElement> item, bool del = true) {}
+  virtual void remove(SceneElement *item, bool del = true) {}
   virtual bool isWorld() const;
   virtual Vec3f normal(const Point3f &p) const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);

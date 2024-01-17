@@ -4,12 +4,16 @@
 
 size_t SceneElement::m_next_id = 0;
 
+bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
+  return false;
+}
+
 bool SceneElement::isWorld() const { return false; }
 
 Vec3f SceneElement::normal(const Point3f& p) const { return Vec3f(); }
 
 void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
-  renderer.visitSceneElement(this, ray);
+  renderer.visitSceneElementLeaf(this, ray);
 }
 
 std::list<std::shared_ptr<SceneElement>> SceneElement::getWorldList() {

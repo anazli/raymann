@@ -16,7 +16,7 @@ void ElementDeco::add(std::shared_ptr<SceneElement> item) {
   m_element->add(item);
 }
 
-void ElementDeco::remove(std::shared_ptr<SceneElement> item, bool del) {
+void ElementDeco::remove(SceneElement* item, bool del) {
   m_element->remove(item, del);
 }
 

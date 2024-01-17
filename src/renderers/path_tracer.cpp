@@ -4,7 +4,7 @@
 
 /*BasicPathTracer::BasicPathTracer(const BaseCameraPtr& cam) : m_cam(cam) {}
 
-void BasicPathTracer::visitSceneElement(SceneElement& elementLeaf,
+void BasicPathTracer::visitSceneElementLeaf(SceneElement& elementLeaf,
                                         const Ray& ray) {}
 
 void BasicPathTracer::visitSceneElementComposite(

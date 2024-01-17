@@ -134,7 +134,7 @@ TEST_F(TMat, precomputingTheReflectionVector) {
   MaterialProperties prop;
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->createPlane();
-  SceneElementPtr plane = builder->getCurrentElement();
+  SceneElementRawPtr plane = builder->getCurrentElement();
   Ray r(Point3f(0.f, 1.f, -1.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r, rec);
   Vec3f reflection_vector = reflect(r.direction(), plane->normal(rec.point(r)));

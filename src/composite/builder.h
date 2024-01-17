@@ -25,7 +25,7 @@ class Builder {
   virtual void applyDielectricMaterial(const float &ri, TexturePtr tex,
                                        const MaterialProperties &prop) = 0;
   virtual SceneElementPtr getProduct() = 0;
-  virtual SceneElementPtr getCurrentElement() const = 0;
+  virtual SceneElementRawPtr getCurrentElement() const = 0;
 };
 
 typedef std::unique_ptr<Builder> BuilderPtr;
@@ -48,7 +48,7 @@ class WorldBuilder : public Builder {
   void applyDielectricMaterial(const float &ri, TexturePtr tex,
                                const MaterialProperties &prop) override;
   SceneElementPtr getProduct() override;
-  SceneElementPtr getCurrentElement() const override;
+  SceneElementRawPtr getCurrentElement() const override;
 
  private:
   SceneElementRawPtr m_currentElement;

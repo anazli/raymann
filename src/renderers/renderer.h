@@ -9,7 +9,7 @@
 class BaseRenderer {
  public:
   virtual ~BaseRenderer() = default;
-  virtual void visitSceneElement(const SceneElementRawPtr elementLeaf,
+  virtual void visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
                                  const Ray &ray) = 0;
   virtual void visitSceneElementComposite(const SceneElementRawPtr elementComp,
                                           const Ray &ray) = 0;

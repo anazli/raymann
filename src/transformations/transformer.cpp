@@ -25,7 +25,7 @@ void Transformer::add(std::shared_ptr<SceneElement> item) {
   ElementDeco::add(item);
 }
 
-void Transformer::remove(std::shared_ptr<SceneElement> item, bool del) {
+void Transformer::remove(SceneElement* item, bool del) {
   ElementDeco::remove(item, del);
 }
 

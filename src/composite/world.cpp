@@ -35,10 +35,10 @@ void World::add(SceneElementPtr item) {
   m_sceneElementContainer.push_back(item);
 }
 
-void World::remove(SceneElementPtr item, bool del) {
-  m_sceneElementContainer.remove(item);
-  item->setParent(nullptr);
-  if (del) item.reset();
+void World::remove(SceneElementRawPtr item, bool del) {
+  m_sceneElementContainer.erase(std::remove_if(
+      m_sceneElementContainer.begin(), m_sceneElementContainer.end(),
+      [item](const SceneElementPtr& elem) { return item == elem.get(); }));
 }
 
 bool World::isWorld() const { return true; }
