@@ -91,3 +91,24 @@ TEST_F(TBox, rayMissesCube) {
     EXPECT_FALSE(box->intersect(ray, rec));
     EXPECT_TRUE(rec.count == 0);
 }
+
+TEST_F(TBox, normalOnSurfaceOfCube) {
+    box = make_shared<BoundingBox>();
+    auto point = Point3f(1.f, 0.5f, -0.8f);
+    EXPECT_TRUE(box->normal(point) == Vec3f(1.f, 0.f, 0.f));
+    point = Point3f(-1.f, -0.2f, 0.9f);
+    EXPECT_TRUE(box->normal(point) == Vec3f(-1.f, 0.f, 0.f));
+    point = Point3f(-0.4f, 1.f, -0.1f);
+    EXPECT_TRUE(box->normal(point) == Vec3f(0.f, 1.f, 0.f));
+    point = Point3f(0.3f, -1.f, -0.7f);
+    EXPECT_TRUE(box->normal(point) == Vec3f(0.f, -1.f, 0.f));
+    point = Point3f(-0.6f, 0.3f, 1.f);
+    EXPECT_TRUE(box->normal(point) == Vec3f(0.f, 0.f, 1.f));
+    point = Point3f(0.4f, 0.4f, -1.f);
+    EXPECT_TRUE(box->normal(point) == Vec3f(0.f, 0.f, -1.f));
+    point = Point3f(1.f, 1.f, 1.f);
+    EXPECT_TRUE(box->normal(point) == Vec3f(1.f, 0.f, 0.f));
+    point = Point3f(-1.f, -1.f, -1.f);
+    EXPECT_TRUE(box->normal(point) == Vec3f(-1.f, 0.f, 0.f));
+
+}
