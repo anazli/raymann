@@ -11,6 +11,9 @@ set(SOURCES src/main/raymann.cpp
             src/composite/scene_element.cpp
             src/container/canvas.cpp
             src/composite/world.cpp
+            src/geometry/bounding_box.h
+            src/geometry/sphere.h
+            src/geometry/plane.h
             src/materials/material.cpp
             src/materials/material_properties.h
             src/materials/material_properties.cpp
@@ -68,11 +71,15 @@ if(BUILD_TESTING)
   set(testSources src/materials/material_properties.cpp)
   TESTCASE(properties ${testSources})
   set(testSources src/composite/scene_element.cpp
+      src/geometry/bounding_box.h
+      src/geometry/sphere.h
+      src/geometry/plane.h
       src/transformations/transformer.cpp
       src/transformations/element_deco.cpp
       src/textures/perlin.cpp)
   TESTCASE(sphere "${testSources}")
   TESTCASE(plane "${testSources}")
+  TESTCASE(boundingBox "${testSources}")
   set(testSources
       src/composite/scene_element.cpp
       src/composite/builder.cpp
