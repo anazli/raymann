@@ -1,7 +1,7 @@
 #pragma once
-#include "transformations/element_deco.h"
+#include "transformations/scene_element_decorator.h"
 
-class Transformer : public ElementDeco {
+class Transformer : public SceneElementDecorator {
  public:
   ~Transformer() override = default;
   Transformer(SceneElement *tr);

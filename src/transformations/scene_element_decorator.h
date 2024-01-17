@@ -1,10 +1,10 @@
 #pragma once
 #include "composite/scene_element.h"
 
-class ElementDeco : public SceneElement {
+class SceneElementDecorator : public SceneElement {
  public:
-  ElementDeco(SceneElement *tr);
-  ~ElementDeco() override;
+  SceneElementDecorator(SceneElement *tr);
+  ~SceneElementDecorator() override;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override;
   void add(std::shared_ptr<SceneElement> item) override;
