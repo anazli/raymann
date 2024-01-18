@@ -5,6 +5,7 @@
 #include "camera/camera.h"
 #include "composite/builder.h"
 #include "container/canvas.h"
+#include "geometry/bounding_box.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "renderers/phong_model.h"
@@ -21,7 +22,7 @@ int main() {
   auto prop_floor = MaterialProperties{};
   prop_floor.setProperty(Props::SPECULAR, 0.f)
       .setProperty(Props::REFLECTION, 0.4f);
-  world->createPlane();
+  world->processSceneElement(new Plane);
   world->applyTransformation(rotY(0.31415f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.65f, 0.65f, 0.65f)),
                        prop_floor);
@@ -30,7 +31,7 @@ int main() {
   //----------------------Ceiling---------------------
   auto prop_ceil = MaterialProperties{};
   prop_ceil.setProperty(Props::AMBIENT, 0.3f).setProperty(Props::SPECULAR, 0.f);
-  world->createPlane();
+  world->processSceneElement(new Plane);
   world->applyTransformation(transl(0.f, 5.f, 0.f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.8f, 0.8f, 0.8f)),
                        prop_ceil);
@@ -42,28 +43,28 @@ int main() {
       .setProperty(Props::DIFFUSE, 0.4f)
       .setProperty(Props::SPECULAR, 0.f)
       .setProperty(Props::REFLECTION, 0.3f);
-  world->createPlane();
+  world->processSceneElement(new Plane);
   world->applyTransformation(transl(-5.f, 0.f, 0.f) * rotZ(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
                        prop_wall);
   world->addElement();
 
   //----------------------East Wall---------------------
-  world->createPlane();
+  world->processSceneElement(new Plane);
   world->applyTransformation(transl(5.f, 0.f, 0.f) * rotZ(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
                        prop_wall);
   world->addElement();
 
   //----------------------North Wall---------------------
-  world->createPlane();
+  world->processSceneElement(new Plane);
   world->applyTransformation(transl(0.f, 0.f, 5.f) * rotX(-1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
                        prop_wall);
   world->addElement();
 
   //----------------------South Wall---------------------
-  world->createPlane();
+  world->processSceneElement(new Plane);
   world->applyTransformation(transl(0.f, 0.f, -5.f) * rotX(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
                        prop_wall);
@@ -72,27 +73,27 @@ int main() {
   //----------------------Background Spheres----------------
   auto prop_back = MaterialProperties{};
   prop_back.setProperty(Props::SHININESS, 50.f);
-  world->createSphere();
+  world->processSceneElement(new Sphere);
   world->applyTransformation(transl(4.6f, 0.4f, 1.f) * scale(0.4f, 0.4f, 0.4f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.8f, 0.5f, 0.3f)),
                        prop_back);
   world->addElement();
 
-  world->createSphere();
+  world->processSceneElement(new Sphere);
   world->applyTransformation(transl(4.7f, 0.3f, 0.4f) *
                              scale(0.3f, 0.3f, 0.3f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.9f, 0.4f, 0.5f)),
                        prop_back);
   world->addElement();
 
-  world->createSphere();
+  world->processSceneElement(new Sphere);
   world->applyTransformation(transl(-1.f, 0.5f, 4.5f) *
                              scale(0.5f, 0.5f, 0.5f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.4f, 0.9f, 0.6f)),
                        prop_back);
   world->addElement();
 
-  world->createSphere();
+  world->processSceneElement(new Sphere);
   world->applyTransformation(transl(-1.7f, 0.3f, 4.7f) *
                              scale(0.3f, 0.3f, 0.3f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.4f, 0.6f, 0.9f)),
@@ -104,28 +105,28 @@ int main() {
   prop_red.setProperty(Props::SPECULAR, 0.4f)
       .setProperty(Props::SHININESS, 5.f);
   prop_red.setProperty(Props::SHININESS, 50.f);
-  world->createSphere();
+  world->processSceneElement(new Sphere);
   world->applyTransformation(transl(-0.6f, 1.f, 0.6f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(1.0f, 0.3f, 0.2f)),
                        prop_red);
   world->addElement();
 
   //----------------------Perlin Sphere1----------------
-  world->createSphere();
+  world->processSceneElement(new Sphere);
   world->applyTransformation(transl(0.6f, 0.7f, -0.6f) *
                              scale(0.7f, 0.7f, 0.7f));
   world->applyMaterial(make_unique<PerlinTexture>(1.2f), MaterialProperties{});
   world->addElement();
 
   //----------------------Perlin Sphere2----------------
-  world->createSphere();
+  world->processSceneElement(new Sphere);
   world->applyTransformation(transl(-0.7f, 0.5f, -0.8f) *
                              scale(0.5f, 0.5f, 0.5f));
   world->applyMaterial(make_unique<PerlinTexture>(0.6f), MaterialProperties{});
   world->addElement();
 
   //----------------------Perlin Box----------------
-  world->createBox();
+  world->processSceneElement(new BoundingBox);
   world->applyTransformation(transl(-2.5f, 0.5f, 0.8f) *
                              scale(0.5f, 0.5f, 0.5f));
   world->applyMaterial(make_unique<PerlinTexture>(1.1f), MaterialProperties{});

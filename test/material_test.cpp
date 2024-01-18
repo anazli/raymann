@@ -1,5 +1,6 @@
 #include "composite/builder.h"
 #include "composite/world.h"
+#include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"
 #include "renderers/phong_model.h"
@@ -133,7 +134,7 @@ TEST_F(TMat, lightingWithSurfaceInShadow) {
 TEST_F(TMat, precomputingTheReflectionVector) {
   MaterialProperties prop;
   BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->createPlane();
+  builder->processSceneElement(new Plane);
   SceneElementRawPtr plane = builder->getCurrentElement();
   Ray r(Point3f(0.f, 1.f, -1.f), Vec3f(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r, rec);
@@ -148,7 +149,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   MaterialProperties prop;
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->createWorld(light);
-  builder->createSphere();
+  builder->processSceneElement(new Sphere);
   prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.f, 0.6f))
       .setProperty(Props::DIFFUSE, 0.7f)
       .setProperty(Props::SPECULAR, 0.2f);
@@ -156,7 +157,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
       std::make_unique<ConstantTexture>(Vec3f(0.8f, 1.f, 0.6f)), prop);
   builder->addElement();
   prop.setProperty(Props::AMBIENT, 1.f);
-  builder->createSphere();
+  builder->processSceneElement(new Sphere);
   builder->applyMaterial(std::make_unique<ConstantTexture>(), prop);
   builder->addElement();
   Ray r(Point3f(0.f, 0.f, 0.f), Vec3f(0.f, 0.f, 1.f));

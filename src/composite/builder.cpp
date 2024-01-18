@@ -18,10 +18,6 @@ void WorldBuilder::addWorld() {
   //----------------
 }
 
-void WorldBuilder::createSphere(const Point3f& c, const float& r) {
-  m_currentElement = new Sphere(c, r);
-}
-
 void WorldBuilder::addElement() {
   if (m_product) {
     SceneElementPtr elem(m_currentElement);
@@ -31,9 +27,9 @@ void WorldBuilder::addElement() {
   // TODO: Assert that world is already created
 }
 
-void WorldBuilder::createPlane() { m_currentElement = new Plane(); }
-
-void WorldBuilder::createBox() { m_currentElement = new BoundingBox(); }
+void WorldBuilder::processSceneElement(SceneElementRawPtr element) {
+  m_currentElement = element;
+}
 
 void WorldBuilder::applyTransformation(const Mat4f& trans) {
   if (m_currentElement)

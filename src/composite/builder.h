@@ -12,10 +12,7 @@ class Builder {
   virtual void createWorld(const PointLight &light) = 0;
   virtual void addWorld() = 0;
   virtual void addElement() = 0;
-  virtual void createSphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
-                            const float &r = 1.0f) = 0;
-  virtual void createPlane() = 0;
-  virtual void createBox() = 0;
+  virtual void processSceneElement(SceneElementRawPtr element) = 0;
   virtual void applyTransformation(const Mat4f &trans) = 0;
   virtual void applyMaterial(TexturePtr tex,
                              const MaterialProperties &prop) = 0;
@@ -37,10 +34,7 @@ class WorldBuilder : public Builder {
   void createWorld(const PointLight &light) override;
   void addWorld() override;
   void addElement() override;
-  void createSphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
-                    const float &r = 1.0f) override;
-  void createPlane() override;
-  void createBox() override;
+  void processSceneElement(SceneElementRawPtr element) override;
   void applyTransformation(const Mat4f &trans) override;
   void applyMaterial(TexturePtr tex, const MaterialProperties &prop) override;
   void applyLambertianMaterial(TexturePtr tex,
