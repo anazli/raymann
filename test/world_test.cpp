@@ -58,12 +58,26 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   EXPECT_TRUE(s->getParent() == world.get());
   EXPECT_TRUE(s1->getParent() == world.get());
 
-  SceneElementPtr world = builder->getProduct();  
   EXPECT_TRUE(world->intersect(r, rec));
 
   EXPECT_EQ(rec.count, 2);
   EXPECT_EQ(rec.t1, 4.0f);
   EXPECT_EQ(rec.t2, 6.0f);
+}
+
+TEST_F(Tworld, intersectingTransformedWorld) {
+  Ray r = Ray(Point3f(10.0f, 0.0f, -10.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  builder = make_unique<WorldBuilder>();
+  builder->createWorld(light);
+
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(transl(5.f, 0.f, 0.f));
+  builder->addElement();
+  builder->applyWorldTransformation(scale(2.f, 2.f, 2.f));
+
+  SceneElementPtr world = builder->getProduct();
+  EXPECT_TRUE(world->intersect(r, rec));
+  EXPECT_EQ(rec.count, 2);
 }
 
 /*TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {

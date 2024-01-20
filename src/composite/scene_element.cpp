@@ -8,6 +8,10 @@ bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
   return false;
 }
 
+void SceneElement::add(std::shared_ptr<SceneElement> item) {}
+
+void SceneElement::remove(SceneElement* item, bool del) {}
+
 bool SceneElement::isWorld() const { return false; }
 
 Vec3f SceneElement::normal(const Point3f& p) const { return Vec3f(); }
@@ -27,6 +31,10 @@ BaseMaterialPtr SceneElement::getMaterial() const { return m_material; }
 void SceneElement::setParent(SceneElement* parent) { m_parent = parent; }
 
 SceneElement* SceneElement::getParent() const { return m_parent; }
+
+void SceneElement::setLight(const PointLight& light) {}
+
+PointLight SceneElement::getLight() const { return PointLight(); }
 
 size_t SceneElement::getId() const { return m_id; }
 

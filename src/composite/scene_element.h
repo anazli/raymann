@@ -17,8 +17,8 @@ class SceneElement {
  public:
   virtual ~SceneElement() = default;
   virtual bool intersect(const Ray &r, IntersectionRecord &record);
-  virtual void add(std::shared_ptr<SceneElement> item) {}
-  virtual void remove(SceneElement *item, bool del = true) {}
+  virtual void add(std::shared_ptr<SceneElement> item);
+  virtual void remove(SceneElement *item, bool del = true);
   virtual bool isWorld() const;
   virtual Vec3f normal(const Point3f &p) const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);
@@ -27,8 +27,8 @@ class SceneElement {
   virtual BaseMaterialPtr getMaterial() const;
   virtual void setParent(SceneElement *parent);
   virtual SceneElement *getParent() const;
-  virtual void setLight(const PointLight &light) {}
-  virtual PointLight getLight() const { return PointLight(); }
+  virtual void setLight(const PointLight &light);
+  virtual PointLight getLight() const;
   size_t getId() const;
 
  protected:

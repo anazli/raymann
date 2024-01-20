@@ -7,8 +7,7 @@
 #include "transformations/transformer.h"
 
 void WorldBuilder::createWorld(const PointLight& light) {
-  m_product.reset();
-  m_product = std::make_shared<World>();
+  m_product = new World;
   m_product->setLight(light);
 }
 
@@ -24,7 +23,6 @@ void WorldBuilder::addElement() {
     m_product->add(elem);
     m_currentElement = nullptr;
   }
-  // TODO: Assert that world is already created
 }
 
 void WorldBuilder::processSceneElement(SceneElementRawPtr element) {
@@ -34,6 +32,10 @@ void WorldBuilder::processSceneElement(SceneElementRawPtr element) {
 void WorldBuilder::applyTransformation(const Mat4f& trans) {
   if (m_currentElement)
     m_currentElement = new Transformer(m_currentElement, trans);
+}
+
+void WorldBuilder::applyWorldTransformation(const Mat4f& trans) {
+  m_product = new Transformer(m_product, trans);
 }
 
 void WorldBuilder::applyMaterial(TexturePtr tex,
@@ -58,7 +60,10 @@ void WorldBuilder::applyDielectricMaterial(const float& ri, TexturePtr tex,
   m_currentElement->setMaterial(matptr);
 }
 
-SceneElementPtr WorldBuilder::getProduct() { return m_product; }
+SceneElementPtr WorldBuilder::getProduct() {
+  SceneElementPtr product(m_product);
+  return product;
+}
 
 SceneElementRawPtr WorldBuilder::getCurrentElement() const {
   return m_currentElement;
