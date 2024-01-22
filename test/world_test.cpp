@@ -71,7 +71,7 @@ TEST_F(Tworld, intersectingTransformedWorld) {
   builder->createWorld(light);
 
   builder->processSceneElement(new Sphere);
-  builder->applyTransformation(transl(5.f, 0.f, 0.f));
+  builder->applyTransformation(translation(5.f, 0.f, 0.f));
   builder->addElement();
   builder->applyWorldTransformation(scale(2.f, 2.f, 2.f));
 
@@ -80,6 +80,22 @@ TEST_F(Tworld, intersectingTransformedWorld) {
   EXPECT_EQ(rec.count, 2);
 }
 
+TEST_F(Tworld, convertingPointFromWorldToObjectSpace) {
+  builder = make_unique<WorldBuilder>();
+
+  builder->createWorld(light);
+  builder->applyWorldTransformation(rotationOverY(PI/2.f));
+  SceneElementPtr outerWorld = builder->getProduct();
+
+  builder->createWorld(light);
+  builder->applyWorldTransformation(scale(2.f, 2.f, 2.f));
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(translation(5.f, 0.f, 0.f));
+  builder->addElement();
+  SceneElementPtr innerWorld = builder->getProduct();
+
+  outerWorld->add(innerWorld);
+}
 /*TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   direct = make_shared<StandardSphere>();
@@ -485,7 +501,7 @@ TEST_F(Tworld, intersectionWithShadows) {
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
   world->add(s1);
-  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, transl(0.0f, 0.0f, 10.0f));
+  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, translation(0.0f, 0.0f, 10.0f));
   direct2 = make_shared<StandardSphere>();
   shared_ptr<SceneElement> s2 = direct2->create(builder, prop);
   world->add(s2);

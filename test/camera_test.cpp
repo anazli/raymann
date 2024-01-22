@@ -62,7 +62,7 @@ TEST_F(Tcam, rayThroughCornerOfCanvas) {
 
 TEST_F(Tcam, rayWhenCameraIsTransformed) {
   c = RayTracingChalengeCamera(201, 101, PI / 2.0f);
-  c.setTransform(rotY(PI / 4.0f) * transl(0.0f, -2.0f, 5.0f));
+  c.setTransform(rotationOverY(PI / 4.0f) * translation(0.0f, -2.0f, 5.0f));
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
   float eps = 1.E-5;

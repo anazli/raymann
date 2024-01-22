@@ -19,7 +19,7 @@ class Ttrans : public Test {
 
 TEST_F(Ttrans, appliesTranslationToPoint) {  // TODO: better interface
   p = Point3f(-3.0f, 4.0f, 5.0f);
-  m = transl(5.0f, -3.0f, 2.0f);
+  m = translation(5.0f, -3.0f, 2.0f);
   Vec4f v4(p);
 
   v4 = m * v4;  // transformation
@@ -33,7 +33,7 @@ TEST_F(Ttrans, appliesTranslationToPoint) {  // TODO: better interface
 TEST_F(Ttrans, appliesTranslationToPointOverloaded) {
   p = Point3f(-3.0f, 4.0f, 5.0f);
   Vec3f trans(5.0f, -3.0f, 2.0f);
-  m = transl(trans);
+  m = translation(trans);
   Vec4f v4(p);
 
   v4 = m * v4;  // transformation
@@ -46,7 +46,7 @@ TEST_F(Ttrans, appliesTranslationToPointOverloaded) {
 
 TEST_F(Ttrans, appliesInverseTranslationToPoint) {
   p = Point3f(-3.0f, 4.0f, 5.0f);
-  m = transl(5.0f, -3.0f, 2.0f);
+  m = translation(5.0f, -3.0f, 2.0f);
   m = m.inverse();
   Vec4f v4(p);
 
@@ -60,7 +60,7 @@ TEST_F(Ttrans, appliesInverseTranslationToPoint) {
 
 TEST_F(Ttrans, appliesTranslationToVector) {
   v = Vec3f(-3.0f, 4.0f, 5.0f);
-  m = transl(5.0f, -3.0f, 2.0f);
+  m = translation(5.0f, -3.0f, 2.0f);
   Vec4f v4(v);
 
   v4 = m * v4;
@@ -119,7 +119,7 @@ TEST_F(Ttrans, appliesInverseScalingToVector) {  // TODO: It doesn't pass with
 
 TEST_F(Ttrans, appliesRotationXToPoint) {
   p = Point3f(0.0f, 1.0f, 0.0f);
-  m = rotX(PI / 4.0f);
+  m = rotationOverX(PI / 4.0f);
   Vec4f v4(p);
   v4 = m * v4;
   p = v4;
@@ -131,7 +131,7 @@ TEST_F(Ttrans, appliesRotationXToPoint) {
 
 TEST_F(Ttrans, appliesInverseRotationXToPoint) {
   p = Point3f(0.0f, 1.0f, 0.0f);
-  m = rotX(PI / 4.0f);
+  m = rotationOverX(PI / 4.0f);
   m = m.inverse();
   Vec4f v4(p);
   v4 = m * v4;
@@ -144,7 +144,7 @@ TEST_F(Ttrans, appliesInverseRotationXToPoint) {
 
 TEST_F(Ttrans, appliesRotationYToPoint) {
   p = Point3f(0.0f, 0.0f, 1.0f);
-  m = rotY(PI / 4.0f);
+  m = rotationOverY(PI / 4.0f);
   Vec4f v4(p);
   v4 = m * v4;
   p = v4;
@@ -156,7 +156,7 @@ TEST_F(Ttrans, appliesRotationYToPoint) {
 
 TEST_F(Ttrans, appliesRotationZToPoint) {
   p = Point3f(0.0f, 1.0f, 0.0f);
-  m = rotZ(PI / 4.0f);
+  m = rotationOverZ(PI / 4.0f);
   Vec4f v4(p);
   v4 = m * v4;
   p = v4;
@@ -169,9 +169,9 @@ TEST_F(Ttrans, appliesRotationZToPoint) {
 TEST_F(Ttrans, appliesTransformationsInSequence) {
   p = Point3f(1.0f, 0.0f, 1.0f);
 
-  Mat4f A = rotX(PI / 2.0f);
+  Mat4f A = rotationOverX(PI / 2.0f);
   Mat4f B = scale(5.0f, 5.0f, 5.0f);
-  Mat4f C = transl(10.0f, 5.0f, 7.0f);
+  Mat4f C = translation(10.0f, 5.0f, 7.0f);
   Vec4f v4(p);
   v4 = A * v4;
   Point3f p1(v4);
@@ -199,9 +199,9 @@ TEST_F(Ttrans, appliesTransformationsInSequence) {
 
 TEST_F(Ttrans, appliesTransformationChaining) {
   p = Point3f(1.0f, 0.0f, 1.0f);
-  Mat4f A = rotX(PI / 2.0f);
+  Mat4f A = rotationOverX(PI / 2.0f);
   Mat4f B = scale(5.0f, 5.0f, 5.0f);
-  Mat4f C = transl(10.0f, 5.0f, 7.0f);
+  Mat4f C = translation(10.0f, 5.0f, 7.0f);
   m = C * B * A;
   Vec4f v4(p);
   v4 = m * v4;
@@ -214,7 +214,7 @@ TEST_F(Ttrans, appliesTransformationChaining) {
 
 TEST_F(Ttrans, computesNormalOfTranslatedSphere) {
   SceneElement *s = new Sphere();
-  SceneElement *t = new Transformer(s, transl(0.0f, 1.0f, 0.0f));
+  SceneElement *t = new Transformer(s, translation(0.0f, 1.0f, 0.0f));
   Vec3f norm = t->normal(Point3f(0.0f, 1.70711f, -0.70711));
 
   Vec3f tn(0.0f, 0.70711f, -0.70711f);
@@ -230,7 +230,7 @@ TEST_F(Ttrans, computesNormalOfTranslatedSphere) {
 
 TEST_F(Ttrans, computesNormalOfRotatedSphere) {
   SceneElement *s = new Sphere();
-  SceneElement *t = new Transformer(new Transformer(s, rotZ(PI / 5.0f)),
+  SceneElement *t = new Transformer(new Transformer(s, rotationOverZ(PI / 5.0f)),
                                     scale(1.0f, 0.5f, 1.0f));
 
   Vec3f norm = t->normal(Point3f(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
@@ -270,7 +270,7 @@ TEST_F(Ttrans, viewTransformationMovesTheWorld) {
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
 
   Mat4f m = view_transform(from, to, up);
-  ASSERT_TRUE(m == transl(0.0f, 0.0f, -8.0f));
+  ASSERT_TRUE(m == translation(0.0f, 0.0f, -8.0f));
 }
 
 TEST_F(Ttrans, ArbitraryViewTransformation) {

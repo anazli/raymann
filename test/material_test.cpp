@@ -190,7 +190,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   MaterialProperties prop2;
   prop2.setProperty(Props::REFRACTIVE_INDEX, 2.f);
   builder->createSphere();
-  builder->applyTransformation(transl(0.f, 0.f, -0.25f));
+  builder->applyTransformation(translation(0.f, 0.f, -0.25f));
   builder->applyMaterial(std::move(tex2), prop2);
   builder->addElement();
 
@@ -198,7 +198,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   MaterialProperties prop3;
   prop3.setProperty(Props::REFRACTIVE_INDEX, 2.5f);
   builder->createSphere();
-  builder->applyTransformation(transl(0.f, 0.f, 0.25f));
+  builder->applyTransformation(translation(0.f, 0.f, 0.25f));
   builder->applyMaterial(std::move(tex3), prop3);
   builder->addElement();
 
@@ -233,7 +233,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
       .setProperty(Props::TRANSPARENCY, 0.5f);
   tex1->setColor(prop1.getPropertyAsVec3f(Props::COLOR));
   builder->createSphere();
-  builder->applyTransformation(transl(0.f, 0.f, 1.f));
+  builder->applyTransformation(translation(0.f, 0.f, 1.f));
   builder->applyMaterial(std::move(tex1), prop1);
   builder->addElement();
   Ray r(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f));
@@ -263,7 +263,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   MaterialProperties prop;
   prop.setProperty(Props::TRANSPARENCY, 0.f);
   builder->createSphere();
-  builder->applyTransformation(transl(0.f, 0.f, 1.f));
+  builder->applyTransformation(translation(0.f, 0.f, 1.f));
   builder->applyMaterial(std::move(tex1), prop);
   builder->addElement();
   Ray r(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f));
@@ -286,7 +286,7 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   prop.setProperty(Props::TRANSPARENCY, 1.f)
       .setProperty(Props::REFRACTIVE_INDEX, 1.5f);
   builder->createSphere();
-  builder->applyTransformation(transl(0.f, 0.f, 1.f));
+  builder->applyTransformation(translation(0.f, 0.f, 1.f));
   builder->applyMaterial(std::move(tex1), prop);
   builder->addElement();
   Ray r(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f));
@@ -368,7 +368,7 @@ TEST_F(TMat, findingRefractedColor) {
 
   prop.setProperty(Props::COLOR, Vec3f(1.f, 1.f, 1.f))
       .setProperty(Props::REFLECTION, 0.5f)
-      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, transl(0.f, -1.f, 0.f));
+      .setProperty(Props::OBJECT_TRANSFROM_MATRIX, translation(0.f, -1.f, 0.f));
   builder->createPlane();
   builder->applyTransformation(
       prop.getPropertyAsMat4f(Props::OBJECT_TRANSFROM_MATRIX));
