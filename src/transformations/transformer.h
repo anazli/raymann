@@ -9,7 +9,7 @@ class Transformer : public SceneElementDecorator {
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override;
   void add(std::shared_ptr<SceneElement> item) override;
-  void remove(SceneElement* item, bool del = true) override;
+  void remove(SceneElement *item, bool del = true) override;
   bool isWorld() const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
 
@@ -19,5 +19,5 @@ class Transformer : public SceneElementDecorator {
   SceneElementRawPtr getParent() const override;
 
  private:
-  Mat4f m_transformer;
+  Mat4f m_transformMatrix;
 };

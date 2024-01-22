@@ -1,23 +1,23 @@
 #include "transformations/transformer.h"
 
 Transformer::Transformer(SceneElement* tr) : SceneElementDecorator(tr) {
-  m_transformer.identity();
+  m_transformMatrix.identity();
 }
 
 Transformer::Transformer(SceneElement* tr, const Mat4f& m)
-    : SceneElementDecorator(tr), m_transformer(m) {}
+    : SceneElementDecorator(tr), m_transformMatrix(m) {}
 
 bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
-  auto r_transformed = r.transform(m_transformer.inverse());
+  auto r_transformed = r.transform(m_transformMatrix.inverse());
   return SceneElementDecorator::intersect(r_transformed, record);
 }
 
 Vec3f Transformer::normal(const Point3f& p) const {
   Vec4f v4 = p;
-  Point3f object_point = m_transformer.inverse() * v4;
+  Point3f object_point = m_transformMatrix.inverse() * v4;
   Vec3f object_normal = SceneElementDecorator::normal(object_point);
   Vec3f world_normal =
-      m_transformer.inverse().transpose() * Vec4f(object_normal);
+      m_transformMatrix.inverse().transpose() * Vec4f(object_normal);
   return world_normal.normalize();
 }
 
