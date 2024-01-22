@@ -2,10 +2,8 @@
 
 #include <list>
 #include <memory>
-#include <string>
 
 #include "materials/material.h"
-#include "tools/tools.h"
 
 class BaseRenderer;
 
@@ -31,7 +29,7 @@ class SceneElement {
 
  protected:
   SceneElement();
-  SceneElement *m_parent;
+  SceneElement *m_parent = nullptr;
   BaseMaterialPtr m_material;
   size_t m_id;
   static size_t m_next_id;

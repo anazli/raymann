@@ -3,7 +3,6 @@
 #include <random>
 
 #include "composite/scene_element.h"
-#include "renderers/renderer.h"
 
 using std::uniform_real_distribution;
 std::mt19937 gen(13759327u);

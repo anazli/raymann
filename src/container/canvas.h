@@ -6,7 +6,6 @@
 #include "camera/camera.h"
 #include "composite/scene_element.h"
 #include "renderers/renderer.h"
-#include "tools/tools.h"
 
 class BaseCamera;
 

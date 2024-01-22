@@ -1,9 +1,6 @@
 #include "composite/builder.h"
 
 #include "composite/world.h"
-#include "geometry/bounding_box.h"
-#include "geometry/plane.h"
-#include "geometry/sphere.h"
 #include "transformations/transformer.h"
 
 void WorldBuilder::createWorld(const PointLight& light) {

@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "composite/scene_element.h"
-#include "materials/material.h"
 #include "textures/texture.h"
 
 class Builder {

@@ -1,6 +1,6 @@
-#include <chrono>
-#include <fstream>
-#include <iostream>
+//#include <chrono>
+//#include <fstream>
+//#include <iostream>
 
 #include "camera/camera.h"
 #include "composite/builder.h"
@@ -10,7 +10,6 @@
 #include "geometry/sphere.h"
 #include "renderers/phong_model.h"
 #include "textures/texture.h"
-#include "tools/tools.h"
 
 using namespace std;
 
@@ -44,28 +43,32 @@ int main() {
       .setProperty(Props::SPECULAR, 0.f)
       .setProperty(Props::REFLECTION, 0.3f);
   world->processSceneElement(new Plane);
-  world->applyTransformation(translation(-5.f, 0.f, 0.f) * rotationOverZ(1.5708f));
+  world->applyTransformation(translation(-5.f, 0.f, 0.f) *
+                             rotationOverZ(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
                        prop_wall);
   world->addElement();
 
   //----------------------East Wall---------------------
   world->processSceneElement(new Plane);
-  world->applyTransformation(translation(5.f, 0.f, 0.f) * rotationOverZ(1.5708f));
+  world->applyTransformation(translation(5.f, 0.f, 0.f) *
+                             rotationOverZ(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
                        prop_wall);
   world->addElement();
 
   //----------------------North Wall---------------------
   world->processSceneElement(new Plane);
-  world->applyTransformation(translation(0.f, 0.f, 5.f) * rotationOverX(-1.5708f));
+  world->applyTransformation(translation(0.f, 0.f, 5.f) *
+                             rotationOverX(-1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
                        prop_wall);
   world->addElement();
 
   //----------------------South Wall---------------------
   world->processSceneElement(new Plane);
-  world->applyTransformation(translation(0.f, 0.f, -5.f) * rotationOverX(1.5708f));
+  world->applyTransformation(translation(0.f, 0.f, -5.f) *
+                             rotationOverX(1.5708f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
                        prop_wall);
   world->addElement();
@@ -74,7 +77,8 @@ int main() {
   auto prop_back = MaterialProperties{};
   prop_back.setProperty(Props::SHININESS, 50.f);
   world->processSceneElement(new Sphere);
-  world->applyTransformation(translation(4.6f, 0.4f, 1.f) * scale(0.4f, 0.4f, 0.4f));
+  world->applyTransformation(translation(4.6f, 0.4f, 1.f) *
+                             scale(0.4f, 0.4f, 0.4f));
   world->applyMaterial(make_unique<ConstantTexture>(Vec3f(0.8f, 0.5f, 0.3f)),
                        prop_back);
   world->addElement();

@@ -1,10 +1,7 @@
 #include "renderers/phong_model.h"
 
-#include <algorithm>
-
-#include "composite/world.h"
-
-void PhongModel::visitSceneElementLeaf(const SceneElementRawPtr elementLeaf, const Ray& ray) {
+void PhongModel::visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
+                                       const Ray& ray) {
   /*if (elementLeaf.intersect(ray) && elementLeaf.getRecord().t_min() > 0. &&
       elementLeaf.getRecord().t_min() < m_tmin) {
     m_closestHit = std::make_shared<SceneElement>(elementLeaf);
@@ -12,8 +9,8 @@ void PhongModel::visitSceneElementLeaf(const SceneElementRawPtr elementLeaf, con
   }*/
 }
 
-void PhongModel::visitSceneElementComposite(const SceneElementRawPtr elementComp,
-                                            const Ray& ray) {
+void PhongModel::visitSceneElementComposite(
+    const SceneElementRawPtr elementComp, const Ray& ray) {
   if (elementComp->isWorld()) {
     m_out_color = computeColor(elementComp, ray);
   }

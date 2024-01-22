@@ -2,9 +2,7 @@
 
 #include <memory>
 
-#include "camera/camera.h"
 #include "composite/scene_element.h"
-#include "tools/tools.h"
 
 class BaseRenderer {
  public:

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "composite/scene_element.h"
-#include "renderers/renderer.h"
 
 class Sphere : public SceneElement {
  public:
