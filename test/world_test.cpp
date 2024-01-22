@@ -2,15 +2,14 @@
 
 #include "composite/builder.h"
 #include "composite/scene_element.h"
-#include "composite/builder.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"
 
 using namespace testing;
 using std::make_shared;
+using std::make_unique;
 using std::shared_ptr;
 using std::vector;
-using std::make_unique;
 
 class Tworld : public Test {
  public:
@@ -20,10 +19,10 @@ class Tworld : public Test {
   MaterialProperties prop;
   IntersectionRecord rec;
 
-  //Tworld()
-  //    : light(PointLight(Point3f(-10.0f, 10.0f, -10.0f),
-  //                       Vec3f(1.0f, 1.0f, 1.0f))) {
-  //}
+  // Tworld()
+  //     : light(PointLight(Point3f(-10.0f, 10.0f, -10.0f),
+  //                        Vec3f(1.0f, 1.0f, 1.0f))) {
+  // }
 };
 
 TEST_F(Tworld, createsWorldOfShere) {
@@ -48,7 +47,7 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   builder = make_unique<WorldBuilder>();
   builder->createWorld(light);
   builder->processSceneElement(new Sphere(Point3f(0.0f, 0.0f, 5.0f)));
-  SceneElementRawPtr s = builder->getCurrentElement(); 
+  SceneElementRawPtr s = builder->getCurrentElement();
   builder->addElement();
   builder->processSceneElement(new Sphere);
   SceneElementRawPtr s1 = builder->getCurrentElement();
@@ -84,7 +83,7 @@ TEST_F(Tworld, convertingPointFromWorldToObjectSpace) {
   builder = make_unique<WorldBuilder>();
 
   builder->createWorld(light);
-  builder->applyWorldTransformation(rotationOverY(PI/2.f));
+  builder->applyWorldTransformation(rotationOverY(PI / 2.f));
   SceneElementPtr outerWorld = builder->getProduct();
 
   builder->createWorld(light);
@@ -94,7 +93,18 @@ TEST_F(Tworld, convertingPointFromWorldToObjectSpace) {
   builder->addElement();
   SceneElementPtr innerWorld = builder->getProduct();
 
+  SceneElementRawPtr sphere = builder->getCurrentElement();
   outerWorld->add(innerWorld);
+
+  EXPECT_TRUE(sphere->getParent() == innerWorld.get());
+  EXPECT_TRUE(innerWorld->getParent() == outerWorld.get());
+  EXPECT_TRUE(outerWorld->getParent() == nullptr);
+
+  Point3f point =
+      sphere->pointFromWorldToObjectSpace(Point3f(-2.f, 0.f, -10.f));
+  EXPECT_EQ(point.x(), 0.f);
+  EXPECT_EQ(point.y(), 0.f);
+  EXPECT_EQ(point.z(), -1.f);
 }
 /*TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
@@ -501,13 +511,11 @@ TEST_F(Tworld, intersectionWithShadows) {
   direct = make_shared<StandardSphere>();
   TraceablePtr s1 = direct->create(builder, prop);
   world->add(s1);
-  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, translation(0.0f, 0.0f, 10.0f));
-  direct2 = make_shared<StandardSphere>();
-  shared_ptr<SceneElement> s2 = direct2->create(builder, prop);
-  world->add(s2);
-  Ray r(Point3f(0.0f, 0.0f, 5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  light = PointLight(Point3f(0.0f, 0.0f, 10.0f), Vec3f(1.0f, 1.0f, 1.0f));
-  world->setLight(light);
+  prop.setProperty(Props::OBJECT_TRANSFROM_MATRIX, translation(0.0f,
+0.0f, 10.0f)); direct2 = make_shared<StandardSphere>(); shared_ptr<SceneElement>
+s2 = direct2->create(builder, prop); world->add(s2); Ray r(Point3f(0.0f,
+0.0f, 5.0f), Vec3f(0.0f, 0.0f, 1.0f)); light = PointLight(Point3f(0.0f,
+0.0f, 10.0f), Vec3f(1.0f, 1.0f, 1.0f)); world->setLight(light);
   world->intersect(r);
   TraceablePtr t = world->closestHit(r);
   t->setLight(light);

@@ -1,6 +1,6 @@
 #include "transformations/transformer.h"
 
-Transformer::Transformer(SceneElement* tr, const Mat4f& m)
+Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
     : SceneElementDecorator(tr, m) {}
 
 bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
@@ -17,11 +17,11 @@ Vec3f Transformer::normal(const Point3f& p) const {
   return world_normal.normalize();
 }
 
-void Transformer::add(std::shared_ptr<SceneElement> item) {
+void Transformer::add(SceneElementPtr item) {
   SceneElementDecorator::add(item);
 }
 
-void Transformer::remove(SceneElement* item, bool del) {
+void Transformer::remove(SceneElementRawPtr item, bool del) {
   SceneElementDecorator::remove(item, del);
 }
 
@@ -40,9 +40,20 @@ BaseMaterialPtr Transformer::getMaterial() const {
 }
 
 void Transformer::setParent(SceneElementRawPtr parent) {
-  SceneElement::setParent(parent);
+  SceneElementDecorator::setParent(parent);
 }
 
 SceneElementRawPtr Transformer::getParent() const {
   return SceneElementDecorator::getParent();
+}
+
+Point3f Transformer::pointFromWorldToObjectSpace(const Point3f& point) const {
+  if (getParent()) {
+    return getParent()->pointFromWorldToObjectSpace(point);
+  }
+  return m_transformMatrix.inverse() * Vec4f(point);
+}
+
+Vec3f Transformer::vectorFromObjectToWorldSpace(const Vec3f vec) const {
+  return SceneElementDecorator::vectorFromObjectToWorldSpace(vec);
 }

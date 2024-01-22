@@ -21,7 +21,6 @@ void WorldBuilder::addElement() {
   if (m_product) {
     SceneElementPtr elem(m_currentElement);
     m_product->add(elem);
-    m_currentElement = nullptr;
   }
 }
 

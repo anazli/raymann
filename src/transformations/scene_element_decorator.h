@@ -3,12 +3,12 @@
 
 class SceneElementDecorator : public SceneElement {
  public:
-  SceneElementDecorator(SceneElement *tr, const Mat4f &m = Mat4f());
+  SceneElementDecorator(SceneElementRawPtr tr, const Mat4f &m = Mat4f());
   ~SceneElementDecorator() override;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override;
-  void add(std::shared_ptr<SceneElement> item) override;
-  void remove(SceneElement *item, bool del = true) override;
+  void add(SceneElementPtr item) override;
+  void remove(SceneElementRawPtr item, bool del = true) override;
   bool isWorld() const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
 
@@ -17,7 +17,10 @@ class SceneElementDecorator : public SceneElement {
   void setParent(SceneElementRawPtr parent) override;
   SceneElementRawPtr getParent() const override;
 
+  Point3f pointFromWorldToObjectSpace(const Point3f &point) const override;
+  Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const override;
+
  protected:
-  SceneElement *m_element;
+  SceneElementRawPtr m_element;
   Mat4f m_transformMatrix;
 };
