@@ -1,10 +1,12 @@
 #include "transformations/scene_element_decorator.h"
 
-SceneElementDecorator::SceneElementDecorator(SceneElement* tr) : m_element(tr) {}
+SceneElementDecorator::SceneElementDecorator(SceneElement* tr, const Mat4f& m)
+    : m_element(tr), m_transformMatrix(m) {}
 
 SceneElementDecorator::~SceneElementDecorator() { delete m_element; }
 
-bool SceneElementDecorator::intersect(const Ray& r, IntersectionRecord& record) {
+bool SceneElementDecorator::intersect(const Ray& r,
+                                      IntersectionRecord& record) {
   return m_element->intersect(r, record);
 }
 

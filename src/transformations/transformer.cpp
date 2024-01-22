@@ -1,11 +1,7 @@
 #include "transformations/transformer.h"
 
-Transformer::Transformer(SceneElement* tr) : SceneElementDecorator(tr) {
-  m_transformMatrix.identity();
-}
-
 Transformer::Transformer(SceneElement* tr, const Mat4f& m)
-    : SceneElementDecorator(tr), m_transformMatrix(m) {}
+    : SceneElementDecorator(tr, m) {}
 
 bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
   auto r_transformed = r.transform(m_transformMatrix.inverse());
