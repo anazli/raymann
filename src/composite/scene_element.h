@@ -16,7 +16,7 @@ class SceneElement {
   virtual bool isWorld() const;
   virtual Vec3f normal(const Point3f &p) const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);
-  virtual std::list<std::shared_ptr<SceneElement>> getWorldList();
+  virtual std::list<std::shared_ptr<SceneElement>> getChildren();
   virtual void setMaterial(BaseMaterialPtr mat);
   virtual BaseMaterialPtr getMaterial() const;
   virtual void setParent(SceneElement *parent);

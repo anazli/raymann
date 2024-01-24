@@ -17,7 +17,7 @@ class World : public SceneElement {
   bool isWorld() const override;
   Vec3f normal(const Point3f &p) const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
-  SceneElementContainer getWorldList() override;
+  SceneElementContainer getChildren() override;
   void setLight(const PointLight &light) override;
   PointLight getLight() const override;
 

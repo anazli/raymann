@@ -217,7 +217,7 @@ bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3f& p) {
     const SceneElementPtr& world, const Ray& ray) const {
   std::map<size_t, std::pair<size_t, float>> ret;
   auto count = 0;
-  WorldIterator iter(world->getWorldList());
+  WorldIterator iter(world->getChildren());
   if (iter.first()) {
     while (iter.notDone()) {
       auto record = IntersectionRecord{};
@@ -240,7 +240,7 @@ bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3f& p) {
 
 /*SceneElementPtr PhongModel::findSceneElementById(const size_t& id,
                                                  const SceneElementPtr& world) {
-  WorldIterator it(world->getWorldList());
+  WorldIterator it(world->getChildren());
   auto ret_iter = std::find_if(
       it.begin(), it.end(),
       [&id](const SceneElementPtr& elem) { return elem->getId() == id; });

@@ -240,17 +240,17 @@ TEST_F(TMat, strikeNonReflectiveSurface) {
   PhongModel pm;
   SceneElementPtr world = builder->getProduct();
   pm.visitSceneElementComposite(world, r);
-  EXPECT_GT(world->getWorldList()
+  EXPECT_GT(world->getChildren()
                 .back()
                 ->getRecord()
                 .under_point_from_refrac_surf.z(),
             EPS / 2.f);
-  EXPECT_GT(Vec3f(world->getWorldList()
+  EXPECT_GT(Vec3f(world->getChildren()
                       .back()
                       ->getRecord()
                       .under_point_from_refrac_surf)
                 .length(),
-            Vec3f(world->getWorldList().back()->getRecord().point(r)).length());
+            Vec3f(world->getChildren().back()->getRecord().point(r)).length());
 }*/
 
 /*TEST_F(TMat, findingRefractedColorOfOpaqueObject) {

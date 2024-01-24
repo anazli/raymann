@@ -1,5 +1,6 @@
 #pragma once
 #include "composite/scene_element.h"
+#include "composite/world.h"
 
 class SceneElementDecorator : public SceneElement {
  public:
@@ -11,6 +12,7 @@ class SceneElementDecorator : public SceneElement {
   void remove(SceneElementRawPtr item, bool del = true) override;
   bool isWorld() const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
+  SceneElementContainer getChildren() override;
 
   void setMaterial(BaseMaterialPtr mat) override;
   BaseMaterialPtr getMaterial() const override;

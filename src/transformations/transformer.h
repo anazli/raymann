@@ -11,6 +11,7 @@ class Transformer : public SceneElementDecorator {
   void remove(SceneElementRawPtr item, bool del = true) override;
   bool isWorld() const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
+  SceneElementContainer getChildren() override;
 
   void setMaterial(BaseMaterialPtr mat) override;
   BaseMaterialPtr getMaterial() const override;

@@ -40,7 +40,7 @@ Vec3f BasicPathTracer::computeColor(const SceneElementPtr& world,
 
 IntersectionRecord BasicPathTracer::findClosestHit(const SceneElementPtr& world,
                                                    const Ray& r) {
-  WorldIterator it(world->getWorldList());
+  WorldIterator it(world->getChildren());
   m_tmin = MAXFLOAT;
   if (it.first()) {
     while (it.notDone()) {

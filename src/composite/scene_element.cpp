@@ -20,7 +20,7 @@ void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementLeaf(this, ray);
 }
 
-std::list<SceneElementPtr> SceneElement::getWorldList() {
+std::list<SceneElementPtr> SceneElement::getChildren() {
   return std::list<SceneElementPtr>();
 }
 

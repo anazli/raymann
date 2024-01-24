@@ -10,7 +10,7 @@ using std::sort;
 using std::vector;
 
 bool World::intersect(const Ray& r, IntersectionRecord& record) {
-  WorldIterator it(getWorldList());
+  WorldIterator it(getChildren());
   float minHitParam = MAXFLOAT;
   bool hitFound = false;
   if (it.first()) {
@@ -49,7 +49,7 @@ void World::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementComposite(this, ray);
 }
 
-SceneElementContainer World::getWorldList() { return m_sceneElementContainer; }
+SceneElementContainer World::getChildren() { return m_sceneElementContainer; }
 
 void World::setLight(const PointLight& light) { m_light = light; }
 

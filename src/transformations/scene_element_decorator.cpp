@@ -27,6 +27,10 @@ void SceneElementDecorator::accept(BaseRenderer& renderer, const Ray& ray) {
   m_element->accept(renderer, ray);
 }
 
+SceneElementContainer SceneElementDecorator::getChildren() {
+  return m_element->getChildren();
+}
+
 void SceneElementDecorator::setMaterial(BaseMaterialPtr mat) {
   m_element->setMaterial(mat);
 }

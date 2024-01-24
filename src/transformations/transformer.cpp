@@ -31,6 +31,10 @@ void Transformer::accept(BaseRenderer& renderer, const Ray& ray) {
   SceneElementDecorator::accept(renderer, ray);
 }
 
+SceneElementContainer Transformer::getChildren() {
+  return SceneElementDecorator::getChildren();
+}
+
 void Transformer::setMaterial(BaseMaterialPtr mat) {
   SceneElementDecorator::setMaterial(mat);
 }
