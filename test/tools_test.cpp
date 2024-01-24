@@ -942,6 +942,11 @@ TEST_F(Matrix4, GetsTheDeterminant) {
       Vec4<double>(5.36, 2.28, 0.93, 13.), Vec4<double>(-1.5, 85., 0., 5.),
       Vec4<double>(45.8, -50., 0.14, -1.5), Vec4<double>(0.48, -38.5, 0., -1.));
   ASSERT_DOUBLE_EQ(m4.determinant(), -4401.55547);
+
+  Mat4<float> m4f = Mat4<float>(
+      Vec4<float>(-2.f, -8.f, 3.f, 5.f), Vec4<float>(-3.f, 1.f, 7.f, 3.f),
+      Vec4<float>(1.f, 2.f, -9.f, 6.f), Vec4<float>(-6.f, 7.f, 7.f, -9.f));
+  ASSERT_DOUBLE_EQ(m4f.determinant(), -4071.f);
 }
 
 TEST_F(Matrix4, AddsTwoMatrices) {
@@ -1060,6 +1065,34 @@ TEST_F(Matrix4, GetInverseOfMatrix) {
   ASSERT_DOUBLE_EQ(m4[3][1], -0.28062094628954117469);
   ASSERT_DOUBLE_EQ(m4[3][2], 0.023882125947969312508);
   ASSERT_DOUBLE_EQ(m4[3][3], -0.29502292015854104069);
+
+  Mat4<float> m4f = Mat4<float>(
+      Vec4<float>(-5.f, 2.f, 6.f, -8.f), Vec4<float>(1.f, -5.f, 1.f, 8.f),
+      Vec4<float>(7.f, 7.f, -6.f, -7.f), Vec4<float>(1.f, -3.f, 7.f, 4.f));
+
+  m4f = m4f.inverse();
+
+  float eps{10E-5f};
+
+  EXPECT_NEAR(m4f[0][0], 0.218045f, eps);
+  EXPECT_NEAR(m4f[0][1], 0.45113f, eps);
+  EXPECT_NEAR(m4f[0][2], 0.24060f, eps);
+  EXPECT_NEAR(m4f[0][3], -0.04511f, eps);
+
+  EXPECT_NEAR(m4f[1][0], -0.80827f, eps);
+  EXPECT_NEAR(m4f[1][1], -1.456777f, eps);
+  EXPECT_NEAR(m4f[1][2], -0.44361f, eps);
+  EXPECT_NEAR(m4f[1][3], 0.52068f, eps);
+
+  EXPECT_NEAR(m4f[2][0], -0.07895f, eps);
+  EXPECT_NEAR(m4f[2][1], -0.22368f, eps);
+  EXPECT_NEAR(m4f[2][2], -0.05263f, eps);
+  EXPECT_NEAR(m4f[2][3], 0.19737f, eps);
+
+  EXPECT_NEAR(m4f[3][0], -0.52256f, eps);
+  EXPECT_NEAR(m4f[3][1], -0.81391f, eps);
+  EXPECT_NEAR(m4f[3][2], -0.30075f, eps);
+  EXPECT_NEAR(m4f[3][3], 0.30639f, eps);
 }
 
 //--------------------------------------------
