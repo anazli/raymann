@@ -23,7 +23,7 @@ class Vec4 {
 
   Vec4<T>(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()}, m_w{v.w()} {}
   Vec4<T>(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
-  Vec4<T>(const Point3<T> p) : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
+  Vec4<T>(const Point3<T>& p) : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
