@@ -38,7 +38,7 @@ PointLight SceneElement::getLight() const { return PointLight(); }
 
 size_t SceneElement::getId() const { return m_id; }
 
-Point3f SceneElement::pointFromWorldToObjectSpace(const Point3f& point) const {
+Point3f SceneElement::pointFromWorldToObjectSpace(Point3f& point) const {
   return Point3f();
 }
 

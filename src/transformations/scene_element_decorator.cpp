@@ -48,7 +48,7 @@ SceneElementRawPtr SceneElementDecorator::getParent() const {
 }
 
 Point3f SceneElementDecorator::pointFromWorldToObjectSpace(
-    const Point3f& point) const {
+    Point3f& point) const {
   return m_element->pointFromWorldToObjectSpace(point);
 }
 

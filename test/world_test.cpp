@@ -1,5 +1,3 @@
-#include "composite/world.h"
-
 #include "composite/builder.h"
 #include "composite/scene_element.h"
 #include "geometry/sphere.h"
@@ -29,6 +27,7 @@ TEST_F(Tworld, createsWorldOfShere) {
   builder = make_unique<WorldBuilder>();
   builder->createWorld(light);
   builder->processSceneElement(new Sphere);
+  builder->applyTransformation(Mat4f());
   SceneElementRawPtr sphere = builder->getCurrentElement();
   EXPECT_TRUE(sphere->getParent() == nullptr);
   builder->addElement();
@@ -64,6 +63,19 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   EXPECT_EQ(rec.t2, 6.0f);
 }
 
+TEST_F(Tworld, whenWorldIsTranformed_parentOfChildIsCorrect) {
+  builder = make_unique<WorldBuilder>();
+  builder->createWorld(light);
+  builder->applyWorldTransformation(Mat4f());
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(Mat4f());
+  SceneElementRawPtr sphere = builder->getCurrentElement();
+  EXPECT_TRUE(sphere->getParent() == nullptr);
+  builder->addElement();
+  world = builder->getProduct();
+  EXPECT_TRUE(sphere->getParent() == world.get());
+}
+
 TEST_F(Tworld, intersectingTransformedWorld) {
   Ray r = Ray(Point3f(10.0f, 0.0f, -10.0f), Vec3f(0.0f, 0.0f, 1.0f));
   builder = make_unique<WorldBuilder>();
@@ -96,15 +108,15 @@ TEST_F(Tworld, convertingPointFromWorldToObjectSpace) {
   SceneElementRawPtr sphere = builder->getCurrentElement();
   outerWorld->add(innerWorld);
 
-  EXPECT_TRUE(sphere->getParent() == innerWorld.get());
-  EXPECT_TRUE(innerWorld->getParent() == outerWorld.get());
-  EXPECT_TRUE(outerWorld->getParent() == nullptr);
+  EXPECT_EQ(sphere->getParent(), innerWorld.get());
+  EXPECT_EQ(innerWorld->getParent(), outerWorld.get());
+  EXPECT_EQ(outerWorld->getParent(), nullptr);
 
-  Point3f point =
-      sphere->pointFromWorldToObjectSpace(Point3f(-2.f, 0.f, -10.f));
-  EXPECT_EQ(point.x(), 0.f);
-  EXPECT_EQ(point.y(), 0.f);
-  EXPECT_EQ(point.z(), -1.f);
+  Point3f p(-2.f, 0.f, -10.f);
+  Point3f point = sphere->pointFromWorldToObjectSpace(p);
+  EXPECT_FLOAT_EQ(point.x(), 0.f);
+  EXPECT_FLOAT_EQ(point.y(), 0.f);
+  EXPECT_FLOAT_EQ(point.z(), -1.f);
 }
 /*TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));

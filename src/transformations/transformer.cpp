@@ -1,7 +1,15 @@
 #include "transformations/transformer.h"
 
 Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
-    : SceneElementDecorator(tr, m) {}
+    : SceneElementDecorator(tr, m) {
+  WorldIterator it(getChildren());
+  if (it.first()) {
+    while (it.notDone()) {
+      it.currentElement()->setParent(this);
+      it.advance();
+    }
+  }
+}
 
 bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
   auto r_transformed = r.transform(m_transformMatrix.inverse());
@@ -19,6 +27,13 @@ Vec3f Transformer::normal(const Point3f& p) const {
 
 void Transformer::add(SceneElementPtr item) {
   SceneElementDecorator::add(item);
+  WorldIterator it(getChildren());
+  if (it.first()) {
+    while (it.notDone()) {
+      it.currentElement()->setParent(this);
+      it.advance();
+    }
+  }
 }
 
 void Transformer::remove(SceneElementRawPtr item, bool del) {
@@ -51,9 +66,9 @@ SceneElementRawPtr Transformer::getParent() const {
   return SceneElementDecorator::getParent();
 }
 
-Point3f Transformer::pointFromWorldToObjectSpace(const Point3f& point) const {
+Point3f Transformer::pointFromWorldToObjectSpace(Point3f& point) const {
   if (getParent()) {
-    return getParent()->pointFromWorldToObjectSpace(point);
+    point = getParent()->pointFromWorldToObjectSpace(point);
   }
   return m_transformMatrix.inverse() * Vec4f(point);
 }
