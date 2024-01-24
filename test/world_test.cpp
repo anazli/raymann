@@ -148,6 +148,35 @@ TEST_F(Tworld, convertingVectorFromObjectToWorldSpace) {
   EXPECT_NEAR(vec.z(), -0.8571f, eps);
 }
 
+TEST_F(Tworld, findingNormalOfChildObjectOfTransformedWorld) {
+  builder = make_unique<WorldBuilder>();
+
+  builder->createWorld(light);
+  builder->applyWorldTransformation(rotationOverY(PI / 2.f));
+  SceneElementPtr outerWorld = builder->getProduct();
+
+  builder->createWorld(light);
+  builder->applyWorldTransformation(scale(1.f, 2.f, 3.f));
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(translation(5.f, 0.f, 0.f));
+  builder->addElement();
+  SceneElementPtr innerWorld = builder->getProduct();
+
+  SceneElementRawPtr sphere = builder->getCurrentElement();
+  outerWorld->add(innerWorld);
+
+  EXPECT_EQ(sphere->getParent(), innerWorld.get());
+  EXPECT_EQ(innerWorld->getParent(), outerWorld.get());
+  EXPECT_EQ(outerWorld->getParent(), nullptr);
+
+  Point3f point(1.7321f, 1.1547f, -5.5774f);
+  Vec3f vec = sphere->normal(point);
+  float eps{10E-5f};
+  EXPECT_NEAR(vec.x(), 0.2857f, eps);
+  EXPECT_NEAR(vec.y(), 0.4286f, eps);
+  EXPECT_NEAR(vec.z(), -0.8571f, eps);
+}
+
 /*TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   direct = make_shared<StandardSphere>();

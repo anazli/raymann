@@ -17,12 +17,10 @@ bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
 }
 
 Vec3f Transformer::normal(const Point3f& p) const {
-  Vec4f v4 = p;
-  Point3f object_point = m_transformMatrix.inverse() * v4;
-  Vec3f object_normal = SceneElementDecorator::normal(object_point);
-  Vec3f world_normal =
-      m_transformMatrix.inverse().transpose() * Vec4f(object_normal);
-  return world_normal.normalize();
+  Point3f world_point(p);
+  Point3f local_point = pointFromWorldToObjectSpace(world_point);
+  Vec3f local_normal = SceneElementDecorator::normal(local_point);
+  return vectorFromObjectToWorldSpace(local_normal);
 }
 
 void Transformer::add(SceneElementPtr item) {
