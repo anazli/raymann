@@ -73,6 +73,11 @@ Point3f Transformer::pointFromWorldToObjectSpace(Point3f& point) const {
   return m_transformMatrix.inverse() * Vec4f(point);
 }
 
-Vec3f Transformer::vectorFromObjectToWorldSpace(const Vec3f vec) const {
-  return SceneElementDecorator::vectorFromObjectToWorldSpace(vec);
+Vec3f Transformer::vectorFromObjectToWorldSpace(Vec3f vec) const {
+  vec = m_transformMatrix.inverse().transpose() * Vec4f(vec);
+  vec = vec.normalize();
+  if (getParent()) {
+    vec = getParent()->vectorFromObjectToWorldSpace(vec);
+  }
+  return vec;
 }

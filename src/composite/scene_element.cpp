@@ -42,7 +42,7 @@ Point3f SceneElement::pointFromWorldToObjectSpace(Point3f& point) const {
   return Point3f();
 }
 
-Vec3f SceneElement::vectorFromObjectToWorldSpace(const Vec3f vec) const {
+Vec3f SceneElement::vectorFromObjectToWorldSpace(Vec3f vec) const {
   return Vec3f();
 }
 

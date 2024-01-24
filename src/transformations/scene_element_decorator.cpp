@@ -52,7 +52,6 @@ Point3f SceneElementDecorator::pointFromWorldToObjectSpace(
   return m_element->pointFromWorldToObjectSpace(point);
 }
 
-Vec3f SceneElementDecorator::vectorFromObjectToWorldSpace(
-    const Vec3f vec) const {
+Vec3f SceneElementDecorator::vectorFromObjectToWorldSpace(Vec3f vec) const {
   return m_element->vectorFromObjectToWorldSpace(vec);
 }
