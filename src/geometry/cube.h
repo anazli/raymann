@@ -4,9 +4,9 @@
 
 #include "composite/scene_element.h"
 
-class BoundingBox : public SceneElement {
+class Cube : public SceneElement {
  public:
-  ~BoundingBox() override = default;
+  ~Cube() override = default;
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {
     std::pair<float, float> xMinMax =

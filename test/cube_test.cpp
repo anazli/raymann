@@ -1,4 +1,4 @@
-#include "geometry/bounding_box.h"
+#include "geometry/cube.h"
 #include "gtest/gtest.h"
 #include "tools/tools.h"
 
@@ -12,7 +12,7 @@ class TBox : public Test {
 };
 
 TEST_F(TBox, rayIntersectsCube) {
-  box = make_shared<BoundingBox>();
+  box = make_shared<Cube>();
 
   ray = Ray(Point3f(5.f, 0.5f, 0.f), Vec3f(-1.f, 0.f, 0.f));
   auto rec = IntersectionRecord{};
@@ -58,7 +58,7 @@ TEST_F(TBox, rayIntersectsCube) {
 }
 
 TEST_F(TBox, rayMissesCube) {
-  box = make_shared<BoundingBox>();
+  box = make_shared<Cube>();
 
   ray = Ray(Point3f(-2.f, 0.f, 0.f), Vec3f(0.2673f, 0.5345f, 0.8018f));
   auto rec = IntersectionRecord{};
@@ -92,7 +92,7 @@ TEST_F(TBox, rayMissesCube) {
 }
 
 TEST_F(TBox, normalOnSurfaceOfCube) {
-  box = make_shared<BoundingBox>();
+  box = make_shared<Cube>();
   auto point = Point3f(1.f, 0.5f, -0.8f);
   EXPECT_TRUE(box->normal(point) == Vec3f(1.f, 0.f, 0.f));
   point = Point3f(-1.f, -0.2f, 0.9f);

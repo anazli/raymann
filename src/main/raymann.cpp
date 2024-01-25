@@ -5,7 +5,7 @@
 #include "camera/camera.h"
 #include "composite/builder.h"
 #include "container/canvas.h"
-#include "geometry/bounding_box.h"
+#include "geometry/cube.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "renderers/phong_model.h"
@@ -130,7 +130,7 @@ int main() {
   world->addElement();
 
   //----------------------Perlin Box----------------
-  world->processSceneElement(new BoundingBox);
+  world->processSceneElement(new Cube);
   world->applyTransformation(translation(-2.5f, 0.5f, 0.8f) *
                              scale(0.5f, 0.5f, 0.5f));
   world->applyMaterial(make_unique<PerlinTexture>(1.1f), MaterialProperties{});
