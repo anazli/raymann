@@ -6,8 +6,7 @@ set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(EXE raymann)
 
-set(SOURCES src/main/raymann.cpp
-            src/acceleration/scene_element_proxy.cpp
+set(SOURCES src/acceleration/scene_element_proxy.cpp
             src/acceleration/scene_element_proxy.h
             src/composite/builder.cpp
             src/composite/builder.h
@@ -37,7 +36,7 @@ set(SOURCES src/main/raymann.cpp
             src/transformations/transformer.h
 )
 
-add_executable(${EXE} ${SOURCES})
+add_executable(${EXE} src/main/raymann.cpp ${SOURCES})
 target_include_directories(${EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
 set_target_properties(${EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
 #target_compile_options(${EXE} PRIVATE "-g")
@@ -49,62 +48,39 @@ if(BUILD_TESTING)
   FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG release-1.12.1
+    GIT_TAG v1.14.0
   )
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   FetchContent_MakeAvailable(googletest)
   include(GoogleTest)
 
 
-  MACRO(TESTCASE NAME TEST_SOURCES)
-    set(TEST_EXE ${NAME}_test)
-    add_executable(${TEST_EXE} test/${NAME}_test.cpp ${TEST_SOURCES})
-    target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
-    target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
-    set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
-    #target_compile_options(${TEST_EXE} PRIVATE "-g")
-    target_link_options(${TEST_EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
-    add_test(${TEST_EXE} ${RUN_TEST_DIR}/${TEST_EXE})
-    gtest_discover_tests(${TEST_EXE})
-  ENDMACRO(TESTCASE)
+  set(TEST_EXE raymannTests)
+  set(TEST_SOURCES test/camera_test.cpp
+                   test/canvas_test.cpp
+                   test/cube_test.cpp
+                   test/material_test.cpp
+                   test/plane_test.cpp
+                   test/properties_test.cpp
+                   test/ray_test.cpp
+                   test/sphere_test.cpp
+                   test/tools_test.cpp
+                   test/transformer_test.cpp
+                   test/world_test.cpp
+                   ${SOURCES}
+  )
+
+  add_executable(${TEST_EXE} ${TEST_SOURCES})
+  target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
+  target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
+  set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
+  #target_compile_options(${TEST_EXE} PRIVATE "-g")
+  target_link_options(${TEST_EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
+  add_test(${TEST_EXE} ${RUN_TEST_DIR}/${TEST_EXE})
+  gtest_discover_tests(${TEST_EXE})
 
   enable_testing()
   find_package(GTest REQUIRED)
   include_directories(${GTEST_INCLUDE_DIRS})
 
-  set(testSources src/tools/tools.h)
-  TESTCASE(tools ${testSources})
-  set(testSources src/container/canvas.cpp
-      src/composite/scene_element.cpp
-     )
-  TESTCASE(canvas ${testSources})
-  set(testSources src/tools/ray.h)
-  TESTCASE(ray ${testSources})
-  set(testSources src/camera/camera.h)
-  TESTCASE(camera ${testSources})
-  set(testSources src/materials/material_properties.cpp)
-  TESTCASE(properties ${testSources})
-  set(testSources src/composite/scene_element.cpp
-      src/geometry/cube.h
-      src/geometry/sphere.h
-      src/geometry/plane.h
-      src/transformations/transformer.cpp
-      src/transformations/scene_element_decorator.cpp
-      src/textures/perlin.cpp)
-  TESTCASE(sphere "${testSources}")
-  TESTCASE(plane "${testSources}")
-  TESTCASE(cube "${testSources}")
-  set(testSources
-      src/composite/scene_element.cpp
-      src/composite/builder.cpp
-      src/composite/world.cpp
-      src/materials/material.cpp
-      src/materials/material_properties.cpp
-      src/transformations/scene_element_decorator.cpp
-      src/transformations/transformer.cpp
-      src/textures/perlin.cpp
-      src/renderers/phong_model.cpp)
-  TESTCASE(material "${testSources}")
-  TESTCASE(transformer "${testSources}")
-  TESTCASE(world "${testSources}")
 endif()
