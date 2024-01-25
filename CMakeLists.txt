@@ -7,21 +7,35 @@ set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(EXE raymann)
 
 set(SOURCES src/main/raymann.cpp
+            src/acceleration/scene_element_proxy.cpp
+            src/acceleration/scene_element_proxy.h
             src/composite/builder.cpp
+            src/composite/builder.h
             src/composite/scene_element.cpp
-            src/container/canvas.cpp
+            src/composite/scene_element.h
             src/composite/world.cpp
+            src/composite/world.h
+            src/container/canvas.cpp
+            src/container/canvas.h
             src/geometry/cube.h
-            src/geometry/sphere.h
             src/geometry/plane.h
+            src/geometry/sphere.h
             src/materials/material.cpp
-            src/materials/material_properties.h
+            src/materials/material.h
             src/materials/material_properties.cpp
-            src/transformations/scene_element_decorator.cpp
-            src/transformations/transformer.cpp
-            src/renderers/phong_model.cpp
+            src/materials/material_properties.h
             src/renderers/path_tracer.cpp
-            src/textures/perlin.cpp)
+            src/renderers/path_tracer.h
+            src/renderers/phong_model.cpp
+            src/renderers/phong_model.h
+            src/textures/perlin.cpp
+            src/textures/perlin.h
+            src/textures/texture.h
+            src/transformations/scene_element_decorator.cpp
+            src/transformations/scene_element_decorator.h
+            src/transformations/transformer.cpp
+            src/transformations/transformer.h
+)
 
 add_executable(${EXE} ${SOURCES})
 target_include_directories(${EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
