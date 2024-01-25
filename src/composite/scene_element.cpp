@@ -39,11 +39,13 @@ PointLight SceneElement::getLight() const { return PointLight(); }
 size_t SceneElement::getId() const { return m_id; }
 
 Point3f SceneElement::pointFromWorldToObjectSpace(const Point3f& point) const {
-  return Point3f();
+  return Mat4f().inverse() * Vec4f(point);
 }
 
 Vec3f SceneElement::vectorFromObjectToWorldSpace(const Vec3f vec) const {
-  return Vec3f();
+  Vec3f v(vec);
+  v = Mat4f().inverse().transpose() * Vec4f(v);
+  return v.normalize();
 }
 
 SceneElement::SceneElement() {
