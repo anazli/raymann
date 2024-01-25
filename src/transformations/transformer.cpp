@@ -2,11 +2,13 @@
 
 Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
     : SceneElementDecorator(tr, m) {
-  WorldIterator it(getChildren());
-  if (it.first()) {
-    while (it.notDone()) {
-      it.currentElement()->setParent(this);
-      it.advance();
+  if (tr->isWorld()) {
+    WorldIterator it(getChildren());
+    if (it.first()) {
+      while (it.notDone()) {
+        it.currentElement()->setParent(this);
+        it.advance();
+      }
     }
   }
 }
@@ -64,18 +66,20 @@ SceneElementRawPtr Transformer::getParent() const {
   return SceneElementDecorator::getParent();
 }
 
-Point3f Transformer::pointFromWorldToObjectSpace(Point3f& point) const {
+Point3f Transformer::pointFromWorldToObjectSpace(const Point3f& point) const {
+  Point3f p(point);
   if (getParent()) {
-    point = getParent()->pointFromWorldToObjectSpace(point);
+    p = getParent()->pointFromWorldToObjectSpace(p);
   }
-  return m_transformMatrix.inverse() * Vec4f(point);
+  return m_transformMatrix.inverse() * Vec4f(p);
 }
 
-Vec3f Transformer::vectorFromObjectToWorldSpace(Vec3f vec) const {
-  vec = m_transformMatrix.inverse().transpose() * Vec4f(vec);
-  vec = vec.normalize();
+Vec3f Transformer::vectorFromObjectToWorldSpace(const Vec3f vec) const {
+  Vec3f v(vec);
+  v = m_transformMatrix.inverse().transpose() * Vec4f(v);
+  v = v.normalize();
   if (getParent()) {
-    vec = getParent()->vectorFromObjectToWorldSpace(vec);
+    v = getParent()->vectorFromObjectToWorldSpace(v);
   }
-  return vec;
+  return v;
 }

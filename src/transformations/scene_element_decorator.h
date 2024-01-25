@@ -19,8 +19,8 @@ class SceneElementDecorator : public SceneElement {
   void setParent(SceneElementRawPtr parent) override;
   SceneElementRawPtr getParent() const override;
 
-  Point3f pointFromWorldToObjectSpace(Point3f &point) const override;
-  Vec3f vectorFromObjectToWorldSpace(Vec3f vec) const override;
+  Point3f pointFromWorldToObjectSpace(const Point3f &point) const override;
+  Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const override;
 
  protected:
   SceneElementRawPtr m_element;

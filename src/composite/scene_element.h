@@ -24,8 +24,8 @@ class SceneElement {
   virtual void setLight(const PointLight &light);
   virtual PointLight getLight() const;
   size_t getId() const;
-  virtual Point3f pointFromWorldToObjectSpace(Point3f &point) const;
-  virtual Vec3f vectorFromObjectToWorldSpace(Vec3f vec) const;
+  virtual Point3f pointFromWorldToObjectSpace(const Point3f &point) const;
+  virtual Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const;
 
  protected:
   SceneElement();
