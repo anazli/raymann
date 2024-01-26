@@ -1,5 +1,6 @@
 #include "composite/builder.h"
 
+#include "application/error.h"
 #include "composite/world.h"
 #include "transformations/transformer.h"
 
@@ -15,10 +16,9 @@ void WorldBuilder::addWorld() {
 }
 
 void WorldBuilder::addElement() {
-  if (m_product) {
-    SceneElementPtr elem(m_currentElement);
-    m_product->add(elem);
-  }
+  APP_ASSERT(m_product, "World not created yet!");
+  SceneElementPtr elem(m_currentElement);
+  m_product->add(elem);
 }
 
 void WorldBuilder::processSceneElement(SceneElementRawPtr element) {
@@ -26,31 +26,36 @@ void WorldBuilder::processSceneElement(SceneElementRawPtr element) {
 }
 
 void WorldBuilder::applyTransformation(const Mat4f& trans) {
-  if (m_currentElement)
-    m_currentElement = new Transformer(m_currentElement, trans);
+  APP_ASSERT(m_currentElement, "SceneElement not created yet!");
+  m_currentElement = new Transformer(m_currentElement, trans);
 }
 
 void WorldBuilder::applyWorldTransformation(const Mat4f& trans) {
+  APP_ASSERT(m_product, "World not created yet!");
   m_product = new Transformer(m_product, trans);
 }
 
 void WorldBuilder::applyMaterial(TexturePtr tex,
                                  const MaterialProperties& prop) {
+  APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   BaseMaterialPtr matptr = std::make_shared<Material>(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyLambertianMaterial(TexturePtr tex,
                                            const MaterialProperties& prop) {
+  APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   BaseMaterialPtr matptr = std::make_shared<Lambertian>(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyMetalMaterial(const float& f, TexturePtr tex,
                                       const MaterialProperties& prop) {
+  APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   BaseMaterialPtr matptr = std::make_shared<Metal>(f, std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyDielectricMaterial(const float& ri, TexturePtr tex,
                                            const MaterialProperties& prop) {
+  APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   BaseMaterialPtr matptr =
       std::make_shared<Dielectric>(ri, std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
