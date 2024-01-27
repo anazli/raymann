@@ -130,3 +130,38 @@ TEST_F(TCylinder, intersectClosedCylinder) {
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 1);
 }
+
+TEST_F(TCylinder, normalVectorOnEndCaps) {
+  cyl = Cylinder(1, 2, true);
+  r = Ray(Point3f(0.f, 3.f, 0.f), Vec3f(0.1f, -1.f, 0.f).normalize());
+  Point3f point(0.f, 1.f, 0.f);
+  Vec3f vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 0.f);
+  EXPECT_FLOAT_EQ(vec.y(), -1.f);
+  EXPECT_FLOAT_EQ(vec.z(), 0.f);
+  point = Point3f(0.5f, 1.f, 0.f);
+  vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 0.f);
+  EXPECT_FLOAT_EQ(vec.y(), -1.f);
+  EXPECT_FLOAT_EQ(vec.z(), 0.f);
+  point = Point3f(0.f, 1.f, 0.5f);
+  vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 0.f);
+  EXPECT_FLOAT_EQ(vec.y(), -1.f);
+  EXPECT_FLOAT_EQ(vec.z(), 0.f);
+  point = Point3f(0.f, 2.f, 0.f);
+  vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 0.f);
+  EXPECT_FLOAT_EQ(vec.y(), 1.f);
+  EXPECT_FLOAT_EQ(vec.z(), 0.f);
+  point = Point3f(0.5f, 2.f, 0.f);
+  vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 0.f);
+  EXPECT_FLOAT_EQ(vec.y(), 1.f);
+  EXPECT_FLOAT_EQ(vec.z(), 0.f);
+  point = Point3f(0.f, 2.f, 0.5f);
+  vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 0.f);
+  EXPECT_FLOAT_EQ(vec.y(), 1.f);
+  EXPECT_FLOAT_EQ(vec.z(), 0.f);
+}

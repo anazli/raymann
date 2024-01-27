@@ -50,6 +50,12 @@ class Cylinder : public SceneElement {
     return hitAnything;
   }
   Vec3f normal(const Point3f &p) const override {
+    auto distance = p.x() * p.x() + p.z() * p.z();
+    if (distance < 1.f && p.y() >= m_maximumY - EPS) {
+      return Vec3f(0.f, 1.f, 0.f);
+    } else if (distance < 1.f && p.y() <= m_minimumY + EPS) {
+      return Vec3f(0.f, -1.f, 0.f);
+    }
     return Vec3f(p.x(), 0.f, p.z());
   }
 
