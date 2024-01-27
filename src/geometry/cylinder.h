@@ -1,11 +1,14 @@
 #pragma once
 
+#include <limits>
+
 #include "composite/scene_element.h"
 
 class Cylinder : public SceneElement {
  public:
-  Cylinder(const float minY = -MAXFLOAT, const float maxY = MAXFLOAT)
-      : m_minimumY(minY), m_maximumY(maxY) {}
+  Cylinder(float minY = -std::numeric_limits<float>::max(),
+           float maxY = std::numeric_limits<float>::max(), bool closed = false)
+      : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {}
   ~Cylinder() override = default;
 
   float minimumY() const { return m_minimumY; }
@@ -18,11 +21,12 @@ class Cylinder : public SceneElement {
     auto roz = r.origin().z();
 
     auto a = rdx * rdx + rdz * rdz;
-    if (a <= EPS) return false;
+    if (a <= EPS) return intersectCaps(r, record);
     auto b = 2.0f * (rox * rdx + roz * rdz);
     auto c = rox * rox + roz * roz - 1.0f;
 
     auto discr = b * b - 4.0f * a * c;
+    bool hitAnything = false;
     if (discr >= 0.0f) {
       auto t1 = (-b - sqrt(discr)) / (2.0f * a);
       auto t2 = (-b + sqrt(discr)) / (2.0f * a);
@@ -32,16 +36,18 @@ class Cylinder : public SceneElement {
       if (m_minimumY < y1 && m_maximumY > y1) {
         record.t1 = t1;
         record.count++;
+        hitAnything = true;
       }
 
       auto y2 = r.origin().y() + t2 * r.direction().y();
       if (m_minimumY < y2 && m_maximumY > y2) {
         record.t2 = t2;
         record.count++;
+        hitAnything = true;
       }
-      return true;
     }
-    return false;
+    if (intersectCaps(r, record)) hitAnything = true;
+    return hitAnything;
   }
   Vec3f normal(const Point3f &p) const override {
     return Vec3f(p.x(), 0.f, p.z());
@@ -50,4 +56,31 @@ class Cylinder : public SceneElement {
  private:
   float m_minimumY;
   float m_maximumY;
+  bool m_closed;
+
+  bool checkCap(const Ray &r, float t) {
+    auto x = r.origin().x() + t * r.direction().x();
+    auto z = r.origin().z() + t * r.direction().z();
+    return x * x + z * z <= 1.f;
+  }
+
+  bool intersectCaps(const Ray &r, IntersectionRecord &record) {
+    if (!m_closed || (r.direction().y() <= EPS && r.direction().y() >= -EPS))
+      return false;
+
+    bool intersectsCap = false;
+    auto t = (m_minimumY - r.origin().y()) / r.direction().y();
+    if (checkCap(r, t)) {
+      record.t1 = t;
+      record.count++;
+      intersectsCap = true;
+    }
+    t = (m_maximumY - r.origin().y()) / r.direction().y();
+    if (checkCap(r, t)) {
+      record.t2 = t;
+      record.count++;
+      intersectsCap = true;
+    }
+    return intersectsCap;
+  }
 };

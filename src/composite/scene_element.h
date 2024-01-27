@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <list>
 #include <memory>
 
@@ -41,8 +42,8 @@ using SceneElementRawPtr = SceneElement *;
 class IntersectionRecord {
  public:
   int count = 0;
-  float t1 = -MAXFLOAT;
-  float t2 = -MAXFLOAT;
+  float t1 = -std::numeric_limits<float>::max();
+  float t2 = -std::numeric_limits<float>::max();
   float t_min() const {
     if (t1 <= 0.0f && t2 > 0.0f)
       return t2;

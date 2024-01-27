@@ -106,3 +106,27 @@ TEST_F(TCylinder, intersectConstrainedCylinder) {
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 2);
 }
+
+TEST_F(TCylinder, intersectClosedCylinder) {
+  cyl = Cylinder(1, 2, true);
+  r = Ray(Point3f(0.f, 3.f, 0.f), Vec3f(0.1f, -1.f, 0.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_EQ(rec.count, 2);
+  r = Ray(Point3f(0.f, 3.f, -2.f), Vec3f(0.f, -1.f, 2.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_EQ(rec.count, 2);
+  r = Ray(Point3f(0.f, 4.f, -2.f), Vec3f(0.f, -1.f, 1.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_EQ(rec.count, 1);
+  r = Ray(Point3f(0.f, 0.f, -2.f), Vec3f(0.f, 1.f, 2.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_EQ(rec.count, 2);
+  r = Ray(Point3f(0.f, -1.f, -2.f), Vec3f(0.f, 1.f, 1.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_EQ(rec.count, 1);
+}
