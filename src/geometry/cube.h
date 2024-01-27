@@ -15,9 +15,8 @@ class Cube : public SceneElement {
         hitAxis(r.origin().y(), r.direction().y());
     std::pair<float, float> zMinMax =
         hitAxis(r.origin().z(), r.direction().z());
-    float tmin =
-        std::max(std::max(xMinMax.first, yMinMax.first), zMinMax.first);
-    float tmax =
+    auto tmin = std::max(std::max(xMinMax.first, yMinMax.first), zMinMax.first);
+    auto tmax =
         std::min(std::min(xMinMax.second, yMinMax.second), zMinMax.second);
     if (tmin > tmax) {
       return false;
@@ -29,7 +28,7 @@ class Cube : public SceneElement {
   }
 
   Vec3f normal(const Point3f &p) const override {
-    float max_coord = std::max(std::max(fabs(p.x()), fabs(p.y())), fabs(p.z()));
+    auto max_coord = std::max(std::max(fabs(p.x()), fabs(p.y())), fabs(p.z()));
     if (max_coord == fabs(p.x()))
       return Vec3f(p.x(), 0.f, 0.f);
     else if (max_coord == fabs(p.y()))
@@ -39,9 +38,9 @@ class Cube : public SceneElement {
 
  private:
   std::pair<float, float> hitAxis(float origin, float direction) {
-    float tmin_numerator = (-1.f - origin);
-    float tmax_numerator = (1.f - origin);
-    float tmin{0.f}, tmax{0.f};
+    auto tmin_numerator = (-1.f - origin);
+    auto tmax_numerator = (1.f - origin);
+    auto tmin{0.f}, tmax{0.f};
     if (fabs(direction) >= EPS) {
       tmin = tmin_numerator / direction;
       tmax = tmax_numerator / direction;

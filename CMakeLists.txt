@@ -17,7 +17,9 @@ set(SOURCES src/acceleration/scene_element_proxy.cpp
             src/composite/world.h
             src/container/canvas.cpp
             src/container/canvas.h
+            src/geometry/cone.h
             src/geometry/cube.h
+            src/geometry/cylinder.h
             src/geometry/plane.h
             src/geometry/sphere.h
             src/materials/material.cpp
@@ -59,7 +61,9 @@ if(BUILD_TESTING)
   set(TEST_EXE raymannTests)
   set(TEST_SOURCES test/camera_test.cpp
                    test/canvas_test.cpp
+                   test/cone_test.cpp
                    test/cube_test.cpp
+                   test/cylinder_test.cpp
                    test/material_test.cpp
                    test/plane_test.cpp
                    test/properties_test.cpp

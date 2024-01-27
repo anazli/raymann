@@ -6,9 +6,7 @@ class Sphere : public SceneElement {
  public:
   ~Sphere() override = default;
   Sphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
-      : m_center(c), m_radius(r) {
-    setParent(nullptr);
-  }
+      : m_center(c), m_radius(r) {}
 
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override {
@@ -31,10 +29,8 @@ inline bool Sphere::intersect(const Ray &r, IntersectionRecord &record) {
   auto c = dot(co, co) - m_radius * m_radius;
   auto discr = b * b - 4.0f * a * c;
   if (discr >= 0.0f) {
-    auto t1 = (-b - sqrt(discr)) / (2. * a);
-    auto t2 = (-b + sqrt(discr)) / (2. * a);
-    record.t1 = t1;
-    record.t2 = t2;
+    record.t1 = (-b - sqrt(discr)) / (2. * a);
+    record.t2 = (-b + sqrt(discr)) / (2. * a);
     record.count = 2;
     return true;
   }
