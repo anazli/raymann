@@ -78,3 +78,31 @@ TEST_F(TCylinder, normalVectorOnCylinder) {
   EXPECT_FLOAT_EQ(vec.y(), 0.f);
   EXPECT_FLOAT_EQ(vec.z(), 0.f);
 }
+
+TEST_F(TCylinder, intersectConstrainedCylinder) {
+  cyl = Cylinder(1, 2);
+  r = Ray(Point3f(0.f, 1.5f, 0.f), Vec3f(0.1f, 1.f, 0.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_TRUE(rec.count == 0);
+  r = Ray(Point3f(0.f, 3.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_TRUE(rec.count == 0);
+  r = Ray(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_TRUE(rec.count == 0);
+  r = Ray(Point3f(0.f, 2.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_TRUE(rec.count == 0);
+  r = Ray(Point3f(0.f, 1.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_TRUE(rec.count == 0);
+  r = Ray(Point3f(0.f, 1.5f, -2.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  rec = IntersectionRecord();
+  cyl.intersect(r, rec);
+  EXPECT_TRUE(rec.count == 2);
+}
