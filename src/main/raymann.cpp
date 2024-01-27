@@ -6,6 +6,7 @@
 #include "composite/builder.h"
 #include "container/canvas.h"
 #include "geometry/cube.h"
+#include "geometry/cylinder.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "renderers/phong_model.h"
@@ -134,6 +135,13 @@ int main() {
   world->applyTransformation(translation(-2.5f, 0.5f, 0.8f) *
                              scale(0.5f, 0.5f, 0.5f));
   world->applyMaterial(make_unique<PerlinTexture>(1.1f), MaterialProperties{});
+  world->addElement();
+
+  //----------------------Perlin Cylinder----------------
+  world->processSceneElement(new Cylinder(0, 2, true));
+  world->applyTransformation(translation(1.4f, 0.f, 1.6f) *
+                             scale(0.7f, 1.f, 1.f));
+  world->applyMaterial(make_unique<PerlinTexture>(1.2f), MaterialProperties{});
   world->addElement();
 
   //----------------------------------------------------------------------------
