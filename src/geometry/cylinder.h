@@ -26,7 +26,9 @@ class Cylinder : public SceneElement {
     }
     return false;
   }
-  Vec3f normal(const Point3f &p) const override { return Vec3f(); }
+  Vec3f normal(const Point3f &p) const override {
+    return Vec3f(p.x(), 0.f, p.z());
+  }
 
  private:
 };

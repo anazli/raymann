@@ -50,3 +50,31 @@ TEST_F(TCylinder, rayHitsTheCylinder) {
   EXPECT_NEAR(rec.t1, 6.80798f, eps);
   EXPECT_NEAR(rec.t2, 7.08872f, eps);
 }
+
+TEST_F(TCylinder, normalVectorOnCylinder) {
+  cyl = Cylinder();
+  Point3f point(1.f, 0.f, 0.f);
+
+  Vec3f vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 1.f);
+  EXPECT_FLOAT_EQ(vec.y(), 0.f);
+  EXPECT_FLOAT_EQ(vec.z(), 0.f);
+
+  point = Point3f(0.f, 5.f, -1.f);
+  vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 0.f);
+  EXPECT_FLOAT_EQ(vec.y(), 0.f);
+  EXPECT_FLOAT_EQ(vec.z(), -1.f);
+
+  point = Point3f(0.f, -2.f, 1.f);
+  vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), 0.f);
+  EXPECT_FLOAT_EQ(vec.y(), 0.f);
+  EXPECT_FLOAT_EQ(vec.z(), 1.f);
+
+  point = Point3f(-1.f, 1.f, 0.f);
+  vec = cyl.normal(point);
+  EXPECT_FLOAT_EQ(vec.x(), -1.f);
+  EXPECT_FLOAT_EQ(vec.y(), 0.f);
+  EXPECT_FLOAT_EQ(vec.z(), 0.f);
+}
