@@ -31,14 +31,6 @@ SceneElementContainer SceneElementDecorator::getChildren() {
   return m_element->getChildren();
 }
 
-void SceneElementDecorator::setMaterial(BaseMaterialPtr mat) {
-  m_element->setMaterial(mat);
-}
-
-BaseMaterialPtr SceneElementDecorator::getMaterial() const {
-  return m_element->getMaterial();
-}
-
 void SceneElementDecorator::setParent(SceneElementRawPtr parent) {
   m_element->setParent(parent);
 }

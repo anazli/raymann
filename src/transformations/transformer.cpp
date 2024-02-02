@@ -50,14 +50,6 @@ SceneElementContainer Transformer::getChildren() {
   return SceneElementDecorator::getChildren();
 }
 
-void Transformer::setMaterial(BaseMaterialPtr mat) {
-  SceneElementDecorator::setMaterial(mat);
-}
-
-BaseMaterialPtr Transformer::getMaterial() const {
-  return SceneElementDecorator::getMaterial();
-}
-
 void Transformer::setParent(SceneElementRawPtr parent) {
   SceneElementDecorator::setParent(parent);
 }

@@ -14,8 +14,6 @@ class SceneElementDecorator : public SceneElement {
   void accept(BaseRenderer &renderer, const Ray &ray) override;
   SceneElementContainer getChildren() override;
 
-  void setMaterial(BaseMaterialPtr mat) override;
-  BaseMaterialPtr getMaterial() const override;
   void setParent(SceneElementRawPtr parent) override;
   SceneElementRawPtr getParent() const override;
 

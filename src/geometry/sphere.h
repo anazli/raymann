@@ -6,7 +6,10 @@ class Sphere : public SceneElement {
  public:
   ~Sphere() override = default;
   Sphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
-      : m_center(c), m_radius(r) {}
+      : m_center(c), m_radius(r) {
+    m_bBoxProps.minPoint() = Point3f(-1.f, -1.f, -1.f);
+    m_bBoxProps.maxPoint() = Point3f(1.f, 1.f, 1.f);
+  }
 
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override {

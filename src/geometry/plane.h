@@ -4,6 +4,11 @@
 
 class Plane : public SceneElement {
  public:
+  Plane() {
+    m_bBoxProps.minPoint() =
+        Point3f(-limit::infinity(), 0.f, -limit::infinity());
+    m_bBoxProps.maxPoint() = Point3f(limit::infinity(), 0.f, limit::infinity());
+  }
   ~Plane() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override {
     if (fabs(r.direction().y()) < EPS) {

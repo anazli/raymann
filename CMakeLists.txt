@@ -59,7 +59,8 @@ if(BUILD_TESTING)
 
 
   set(TEST_EXE raymannTests)
-  set(TEST_SOURCES test/camera_test.cpp
+  set(TEST_SOURCES test/boundingBox_test.cpp
+                   test/camera_test.cpp
                    test/canvas_test.cpp
                    test/cone_test.cpp
                    test/cube_test.cpp

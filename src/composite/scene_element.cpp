@@ -2,7 +2,15 @@
 
 #include "renderers/renderer.h"
 
-size_t SceneElement::m_next_id = 0;
+BoundingBoxProperties::BoundingBoxProperties(const Point3f& pmin,
+                                             const Point3f& pmax)
+    : m_minPoint(pmin), m_maxPoint(pmax) {}
+
+Point3f& BoundingBoxProperties::minPoint() { return m_minPoint; }
+
+Point3f& BoundingBoxProperties::maxPoint() { return m_maxPoint; }
+
+// size_t SceneElement::m_next_id = 0;
 
 bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
   return false;
@@ -36,7 +44,16 @@ void SceneElement::setLight(const PointLight& light) {}
 
 PointLight SceneElement::getLight() const { return PointLight(); }
 
-size_t SceneElement::getId() const { return m_id; }
+void SceneElement::setBoundingBoxProperties(
+    const BoundingBoxProperties& props) {
+  m_bBoxProps = props;
+}
+
+BoundingBoxProperties& SceneElement::boundingBoxProperties() {
+  return m_bBoxProps;
+}
+
+// size_t SceneElement::getId() const { return 0; /*m_id*/ }
 
 Point3f SceneElement::pointFromWorldToObjectSpace(const Point3f& point) const {
   return Mat4f().inverse() * Vec4f(point);
@@ -48,7 +65,10 @@ Vec3f SceneElement::vectorFromObjectToWorldSpace(const Vec3f vec) const {
   return v.normalize();
 }
 
-SceneElement::SceneElement() {
+SceneElement::SceneElement(const BoundingBoxProperties& props)
+    : m_bBoxProps(props) {}
+
+/*SceneElement::SceneElement() {
   m_id = m_next_id;
   m_next_id++;
-}
+}*/
