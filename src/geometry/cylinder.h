@@ -10,11 +10,12 @@ class Cylinder : public SceneElement {
            float maxY = std::numeric_limits<float>::max(), bool closed = false)
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
     if (!closed) {
-      m_bBoxProps.minPoint() = Point3f(-1.f, -limit::infinity(), -1.f);
-      m_bBoxProps.maxPoint() = Point3f(1.f, limit::infinity(), 1.f);
+      m_bBoxProps =
+          BoundingBoxProperties(Point3f(-1.f, -limit::infinity(), -1.f),
+                                Point3f(1.f, limit::infinity(), 1.f));
     } else {
-      m_bBoxProps.minPoint() = Point3f(-1.f, m_minimumY, -1.f);
-      m_bBoxProps.maxPoint() = Point3f(1.f, m_maximumY, 1.f);
+      m_bBoxProps = BoundingBoxProperties(Point3f(-1.f, m_minimumY, -1.f),
+                                          Point3f(1.f, m_maximumY, 1.f));
     }
   }
   ~Cylinder() override = default;

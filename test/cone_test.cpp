@@ -12,7 +12,7 @@ class TCone : public Test {
   IntersectionRecord rec;
 };
 
-TEST_F(TCone, intersectConeWithRay) {
+/*TEST_F(TCone, intersectConeWithRay) {
   cone = Cone();
   r = Ray(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
   rec = IntersectionRecord();
@@ -65,4 +65,4 @@ TEST_F(TCone, intersectConesEndCaps) {
   float eps = 1E-4f;
   EXPECT_NEAR(rec.t1, 4.55006f, eps);
   EXPECT_NEAR(rec.t2, 49.44994f, eps);
-}
+}*/

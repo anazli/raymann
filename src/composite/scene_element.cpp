@@ -44,6 +44,8 @@ void SceneElement::setLight(const PointLight& light) {}
 
 PointLight SceneElement::getLight() const { return PointLight(); }
 
+void SceneElement::addPoint(const Point3f& point) {}
+
 void SceneElement::setBoundingBoxProperties(
     const BoundingBoxProperties& props) {
   m_bBoxProps = props;

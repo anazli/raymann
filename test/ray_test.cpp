@@ -4,14 +4,14 @@
 
 using namespace testing;
 
-class Tray : public Test {
+class RayTest : public Test {
  public:
   Ray r;
   Point3f ori;
   Vec3f dir;
 };
 
-TEST_F(Tray, createsRay) {
+TEST_F(RayTest, createsRay) {
   ori = Point3f(1, 2, 3);
   dir = Vec3f(4, 5, 6);
   r = Ray(ori, dir);
@@ -20,7 +20,7 @@ TEST_F(Tray, createsRay) {
   ASSERT_TRUE(r.direction() == dir);
 }
 
-TEST_F(Tray, computesPositionAtT) {
+TEST_F(RayTest, computesPositionAtT) {
   ori = Point3f(2, 3, 4);
   dir = Vec3f(1, 0, 0);
   r = Ray(ori, dir);
@@ -31,7 +31,7 @@ TEST_F(Tray, computesPositionAtT) {
   ASSERT_TRUE(r.position(2.5) == Point3f(4.5, 3, 4));
 }
 
-TEST_F(Tray, translatesRay) {
+TEST_F(RayTest, translatesRay) {
   r = Ray(Point3f(1, 2, 3), Vec3f(0, 1, 0));
   Mat4f m = translation(3.0f, 4.0f, 5.0f);
   Ray tr = r.transform(m);
@@ -40,7 +40,7 @@ TEST_F(Tray, translatesRay) {
   ASSERT_TRUE(tr.direction() == Vec3f(0.0f, 1.0f, 0.0f));
 }
 
-TEST_F(Tray, scalesRay) {
+TEST_F(RayTest, scalesRay) {
   r = Ray(Point3f(1, 2, 3), Vec3f(0, 1, 0));
   Mat4f m = scale(2.0f, 3.0f, 4.0f);
   Ray tr = r.transform(m);

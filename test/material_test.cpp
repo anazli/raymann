@@ -8,7 +8,7 @@
 
 using namespace testing;
 
-class TMat : public Test {
+class MaterialTest : public Test {
  public:
   Sphere *s;
   PointLight light;
@@ -16,12 +16,12 @@ class TMat : public Test {
   IntersectionRecord rec;
 };
 
-TEST_F(TMat, createsDefaultLight) {
+TEST_F(MaterialTest, createsDefaultLight) {
   ASSERT_TRUE(light.position() == Point3f());
   ASSERT_TRUE(light.intensity() == Vec3f());
 }
 
-TEST_F(TMat, createsNewLight1) {
+TEST_F(MaterialTest, createsNewLight1) {
   light.setPosition(Point3f(1.0f, 2.0f, 3.0f));
   light.setIntensity(Vec3f(0.1f, 0.1f, 0.3f));
 
@@ -34,7 +34,7 @@ TEST_F(TMat, createsNewLight1) {
   ASSERT_EQ(light.intensity().z(), 0.3f);
 }
 
-TEST_F(TMat, createsNewLight2) {
+TEST_F(MaterialTest, createsNewLight2) {
   light = PointLight(Point3f(0.1f, -4.0f, -0.4f), Vec3f(1.0f, 4.0f, 0.0f));
 
   ASSERT_EQ(light.position().x(), 0.1f);
@@ -46,7 +46,7 @@ TEST_F(TMat, createsNewLight2) {
   ASSERT_EQ(light.intensity().z(), 0.0f);
 }
 
-TEST_F(TMat, lightsWithEyeBetweenLightAndSurface) {
+TEST_F(MaterialTest, lightsWithEyeBetweenLightAndSurface) {
   //----------------------------------
   // As it is in Material->lighting
   //----------------------------------
@@ -87,7 +87,7 @@ TEST_F(TMat, lightsWithEyeBetweenLightAndSurface) {
   ASSERT_TRUE(result == Vec3f(1.9f, 1.9f, 1.9f));
 }
 
-TEST_F(TMat, lightingWithSurfaceInShadow) {
+TEST_F(MaterialTest, lightingWithSurfaceInShadow) {
   //------------------------------------------------------
   // As it is in Material->lighting | Update (With shadow)
   //------------------------------------------------------
@@ -131,7 +131,7 @@ TEST_F(TMat, lightingWithSurfaceInShadow) {
   ASSERT_TRUE(result == Vec3f(0.1f, 0.1f, 0.1f));
 }
 
-TEST_F(TMat, precomputingTheReflectionVector) {
+TEST_F(MaterialTest, precomputingTheReflectionVector) {
   MaterialProperties prop;
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->processSceneElement(new Plane);
@@ -144,7 +144,7 @@ TEST_F(TMat, precomputingTheReflectionVector) {
               Vec3f(0.f, sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));
 }
 
-TEST_F(TMat, strikeNonReflectiveSurface) {
+TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
   MaterialProperties prop;
   BuilderPtr builder = std::make_unique<WorldBuilder>();

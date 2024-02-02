@@ -9,21 +9,16 @@ using std::make_unique;
 using std::shared_ptr;
 using std::vector;
 
-class Tworld : public Test {
+class WorldTest : public Test {
  public:
   BuilderPtr builder;
   PointLight light;
   SceneElementPtr world;
   MaterialProperties prop;
   IntersectionRecord rec;
-
-  // Tworld()
-  //     : light(PointLight(Point3f(-10.0f, 10.0f, -10.0f),
-  //                        Vec3f(1.0f, 1.0f, 1.0f))) {
-  // }
 };
 
-TEST_F(Tworld, createsWorldOfShere) {
+TEST_F(WorldTest, createsWorldOfShere) {
   builder = make_unique<WorldBuilder>();
   builder->createWorld(light);
   builder->processSceneElement(new Sphere);
@@ -41,7 +36,7 @@ TEST_F(Tworld, createsWorldOfShere) {
   EXPECT_EQ(rec.t2, 6.0f);
 }
 
-TEST_F(Tworld, createsWorldOfTwoSpheres) {
+TEST_F(WorldTest, createsWorldOfTwoSpheres) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   builder = make_unique<WorldBuilder>();
   builder->createWorld(light);
@@ -63,7 +58,7 @@ TEST_F(Tworld, createsWorldOfTwoSpheres) {
   EXPECT_EQ(rec.t2, 6.0f);
 }
 
-TEST_F(Tworld, whenWorldIsTranformed_parentOfChildIsCorrect) {
+TEST_F(WorldTest, whenWorldIsTranformed_parentOfChildIsCorrect) {
   builder = make_unique<WorldBuilder>();
   builder->createWorld(light);
   builder->applyWorldTransformation(Mat4f());
@@ -76,7 +71,7 @@ TEST_F(Tworld, whenWorldIsTranformed_parentOfChildIsCorrect) {
   EXPECT_TRUE(sphere->getParent() == world.get());
 }
 
-TEST_F(Tworld, intersectingTransformedWorld) {
+TEST_F(WorldTest, intersectingTransformedWorld) {
   Ray r = Ray(Point3f(10.0f, 0.0f, -10.0f), Vec3f(0.0f, 0.0f, 1.0f));
   builder = make_unique<WorldBuilder>();
   builder->createWorld(light);
@@ -91,7 +86,7 @@ TEST_F(Tworld, intersectingTransformedWorld) {
   EXPECT_EQ(rec.count, 2);
 }
 
-TEST_F(Tworld, convertingPointFromWorldToObjectSpace) {
+TEST_F(WorldTest, convertingPointFromWorldToObjectSpace) {
   builder = make_unique<WorldBuilder>();
 
   builder->createWorld(light);
@@ -119,7 +114,7 @@ TEST_F(Tworld, convertingPointFromWorldToObjectSpace) {
   EXPECT_FLOAT_EQ(point.z(), -1.f);
 }
 
-TEST_F(Tworld, convertingVectorFromObjectToWorldSpace) {
+TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
   builder = make_unique<WorldBuilder>();
 
   builder->createWorld(light);
@@ -148,7 +143,7 @@ TEST_F(Tworld, convertingVectorFromObjectToWorldSpace) {
   EXPECT_NEAR(vec.z(), -0.8571f, eps);
 }
 
-TEST_F(Tworld, findingNormalOfChildObjectOfTransformedWorld) {
+TEST_F(WorldTest, findingNormalOfChildObjectOfTransformedWorld) {
   builder = make_unique<WorldBuilder>();
 
   builder->createWorld(light);

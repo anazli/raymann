@@ -6,7 +6,7 @@
 
 using namespace testing;
 
-class Ttrans : public Test {
+class TransformerTest : public Test {
  public:
   Mat4f m;
   Vec3f v;
@@ -17,7 +17,7 @@ class Ttrans : public Test {
  *       Translation
  *********************************/
 
-TEST_F(Ttrans, appliesTranslationToPoint) {  // TODO: better interface
+TEST_F(TransformerTest, appliesTranslationToPoint) {  // TODO: better interface
   p = Point3f(-3.0f, 4.0f, 5.0f);
   m = translation(5.0f, -3.0f, 2.0f);
   Vec4f v4(p);
@@ -30,7 +30,7 @@ TEST_F(Ttrans, appliesTranslationToPoint) {  // TODO: better interface
   ASSERT_FLOAT_EQ(p.z(), 7.0f);
 }
 
-TEST_F(Ttrans, appliesTranslationToPointOverloaded) {
+TEST_F(TransformerTest, appliesTranslationToPointOverloaded) {
   p = Point3f(-3.0f, 4.0f, 5.0f);
   Vec3f trans(5.0f, -3.0f, 2.0f);
   m = translation(trans);
@@ -44,7 +44,7 @@ TEST_F(Ttrans, appliesTranslationToPointOverloaded) {
   ASSERT_FLOAT_EQ(p.z(), 7.0f);
 }
 
-TEST_F(Ttrans, appliesInverseTranslationToPoint) {
+TEST_F(TransformerTest, appliesInverseTranslationToPoint) {
   p = Point3f(-3.0f, 4.0f, 5.0f);
   m = translation(5.0f, -3.0f, 2.0f);
   m = m.inverse();
@@ -58,7 +58,7 @@ TEST_F(Ttrans, appliesInverseTranslationToPoint) {
   ASSERT_FLOAT_EQ(p.z(), 3.0f);
 }
 
-TEST_F(Ttrans, appliesTranslationToVector) {
+TEST_F(TransformerTest, appliesTranslationToVector) {
   v = Vec3f(-3.0f, 4.0f, 5.0f);
   m = translation(5.0f, -3.0f, 2.0f);
   Vec4f v4(v);
@@ -73,7 +73,7 @@ TEST_F(Ttrans, appliesTranslationToVector) {
  *       Scaling
  *********************************/
 
-TEST_F(Ttrans, appliesScalingToPoint) {
+TEST_F(TransformerTest, appliesScalingToPoint) {
   p = Point3f(-4.0f, 6.0f, 8.0f);
   m = scale(2.0f, 3.0f, 4.0f);
   Vec4f v4(p);
@@ -86,7 +86,7 @@ TEST_F(Ttrans, appliesScalingToPoint) {
   ASSERT_FLOAT_EQ(p.z(), 32.0f);
 }
 
-TEST_F(Ttrans, appliesScalingToVector) {
+TEST_F(TransformerTest, appliesScalingToVector) {
   v = Vec3f(-4.0f, 6.0f, 8.0f);
   m = scale(2.0f, 3.0f, 4.0f);
   Vec4f v4(v);
@@ -99,7 +99,7 @@ TEST_F(Ttrans, appliesScalingToVector) {
   ASSERT_FLOAT_EQ(v.z(), 32.0f);
 }
 
-TEST_F(Ttrans, appliesInverseScalingToVector) {  // TODO: It doesn't pass with
+TEST_F(TransformerTest, appliesInverseScalingToVector) {  // TODO: It doesn't pass with
   v = Vec3f(-4.0f, 6.0f, 8.0f);                  // integers
   m = scale(2.0f, 3.0f, 4.0f);
   m = m.inverse();
@@ -117,7 +117,7 @@ TEST_F(Ttrans, appliesInverseScalingToVector) {  // TODO: It doesn't pass with
  *       Rotation
  *********************************/
 
-TEST_F(Ttrans, appliesRotationXToPoint) {
+TEST_F(TransformerTest, appliesRotationXToPoint) {
   p = Point3f(0.0f, 1.0f, 0.0f);
   m = rotationOverX(PI / 4.0f);
   Vec4f v4(p);
@@ -129,7 +129,7 @@ TEST_F(Ttrans, appliesRotationXToPoint) {
   ASSERT_FLOAT_EQ(p.z(), sqrt(2.) / 2.0f);
 }
 
-TEST_F(Ttrans, appliesInverseRotationXToPoint) {
+TEST_F(TransformerTest, appliesInverseRotationXToPoint) {
   p = Point3f(0.0f, 1.0f, 0.0f);
   m = rotationOverX(PI / 4.0f);
   m = m.inverse();
@@ -142,7 +142,7 @@ TEST_F(Ttrans, appliesInverseRotationXToPoint) {
   ASSERT_FLOAT_EQ(p.z(), -sqrt(2.) / 2.0f);
 }
 
-TEST_F(Ttrans, appliesRotationYToPoint) {
+TEST_F(TransformerTest, appliesRotationYToPoint) {
   p = Point3f(0.0f, 0.0f, 1.0f);
   m = rotationOverY(PI / 4.0f);
   Vec4f v4(p);
@@ -154,7 +154,7 @@ TEST_F(Ttrans, appliesRotationYToPoint) {
   ASSERT_FLOAT_EQ(p.z(), sqrt(2.) / 2.0f);
 }
 
-TEST_F(Ttrans, appliesRotationZToPoint) {
+TEST_F(TransformerTest, appliesRotationZToPoint) {
   p = Point3f(0.0f, 1.0f, 0.0f);
   m = rotationOverZ(PI / 4.0f);
   Vec4f v4(p);
@@ -166,7 +166,7 @@ TEST_F(Ttrans, appliesRotationZToPoint) {
   ASSERT_FLOAT_EQ(p.z(), 0.0f);
 }
 
-TEST_F(Ttrans, appliesTransformationsInSequence) {
+TEST_F(TransformerTest, appliesTransformationsInSequence) {
   p = Point3f(1.0f, 0.0f, 1.0f);
 
   Mat4f A = rotationOverX(PI / 2.0f);
@@ -197,7 +197,7 @@ TEST_F(Ttrans, appliesTransformationsInSequence) {
   ASSERT_FLOAT_EQ(p3.z(), 7.0f);
 }
 
-TEST_F(Ttrans, appliesTransformationChaining) {
+TEST_F(TransformerTest, appliesTransformationChaining) {
   p = Point3f(1.0f, 0.0f, 1.0f);
   Mat4f A = rotationOverX(PI / 2.0f);
   Mat4f B = scale(5.0f, 5.0f, 5.0f);
@@ -212,7 +212,7 @@ TEST_F(Ttrans, appliesTransformationChaining) {
   ASSERT_FLOAT_EQ(p.z(), 7.0f);
 }
 
-TEST_F(Ttrans, computesNormalOfTranslatedSphere) {
+TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
   SceneElement *s = new Sphere();
   SceneElement *t = new Transformer(s, translation(0.0f, 1.0f, 0.0f));
   Vec3f norm = t->normal(Point3f(0.0f, 1.70711f, -0.70711));
@@ -228,7 +228,7 @@ TEST_F(Ttrans, computesNormalOfTranslatedSphere) {
              // stops above.
 }
 
-TEST_F(Ttrans, computesNormalOfRotatedSphere) {
+TEST_F(TransformerTest, computesNormalOfRotatedSphere) {
   SceneElement *s = new Sphere();
   SceneElement *t = new Transformer(new Transformer(s, rotationOverZ(PI / 5.0f)),
                                     scale(1.0f, 0.5f, 1.0f));
@@ -244,7 +244,7 @@ TEST_F(Ttrans, computesNormalOfRotatedSphere) {
   delete t;
 }
 
-TEST_F(Ttrans, transformationMatrixForDefaultOrientation) {
+TEST_F(TransformerTest, transformationMatrixForDefaultOrientation) {
   Point3f from = Point3f(0.0f, 0.0f, 0.0f);
   Point3f to = Point3f(0.0f, 0.0f, -1.0f);
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
@@ -255,7 +255,7 @@ TEST_F(Ttrans, transformationMatrixForDefaultOrientation) {
   ASSERT_TRUE(m == t);
 }
 
-TEST_F(Ttrans, viewTransformationLookingInPositiveZ) {
+TEST_F(TransformerTest, viewTransformationLookingInPositiveZ) {
   Point3f from = Point3f(0.0f, 0.0f, 0.0f);
   Point3f to = Point3f(0.0f, 0.0f, 1.0f);
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
@@ -264,7 +264,7 @@ TEST_F(Ttrans, viewTransformationLookingInPositiveZ) {
   ASSERT_TRUE(m == scale(-1.0f, 1.0f, -1.0f));
 }
 
-TEST_F(Ttrans, viewTransformationMovesTheWorld) {
+TEST_F(TransformerTest, viewTransformationMovesTheWorld) {
   Point3f from = Point3f(0.0f, 0.0f, 8.0f);
   Point3f to = Point3f(0.0f, 0.0f, 0.0f);
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
@@ -273,7 +273,7 @@ TEST_F(Ttrans, viewTransformationMovesTheWorld) {
   ASSERT_TRUE(m == translation(0.0f, 0.0f, -8.0f));
 }
 
-TEST_F(Ttrans, ArbitraryViewTransformation) {
+TEST_F(TransformerTest, ArbitraryViewTransformation) {
   Point3f from = Point3f(1.0f, 3.0f, 2.0f);
   Point3f to = Point3f(4.0f, -2.0f, 8.0f);
   Vec3f up = Vec3f(1.0f, 1.0f, 0.0f);

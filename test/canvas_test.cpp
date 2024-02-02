@@ -3,12 +3,12 @@
 
 using namespace testing;
 
-class Tcanvas : public Test {
+class CanvasTest : public Test {
  public:
   Canvas c;
 };
 
-TEST_F(Tcanvas, createsCanvas) {
+TEST_F(CanvasTest, createsCanvas) {
   c = Canvas(10, 20);
   ASSERT_EQ(c.width(), 10);
   ASSERT_EQ(c.height(), 20);
@@ -20,7 +20,7 @@ TEST_F(Tcanvas, createsCanvas) {
   ASSERT_TRUE(c.pixel(40, 50) == Vec3f(0., 0., 0.));
 }
 
-TEST_F(Tcanvas, setsPixelColor) {
+TEST_F(CanvasTest, setsPixelColor) {
   c = Canvas(800, 600);
   ASSERT_EQ(c.width(), 800);
   ASSERT_EQ(c.height(), 600);
@@ -31,7 +31,7 @@ TEST_F(Tcanvas, setsPixelColor) {
   ASSERT_TRUE(c.pixel(0, 0) == Vec3f(0., 0., 0.));
 }
 
-TEST_F(Tcanvas, savesCanvas) {
+TEST_F(CanvasTest, savesCanvas) {
   c = Canvas(5, 3);
   Vec3f color1(1.5, 0., 0.);
   Vec3f color2(0., 0.5, 0.);

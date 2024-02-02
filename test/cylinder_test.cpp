@@ -5,14 +5,14 @@
 
 using namespace testing;
 
-class TCylinder : public Test {
+class CylinderTest : public Test {
  public:
   Cylinder cyl;
   Ray r;
   IntersectionRecord rec;
 };
 
-TEST_F(TCylinder, rayMissesTheCylinder) {
+TEST_F(CylinderTest, rayMissesTheCylinder) {
   cyl = Cylinder();
   r = Ray(Point3f(1.f, 0.f, 0.f), Vec3f(0.f, 1.f, 0.f).normalize());
   rec = IntersectionRecord();
@@ -28,7 +28,7 @@ TEST_F(TCylinder, rayMissesTheCylinder) {
   EXPECT_TRUE(rec.count == 0);
 }
 
-TEST_F(TCylinder, rayHitsTheCylinder) {
+TEST_F(CylinderTest, rayHitsTheCylinder) {
   cyl = Cylinder();
   r = Ray(Point3f(1.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
   rec = IntersectionRecord();
@@ -51,7 +51,7 @@ TEST_F(TCylinder, rayHitsTheCylinder) {
   EXPECT_NEAR(rec.t2, 7.08872f, eps);
 }
 
-TEST_F(TCylinder, normalVectorOnCylinder) {
+TEST_F(CylinderTest, normalVectorOnCylinder) {
   cyl = Cylinder();
   Point3f point(1.f, 0.f, 0.f);
 
@@ -79,7 +79,7 @@ TEST_F(TCylinder, normalVectorOnCylinder) {
   EXPECT_FLOAT_EQ(vec.z(), 0.f);
 }
 
-TEST_F(TCylinder, intersectConstrainedCylinder) {
+TEST_F(CylinderTest, intersectConstrainedCylinder) {
   cyl = Cylinder(1, 2);
   r = Ray(Point3f(0.f, 1.5f, 0.f), Vec3f(0.1f, 1.f, 0.f).normalize());
   rec = IntersectionRecord();
@@ -107,7 +107,7 @@ TEST_F(TCylinder, intersectConstrainedCylinder) {
   EXPECT_TRUE(rec.count == 2);
 }
 
-TEST_F(TCylinder, intersectClosedCylinder) {
+TEST_F(CylinderTest, intersectClosedCylinder) {
   cyl = Cylinder(1, 2, true);
   r = Ray(Point3f(0.f, 3.f, 0.f), Vec3f(0.1f, -1.f, 0.f).normalize());
   rec = IntersectionRecord();
@@ -131,7 +131,7 @@ TEST_F(TCylinder, intersectClosedCylinder) {
   EXPECT_EQ(rec.count, 1);
 }
 
-TEST_F(TCylinder, normalVectorOnEndCaps) {
+TEST_F(CylinderTest, normalVectorOnEndCaps) {
   cyl = Cylinder(1, 2, true);
   r = Ray(Point3f(0.f, 3.f, 0.f), Vec3f(0.1f, -1.f, 0.f).normalize());
   Point3f point(0.f, 1.f, 0.f);

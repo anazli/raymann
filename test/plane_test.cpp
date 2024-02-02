@@ -5,14 +5,14 @@
 
 using namespace testing;
 
-class Tplane : public Test {
+class PlaneTest : public Test {
  public:
   Plane p;
   Ray r;
   IntersectionRecord rec;
 };
 
-TEST_F(Tplane, normalOfPlaneIsConstantEverywhere) {
+TEST_F(PlaneTest, normalOfPlaneIsConstantEverywhere) {
   p = Plane();
   Vec3f n1 = p.normal(Point3f(0.0f, 0.0f, 0.0f));
   Vec3f n2 = p.normal(Point3f(10.0f, 0.0f, -10.0f));
@@ -23,21 +23,21 @@ TEST_F(Tplane, normalOfPlaneIsConstantEverywhere) {
   ASSERT_TRUE(n3 == Vec3f(0.0f, 1.0f, 0.0f));
 }
 
-TEST_F(Tplane, intersectRayParallelToThePlane) {
+TEST_F(PlaneTest, intersectRayParallelToThePlane) {
   p = Plane();
   r = Ray(Point3f(0.0f, 10.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
   ASSERT_FALSE(p.intersect(r, rec));
   ASSERT_TRUE(rec.count == 0);
 }
 
-TEST_F(Tplane, intersectWithACoplanarRay) {
+TEST_F(PlaneTest, intersectWithACoplanarRay) {
   p = Plane();
   r = Ray(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
   ASSERT_FALSE(p.intersect(r, rec));
   ASSERT_TRUE(rec.count == 0);
 }
 
-TEST_F(Tplane, rayIntersectingPlaneFromAbove) {
+TEST_F(PlaneTest, rayIntersectingPlaneFromAbove) {
   p = Plane();
   r = Ray(Point3f(0.0f, 1.0f, 0.0f), Vec3f(0.0f, -1.0f, 0.0f));
   ASSERT_TRUE(p.intersect(r, rec));
@@ -45,7 +45,7 @@ TEST_F(Tplane, rayIntersectingPlaneFromAbove) {
   ASSERT_TRUE(rec.t_min() == 1.0f);
 }
 
-TEST_F(Tplane, rayIntersectingPlaneFromBelow) {
+TEST_F(PlaneTest, rayIntersectingPlaneFromBelow) {
   p = Plane();
   r = Ray(Point3f(0.0f, -1.0f, 0.0f), Vec3f(0.0f, 1.0f, 0.0f));
   ASSERT_TRUE(p.intersect(r, rec));

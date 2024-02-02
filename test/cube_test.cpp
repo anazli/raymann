@@ -5,13 +5,13 @@
 using namespace testing;
 using namespace std;
 
-class TBox : public Test {
+class CubeTest : public Test {
  public:
   SceneElementPtr box;
   Ray ray;
 };
 
-TEST_F(TBox, rayIntersectsCube) {
+TEST_F(CubeTest, rayIntersectsCube) {
   box = make_shared<Cube>();
 
   ray = Ray(Point3f(5.f, 0.5f, 0.f), Vec3f(-1.f, 0.f, 0.f));
@@ -57,7 +57,7 @@ TEST_F(TBox, rayIntersectsCube) {
   EXPECT_EQ(rec.t2, 6.f);
 }
 
-TEST_F(TBox, rayMissesCube) {
+TEST_F(CubeTest, rayMissesCube) {
   box = make_shared<Cube>();
 
   ray = Ray(Point3f(-2.f, 0.f, 0.f), Vec3f(0.2673f, 0.5345f, 0.8018f));
@@ -91,7 +91,7 @@ TEST_F(TBox, rayMissesCube) {
   EXPECT_TRUE(rec.count == 0);
 }
 
-TEST_F(TBox, normalOnSurfaceOfCube) {
+TEST_F(CubeTest, normalOnSurfaceOfCube) {
   box = make_shared<Cube>();
   auto point = Point3f(1.f, 0.5f, -0.8f);
   EXPECT_TRUE(box->normal(point) == Vec3f(1.f, 0.f, 0.f));

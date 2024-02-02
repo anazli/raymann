@@ -15,7 +15,7 @@ class SceneElementProxy : public SceneElement {
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   // SceneElementPtr getSceneElement() const;
   // void setSceneElement(SceneElementPtr element);
-  void addPoint(const Point3f &point);
+  void addPoint(const Point3f &point) override;
 
  private:
   SceneElementPtr m_sceneElement;

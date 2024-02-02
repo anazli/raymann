@@ -7,8 +7,8 @@
 class Cube : public SceneElement {
  public:
   Cube() {
-    m_bBoxProps.minPoint() = Point3f(-1.f, -1.f, -1.f);
-    m_bBoxProps.maxPoint() = Point3f(1.f, 1.f, 1.f);
+    m_bBoxProps = BoundingBoxProperties(Point3f(-1.f, -1.f, -1.f),
+                                        Point3f(1.f, 1.f, 1.f));
   }
   ~Cube() override = default;
 
