@@ -36,7 +36,11 @@ class SceneElement {
   virtual SceneElement *getParent() const;
   virtual void setLight(const PointLight &light);
   virtual PointLight getLight() const;
+  virtual std::shared_ptr<SceneElement> getElementOfBoundingBox() const;
+  virtual void setElementOfBoundingBox(std::shared_ptr<SceneElement> element);
+  virtual bool containsElement() const;
   virtual void addPoint(const Point3f &point);
+  virtual bool containsPoint(const Point3f &point);
   void setBoundingBoxProperties(const BoundingBoxProperties &props);
   BoundingBoxProperties &boundingBoxProperties();
   void setMaterial(BaseMaterialPtr mat);

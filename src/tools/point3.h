@@ -84,6 +84,8 @@ class Point3 {
     return *this;
   }
 
+  auto operator<=>(const Point3<T> &) const = default;
+
  private:
   T m_x, m_y, m_z;
 };

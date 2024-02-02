@@ -44,7 +44,18 @@ void SceneElement::setLight(const PointLight& light) {}
 
 PointLight SceneElement::getLight() const { return PointLight(); }
 
+std::shared_ptr<SceneElement> SceneElement::getElementOfBoundingBox() const {
+  return nullptr;
+}
+
+void SceneElement::setElementOfBoundingBox(
+    std::shared_ptr<SceneElement> element) {}
+
+bool SceneElement::containsElement() const { return false; }
+
 void SceneElement::addPoint(const Point3f& point) {}
+
+bool SceneElement::containsPoint(const Point3f& point) { return false; }
 
 void SceneElement::setBoundingBoxProperties(
     const BoundingBoxProperties& props) {

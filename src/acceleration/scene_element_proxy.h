@@ -13,9 +13,12 @@ class SceneElementProxy : public SceneElement {
                                                       -limit::infinity()));
   ~SceneElementProxy() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
-  // SceneElementPtr getSceneElement() const;
-  // void setSceneElement(SceneElementPtr element);
+  void add(SceneElementPtr item) override;
+  SceneElementPtr getElementOfBoundingBox() const override;
+  void setElementOfBoundingBox(SceneElementPtr element) override;
+  bool containsElement() const override;
   void addPoint(const Point3f &point) override;
+  bool containsPoint(const Point3f &point) override;
 
  private:
   SceneElementPtr m_sceneElement;

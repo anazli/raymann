@@ -10,13 +10,31 @@ bool SceneElementProxy::intersect(const Ray &r, IntersectionRecord &record) {
   return false;
 }
 
-// SceneElementPtr SceneElementProxy::getSceneElement() const {
-//   return m_sceneElement;
-// }
+void SceneElementProxy::add(SceneElementPtr item) {
+  if (m_sceneElement->isWorld()) {
+    addPoint(item->boundingBoxProperties().minPoint());
+    addPoint(item->boundingBoxProperties().maxPoint());
+    if (item->containsElement()) {
+      item->getElementOfBoundingBox()->setParent(m_sceneElement.get());
+      m_sceneElement->add(item->getElementOfBoundingBox());
+    } else {
+      item->setParent(m_sceneElement.get());
+      m_sceneElement->add(item);
+    }
+  }
+}
 
-// void SceneElementProxy::setSceneElement(SceneElementPtr element) {
-//   m_sceneElement = element;
-// }
+bool SceneElementProxy::containsElement() const {
+  return m_sceneElement != nullptr;
+}
+
+SceneElementPtr SceneElementProxy::getElementOfBoundingBox() const {
+  return m_sceneElement;
+}
+
+void SceneElementProxy::setElementOfBoundingBox(SceneElementPtr element) {
+  m_sceneElement = element;
+}
 
 void SceneElementProxy::addPoint(const Point3f &point) {
   if (point.x() < m_bBoxProps.minPoint().x())
@@ -32,4 +50,16 @@ void SceneElementProxy::addPoint(const Point3f &point) {
     m_bBoxProps.maxPoint().setY(point.y());
   if (point.z() > m_bBoxProps.maxPoint().z())
     m_bBoxProps.maxPoint().setZ(point.z());
+}
+
+bool SceneElementProxy::containsPoint(const Point3f &point) {
+  // three-way comparison doesn't work
+  return point.x() >= m_bBoxProps.minPoint().x() &&
+         point.x() <= m_bBoxProps.maxPoint().x() &&
+
+         point.y() >= m_bBoxProps.minPoint().y() &&
+         point.y() <= m_bBoxProps.maxPoint().y() &&
+
+         point.z() >= m_bBoxProps.minPoint().z() &&
+         point.z() <= m_bBoxProps.maxPoint().z();
 }
