@@ -52,7 +52,7 @@ void SceneElementProxy::addPoint(const Point3f &point) {
     m_bBoxProps.maxPoint().setZ(point.z());
 }
 
-bool SceneElementProxy::containsPoint(const Point3f &point) {
+bool SceneElementProxy::containsPoint(const Point3f &point) const {
   // three-way comparison doesn't work
   return point.x() >= m_bBoxProps.minPoint().x() &&
          point.x() <= m_bBoxProps.maxPoint().x() &&
@@ -62,4 +62,9 @@ bool SceneElementProxy::containsPoint(const Point3f &point) {
 
          point.z() >= m_bBoxProps.minPoint().z() &&
          point.z() <= m_bBoxProps.maxPoint().z();
+}
+
+bool SceneElementProxy::containsBoundingBox(
+    const BoundingBoxProperties &prop) const {
+  return containsPoint(prop.minPoint()) && containsPoint(prop.maxPoint());
 }

@@ -18,7 +18,8 @@ class SceneElementProxy : public SceneElement {
   void setElementOfBoundingBox(SceneElementPtr element) override;
   bool containsElement() const override;
   void addPoint(const Point3f &point) override;
-  bool containsPoint(const Point3f &point) override;
+  bool containsPoint(const Point3f &point) const override;
+  bool containsBoundingBox(const BoundingBoxProperties &prop) const override;
 
  private:
   SceneElementPtr m_sceneElement;

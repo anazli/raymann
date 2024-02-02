@@ -67,3 +67,20 @@ TEST_F(BoundingBoxTest, checkIfBoxContainsPoint) {
   EXPECT_FALSE(box1->containsPoint(Point3f(8.f, 5.f, 3.f)));
   EXPECT_FALSE(box1->containsPoint(Point3f(8.f, 1.f, 8.f)));
 }
+
+TEST_F(BoundingBoxTest, checkIfBoxContainsAnotherBox) {
+  box1 = std::make_shared<SceneElementProxy>(nullptr, Point3f(5.f, -2.f, 0.f),
+                                             Point3f(11.f, 4.f, 7.f));
+  box2 = std::make_shared<SceneElementProxy>(nullptr, Point3f(5.f, -2.f, 0.f),
+                                             Point3f(11.f, 4.f, 7.f));
+  EXPECT_TRUE(box1->containsBoundingBox(box2->boundingBoxProperties()));
+  box2->boundingBoxProperties() =
+      BoundingBoxProperties(Point3f(6.f, -1.f, 1.f), Point3f(10.f, 3.f, 6.f));
+  EXPECT_TRUE(box1->containsBoundingBox(box2->boundingBoxProperties()));
+  box2->boundingBoxProperties() =
+      BoundingBoxProperties(Point3f(4.f, -3.f, -1.f), Point3f(10.f, 3.f, 6.f));
+  EXPECT_FALSE(box1->containsBoundingBox(box2->boundingBoxProperties()));
+  box2->boundingBoxProperties() =
+      BoundingBoxProperties(Point3f(6.f, -1.f, 1.f), Point3f(12.f, 5.f, 8.f));
+  EXPECT_FALSE(box1->containsBoundingBox(box2->boundingBoxProperties()));
+}

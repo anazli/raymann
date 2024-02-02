@@ -16,6 +16,8 @@ class BoundingBoxProperties {
   BoundingBoxProperties(const Point3f &pmin, const Point3f &pmax);
   Point3f &minPoint();
   Point3f &maxPoint();
+  const Point3f &minPoint() const;
+  const Point3f &maxPoint() const;
 
  private:
   Point3f m_minPoint;
@@ -40,9 +42,11 @@ class SceneElement {
   virtual void setElementOfBoundingBox(std::shared_ptr<SceneElement> element);
   virtual bool containsElement() const;
   virtual void addPoint(const Point3f &point);
-  virtual bool containsPoint(const Point3f &point);
+  virtual bool containsPoint(const Point3f &point) const;
+  virtual bool containsBoundingBox(const BoundingBoxProperties &prop) const;
   void setBoundingBoxProperties(const BoundingBoxProperties &props);
   BoundingBoxProperties &boundingBoxProperties();
+  const BoundingBoxProperties &boundingBoxProperties() const;
   void setMaterial(BaseMaterialPtr mat);
   BaseMaterialPtr getMaterial() const;
   // size_t getId() const;

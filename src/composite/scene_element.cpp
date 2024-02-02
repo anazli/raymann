@@ -10,6 +10,10 @@ Point3f& BoundingBoxProperties::minPoint() { return m_minPoint; }
 
 Point3f& BoundingBoxProperties::maxPoint() { return m_maxPoint; }
 
+const Point3f& BoundingBoxProperties::minPoint() const { return m_minPoint; }
+
+const Point3f& BoundingBoxProperties::maxPoint() const { return m_maxPoint; }
+
 // size_t SceneElement::m_next_id = 0;
 
 bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
@@ -55,7 +59,12 @@ bool SceneElement::containsElement() const { return false; }
 
 void SceneElement::addPoint(const Point3f& point) {}
 
-bool SceneElement::containsPoint(const Point3f& point) { return false; }
+bool SceneElement::containsPoint(const Point3f& point) const { return false; }
+
+bool SceneElement::containsBoundingBox(
+    const BoundingBoxProperties& prop) const {
+  return false;
+}
 
 void SceneElement::setBoundingBoxProperties(
     const BoundingBoxProperties& props) {
@@ -63,6 +72,10 @@ void SceneElement::setBoundingBoxProperties(
 }
 
 BoundingBoxProperties& SceneElement::boundingBoxProperties() {
+  return m_bBoxProps;
+}
+
+const BoundingBoxProperties& SceneElement::boundingBoxProperties() const {
   return m_bBoxProps;
 }
 
