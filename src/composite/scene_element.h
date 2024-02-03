@@ -20,8 +20,10 @@ class BoundingBoxProperties {
   const Point3f &maxPoint() const;
 
  private:
-  Point3f m_minPoint;
-  Point3f m_maxPoint;
+  Point3f m_minPoint =
+      Point3f(limit::infinity(), limit::infinity(), limit::infinity());
+  Point3f m_maxPoint =
+      Point3f(-limit::infinity(), -limit::infinity(), -limit::infinity());
 };
 
 class SceneElement {
@@ -49,6 +51,7 @@ class SceneElement {
   const BoundingBoxProperties &boundingBoxProperties() const;
   void setMaterial(BaseMaterialPtr mat);
   BaseMaterialPtr getMaterial() const;
+  virtual Mat4f transformationMatrix() const;
   // size_t getId() const;
   virtual Point3f pointFromWorldToObjectSpace(const Point3f &point) const;
   virtual Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const;

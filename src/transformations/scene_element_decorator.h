@@ -13,9 +13,9 @@ class SceneElementDecorator : public SceneElement {
   bool isWorld() const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
   SceneElementContainer getChildren() override;
-
   void setParent(SceneElementRawPtr parent) override;
   SceneElementRawPtr getParent() const override;
+  Mat4f transformationMatrix() const override;
 
   Point3f pointFromWorldToObjectSpace(const Point3f &point) const override;
   Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const override;

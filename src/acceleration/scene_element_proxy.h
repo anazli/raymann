@@ -4,13 +4,9 @@
 
 class SceneElementProxy : public SceneElement {
  public:
-  SceneElementProxy(SceneElementPtr element,
-                    const Point3f &minPoint = Point3f(limit::infinity(),
-                                                      limit::infinity(),
-                                                      limit::infinity()),
-                    const Point3f &maxPoint = Point3f(-limit::infinity(),
-                                                      -limit::infinity(),
-                                                      -limit::infinity()));
+  SceneElementProxy(SceneElementPtr element);
+  SceneElementProxy(SceneElementPtr element, const Point3f &minPoint,
+                    const Point3f &maxPoint);
   ~SceneElementProxy() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   void add(SceneElementPtr item) override;
@@ -22,5 +18,6 @@ class SceneElementProxy : public SceneElement {
   bool containsBoundingBox(const BoundingBoxProperties &prop) const override;
 
  private:
+  void transformBox();
   SceneElementPtr m_sceneElement;
 };

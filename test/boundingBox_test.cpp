@@ -2,6 +2,7 @@
 #include "composite/builder.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"
+#include "transformations/transformer.h"
 
 using namespace testing;
 using std::make_shared;
@@ -83,4 +84,24 @@ TEST_F(BoundingBoxTest, checkIfBoxContainsAnotherBox) {
   box2->boundingBoxProperties() =
       BoundingBoxProperties(Point3f(6.f, -1.f, 1.f), Point3f(12.f, 5.f, 8.f));
   EXPECT_FALSE(box1->containsBoundingBox(box2->boundingBoxProperties()));
+}
+
+TEST_F(BoundingBoxTest, transformsBoundingBox) {
+  BuilderPtr builder = std::make_unique<WorldBuilder>();
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(rotationOverX(PI / 4.f) *
+                               rotationOverY(PI / 4.f));
+  SceneElementPtr sphere(builder->getCurrentElement());
+  SceneElementPtr box = std::make_shared<SceneElementProxy>(
+      sphere, Point3f(-1.f, -1.f, -1.f), Point3f(1.f, 1.f, 1.f));
+  BoundingBoxProperties p = box->boundingBoxProperties();
+
+  float eps = 1E-4f;
+  EXPECT_NEAR(p.minPoint().x(), -1.4142f, eps);
+  EXPECT_NEAR(p.minPoint().y(), -1.7071f, eps);
+  EXPECT_NEAR(p.minPoint().z(), -1.7071f, eps);
+
+  EXPECT_NEAR(p.maxPoint().x(), 1.4142f, eps);
+  EXPECT_NEAR(p.maxPoint().y(), 1.7071f, eps);
+  EXPECT_NEAR(p.maxPoint().z(), 1.7071f, eps);
 }

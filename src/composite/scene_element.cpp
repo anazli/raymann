@@ -40,6 +40,8 @@ void SceneElement::setMaterial(BaseMaterialPtr mat) { m_material = mat; }
 
 BaseMaterialPtr SceneElement::getMaterial() const { return m_material; }
 
+Mat4f SceneElement::transformationMatrix() const { return Mat4f(); }
+
 void SceneElement::setParent(SceneElementRawPtr parent) { m_parent = parent; }
 
 SceneElementRawPtr SceneElement::getParent() const { return m_parent; }
