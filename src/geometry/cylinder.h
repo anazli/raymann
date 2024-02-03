@@ -9,14 +9,7 @@ class Cylinder : public SceneElement {
   Cylinder(float minY = -std::numeric_limits<float>::max(),
            float maxY = std::numeric_limits<float>::max(), bool closed = false)
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
-    if (!closed) {
-      m_bBoxProps =
-          BoundingBoxProperties(Point3f(-1.f, -limit::infinity(), -1.f),
-                                Point3f(1.f, limit::infinity(), 1.f));
-    } else {
-      m_bBoxProps = BoundingBoxProperties(Point3f(-1.f, m_minimumY, -1.f),
-                                          Point3f(1.f, m_maximumY, 1.f));
-    }
+    m_elementType = SceneElementType::CYLINDER;
   }
   ~Cylinder() override = default;
 
@@ -67,6 +60,8 @@ class Cylinder : public SceneElement {
     }
     return Vec3f(p.x(), 0.f, p.z());
   }
+
+  bool isClosed() const { return m_closed; }
 
  private:
   float m_minimumY;

@@ -13,6 +13,10 @@ Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
   }
 }
 
+SceneElementType Transformer::elementType() const {
+  return SceneElementDecorator::elementType();
+}
+
 bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
   auto r_transformed = r.transform(m_transformMatrix.inverse());
   return SceneElementDecorator::intersect(r_transformed, record);

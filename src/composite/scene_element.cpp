@@ -16,6 +16,8 @@ const Point3f& BoundingBoxProperties::maxPoint() const { return m_maxPoint; }
 
 // size_t SceneElement::m_next_id = 0;
 
+SceneElementType SceneElement::elementType() const { return m_elementType; }
+
 bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
   return false;
 }

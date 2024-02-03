@@ -7,8 +7,7 @@ class Sphere : public SceneElement {
   ~Sphere() override = default;
   Sphere(const Point3f &c = Point3f(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
       : m_center(c), m_radius(r) {
-    m_bBoxProps = BoundingBoxProperties(Point3f(-1.f, -1.f, -1.f),
-                                        Point3f(1.f, 1.f, 1.f));
+    m_elementType = SceneElementType::SPHERE;
   }
 
   bool intersect(const Ray &r, IntersectionRecord &record) override;

@@ -4,11 +4,7 @@
 
 class Plane : public SceneElement {
  public:
-  Plane() {
-    m_bBoxProps = BoundingBoxProperties(
-        Point3f(-limit::infinity(), 0.f, -limit::infinity()),
-        Point3f(limit::infinity(), 0.f, limit::infinity()));
-  }
+  Plane() { m_elementType = SceneElementType::PLANE; }
   ~Plane() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override {
     if (fabs(r.direction().y()) < EPS) {

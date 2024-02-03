@@ -6,10 +6,7 @@
 
 class Cube : public SceneElement {
  public:
-  Cube() {
-    m_bBoxProps = BoundingBoxProperties(Point3f(-1.f, -1.f, -1.f),
-                                        Point3f(1.f, 1.f, 1.f));
-  }
+  Cube() { m_elementType = SceneElementType::CUBE; }
   ~Cube() override = default;
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {

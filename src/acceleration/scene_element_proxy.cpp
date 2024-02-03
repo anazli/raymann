@@ -1,13 +1,16 @@
 #include "acceleration/scene_element_proxy.h"
 
 #include "application/error.h"
+#include "geometry/cone.h"
+#include "geometry/cylinder.h"
 
 SceneElementProxy::SceneElementProxy(SceneElementPtr element)
     : m_sceneElement(element) {
-  if (m_sceneElement && m_sceneElement->transformationMatrix() != Mat4f()) {
-    transformBox();
-  } else if (m_sceneElement) {
-    m_bBoxProps = m_sceneElement->boundingBoxProperties();
+  if (m_sceneElement) {
+    applyDefaultBoundsForElementType();
+    if (m_sceneElement->transformationMatrix() != Mat4f()) {
+      transformBox();
+    }
   }
 }
 
@@ -83,6 +86,63 @@ bool SceneElementProxy::containsPoint(const Point3f &point) const {
 bool SceneElementProxy::containsBoundingBox(
     const BoundingBoxProperties &prop) const {
   return containsPoint(prop.minPoint()) && containsPoint(prop.maxPoint());
+}
+
+void SceneElementProxy::applyDefaultBoundsForElementType() {
+  SceneElementType t = m_sceneElement->elementType();
+  switch (t) {
+    case SceneElementType::SPHERE:
+      m_bBoxProps = BoundingBoxProperties(Point3f(-1.f, -1.f, -1.f),
+                                          Point3f(1.f, 1.f, 1.f));
+      break;
+    case SceneElementType::CONE: {
+      Cone *cone = dynamic_cast<Cone *>(m_sceneElement.get());
+      if (cone) {
+        if (!cone->isClosed()) {
+          m_bBoxProps = BoundingBoxProperties(
+              Point3f(-limit::infinity(), -limit::infinity(),
+                      -limit::infinity()),
+              Point3f(limit::infinity(), limit::infinity(), limit::infinity()));
+        } else {
+          float a = fabs(cone->minimumY());
+          float b = fabs(cone->maximumY());
+          float lim = std::max(a, b);
+          m_bBoxProps =
+              BoundingBoxProperties(Point3f(-lim, cone->minimumY(), -lim),
+                                    Point3f(lim, cone->maximumY(), lim));
+        }
+      }
+      break;
+    }
+    case SceneElementType::CYLINDER: {
+      Cylinder *cyl = dynamic_cast<Cylinder *>(m_sceneElement.get());
+      if (cyl) {
+        if (!cyl->isClosed()) {
+          m_bBoxProps =
+              BoundingBoxProperties(Point3f(-1.f, -limit::infinity(), -1.f),
+                                    Point3f(1.f, limit::infinity(), 1.f));
+        } else {
+          m_bBoxProps =
+              BoundingBoxProperties(Point3f(-1.f, cyl->minimumY(), -1.f),
+                                    Point3f(1.f, cyl->maximumY(), 1.f));
+        }
+      }
+      break;
+    }
+    case SceneElementType::CUBE:
+      m_bBoxProps = BoundingBoxProperties(Point3f(-1.f, -1.f, -1.f),
+                                          Point3f(1.f, 1.f, 1.f));
+      break;
+    case SceneElementType::TRIANGLE:
+      break;
+    case SceneElementType::PLANE:
+      m_bBoxProps = BoundingBoxProperties(
+          Point3f(-limit::infinity(), 0.f, -limit::infinity()),
+          Point3f(limit::infinity(), 0.f, limit::infinity()));
+      break;
+    default:
+      break;
+  }
 }
 
 void SceneElementProxy::transformBox() {

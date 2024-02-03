@@ -18,6 +18,7 @@ class SceneElementProxy : public SceneElement {
   bool containsBoundingBox(const BoundingBoxProperties &prop) const override;
 
  private:
+  void applyDefaultBoundsForElementType();
   void transformBox();
   SceneElementPtr m_sceneElement;
 };

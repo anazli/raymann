@@ -6,6 +6,10 @@ SceneElementDecorator::SceneElementDecorator(SceneElementRawPtr tr,
 
 SceneElementDecorator::~SceneElementDecorator() { delete m_element; }
 
+SceneElementType SceneElementDecorator::elementType() const {
+  return m_element->elementType();
+}
+
 bool SceneElementDecorator::intersect(const Ray& r,
                                       IntersectionRecord& record) {
   return m_element->intersect(r, record);

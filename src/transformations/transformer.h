@@ -5,6 +5,7 @@ class Transformer : public SceneElementDecorator {
  public:
   ~Transformer() override = default;
   Transformer(SceneElementRawPtr tr, const Mat4f &m = Mat4f());
+  SceneElementType elementType() const override;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override;
   void add(SceneElementPtr item) override;

@@ -10,6 +10,16 @@ using limit = std::numeric_limits<float>;
 
 class BaseRenderer;
 
+enum class SceneElementType {
+  CONE,
+  CUBE,
+  CYLINDER,
+  PLANE,
+  SPHERE,
+  TRIANGLE,
+  BBOX
+};
+
 class BoundingBoxProperties {
  public:
   BoundingBoxProperties() = default;
@@ -29,6 +39,7 @@ class BoundingBoxProperties {
 class SceneElement {
  public:
   virtual ~SceneElement() = default;
+  virtual SceneElementType elementType() const;
   virtual bool intersect(const Ray &r, IntersectionRecord &record);
   virtual void add(std::shared_ptr<SceneElement> item);
   virtual void remove(SceneElement *item, bool del = true);
@@ -62,6 +73,7 @@ class SceneElement {
   SceneElement *m_parent = nullptr;
   BaseMaterialPtr m_material;
   BoundingBoxProperties m_bBoxProps;
+  SceneElementType m_elementType;
   // size_t m_id;
   // static size_t m_next_id;
 };
