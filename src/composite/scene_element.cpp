@@ -52,22 +52,23 @@ void SceneElement::setLight(const PointLight& light) {}
 
 PointLight SceneElement::getLight() const { return PointLight(); }
 
-std::shared_ptr<SceneElement> SceneElement::getElementOfBoundingBox() const {
-  return nullptr;
-}
-
-void SceneElement::setElementOfBoundingBox(
-    std::shared_ptr<SceneElement> element) {}
-
-bool SceneElement::containsElement() const { return false; }
-
 void SceneElement::addPoint(const Point3f& point) {}
 
-bool SceneElement::containsPoint(const Point3f& point) const { return false; }
+bool SceneElement::containsPoint(const Point3f& point) const {
+  // three-way comparison doesn't work
+  return point.x() >= m_bBoxProps.minPoint().x() &&
+         point.x() <= m_bBoxProps.maxPoint().x() &&
+
+         point.y() >= m_bBoxProps.minPoint().y() &&
+         point.y() <= m_bBoxProps.maxPoint().y() &&
+
+         point.z() >= m_bBoxProps.minPoint().z() &&
+         point.z() <= m_bBoxProps.maxPoint().z();
+}
 
 bool SceneElement::containsBoundingBox(
     const BoundingBoxProperties& prop) const {
-  return false;
+  return containsPoint(prop.minPoint()) && containsPoint(prop.maxPoint());
 }
 
 void SceneElement::setBoundingBoxProperties(
