@@ -6,7 +6,11 @@
 
 class Cube : public SceneElement {
  public:
-  Cube() { m_elementType = SceneElementType::CUBE; }
+  Cube() {
+    m_elementType = SceneElementType::CUBE;
+    m_bBoxProps.minPoint() = Point3f(-1.f, -1.f, -1.f);
+    m_bBoxProps.maxPoint() = Point3f(1.f, 1.f, 1.f);
+  }
   ~Cube() override = default;
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {
