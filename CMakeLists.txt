@@ -6,9 +6,7 @@ set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(EXE raymann)
 
-set(SOURCES src/acceleration/scene_element_proxy.cpp
-            src/acceleration/scene_element_proxy.h
-            src/application/error.h
+set(SOURCES src/application/error.h
             src/composite/builder.cpp
             src/composite/builder.h
             src/composite/scene_element.cpp
