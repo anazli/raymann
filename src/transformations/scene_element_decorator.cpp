@@ -43,10 +43,6 @@ SceneElementRawPtr SceneElementDecorator::getParent() const {
   return m_element->getParent();
 }
 
-Mat4f SceneElementDecorator::transformationMatrix() const {
-  return m_transformMatrix;
-}
-
 Point3f SceneElementDecorator::pointFromWorldToObjectSpace(
     const Point3f& point) const {
   return m_element->pointFromWorldToObjectSpace(point);

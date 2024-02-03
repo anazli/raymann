@@ -2,6 +2,7 @@
 
 Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
     : SceneElementDecorator(tr, m) {
+  transformBox();
   if (tr->isWorld()) {
     WorldIterator it(getChildren());
     if (it.first()) {
@@ -62,10 +63,6 @@ SceneElementRawPtr Transformer::getParent() const {
   return SceneElementDecorator::getParent();
 }
 
-Mat4f Transformer::transformationMatrix() const {
-  return SceneElementDecorator::transformationMatrix();
-}
-
 Point3f Transformer::pointFromWorldToObjectSpace(const Point3f& point) const {
   Point3f p(point);
   if (getParent()) {
@@ -82,4 +79,26 @@ Vec3f Transformer::vectorFromObjectToWorldSpace(const Vec3f vec) const {
     v = getParent()->vectorFromObjectToWorldSpace(v);
   }
   return v;
+}
+
+void Transformer::transformBox() {
+  Point3f p1 = m_bBox.minPoint();
+  Point3f p2 = Point3f(m_bBox.minPoint().x(), m_bBox.minPoint().y(),
+                       m_bBox.maxPoint().z());
+  Point3f p3 = Point3f(m_bBox.minPoint().x(), m_bBox.maxPoint().y(),
+                       m_bBox.minPoint().z());
+  Point3f p4 = Point3f(m_bBox.minPoint().x(), m_bBox.maxPoint().y(),
+                       m_bBox.maxPoint().z());
+  Point3f p5 = Point3f(m_bBox.maxPoint().x(), m_bBox.minPoint().y(),
+                       m_bBox.minPoint().z());
+  Point3f p6 = Point3f(m_bBox.maxPoint().x(), m_bBox.minPoint().y(),
+                       m_bBox.maxPoint().z());
+  Point3f p7 = Point3f(m_bBox.maxPoint().x(), m_bBox.maxPoint().y(),
+                       m_bBox.minPoint().z());
+  Point3f p8 = m_bBox.maxPoint();
+  m_bBox = BoundingBox{};
+  std::vector<Point3f> v{p1, p2, p3, p4, p5, p6, p7, p8};
+  for (Point3f& elem : v) {
+    m_bBox.addPoint(m_transformMatrix * Vec4f(elem));
+  }
 }

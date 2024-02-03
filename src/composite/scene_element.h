@@ -20,14 +20,18 @@ enum class SceneElementType {
   BBOX
 };
 
-class BoundingBoxProperties {
+class BoundingBox {
  public:
-  BoundingBoxProperties() = default;
-  BoundingBoxProperties(const Point3f &pmin, const Point3f &pmax);
+  BoundingBox() = default;
+  BoundingBox(const Point3f &pmin, const Point3f &pmax);
   Point3f &minPoint();
   Point3f &maxPoint();
   const Point3f &minPoint() const;
   const Point3f &maxPoint() const;
+  void addPoint(const Point3f &point);
+  void addBox(const BoundingBox &box);
+  bool containsPoint(const Point3f &point) const;
+  bool containsBoundingBox(const BoundingBox &box) const;
 
  private:
   Point3f m_minPoint =
@@ -51,25 +55,21 @@ class SceneElement {
   virtual SceneElement *getParent() const;
   virtual void setLight(const PointLight &light);
   virtual PointLight getLight() const;
-  virtual void addPoint(const Point3f &point);
-  virtual bool containsPoint(const Point3f &point) const;
-  virtual bool containsBoundingBox(const BoundingBoxProperties &prop) const;
-  void setBoundingBoxProperties(const BoundingBoxProperties &props);
-  BoundingBoxProperties &boundingBoxProperties();
-  const BoundingBoxProperties &boundingBoxProperties() const;
+  void setBoundingBox(const BoundingBox &props);
+  BoundingBox &boundingBox();
+  const BoundingBox &boundingBox() const;
   void setMaterial(BaseMaterialPtr mat);
   BaseMaterialPtr getMaterial() const;
-  virtual Mat4f transformationMatrix() const;
   // size_t getId() const;
   virtual Point3f pointFromWorldToObjectSpace(const Point3f &point) const;
   virtual Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const;
 
  protected:
   SceneElement() = default;
-  SceneElement(const BoundingBoxProperties &props);
+  SceneElement(const BoundingBox &props);
   SceneElement *m_parent = nullptr;
   BaseMaterialPtr m_material;
-  BoundingBoxProperties m_bBoxProps;
+  BoundingBox m_bBox;
   SceneElementType m_elementType;
   // size_t m_id;
   // static size_t m_next_id;

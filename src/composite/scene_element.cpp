@@ -2,17 +2,42 @@
 
 #include "renderers/renderer.h"
 
-BoundingBoxProperties::BoundingBoxProperties(const Point3f& pmin,
-                                             const Point3f& pmax)
+BoundingBox::BoundingBox(const Point3f& pmin, const Point3f& pmax)
     : m_minPoint(pmin), m_maxPoint(pmax) {}
 
-Point3f& BoundingBoxProperties::minPoint() { return m_minPoint; }
+Point3f& BoundingBox::minPoint() { return m_minPoint; }
 
-Point3f& BoundingBoxProperties::maxPoint() { return m_maxPoint; }
+Point3f& BoundingBox::maxPoint() { return m_maxPoint; }
 
-const Point3f& BoundingBoxProperties::minPoint() const { return m_minPoint; }
+const Point3f& BoundingBox::minPoint() const { return m_minPoint; }
 
-const Point3f& BoundingBoxProperties::maxPoint() const { return m_maxPoint; }
+const Point3f& BoundingBox::maxPoint() const { return m_maxPoint; }
+
+void BoundingBox::addPoint(const Point3f& point) {
+  if (point.x() < m_minPoint.x()) m_minPoint.setX(point.x());
+  if (point.y() < m_minPoint.y()) m_minPoint.setY(point.y());
+  if (point.z() < m_minPoint.z()) m_minPoint.setZ(point.z());
+
+  if (point.x() > m_maxPoint.x()) m_maxPoint.setX(point.x());
+  if (point.y() > m_maxPoint.y()) m_maxPoint.setY(point.y());
+  if (point.z() > m_maxPoint.z()) m_maxPoint.setZ(point.z());
+}
+
+void BoundingBox::addBox(const BoundingBox& box) {
+  addPoint(box.minPoint());
+  addPoint(box.maxPoint());
+}
+
+bool BoundingBox::containsPoint(const Point3f& point) const {
+  // three-way comparison doesn't work
+  return point.x() >= m_minPoint.x() && point.x() <= m_maxPoint.x() &&
+         point.y() >= m_minPoint.y() && point.y() <= m_maxPoint.y() &&
+         point.z() >= m_minPoint.z() && point.z() <= m_maxPoint.z();
+}
+
+bool BoundingBox::containsBoundingBox(const BoundingBox& box) const {
+  return containsPoint(box.minPoint()) && containsPoint(box.maxPoint());
+}
 
 // size_t SceneElement::m_next_id = 0;
 
@@ -42,8 +67,6 @@ void SceneElement::setMaterial(BaseMaterialPtr mat) { m_material = mat; }
 
 BaseMaterialPtr SceneElement::getMaterial() const { return m_material; }
 
-Mat4f SceneElement::transformationMatrix() const { return Mat4f(); }
-
 void SceneElement::setParent(SceneElementRawPtr parent) { m_parent = parent; }
 
 SceneElementRawPtr SceneElement::getParent() const { return m_parent; }
@@ -52,37 +75,13 @@ void SceneElement::setLight(const PointLight& light) {}
 
 PointLight SceneElement::getLight() const { return PointLight(); }
 
-void SceneElement::addPoint(const Point3f& point) {}
-
-bool SceneElement::containsPoint(const Point3f& point) const {
-  // three-way comparison doesn't work
-  return point.x() >= m_bBoxProps.minPoint().x() &&
-         point.x() <= m_bBoxProps.maxPoint().x() &&
-
-         point.y() >= m_bBoxProps.minPoint().y() &&
-         point.y() <= m_bBoxProps.maxPoint().y() &&
-
-         point.z() >= m_bBoxProps.minPoint().z() &&
-         point.z() <= m_bBoxProps.maxPoint().z();
+void SceneElement::setBoundingBox(const BoundingBox& props) {
+  m_bBox = props;
 }
 
-bool SceneElement::containsBoundingBox(
-    const BoundingBoxProperties& prop) const {
-  return containsPoint(prop.minPoint()) && containsPoint(prop.maxPoint());
-}
+BoundingBox& SceneElement::boundingBox() { return m_bBox; }
 
-void SceneElement::setBoundingBoxProperties(
-    const BoundingBoxProperties& props) {
-  m_bBoxProps = props;
-}
-
-BoundingBoxProperties& SceneElement::boundingBoxProperties() {
-  return m_bBoxProps;
-}
-
-const BoundingBoxProperties& SceneElement::boundingBoxProperties() const {
-  return m_bBoxProps;
-}
+const BoundingBox& SceneElement::boundingBox() const { return m_bBox; }
 
 // size_t SceneElement::getId() const { return 0; /*m_id*/ }
 
@@ -96,8 +95,7 @@ Vec3f SceneElement::vectorFromObjectToWorldSpace(const Vec3f vec) const {
   return v.normalize();
 }
 
-SceneElement::SceneElement(const BoundingBoxProperties& props)
-    : m_bBoxProps(props) {}
+SceneElement::SceneElement(const BoundingBox& props) : m_bBox(props) {}
 
 /*SceneElement::SceneElement() {
   m_id = m_next_id;

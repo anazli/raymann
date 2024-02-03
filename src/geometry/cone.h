@@ -11,16 +11,16 @@ class Cone : public SceneElement {
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
     m_elementType = SceneElementType::CONE;
     if (!closed) {
-      m_bBoxProps.minPoint() =
+      m_bBox.minPoint() =
           Point3f(-limit::infinity(), -limit::infinity(), -limit::infinity());
-      m_bBoxProps.maxPoint() =
+      m_bBox.maxPoint() =
           Point3f(limit::infinity(), limit::infinity(), limit::infinity());
     } else {
       float a = fabs(m_minimumY);
       float b = fabs(m_maximumY);
       float lim = std::max(a, b);
-      m_bBoxProps.minPoint() = Point3f(-lim, m_minimumY, -lim);
-      m_bBoxProps.maxPoint() = Point3f(lim, m_maximumY, lim);
+      m_bBox.minPoint() = Point3f(-lim, m_minimumY, -lim);
+      m_bBox.maxPoint() = Point3f(lim, m_maximumY, lim);
     }
   }
   ~Cone() override = default;
