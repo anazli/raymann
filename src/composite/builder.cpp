@@ -61,6 +61,10 @@ void WorldBuilder::applyDielectricMaterial(const float& ri, TexturePtr tex,
   m_currentElement->setMaterial(matptr);
 }
 
+void WorldBuilder::createBBoxForElement(const BoundingBox& box) {
+  m_currentElement->setBoundingBox(box);
+}
+
 SceneElementPtr WorldBuilder::getProduct() {
   SceneElementPtr product(m_product);
   return product;

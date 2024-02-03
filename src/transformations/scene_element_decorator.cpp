@@ -43,6 +43,18 @@ SceneElementRawPtr SceneElementDecorator::getParent() const {
   return m_element->getParent();
 }
 
+void SceneElementDecorator::setBoundingBox(const BoundingBox& box) {
+  m_element->setBoundingBox(box);
+}
+
+BoundingBox& SceneElementDecorator::boundingBox() {
+  return m_element->boundingBox();
+}
+
+const BoundingBox& SceneElementDecorator::boundingBox() const {
+  return m_element->boundingBox();
+}
+
 Point3f SceneElementDecorator::pointFromWorldToObjectSpace(
     const Point3f& point) const {
   return m_element->pointFromWorldToObjectSpace(point);

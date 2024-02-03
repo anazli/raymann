@@ -22,6 +22,7 @@ class Builder {
                                   const MaterialProperties &prop) = 0;
   virtual void applyDielectricMaterial(const float &ri, TexturePtr tex,
                                        const MaterialProperties &prop) = 0;
+  virtual void createBBoxForElement(const BoundingBox &box) = 0;
   virtual SceneElementPtr getProduct() = 0;
   virtual SceneElementRawPtr getCurrentElement() const = 0;
 };
@@ -44,6 +45,7 @@ class WorldBuilder : public Builder {
                           const MaterialProperties &prop) override;
   void applyDielectricMaterial(const float &ri, TexturePtr tex,
                                const MaterialProperties &prop) override;
+  virtual void createBBoxForElement(const BoundingBox &box) override;
   SceneElementPtr getProduct() override;
   SceneElementRawPtr getCurrentElement() const override;
 

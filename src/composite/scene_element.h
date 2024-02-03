@@ -55,9 +55,9 @@ class SceneElement {
   virtual SceneElement *getParent() const;
   virtual void setLight(const PointLight &light);
   virtual PointLight getLight() const;
-  void setBoundingBox(const BoundingBox &props);
-  BoundingBox &boundingBox();
-  const BoundingBox &boundingBox() const;
+  virtual void setBoundingBox(const BoundingBox &box);
+  virtual BoundingBox &boundingBox();
+  virtual const BoundingBox &boundingBox() const;
   void setMaterial(BaseMaterialPtr mat);
   BaseMaterialPtr getMaterial() const;
   // size_t getId() const;

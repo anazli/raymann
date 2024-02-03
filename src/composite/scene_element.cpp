@@ -75,9 +75,7 @@ void SceneElement::setLight(const PointLight& light) {}
 
 PointLight SceneElement::getLight() const { return PointLight(); }
 
-void SceneElement::setBoundingBox(const BoundingBox& props) {
-  m_bBox = props;
-}
+void SceneElement::setBoundingBox(const BoundingBox& box) { m_bBox = box; }
 
 BoundingBox& SceneElement::boundingBox() { return m_bBox; }
 

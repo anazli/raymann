@@ -70,15 +70,14 @@ TEST_F(BoundingBoxTest, checkIfBoxContainsAnotherBox) {
   EXPECT_FALSE(box1.containsBoundingBox(box2));
 }
 
-/*TEST_F(BoundingBoxTest, transformsBoundingBox) {
+TEST_F(BoundingBoxTest, transformsBoundingBox) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->processSceneElement(new Sphere);
+  builder->createBBoxForElement(
+      BoundingBox(Point3f(-1.f, -1.f, -1.f), Point3f(1.f, 1.f, 1.f)));
   builder->applyTransformation(rotationOverX(PI / 4.f) *
                                rotationOverY(PI / 4.f));
-  SceneElementPtr sphere(builder->getCurrentElement());
-  SceneElementPtr box = std::make_shared<SceneElementProxy>(
-      sphere, Point3f(-1.f, -1.f, -1.f), Point3f(1.f, 1.f, 1.f));
-  BoundingBox p = box->boundingBox();
+  BoundingBox p = builder->getCurrentElement()->boundingBox();
 
   float eps = 1E-4f;
   EXPECT_NEAR(p.minPoint().x(), -1.4142f, eps);
@@ -90,7 +89,7 @@ TEST_F(BoundingBoxTest, checkIfBoxContainsAnotherBox) {
   EXPECT_NEAR(p.maxPoint().z(), 1.7071f, eps);
 }
 
-TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
+/*TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(translation(Vec3f(1.f, -3.f, 5.f)) *
