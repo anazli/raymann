@@ -10,9 +10,13 @@ using std::sort;
 using std::vector;
 
 bool World::intersect(const Ray& r, IntersectionRecord& record) {
+  // if (!m_bBox.intersectsRay(r)) {
+  //   return false;
+  // }
+
   WorldIterator it(getChildren());
-  float minHitParam = MAXFLOAT;
-  bool hitFound = false;
+  auto minHitParam = MAXFLOAT;
+  auto hitFound = false;
   if (it.first()) {
     while (it.notDone()) {
       auto rec = IntersectionRecord{};
