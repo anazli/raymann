@@ -106,10 +106,9 @@ TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   EXPECT_NEAR(p.maxPoint().z(), 9.f, eps);
 }
 
-/*TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
+TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->createWorld(PointLight());
-  builder->addWorldToBoundingbox();
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(translation(Vec3f(2.f, 5.f, -3.f)) *
                                scale(Vec3f(2.f, 2.f, 2.f)));
@@ -118,14 +117,72 @@ TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   builder->applyTransformation(translation(Vec3f(-4.f, -1.f, 4.f)) *
                                scale(Vec3f(0.5f, 1.f, 0.5f)));
   builder->addElement();
-  BoundingBox p = builder->getProductBBox()->boundingBoxProperties();
+  BoundingBox p = builder->getProduct()->boundingBox();
 
   float eps = 1E-4f;
   EXPECT_NEAR(p.minPoint().x(), -4.5f, eps);
   EXPECT_NEAR(p.minPoint().y(), -3.f, eps);
   EXPECT_NEAR(p.minPoint().z(), -5.f, eps);
 
-  EXPECT_NEAR(p.maxPoint().x(), 4.5f, eps);
+  EXPECT_NEAR(p.maxPoint().x(), 4.f, eps);
   EXPECT_NEAR(p.maxPoint().y(), 7.f, eps);
   EXPECT_NEAR(p.maxPoint().z(), 4.5f, eps);
-}*/
+}
+
+TEST_F(BoundingBoxTest, intersectRayWithBBox) {
+  box1 = BoundingBox(Point3f(-1.f, -1.f, -1.f), Point3f(1.f, 1.f, 1.f));
+  Ray r(Point3f(5.f, 0.5f, 0.f), Vec3f(-1.f, 0.f, 0.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(-5.f, 0.5f, 0.f), Vec3f(1.f, 0.f, 0.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(0.5f, 5.f, 0.f), Vec3f(0.f, -1.f, 0.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(0.5f, -5.f, 0.f), Vec3f(0.f, 1.f, 0.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(0.5f, 0.f, 5.f), Vec3f(0.f, 0.f, -1.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(0.5f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(0.f, 0.5f, 0.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(-2.f, 0.f, 0.f), Vec3f(2.f, 4.f, 6.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(0.f, -2.f, 0.f), Vec3f(6.f, 2.f, 4.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(0.f, 0.f, -2.f), Vec3f(4.f, 6.f, 2.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(2.f, 0.f, 2.f), Vec3f(0.f, 0.f, -1.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(0.f, 2.f, 2.f), Vec3f(0.f, -1.f, 0.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(2.f, 2.f, 0.f), Vec3f(-1.f, 0.f, 0.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+
+  box1 = BoundingBox(Point3f(5.f, -2.f, 0.f), Point3f(11.f, 4.f, 7.f));
+  r = Ray(Point3f(15.f, 1.f, 2.f), Vec3f(-1.f, 0.f, 0.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(-5.f, -1.f, 4.f), Vec3f(1.f, 0.f, 0.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(7.f, 6.f, 5.f), Vec3f(0.f, -1.f, 0.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(9.f, -5.f, 6.f), Vec3f(0.f, 1.f, 0.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(8.f, 2.f, 12.f), Vec3f(0.f, 0.f, -1.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(6.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(8.f, 1.f, 3.5f), Vec3f(0.f, 0.f, 1.f).normalize());
+  EXPECT_TRUE(box1.intersectsRay(r));
+  r = Ray(Point3f(9.f, -1.f, -8.f), Vec3f(2.f, 4.f, 6.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(8.f, 3.f, -4.f), Vec3f(6.f, 2.f, 4.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(9.f, -1.f, -2.f), Vec3f(4.f, 6.f, 2.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(4.f, 0.f, 9.f), Vec3f(0.f, 0.f, -1.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(8.f, 6.f, -1.f), Vec3f(0.f, -1.f, 0.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+  r = Ray(Point3f(12.f, 5.f, 4.f), Vec3f(-1.f, 0.f, 0.f).normalize());
+  EXPECT_FALSE(box1.intersectsRay(r));
+}

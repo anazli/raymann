@@ -2,43 +2,6 @@
 
 #include "renderers/renderer.h"
 
-BoundingBox::BoundingBox(const Point3f& pmin, const Point3f& pmax)
-    : m_minPoint(pmin), m_maxPoint(pmax) {}
-
-Point3f& BoundingBox::minPoint() { return m_minPoint; }
-
-Point3f& BoundingBox::maxPoint() { return m_maxPoint; }
-
-const Point3f& BoundingBox::minPoint() const { return m_minPoint; }
-
-const Point3f& BoundingBox::maxPoint() const { return m_maxPoint; }
-
-void BoundingBox::addPoint(const Point3f& point) {
-  if (point.x() < m_minPoint.x()) m_minPoint.setX(point.x());
-  if (point.y() < m_minPoint.y()) m_minPoint.setY(point.y());
-  if (point.z() < m_minPoint.z()) m_minPoint.setZ(point.z());
-
-  if (point.x() > m_maxPoint.x()) m_maxPoint.setX(point.x());
-  if (point.y() > m_maxPoint.y()) m_maxPoint.setY(point.y());
-  if (point.z() > m_maxPoint.z()) m_maxPoint.setZ(point.z());
-}
-
-void BoundingBox::addBox(const BoundingBox& box) {
-  addPoint(box.minPoint());
-  addPoint(box.maxPoint());
-}
-
-bool BoundingBox::containsPoint(const Point3f& point) const {
-  // three-way comparison doesn't work
-  return point.x() >= m_minPoint.x() && point.x() <= m_maxPoint.x() &&
-         point.y() >= m_minPoint.y() && point.y() <= m_maxPoint.y() &&
-         point.z() >= m_minPoint.z() && point.z() <= m_maxPoint.z();
-}
-
-bool BoundingBox::containsBoundingBox(const BoundingBox& box) const {
-  return containsPoint(box.minPoint()) && containsPoint(box.maxPoint());
-}
-
 // size_t SceneElement::m_next_id = 0;
 
 SceneElementType SceneElement::elementType() const { return m_elementType; }
