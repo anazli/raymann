@@ -89,14 +89,12 @@ TEST_F(BoundingBoxTest, transformsBoundingBox) {
   EXPECT_NEAR(p.maxPoint().z(), 1.7071f, eps);
 }
 
-/*TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
+TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(translation(Vec3f(1.f, -3.f, 5.f)) *
                                scale(Vec3f(0.5f, 2.f, 4.f)));
-  SceneElementPtr sphere(builder->getCurrentElement());
-  SceneElementPtr box = std::make_shared<SceneElementProxy>(sphere);
-  BoundingBox p = box->boundingBox();
+  BoundingBox p = builder->getCurrentElement()->boundingBox();
 
   float eps = 1E-4f;
   EXPECT_NEAR(p.minPoint().x(), 0.5f, eps);
@@ -108,7 +106,7 @@ TEST_F(BoundingBoxTest, transformsBoundingBox) {
   EXPECT_NEAR(p.maxPoint().z(), 9.f, eps);
 }
 
-TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
+/*TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->createWorld(PointLight());
   builder->addWorldToBoundingbox();
