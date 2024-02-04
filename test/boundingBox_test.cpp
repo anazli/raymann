@@ -1,3 +1,4 @@
+#include "acceleration/bvh.h"
 #include "composite/builder.h"
 #include "geometry/cylinder.h"
 #include "geometry/sphere.h"
@@ -16,33 +17,32 @@ class BoundingBoxTest : public Test {
   BoundingBox box2;
   MaterialProperties prop;
   IntersectionRecord rec;
+  BVHierarchy bvh;
+  void comparePoints(const Point3f& p1, const Point3f& p2) {
+    EXPECT_FLOAT_EQ(p1.x(), p2.x());
+    EXPECT_FLOAT_EQ(p1.y(), p2.y());
+    EXPECT_FLOAT_EQ(p1.z(), p2.z());
+  }
+  void comparePointsApprox(const Point3f& p1, const Point3f& p2, float eps) {
+    EXPECT_NEAR(p1.x(), p2.x(), eps);
+    EXPECT_NEAR(p1.y(), p2.y(), eps);
+    EXPECT_NEAR(p1.z(), p2.z(), eps);
+  }
 };
 
 TEST_F(BoundingBoxTest, addsPointToBoundingBox) {
   box1.addPoint(Point3f(-5.f, 2.f, 0.f));
   box1.addPoint(Point3f(7.f, 0.f, -3.f));
-
-  EXPECT_FLOAT_EQ(box1.minPoint().x(), -5.f);
-  EXPECT_FLOAT_EQ(box1.minPoint().y(), 0.f);
-  EXPECT_FLOAT_EQ(box1.minPoint().z(), -3.f);
-
-  EXPECT_FLOAT_EQ(box1.maxPoint().x(), 7.f);
-  EXPECT_FLOAT_EQ(box1.maxPoint().y(), 2.f);
-  EXPECT_FLOAT_EQ(box1.maxPoint().z(), 0.f);
+  comparePoints(box1.minPoint(), Point3f(-5.f, 0.f, -3.f));
+  comparePoints(box1.maxPoint(), Point3f(7.f, 2.f, 0.f));
 }
 
 TEST_F(BoundingBoxTest, addsBoxToBoundingBox) {
   box1 = BoundingBox(Point3f(-5.f, -2.f, 0.f), Point3f(7.f, 4.f, 4.f));
   box2 = BoundingBox(Point3f(8.f, -7.f, -2.f), Point3f(14.f, 2.f, 8.f));
   box1.addBox(box2);
-
-  EXPECT_FLOAT_EQ(box1.minPoint().x(), -5.f);
-  EXPECT_FLOAT_EQ(box1.minPoint().y(), -7.f);
-  EXPECT_FLOAT_EQ(box1.minPoint().z(), -2.f);
-
-  EXPECT_FLOAT_EQ(box1.maxPoint().x(), 14.f);
-  EXPECT_FLOAT_EQ(box1.maxPoint().y(), 4.f);
-  EXPECT_FLOAT_EQ(box1.maxPoint().z(), 8.f);
+  comparePoints(box1.minPoint(), Point3f(-5.f, -7.f, -2.f));
+  comparePoints(box1.maxPoint(), Point3f(14.f, 4.f, 8.f));
 }
 
 TEST_F(BoundingBoxTest, checkIfBoxContainsPoint) {
@@ -80,13 +80,8 @@ TEST_F(BoundingBoxTest, transformsBoundingBox) {
   BoundingBox p = builder->getCurrentElement()->boundingBox();
 
   float eps = 1E-4f;
-  EXPECT_NEAR(p.minPoint().x(), -1.4142f, eps);
-  EXPECT_NEAR(p.minPoint().y(), -1.7071f, eps);
-  EXPECT_NEAR(p.minPoint().z(), -1.7071f, eps);
-
-  EXPECT_NEAR(p.maxPoint().x(), 1.4142f, eps);
-  EXPECT_NEAR(p.maxPoint().y(), 1.7071f, eps);
-  EXPECT_NEAR(p.maxPoint().z(), 1.7071f, eps);
+  comparePointsApprox(p.minPoint(), Point3f(-1.4142f, -1.7071f, -1.7071f), eps);
+  comparePointsApprox(p.maxPoint(), Point3f(1.4142f, 1.7071f, 1.7071f), eps);
 }
 
 TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
@@ -97,13 +92,8 @@ TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   BoundingBox p = builder->getCurrentElement()->boundingBox();
 
   float eps = 1E-4f;
-  EXPECT_NEAR(p.minPoint().x(), 0.5f, eps);
-  EXPECT_NEAR(p.minPoint().y(), -5.f, eps);
-  EXPECT_NEAR(p.minPoint().z(), 1.f, eps);
-
-  EXPECT_NEAR(p.maxPoint().x(), 1.5f, eps);
-  EXPECT_NEAR(p.maxPoint().y(), -1.f, eps);
-  EXPECT_NEAR(p.maxPoint().z(), 9.f, eps);
+  comparePointsApprox(p.minPoint(), Point3f(0.5f, -5.f, 1.f), eps);
+  comparePointsApprox(p.maxPoint(), Point3f(1.5f, -1.f, 9.f), eps);
 }
 
 TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
@@ -120,13 +110,8 @@ TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   BoundingBox p = builder->getProduct()->boundingBox();
 
   float eps = 1E-4f;
-  EXPECT_NEAR(p.minPoint().x(), -4.5f, eps);
-  EXPECT_NEAR(p.minPoint().y(), -3.f, eps);
-  EXPECT_NEAR(p.minPoint().z(), -5.f, eps);
-
-  EXPECT_NEAR(p.maxPoint().x(), 4.f, eps);
-  EXPECT_NEAR(p.maxPoint().y(), 7.f, eps);
-  EXPECT_NEAR(p.maxPoint().z(), 4.5f, eps);
+  comparePointsApprox(p.minPoint(), Point3f(-4.5f, -3.f, -5.f), eps);
+  comparePointsApprox(p.maxPoint(), Point3f(4.f, 7.f, 4.5f), eps);
 }
 
 TEST_F(BoundingBoxTest, intersectRayWithBBox) {
@@ -185,4 +170,34 @@ TEST_F(BoundingBoxTest, intersectRayWithBBox) {
   EXPECT_FALSE(box1.intersectsRay(r));
   r = Ray(Point3f(12.f, 5.f, 4.f), Vec3f(-1.f, 0.f, 0.f).normalize());
   EXPECT_FALSE(box1.intersectsRay(r));
+}
+
+TEST_F(BoundingBoxTest, splitBox) {
+  box1 = BoundingBox(Point3f(-1.f, -4.f, -5.f), Point3f(9.f, 6.f, 5.f));
+  BoundingBoxPair splittedBox = bvh.splitBoundsOf(box1);
+  comparePoints(splittedBox.first.minPoint(), Point3f(-1.f, -4.f, -5.f));
+  comparePoints(splittedBox.first.maxPoint(), Point3f(4.f, 6.f, 5.f));
+  comparePoints(splittedBox.second.minPoint(), Point3f(4.f, -4.f, -5.f));
+  comparePoints(splittedBox.second.maxPoint(), Point3f(9.f, 6.f, 5.f));
+
+  box1 = BoundingBox(Point3f(-1.f, -2.f, -3.f), Point3f(9.f, 5.5f, 3.f));
+  splittedBox = bvh.splitBoundsOf(box1);
+  comparePoints(splittedBox.first.minPoint(), Point3f(-1.f, -2.f, -3.f));
+  comparePoints(splittedBox.first.maxPoint(), Point3f(4.f, 5.5f, 3.f));
+  comparePoints(splittedBox.second.minPoint(), Point3f(4.f, -2.f, -3.f));
+  comparePoints(splittedBox.second.maxPoint(), Point3f(9.f, 5.5f, 3.f));
+
+  box1 = BoundingBox(Point3f(-1.f, -2.f, -3.f), Point3f(5.f, 8.f, 3.f));
+  splittedBox = bvh.splitBoundsOf(box1);
+  comparePoints(splittedBox.first.minPoint(), Point3f(-1.f, -2.f, -3.f));
+  comparePoints(splittedBox.first.maxPoint(), Point3f(5.f, 3.f, 3.f));
+  comparePoints(splittedBox.second.minPoint(), Point3f(-1.f, 3.f, -3.f));
+  comparePoints(splittedBox.second.maxPoint(), Point3f(5.f, 8.f, 3.f));
+
+  box1 = BoundingBox(Point3f(-1.f, -2.f, -3.f), Point3f(5.f, 3.f, 7.f));
+  splittedBox = bvh.splitBoundsOf(box1);
+  comparePoints(splittedBox.first.minPoint(), Point3f(-1.f, -2.f, -3.f));
+  comparePoints(splittedBox.first.maxPoint(), Point3f(5.f, 3.f, 2.f));
+  comparePoints(splittedBox.second.minPoint(), Point3f(-1.f, -2.f, 2.f));
+  comparePoints(splittedBox.second.maxPoint(), Point3f(5.f, 3.f, 7.f));
 }
