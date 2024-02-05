@@ -25,29 +25,3 @@ class World : public SceneElement {
   SceneElementContainer m_sceneElementContainer;
   PointLight m_light;
 };
-
-class WorldIterator {
- public:
-  WorldIterator(const SceneElementContainer &world)
-      : m_sceneElementContainer(world) {}
-  bool first() {
-    m_current = m_sceneElementContainer.begin();
-    if (*m_current)
-      return true;
-    else
-      return false;
-  }
-  SceneElementContainer::const_iterator begin() const {
-    return m_sceneElementContainer.begin();
-  }
-  SceneElementContainer::const_iterator end() const {
-    return m_sceneElementContainer.end();
-  }
-  void advance() { m_current++; }
-  bool notDone() { return m_current != m_sceneElementContainer.end(); }
-  SceneElementRawPtr currentElement() { return (*m_current).get(); }
-
- private:
-  SceneElementContainer::const_iterator m_current;
-  SceneElementContainer m_sceneElementContainer;
-};

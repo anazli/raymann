@@ -80,4 +80,6 @@ class IntersectionRecord {
   Vec3f normal;
   float n1, n2;
   SceneElementRawPtr object = nullptr;
+  float minHitParam = limit::max();
+  bool hitFound = false;
 };

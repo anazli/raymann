@@ -1,5 +1,7 @@
 #include "transformations/transformer.h"
 
+#include "composite/iterator.h"
+
 Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
     : SceneElementDecorator(tr, m) {
   transformBox();

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "composite/iterator.h"
 #include "renderers/renderer.h"
 
 using std::list;
@@ -15,23 +16,25 @@ bool World::intersect(const Ray& r, IntersectionRecord& record) {
   // }
 
   WorldIterator it(getChildren());
-  auto minHitParam = MAXFLOAT;
-  auto hitFound = false;
   if (it.first()) {
     while (it.notDone()) {
-      auto rec = IntersectionRecord{};
-      if (it.currentElement()->intersect(r, rec)) {
-        hitFound = true;
-        if (rec.t_min() > 0.0f && rec.t_min() < minHitParam) {
-          rec.object = it.currentElement();
-          minHitParam = rec.t_min();
-          record = rec;
+      if (it.currentElement()->isWorld()) {
+        it.currentElement()->intersect(r, record);
+      } else {
+        auto rec = IntersectionRecord{};
+        if (it.currentElement()->intersect(r, rec)) {
+          rec.hitFound = true;
+          if (rec.t_min() > 0.0f && rec.t_min() < record.minHitParam) {
+            rec.object = it.currentElement();
+            rec.minHitParam = rec.t_min();
+            record = rec;
+          }
         }
       }
       it.advance();
     }
   }
-  return hitFound;
+  return record.hitFound;
 }
 
 void World::add(SceneElementPtr item) {

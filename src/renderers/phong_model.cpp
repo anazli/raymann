@@ -18,6 +18,8 @@ void PhongModel::visitSceneElementComposite(
 
 Vec3f PhongModel::computeColor(const SceneElementRawPtr world, const Ray& ray,
                                int rec) {
+  m_closestHit.hitFound = false;
+  m_closestHit.minHitParam = limit::max();
   if (world->intersect(ray, m_closestHit)) {
     if (m_closestHit.object) {
       auto surf_col = lighting(world, ray);
