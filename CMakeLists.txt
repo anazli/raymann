@@ -13,6 +13,8 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/application/error.h
             src/composite/builder.cpp
             src/composite/builder.h
+            src/composite/iterator.cpp
+            src/composite/iterator.h
             src/composite/scene_element.cpp
             src/composite/scene_element.h
             src/composite/world.cpp
