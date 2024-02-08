@@ -17,15 +17,16 @@ class BaseIterator {
 
 class WorldIterator : public BaseIterator {
  public:
-  WorldIterator(const SceneElementContainer &world);
+  WorldIterator(const SceneElementContainer& world);
   bool first() override;
   SceneElementContainer::const_iterator begin() const override;
   SceneElementContainer::const_iterator end() const override;
   void advance() override;
   bool notDone() override;
   SceneElementRawPtr currentElement() override;
+  SceneElementContainer::iterator& getIterator();
 
  private:
-  SceneElementContainer::const_iterator m_current;
+  SceneElementContainer::iterator m_current;
   SceneElementContainer m_sceneElementContainer;
 };

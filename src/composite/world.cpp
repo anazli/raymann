@@ -43,10 +43,17 @@ void World::add(SceneElementPtr item) {
   m_sceneElementContainer.push_back(item);
 }
 
-void World::remove(SceneElementRawPtr item, bool del) {
-  m_sceneElementContainer.erase(std::remove_if(
+SceneElementContainer::iterator World::remove(SceneElementRawPtr item,
+                                              SceneElementPtr removedElem) {
+  auto it = std::find_if(
       m_sceneElementContainer.begin(), m_sceneElementContainer.end(),
-      [item](const SceneElementPtr& elem) { return item == elem.get(); }));
+      [&item](const SceneElementPtr& elem) { return item == elem.get(); });
+  if (it != m_sceneElementContainer.end()) {
+    removedElem = *it;
+    auto itret = m_sceneElementContainer.erase(it);
+    return itret;
+  }
+  return m_sceneElementContainer.end();
 }
 
 bool World::isWorld() const { return true; }
@@ -57,7 +64,11 @@ void World::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementComposite(this, ray);
 }
 
-SceneElementContainer World::getChildren() { return m_sceneElementContainer; }
+SceneElementContainer World::getChildren() const {
+  return m_sceneElementContainer;
+}
+
+SceneElementContainer& World::getChildren() { return m_sceneElementContainer; }
 
 void World::setLight(const PointLight& light) { m_light = light; }
 

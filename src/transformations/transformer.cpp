@@ -4,6 +4,8 @@
 
 Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
     : SceneElementDecorator(tr, m) {
+  m_elementType = tr->elementType();
+  m_bBox = tr->boundingBox();
   transformBox();
   if (tr->isWorld()) {
     WorldIterator it(getChildren());
@@ -43,8 +45,9 @@ void Transformer::add(SceneElementPtr item) {
   }
 }
 
-void Transformer::remove(SceneElementRawPtr item, bool del) {
-  SceneElementDecorator::remove(item, del);
+SceneElementContainer::iterator Transformer::remove(
+    SceneElementRawPtr item, SceneElementPtr removedElem) {
+  return SceneElementDecorator::remove(item, removedElem);
 }
 
 bool Transformer::isWorld() const { return SceneElementDecorator::isWorld(); }
@@ -53,7 +56,11 @@ void Transformer::accept(BaseRenderer& renderer, const Ray& ray) {
   SceneElementDecorator::accept(renderer, ray);
 }
 
-SceneElementContainer Transformer::getChildren() {
+SceneElementContainer Transformer::getChildren() const {
+  return SceneElementDecorator::getChildren();
+}
+
+SceneElementContainer& Transformer::getChildren() {
   return SceneElementDecorator::getChildren();
 }
 

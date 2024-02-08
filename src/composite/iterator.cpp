@@ -28,3 +28,7 @@ bool WorldIterator::notDone() {
 SceneElementRawPtr WorldIterator::currentElement() {
   return (*m_current).get();
 }
+
+SceneElementContainer::iterator &WorldIterator::getIterator() {
+  return m_current;
+}

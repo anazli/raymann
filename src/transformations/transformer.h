@@ -9,10 +9,12 @@ class Transformer : public SceneElementDecorator {
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   Vec3f normal(const Point3f &p) const override;
   void add(SceneElementPtr item) override;
-  void remove(SceneElementRawPtr item, bool del = true) override;
+  SceneElementContainer::iterator remove(SceneElementRawPtr item,
+                                         SceneElementPtr removedElem) override;
   bool isWorld() const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
-  SceneElementContainer getChildren() override;
+  SceneElementContainer getChildren() const override;
+  SceneElementContainer &getChildren() override;
   void setParent(SceneElementRawPtr parent) override;
   SceneElementRawPtr getParent() const override;
   void setBoundingBox(const BoundingBox &box) override;

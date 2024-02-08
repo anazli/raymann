@@ -21,8 +21,9 @@ Vec3f SceneElementDecorator::normal(const Point3f& p) const {
 
 void SceneElementDecorator::add(SceneElementPtr item) { m_element->add(item); }
 
-void SceneElementDecorator::remove(SceneElementRawPtr item, bool del) {
-  m_element->remove(item, del);
+SceneElementContainer::iterator SceneElementDecorator::remove(
+    SceneElementRawPtr item, SceneElementPtr removedElem) {
+  return m_element->remove(item, removedElem);
 }
 
 bool SceneElementDecorator::isWorld() const { return m_element->isWorld(); }
@@ -31,7 +32,11 @@ void SceneElementDecorator::accept(BaseRenderer& renderer, const Ray& ray) {
   m_element->accept(renderer, ray);
 }
 
-SceneElementContainer SceneElementDecorator::getChildren() {
+SceneElementContainer SceneElementDecorator::getChildren() const {
+  return m_element->getChildren();
+}
+
+SceneElementContainer& SceneElementDecorator::getChildren() {
   return m_element->getChildren();
 }
 

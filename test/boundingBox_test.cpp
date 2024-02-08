@@ -201,3 +201,35 @@ TEST_F(BoundingBoxTest, splitBox) {
   comparePoints(splittedBox.second.minPoint(), Point3f(-1.f, -2.f, 2.f));
   comparePoints(splittedBox.second.maxPoint(), Point3f(5.f, 3.f, 7.f));
 }
+
+TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
+  WorldBuilder builder;
+  builder.createWorld(PointLight());
+
+  builder.processSceneElement(new Sphere);
+  builder.applyTransformation(translation(-2.f, 0.f, 0.f));
+  SceneElementRawPtr sphere1 = builder.getCurrentElement();
+  builder.addElement();
+
+  builder.processSceneElement(new Sphere);
+  builder.applyTransformation(translation(2.f, 0.f, 0.f));
+  SceneElementRawPtr sphere2 = builder.getCurrentElement();
+  builder.addElement();
+
+  builder.processSceneElement(new Sphere);
+  SceneElementRawPtr sphere3 = builder.getCurrentElement();
+  builder.addElement();
+
+  SceneElementPtr world = builder.getProduct();
+  WorldPair wp =
+      bvh.splitElementsOf(world->getChildren(), world->boundingBox());
+
+  ASSERT_TRUE(world->getChildren().size() == 1);
+  ASSERT_TRUE((*world->getChildren().begin()).get() == sphere3);
+
+  ASSERT_TRUE(wp.first->getChildren().size() == 1);
+  ASSERT_TRUE((*wp.first->getChildren().begin()).get() == sphere1);
+
+  ASSERT_TRUE(wp.second->getChildren().size() == 1);
+  ASSERT_TRUE((*wp.second->getChildren().begin()).get() == sphere2);
+}

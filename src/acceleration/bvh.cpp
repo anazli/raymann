@@ -1,5 +1,8 @@
 #include "acceleration/bvh.h"
 
+#include "composite/builder.h"
+#include "composite/iterator.h"
+
 BoundingBoxPair BVHierarchy::splitBoundsOf(const BoundingBox &box) {
   auto dx = box.maxPoint().x() - box.minPoint().x();
   auto dy = box.maxPoint().y() - box.minPoint().y();
@@ -33,4 +36,34 @@ BoundingBoxPair BVHierarchy::splitBoundsOf(const BoundingBox &box) {
   auto right = BoundingBox(midMin, box.maxPoint());
 
   return std::make_pair(left, right);
+}
+
+WorldPair BVHierarchy::splitElementsOf(SceneElementContainer &worldList,
+                                       const BoundingBox &worldBox) {
+  BoundingBoxPair boxPair = splitBoundsOf(worldBox);
+
+  SceneElementPtr leftWorld = std::make_shared<World>();
+  SceneElementPtr rightWorld = std::make_shared<World>();
+
+  WorldPair worldPair(leftWorld, rightWorld);
+  SceneElementContainer::iterator it = worldList.begin();
+  while (it != worldList.end()) {
+    if (*it != nullptr) {
+      if (boxPair.first.containsBoundingBox((*it)->boundingBox())) {
+        SceneElementPtr removedElem = *it;
+        it = worldList.erase(it);
+        if (removedElem) {
+          worldPair.first->add(removedElem);
+        }
+      } else if (boxPair.second.containsBoundingBox((*it)->boundingBox())) {
+        std::cout << "trexw" << std::endl;
+        SceneElementPtr removedElem = *it;
+        it = worldList.erase(it);
+        if (removedElem) worldPair.second->add(removedElem);
+      } else {
+        it++;
+      }
+    }
+  }
+  return worldPair;
 }

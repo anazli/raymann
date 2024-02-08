@@ -13,11 +13,13 @@ class World : public SceneElement {
   ~World() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
   void add(SceneElementPtr item) override;
-  void remove(SceneElementRawPtr item, bool del = true) override;
+  SceneElementContainer::iterator remove(SceneElementRawPtr item,
+                                         SceneElementPtr removedElem) override;
   bool isWorld() const override;
   Vec3f normal(const Point3f &p) const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
-  SceneElementContainer getChildren() override;
+  SceneElementContainer getChildren() const override;
+  SceneElementContainer &getChildren() override;
   void setLight(const PointLight &light) override;
   PointLight getLight() const override;
 

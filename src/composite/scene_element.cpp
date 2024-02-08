@@ -1,6 +1,7 @@
 #include "composite/scene_element.h"
 
 #include "renderers/renderer.h"
+#include "world.h"
 
 // size_t SceneElement::m_next_id = 0;
 
@@ -12,7 +13,8 @@ bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
 
 void SceneElement::add(SceneElementPtr item) {}
 
-void SceneElement::remove(SceneElementRawPtr item, bool del) {}
+SceneElementContainer::iterator SceneElement::remove(
+    SceneElementRawPtr item, SceneElementPtr removedElem) {}
 
 bool SceneElement::isWorld() const { return false; }
 
@@ -22,9 +24,11 @@ void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementLeaf(this, ray);
 }
 
-std::list<SceneElementPtr> SceneElement::getChildren() {
-  return std::list<SceneElementPtr>();
+SceneElementContainer SceneElement::getChildren() const {
+  return SceneElementContainer();
 }
+
+std::list<std::shared_ptr<SceneElement> >& SceneElement::getChildren() {}
 
 void SceneElement::setMaterial(BaseMaterialPtr mat) { m_material = mat; }
 
