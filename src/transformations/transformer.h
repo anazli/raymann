@@ -25,4 +25,6 @@ class Transformer : public SceneElementDecorator {
 
  private:
   void transformBox();
+  Mat4f m_inverseTransf;        // caching
+  Mat4f m_inverseTransfTransp;  // caching
 };

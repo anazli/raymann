@@ -4,6 +4,8 @@
 
 Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
     : SceneElementDecorator(tr, m) {
+  m_inverseTransf = m_transformMatrix.inverse();
+  m_inverseTransfTransp = m_inverseTransf.transpose();
   m_elementType = tr->elementType();
   m_bBox = tr->boundingBox();
   transformBox();
@@ -23,7 +25,7 @@ SceneElementType Transformer::elementType() const {
 }
 
 bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
-  auto r_transformed = r.transform(m_transformMatrix.inverse());
+  auto r_transformed = r.transform(m_inverseTransf);
   return SceneElementDecorator::intersect(r_transformed, record);
 }
 
@@ -89,12 +91,12 @@ Point3f Transformer::pointFromWorldToObjectSpace(const Point3f& point) const {
   if (getParent()) {
     p = getParent()->pointFromWorldToObjectSpace(p);
   }
-  return m_transformMatrix.inverse() * Vec4f(p);
+  return m_inverseTransf * Vec4f(p);
 }
 
 Vec3f Transformer::vectorFromObjectToWorldSpace(const Vec3f vec) const {
   Vec3f v(vec);
-  v = m_transformMatrix.inverse().transpose() * Vec4f(v);
+  v = m_inverseTransfTransp * Vec4f(v);
   v = v.normalize();
   if (getParent()) {
     v = getParent()->vectorFromObjectToWorldSpace(v);
