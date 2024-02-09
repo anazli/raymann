@@ -18,31 +18,27 @@ int main() {
   auto light = PointLight(Point3f(-2.f, 4.9f, -10.f), Vec3f(1.0f, 1.0f, 1.0f));
   auto builder = make_unique<WorldBuilder>();
   builder->createWorld(light);
-  int number_per_axis = 10;
 
   //----------------------Perlin Spheres----------------
-  auto prop = MaterialProperties{};
-  prop.setProperty(Props::SPECULAR, 0.4f).setProperty(Props::SHININESS, 5.f);
+  int number_per_axis = 10;
+  float distance = 0.9f;
+  int c = 0;
   for (int i = 0; i < number_per_axis; ++i) {
     for (int j = 0; j < number_per_axis; ++j) {
       for (int k = 0; k < number_per_axis; ++k) {
         builder->processSceneElement(new Sphere);
-        builder->applyTransformation(
-            translation(-5.5f + i * 0.7f, -2.f + j * 0.7f, -2.5f + k * 0.7f) *
-            scale(0.2f, 0.2f, 0.2f));
-        // builder->applyMaterial(make_unique<PerlinTexture>(1.2f),
-        //                        MaterialProperties{});
-        builder->applyMaterial(
-            make_unique<ConstantTexture>(Vec3f(1.0f, 0.3f, 0.2f)), prop);
+        builder->applyTransformation(translation(-6.5f + i * distance,
+                                                 -2.f + j * distance,
+                                                 -2.f + k * distance) *
+                                     scale(0.35f, 0.35f, 0.35f));
+        builder->applyMaterial(make_unique<PerlinTexture>(0.002f * c++),
+                               MaterialProperties{});
         builder->addElement();
       }
     }
   }
 
-  builder->enableBVHierarchy(true);
-  SceneElementPtr world = builder->getProduct();
-  std::cout << "World constructed!" << std::endl;
-  std::cout << "Number of childer:" << world->getChildren().size() << std::endl;
+  SceneElementPtr world = builder->getProductBVHierarchy();
 
   //----------------------------------------------------------------------------
   auto canvas = Canvas(800, 600);
@@ -50,12 +46,13 @@ int main() {
   BaseCameraPtr camera = make_unique<RayTracingChalengeCamera>(
       canvas.width(), canvas.height(), 1.112f);
   camera->computePixelSize();
-  auto from = Point3f(-2.6f, 3.5f, -11.f);
+  auto from = Point3f(-2.6f, 4.5f, -11.f);
   auto to = Point3f(-2.6f, 1.0f, -0.5f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
   BaseRendererPtr renderer = make_unique<PhongModel>();
+  renderer->setBackgroundColor(Vec3f(0.1f, 0.1f, 0.1f));
   chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
   canvas.render(world, move(camera), move(renderer));
   canvas.save();
