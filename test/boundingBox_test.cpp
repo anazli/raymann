@@ -1,5 +1,6 @@
 #include "acceleration/bvh.h"
 #include "composite/builder.h"
+#include "composite/iterator.h"
 #include "geometry/cylinder.h"
 #include "geometry/sphere.h"
 #include "gtest/gtest.h"
@@ -232,4 +233,47 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
 
   ASSERT_TRUE(wp.second->getChildren().size() == 1);
   ASSERT_TRUE((*wp.second->getChildren().begin()).get() == sphere2);
+}
+
+TEST_F(BoundingBoxTest, divideWorld) {
+  WorldBuilder builder;
+  builder.createWorld(PointLight());
+
+  builder.processSceneElement(new Sphere);
+  builder.applyTransformation(translation(-2.f, -2.f, 0.f));
+  SceneElementRawPtr sphere1 = builder.getCurrentElement();
+  builder.addElement();
+
+  builder.processSceneElement(new Sphere);
+  builder.applyTransformation(translation(-2.f, 2.f, 0.f));
+  SceneElementRawPtr sphere2 = builder.getCurrentElement();
+  builder.addElement();
+
+  builder.processSceneElement(new Sphere);
+  builder.applyTransformation(scale(4.f, 4.f, 4.f));
+  SceneElementRawPtr sphere3 = builder.getCurrentElement();
+  builder.addElement();
+
+  SceneElementPtr world = builder.getProduct();
+  bvh.divideWorld(world, 1);
+  WorldIterator it(world->getChildren());
+  if (it.first()) {
+    ASSERT_TRUE(it.currentElement() == sphere3);
+    ASSERT_FALSE(it.currentElement()->isWorld());
+    it.advance();
+    ASSERT_TRUE(it.currentElement()->isWorld());
+    ASSERT_TRUE(it.currentElement()->getChildren().size() == 2);
+    WorldIterator it1(it.currentElement()->getChildren());
+    if (it1.first()) {
+      ASSERT_TRUE(it1.currentElement()->isWorld());
+      ASSERT_TRUE(it1.currentElement()->getChildren().size() == 1);
+      ASSERT_TRUE((*it1.currentElement()->getChildren().begin()).get() ==
+                  sphere1);
+      it1.advance();
+      ASSERT_TRUE(it1.currentElement()->isWorld());
+      ASSERT_TRUE(it1.currentElement()->getChildren().size() == 1);
+      ASSERT_TRUE((*it1.currentElement()->getChildren().begin()).get() ==
+                  sphere2);
+    }
+  }
 }

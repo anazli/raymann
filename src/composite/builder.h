@@ -25,9 +25,10 @@ class Builder {
   virtual void createBBoxForElement(const BoundingBox &box) = 0;
   virtual SceneElementPtr getProduct() = 0;
   virtual SceneElementRawPtr getCurrentElement() const = 0;
+  virtual void enableBVHierarchy(bool enable) = 0;
 };
 
-typedef std::unique_ptr<Builder> BuilderPtr;
+using BuilderPtr = std::unique_ptr<Builder>;
 
 class WorldBuilder : public Builder {
  public:
@@ -48,8 +49,10 @@ class WorldBuilder : public Builder {
   virtual void createBBoxForElement(const BoundingBox &box) override;
   SceneElementPtr getProduct() override;
   SceneElementRawPtr getCurrentElement() const override;
+  void enableBVHierarchy(bool enable) override;
 
  private:
   SceneElementRawPtr m_currentElement;
   SceneElementRawPtr m_product;
+  bool m_bvhEnabled = false;
 };

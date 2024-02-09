@@ -1,5 +1,6 @@
 #include "composite/builder.h"
 
+#include "acceleration/bvh.h"
 #include "application/error.h"
 #include "composite/world.h"
 #include "transformations/transformer.h"
@@ -67,9 +68,17 @@ void WorldBuilder::createBBoxForElement(const BoundingBox& box) {
 
 SceneElementPtr WorldBuilder::getProduct() {
   SceneElementPtr product(m_product);
+  if (m_bvhEnabled) {
+    BVHierarchy bvh;
+    bvh.divideWorld(product);
+  } else {
+    product->setBoundingBox(BoundingBox{});  // make box invalid
+  }
   return product;
 }
 
 SceneElementRawPtr WorldBuilder::getCurrentElement() const {
   return m_currentElement;
 }
+
+void WorldBuilder::enableBVHierarchy(bool enable) { m_bvhEnabled = enable; }

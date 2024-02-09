@@ -9,9 +9,8 @@ using WorldPair = std::pair<SceneElementPtr, SceneElementPtr>;
 
 class BVHierarchy {
  public:
-  BoundingBoxPair splitBoundsOf(const BoundingBox &box);
+  BoundingBoxPair splitBoundsOf(const BoundingBox &box) const;
   WorldPair splitElementsOf(SceneElementContainer &worldList,
-                            const BoundingBox &worldBox);
-
- private:
+                            const BoundingBox &worldBox) const;
+  void divideWorld(const SceneElementPtr &world, size_t threshold = 1) const;
 };

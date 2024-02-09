@@ -11,9 +11,9 @@ using std::sort;
 using std::vector;
 
 bool World::intersect(const Ray& r, IntersectionRecord& record) {
-  // if (!m_bBox.intersectsRay(r)) {
-  //   return false;
-  // }
+  if (!m_bBox.intersectsRay(r)) {
+    return false;
+  }
 
   WorldIterator it(getChildren());
   if (it.first()) {

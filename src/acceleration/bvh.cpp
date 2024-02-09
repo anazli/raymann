@@ -3,7 +3,7 @@
 #include "composite/builder.h"
 #include "composite/iterator.h"
 
-BoundingBoxPair BVHierarchy::splitBoundsOf(const BoundingBox &box) {
+BoundingBoxPair BVHierarchy::splitBoundsOf(const BoundingBox &box) const {
   auto dx = box.maxPoint().x() - box.minPoint().x();
   auto dy = box.maxPoint().y() - box.minPoint().y();
   auto dz = box.maxPoint().z() - box.minPoint().z();
@@ -39,7 +39,7 @@ BoundingBoxPair BVHierarchy::splitBoundsOf(const BoundingBox &box) {
 }
 
 WorldPair BVHierarchy::splitElementsOf(SceneElementContainer &worldList,
-                                       const BoundingBox &worldBox) {
+                                       const BoundingBox &worldBox) const {
   BoundingBoxPair boxPair = splitBoundsOf(worldBox);
 
   SceneElementPtr leftWorld = std::make_shared<World>();
@@ -54,16 +54,38 @@ WorldPair BVHierarchy::splitElementsOf(SceneElementContainer &worldList,
         it = worldList.erase(it);
         if (removedElem) {
           worldPair.first->add(removedElem);
+          worldPair.first->setLight(removedElem->getParent()->getLight());
         }
       } else if (boxPair.second.containsBoundingBox((*it)->boundingBox())) {
-        std::cout << "trexw" << std::endl;
         SceneElementPtr removedElem = *it;
         it = worldList.erase(it);
-        if (removedElem) worldPair.second->add(removedElem);
+        if (removedElem) {
+          worldPair.second->add(removedElem);
+          worldPair.second->setLight(removedElem->getParent()->getLight());
+        }
       } else {
         it++;
       }
     }
   }
   return worldPair;
+}
+
+void BVHierarchy::divideWorld(const SceneElementPtr &world,
+                              size_t threshold) const {
+  if (world->isWorld()) {
+    if (world->getChildren().size() >= threshold) {
+      WorldPair worldpair =
+          splitElementsOf(world->getChildren(), world->boundingBox());
+      if (!worldpair.first->getChildren().empty()) {
+        world->add(worldpair.first);
+      }
+      if (!worldpair.second->getChildren().empty()) {
+        world->add(worldpair.second);
+      }
+    }
+    for (const auto &elem : world->getChildren()) {
+      divideWorld(elem, threshold);
+    }
+  }
 }

@@ -27,7 +27,7 @@ Vec3f PhongModel::computeColor(const SceneElementRawPtr world, const Ray& ray,
       return surf_col + refl_col /*+ refract_col*/;
     }
   }
-  return Vec3f(0.f, 0.f, 0.f);
+  return m_background_color;
 }
 
 Vec3f PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
