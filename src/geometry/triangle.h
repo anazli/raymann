@@ -23,7 +23,7 @@ class Triangle : public SceneElement {
   bool intersect(const Ray& r, IntersectionRecord& record) override {
     auto cde = cross(r.direction(), m_edgeVec[1]);
     auto det = dot(m_edgeVec[0], cde);
-    if (det > -limit::epsilon() && det < limit::epsilon()) return false;
+    if (det > -EPS && det < EPS) return false;
 
     auto inv_det = 1.f / det;
 

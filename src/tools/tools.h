@@ -2,6 +2,7 @@
 #define TOOLS_H
 
 #include <cmath>
+#include <limits>
 
 #include "light.h"
 #include "mat2.h"
@@ -14,7 +15,7 @@
 #include "vec4.h"
 
 const float PI = acos(-1.);
-const float EPS = 0.0001f;
+const float EPS = std::numeric_limits<float>::epsilon();
 const float EPS1 = 0.000002f;
 
 #endif  // TOOLS_H
