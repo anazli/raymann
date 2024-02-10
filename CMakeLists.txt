@@ -26,6 +26,7 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/geometry/cylinder.h
             src/geometry/plane.h
             src/geometry/sphere.h
+            src/geometry/triangle.h
             src/materials/material.cpp
             src/materials/material.h
             src/materials/material_properties.cpp
@@ -75,6 +76,7 @@ if(BUILD_TESTING)
                    test/ray_test.cpp
                    test/sphere_test.cpp
                    test/tools_test.cpp
+                   test/triangle_test.cpp
                    test/transformer_test.cpp
                    test/world_test.cpp
                    ${SOURCES}
