@@ -21,7 +21,23 @@ class Triangle : public SceneElement {
   }
 
   bool intersect(const Ray& r, IntersectionRecord& record) override {
-    return false;
+    auto cde = cross(r.direction(), m_edgeVec[1]);
+    auto det = dot(m_edgeVec[0], cde);
+    if (det > -limit::epsilon() && det < limit::epsilon()) return false;
+
+    auto inv_det = 1.f / det;
+
+    auto s = r.origin() - m_points[0];
+    auto u = inv_det * dot(s, cde);
+    if (u < 0.f || u > 1.f) return false;
+
+    auto cross_s_edge1 = cross(s, m_edgeVec[0]);
+    auto v = inv_det * dot(r.direction(), cross_s_edge1);
+    if (v < 0.f || (u + v) > 1.f) return false;
+
+    record.t1 = inv_det * dot(m_edgeVec[1], cross_s_edge1);
+    record.count++;
+    return true;
   }
   Vec3f normal(const Point3f& p) const override { return m_normalVec; }
 
