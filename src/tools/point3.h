@@ -73,6 +73,10 @@ class Point3 {
     return Vec3<T>(x() - p.x(), y() - p.y(), z() - p.z());
   }
 
+  Vec3<T> operator+(const Point3<T> &p) const {
+    return Vec3<T>(x() + p.x(), y() + p.y(), z() + p.z());
+  }
+
   Point3<T> operator-(const Vec3<T> &v) const {  // Point - Vector = Point
     return Point3<T>(x() - v.x(), y() - v.y(), z() - v.z());
   }
@@ -98,6 +102,11 @@ template <typename T>
 Vec3<T> operator-(const Vec3<T> &v,      // TODO: Cannot be (Smth is wrong)
                   const Point3<T> &p) {  // Vector - Point = Vector
   return Vec3<T>(v.x() - p.x(), v.y() - p.y(), v.z() - p.z());
+}
+
+template <typename T>
+Vec3<T> operator+(const Vec3<T> &v, const Point3<T> &p) {
+  return Vec3<T>(v.x() + p.x(), v.y() + p.y(), v.z() + p.z());
 }
 
 template <typename T>
