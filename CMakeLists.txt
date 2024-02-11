@@ -11,6 +11,8 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/acceleration/bvh.cpp
             src/acceleration/bvh.h
             src/application/error.h
+            src/camera/camera.cpp
+            src/camera/camera.h
             src/composite/builder.cpp
             src/composite/builder.h
             src/composite/iterator.cpp
