@@ -64,26 +64,21 @@ if(BUILD_TESTING)
 
 
   set(TEST_EXE raymannTests)
-  set(TEST_SOURCES test/boundingBox_test.cpp
+  set(TEST_SOURCES test/gtesting.h
+                   test/boundingBox_test.cpp
                    test/camera_test.cpp
                    test/canvas_test.cpp
-                   test/cone_test.cpp
-                   test/cube_test.cpp
-                   test/cylinder_test.cpp
                    test/material_test.cpp
-                   test/plane_test.cpp
                    test/properties_test.cpp
                    test/ray_test.cpp
-                   test/sphere_test.cpp
                    test/tools_test.cpp
-                   test/triangle_test.cpp
                    test/transformer_test.cpp
                    test/world_test.cpp
                    ${SOURCES}
   )
 
   add_executable(${TEST_EXE} ${TEST_SOURCES})
-  target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
+  target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/test)
   target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
   set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
   target_compile_options(${TEST_EXE} PRIVATE "-g")
