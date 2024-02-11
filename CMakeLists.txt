@@ -69,6 +69,7 @@ if(BUILD_TESTING)
                    test/camera_test.cpp
                    test/canvas_test.cpp
                    test/material_test.cpp
+                   test/primitive_test.cpp
                    test/properties_test.cpp
                    test/ray_test.cpp
                    test/tools_test.cpp

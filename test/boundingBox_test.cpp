@@ -3,7 +3,7 @@
 #include "composite/iterator.h"
 #include "geometry/cylinder.h"
 #include "geometry/sphere.h"
-#include "gtest/gtest.h"
+#include "gtesting.h"
 #include "transformations/transformer.h"
 
 using namespace testing;
@@ -12,23 +12,13 @@ using std::make_unique;
 using std::shared_ptr;
 using std::vector;
 
-class BoundingBoxTest : public Test {
+class BoundingBoxTest : public RTest {
  public:
   BoundingBox box1;
   BoundingBox box2;
   MaterialProperties prop;
   IntersectionRecord rec;
   BVHierarchy bvh;
-  void comparePoints(const Point3f& p1, const Point3f& p2) {
-    EXPECT_FLOAT_EQ(p1.x(), p2.x());
-    EXPECT_FLOAT_EQ(p1.y(), p2.y());
-    EXPECT_FLOAT_EQ(p1.z(), p2.z());
-  }
-  void comparePointsApprox(const Point3f& p1, const Point3f& p2, float eps) {
-    EXPECT_NEAR(p1.x(), p2.x(), eps);
-    EXPECT_NEAR(p1.y(), p2.y(), eps);
-    EXPECT_NEAR(p1.z(), p2.z(), eps);
-  }
 };
 
 TEST_F(BoundingBoxTest, addsPointToBoundingBox) {
