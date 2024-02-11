@@ -1,8 +1,6 @@
 #include "canvas.h"
 
-#include <cassert>
 #include <fstream>
-#include <list>
 
 using std::endl;
 using std::list;

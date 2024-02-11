@@ -12,10 +12,25 @@ class Sphere : public SceneElement {
     m_bBox.maxPoint() = Point3f(1.f, 1.f, 1.f);
   }
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override;
+  bool intersect(const Ray &r, IntersectionRecord &record) override {
+    auto co = r.origin() - m_center;
+    auto a = dot(r.direction(), r.direction());
+    auto b = 2.0f * dot(r.direction(), co);
+    auto c = dot(co, co) - m_radius * m_radius;
+    auto discr = b * b - 4.0f * a * c;
+    if (discr >= 0.0f) {
+      record.t1 = (-b - sqrt(discr)) / (2. * a);
+      record.t2 = (-b + sqrt(discr)) / (2. * a);
+      record.count = 2;
+      return true;
+    }
+    return false;
+  }
+
   Vec3f normal(const Point3f &p) const override {
     return (p - m_center).normalize();
   }
+
   void setCenter(const Point3f &c) { m_center = c; }
   void setRadius(const float &r) { m_radius = r; }
   Point3f center() const { return m_center; }
@@ -25,18 +40,3 @@ class Sphere : public SceneElement {
   Point3f m_center;
   float m_radius;
 };
-
-inline bool Sphere::intersect(const Ray &r, IntersectionRecord &record) {
-  auto co = r.origin() - m_center;
-  auto a = dot(r.direction(), r.direction());
-  auto b = 2.0f * dot(r.direction(), co);
-  auto c = dot(co, co) - m_radius * m_radius;
-  auto discr = b * b - 4.0f * a * c;
-  if (discr >= 0.0f) {
-    record.t1 = (-b - sqrt(discr)) / (2. * a);
-    record.t2 = (-b + sqrt(discr)) / (2. * a);
-    record.count = 2;
-    return true;
-  }
-  return false;
-}
