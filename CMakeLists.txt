@@ -11,6 +11,7 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/acceleration/bvh.cpp
             src/acceleration/bvh.h
             src/application/error.h
+            src/application/wavefront_reader.h
             src/camera/camera.cpp
             src/camera/camera.h
             src/composite/builder.cpp
@@ -67,6 +68,7 @@ if(BUILD_TESTING)
 
   set(TEST_EXE raymannTests)
   set(TEST_SOURCES test/gtesting.h
+                   test/application_test.cpp
                    test/boundingBox_test.cpp
                    test/camera_test.cpp
                    test/canvas_test.cpp
@@ -86,7 +88,7 @@ if(BUILD_TESTING)
   set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
   target_compile_options(${TEST_EXE} PRIVATE "-g")
   target_link_options(${TEST_EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
-  add_test(${TEST_EXE} ${RUN_TEST_DIR}/${TEST_EXE})
+  add_test(${TEST_EXE} ${RUN_TEST_DIR}/${TEST_EXE} WORKING_DIRECTORY ${RUN_TEST_DIR})
   gtest_discover_tests(${TEST_EXE})
 
   enable_testing()
