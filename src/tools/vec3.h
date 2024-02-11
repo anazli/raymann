@@ -290,7 +290,7 @@ Vec3<T> getUnitVectorOf(const Vec3<T>& v) {
 
 template <typename T>
 Vec3<T> reflect(const Vec3<T>& in, const Vec3<T>& normal) {
-  return in - normal * (T)2 * dot(in, normal);
+  return in - normal * static_cast<T>(2) * dot(in, normal);
 }
 
 /*template <typename T>

@@ -6,13 +6,12 @@
 #include "gtesting.h"
 #include "transformations/transformer.h"
 
-using namespace testing;
 using std::make_shared;
 using std::make_unique;
 using std::shared_ptr;
 using std::vector;
 
-class BoundingBoxTest : public RTest {
+class BoundingBoxTest : public testing::RTest {
  public:
   BoundingBox box1;
   BoundingBox box2;

@@ -2,13 +2,10 @@
 #include "composite/world.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
-#include "gtest/gtest.h"
+#include "gtesting.h"
 #include "renderers/phong_model.h"
-#include "tools/tools.h"
 
-using namespace testing;
-
-class MaterialTest : public Test {
+class MaterialTest : public testing::RTest {
  public:
   Sphere *s;
   PointLight light;
@@ -25,25 +22,15 @@ TEST_F(MaterialTest, createsNewLight1) {
   light.setPosition(Point3f(1.0f, 2.0f, 3.0f));
   light.setIntensity(Vec3f(0.1f, 0.1f, 0.3f));
 
-  ASSERT_EQ(light.position().x(), 1.0f);
-  ASSERT_EQ(light.position().y(), 2.0f);
-  ASSERT_EQ(light.position().z(), 3.0f);
-
-  ASSERT_EQ(light.intensity().x(), 0.1f);
-  ASSERT_EQ(light.intensity().y(), 0.1f);
-  ASSERT_EQ(light.intensity().z(), 0.3f);
+  comparePoints(light.position(), Point3f(1.f, 2.f, 3.f));
+  compareVectors(light.intensity(), Vec3f(0.1f, 0.1f, 0.3f));
 }
 
 TEST_F(MaterialTest, createsNewLight2) {
   light = PointLight(Point3f(0.1f, -4.0f, -0.4f), Vec3f(1.0f, 4.0f, 0.0f));
 
-  ASSERT_EQ(light.position().x(), 0.1f);
-  ASSERT_EQ(light.position().y(), -4.0f);
-  ASSERT_EQ(light.position().z(), -0.4f);
-
-  ASSERT_EQ(light.intensity().x(), 1.0f);
-  ASSERT_EQ(light.intensity().y(), 4.0f);
-  ASSERT_EQ(light.intensity().z(), 0.0f);
+  comparePoints(light.position(), Point3f(0.1f, -4.f, -0.4f));
+  compareVectors(light.intensity(), Vec3f(1.f, 4.f, 0.f));
 }
 
 TEST_F(MaterialTest, lightsWithEyeBetweenLightAndSurface) {
@@ -80,10 +67,7 @@ TEST_F(MaterialTest, lightsWithEyeBetweenLightAndSurface) {
   }
 
   Vec3f result = ret_ambient + ret_diffuse + ret_specular;
-
-  ASSERT_EQ(result.x(), 1.9f);
-  ASSERT_EQ(result.y(), 1.9f);
-  ASSERT_EQ(result.z(), 1.9f);
+  compareVectors(result, Vec3f(1.9f, 1.9f, 1.9f));
   ASSERT_TRUE(result == Vec3f(1.9f, 1.9f, 1.9f));
 }
 
@@ -124,10 +108,7 @@ TEST_F(MaterialTest, lightingWithSurfaceInShadow) {
   }
 
   Vec3f result = ret_ambient + ret_diffuse + ret_specular;
-
-  ASSERT_EQ(result.x(), 0.1f);
-  ASSERT_EQ(result.y(), 0.1f);
-  ASSERT_EQ(result.z(), 0.1f);
+  compareVectors(result, Vec3f(0.1f, 0.1f, 0.1f));
   ASSERT_TRUE(result == Vec3f(0.1f, 0.1f, 0.1f));
 }
 
@@ -166,9 +147,7 @@ TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   w->accept(*pm, r);
   Vec3f color = pm->getColor();
   float e = 0.1f;
-  EXPECT_NEAR(color.x(), 0.f, e);
-  EXPECT_NEAR(color.y(), 0.f, e);
-  EXPECT_NEAR(color.z(), 0.f, e);
+  compareVectorsApprox(color, Vec3f(), e);
 }
 
 /*TEST_F(TMat, determiningN1AndN2) {

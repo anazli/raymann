@@ -1,10 +1,6 @@
-#include "gtest/gtest.h"
-#include "tools/ray.h"
-#include "tools/tools.h"
+#include "gtesting.h"
 
-using namespace testing;
-
-class RayTest : public Test {
+class RayTest : public testing::RTest {
  public:
   Ray r;
   Point3f ori;

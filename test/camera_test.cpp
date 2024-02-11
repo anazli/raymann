@@ -1,11 +1,8 @@
 #include "camera/camera.h"
 
-#include "gtest/gtest.h"
-#include "tools/tools.h"
+#include "gtesting.h"
 
-using namespace testing;
-
-class CameraTest : public Test {
+class CameraTest : public testing::RTest {
  public:
   RayTracingChalengeCamera c;
 };
@@ -39,12 +36,8 @@ TEST_F(CameraTest, rayThroughTheCenterOfCanvas) {
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
   float eps = 1.E-6;
-  EXPECT_NEAR(r.origin().x(), 0.0f, eps);
-  EXPECT_NEAR(r.origin().y(), 0.0f, eps);
-  EXPECT_NEAR(r.origin().z(), 0.0f, eps);
-  EXPECT_NEAR(r.direction().x(), 0.0f, eps);
-  EXPECT_NEAR(r.direction().y(), 0.0f, eps);
-  EXPECT_NEAR(r.direction().z(), -1.0f, eps);
+  comparePointsApprox(r.origin(), Point3f(), eps);
+  compareVectorsApprox(r.direction(), Vec3f(0.f, 0.f, -1.f), eps);
 }
 
 TEST_F(CameraTest, rayThroughCornerOfCanvas) {
@@ -52,12 +45,9 @@ TEST_F(CameraTest, rayThroughCornerOfCanvas) {
   c.computePixelSize();
   Ray r = c.getRay(0, 0);
   float eps = 1.E-5;
-  EXPECT_NEAR(r.origin().x(), 0.0f, eps);
-  EXPECT_NEAR(r.origin().y(), 0.0f, eps);
-  EXPECT_NEAR(r.origin().z(), 0.0f, eps);
-  EXPECT_NEAR(r.direction().x(), 0.66519f, eps);
-  EXPECT_NEAR(r.direction().y(), 0.33259f, eps);
-  EXPECT_NEAR(r.direction().z(), -0.66851f, eps);
+  comparePointsApprox(r.origin(), Point3f(), eps);
+  compareVectorsApprox(r.direction(), Vec3f(0.66519f, 0.33259f, -0.66851f),
+                       eps);
 }
 
 TEST_F(CameraTest, rayWhenCameraIsTransformed) {
@@ -66,10 +56,6 @@ TEST_F(CameraTest, rayWhenCameraIsTransformed) {
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
   float eps = 1.E-5;
-  EXPECT_NEAR(r.origin().x(), 0.0f, eps);
-  EXPECT_NEAR(r.origin().y(), 2.0f, eps);
-  EXPECT_NEAR(r.origin().z(), -5.0f, eps);
-  EXPECT_NEAR(r.direction().x(), 0.7071f, eps);
-  EXPECT_NEAR(r.direction().y(), 0.0f, eps);
-  EXPECT_NEAR(r.direction().z(), -0.7071f, eps);
+  comparePointsApprox(r.origin(), Point3f(0.f, 2.f, -5.f), eps);
+  compareVectorsApprox(r.direction(), Vec3f(0.7071f, 0.f, -0.7071f), eps);
 }

@@ -1,15 +1,14 @@
 #include "composite/builder.h"
 #include "composite/scene_element.h"
 #include "geometry/sphere.h"
-#include "gtest/gtest.h"
+#include "gtesting.h"
 
-using namespace testing;
 using std::make_shared;
 using std::make_unique;
 using std::shared_ptr;
 using std::vector;
 
-class WorldTest : public Test {
+class WorldTest : public testing::RTest {
  public:
   BuilderPtr builder;
   PointLight light;
@@ -109,9 +108,7 @@ TEST_F(WorldTest, convertingPointFromWorldToObjectSpace) {
 
   Point3f p(-2.f, 0.f, -10.f);
   Point3f point = sphere->pointFromWorldToObjectSpace(p);
-  EXPECT_FLOAT_EQ(point.x(), 0.f);
-  EXPECT_FLOAT_EQ(point.y(), 0.f);
-  EXPECT_FLOAT_EQ(point.z(), -1.f);
+  comparePoints(point, Point3f(0.f, 0.f, -1.f));
 }
 
 TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
@@ -138,9 +135,7 @@ TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
   Vec3f v(sqrt(3.f) / 3.f, sqrt(3.f) / 3.f, sqrt(3.f) / 3.f);
   Vec3f vec = sphere->vectorFromObjectToWorldSpace(v);
   float eps{10E-5f};
-  EXPECT_NEAR(vec.x(), 0.2857f, eps);
-  EXPECT_NEAR(vec.y(), 0.4286f, eps);
-  EXPECT_NEAR(vec.z(), -0.8571f, eps);
+  compareVectorsApprox(vec, Vec3f(0.2857f, 0.4286f, -0.8571f), eps);
 }
 
 TEST_F(WorldTest, findingNormalOfChildObjectOfTransformedWorld) {
@@ -167,9 +162,7 @@ TEST_F(WorldTest, findingNormalOfChildObjectOfTransformedWorld) {
   Point3f point(1.7321f, 1.1547f, -5.5774f);
   Vec3f vec = sphere->normal(point);
   float eps{10E-5f};
-  EXPECT_NEAR(vec.x(), 0.2857f, eps);
-  EXPECT_NEAR(vec.y(), 0.4286f, eps);
-  EXPECT_NEAR(vec.z(), -0.8571f, eps);
+  compareVectorsApprox(vec, Vec3f(0.2857f, 0.4286f, -0.8571f), eps);
 }
 
 /*TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {

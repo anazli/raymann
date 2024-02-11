@@ -1,12 +1,9 @@
 #include "transformations/transformer.h"
 
 #include "geometry/sphere.h"
-#include "gtest/gtest.h"
-#include "tools/tools.h"
+#include "gtesting.h"
 
-using namespace testing;
-
-class TransformerTest : public Test {
+class TransformerTest : public testing::RTest {
  public:
   Mat4f m;
   Vec3f v;
@@ -25,9 +22,7 @@ TEST_F(TransformerTest, appliesTranslationToPoint) {  // TODO: better interface
   v4 = m * v4;  // transformation
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), 2.0f);
-  ASSERT_FLOAT_EQ(p.y(), 1.0f);
-  ASSERT_FLOAT_EQ(p.z(), 7.0f);
+  comparePoints(p, Point3f(2.f, 1.f, 7.f));
 }
 
 TEST_F(TransformerTest, appliesTranslationToPointOverloaded) {
@@ -39,9 +34,7 @@ TEST_F(TransformerTest, appliesTranslationToPointOverloaded) {
   v4 = m * v4;  // transformation
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), 2.0f);
-  ASSERT_FLOAT_EQ(p.y(), 1.0f);
-  ASSERT_FLOAT_EQ(p.z(), 7.0f);
+  comparePoints(p, Point3f(2.f, 1.f, 7.f));
 }
 
 TEST_F(TransformerTest, appliesInverseTranslationToPoint) {
@@ -53,9 +46,7 @@ TEST_F(TransformerTest, appliesInverseTranslationToPoint) {
   v4 = m * v4;
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), -8.0f);
-  ASSERT_FLOAT_EQ(p.y(), 7.0f);
-  ASSERT_FLOAT_EQ(p.z(), 3.0f);
+  comparePoints(p, Point3f(-8.f, 7.f, 3.f));
 }
 
 TEST_F(TransformerTest, appliesTranslationToVector) {
@@ -81,9 +72,7 @@ TEST_F(TransformerTest, appliesScalingToPoint) {
   v4 = m * v4;
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), -8.0f);
-  ASSERT_FLOAT_EQ(p.y(), 18.0f);
-  ASSERT_FLOAT_EQ(p.z(), 32.0f);
+  comparePoints(p, Point3f(-8.f, 18.f, 32.f));
 }
 
 TEST_F(TransformerTest, appliesScalingToVector) {
@@ -94,13 +83,12 @@ TEST_F(TransformerTest, appliesScalingToVector) {
   v4 = m * v4;
   v = v4;
 
-  ASSERT_FLOAT_EQ(v.x(), -8.0f);
-  ASSERT_FLOAT_EQ(v.y(), 18.0f);
-  ASSERT_FLOAT_EQ(v.z(), 32.0f);
+  compareVectors(v, Vec3f(-8.f, 18.f, 32.f));
 }
 
-TEST_F(TransformerTest, appliesInverseScalingToVector) {  // TODO: It doesn't pass with
-  v = Vec3f(-4.0f, 6.0f, 8.0f);                  // integers
+TEST_F(TransformerTest,
+       appliesInverseScalingToVector) {  // TODO: It doesn't pass with
+  v = Vec3f(-4.0f, 6.0f, 8.0f);          // integers
   m = scale(2.0f, 3.0f, 4.0f);
   m = m.inverse();
   Vec4f v4(v);
@@ -108,9 +96,7 @@ TEST_F(TransformerTest, appliesInverseScalingToVector) {  // TODO: It doesn't pa
   v4 = m * v4;
   v = v4;
 
-  ASSERT_FLOAT_EQ(v.x(), -2.0f);
-  ASSERT_FLOAT_EQ(v.y(), 2.0f);
-  ASSERT_FLOAT_EQ(v.z(), 2.0f);
+  compareVectors(v, Vec3f(-2.f, 2.f, 2.f));
 }
 
 /**********************************
@@ -124,9 +110,7 @@ TEST_F(TransformerTest, appliesRotationXToPoint) {
   v4 = m * v4;
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), 0.0f);
-  ASSERT_FLOAT_EQ(p.y(), sqrt(2.) / 2.0f);
-  ASSERT_FLOAT_EQ(p.z(), sqrt(2.) / 2.0f);
+  comparePoints(p, Point3f(0.f, sqrt(2.) / 2.f, sqrt(2.) / 2.f));
 }
 
 TEST_F(TransformerTest, appliesInverseRotationXToPoint) {
@@ -137,9 +121,7 @@ TEST_F(TransformerTest, appliesInverseRotationXToPoint) {
   v4 = m * v4;
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), 0.0f);
-  ASSERT_FLOAT_EQ(p.y(), sqrt(2.) / 2.0f);
-  ASSERT_FLOAT_EQ(p.z(), -sqrt(2.) / 2.0f);
+  comparePoints(p, Point3f(0.f, sqrt(2.) / 2.f, -sqrt(2.) / 2.f));
 }
 
 TEST_F(TransformerTest, appliesRotationYToPoint) {
@@ -149,9 +131,7 @@ TEST_F(TransformerTest, appliesRotationYToPoint) {
   v4 = m * v4;
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), sqrt(2.) / 2.0f);
-  ASSERT_FLOAT_EQ(p.y(), 0.0f);
-  ASSERT_FLOAT_EQ(p.z(), sqrt(2.) / 2.0f);
+  comparePoints(p, Point3f(sqrt(2.) / 2.f, 0.f, sqrt(2.) / 2.f));
 }
 
 TEST_F(TransformerTest, appliesRotationZToPoint) {
@@ -161,9 +141,7 @@ TEST_F(TransformerTest, appliesRotationZToPoint) {
   v4 = m * v4;
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), -sqrt(2.) / 2.0f);
-  ASSERT_FLOAT_EQ(p.y(), sqrt(2.) / 2.0f);
-  ASSERT_FLOAT_EQ(p.z(), 0.0f);
+  comparePoints(p, Point3f(-sqrt(2.) / 2.f, sqrt(2.) / 2.f, 0.f));
 }
 
 TEST_F(TransformerTest, appliesTransformationsInSequence) {
@@ -192,9 +170,7 @@ TEST_F(TransformerTest, appliesTransformationsInSequence) {
   v41 = C * v41;
   Point3f p3(v41);
 
-  ASSERT_FLOAT_EQ(p3.x(), 15.0f);
-  ASSERT_FLOAT_EQ(p3.y(), 0.0f);
-  ASSERT_FLOAT_EQ(p3.z(), 7.0f);
+  comparePoints(p3, Point3f(15.f, 0.f, 7.f));
 }
 
 TEST_F(TransformerTest, appliesTransformationChaining) {
@@ -207,9 +183,7 @@ TEST_F(TransformerTest, appliesTransformationChaining) {
   v4 = m * v4;
   p = v4;
 
-  ASSERT_FLOAT_EQ(p.x(), 15.0f);
-  ASSERT_FLOAT_EQ(p.y(), 0.0f);
-  ASSERT_FLOAT_EQ(p.z(), 7.0f);
+  comparePoints(p, Point3f(15.f, 0.f, 7.f));
 }
 
 TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
@@ -220,9 +194,7 @@ TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
   Vec3f tn(0.0f, 0.70711f, -0.70711f);
 
   float eps = 1.E-5;
-  EXPECT_NEAR(norm.x(), tn.x(), eps);
-  EXPECT_NEAR(norm.y(), tn.y(), eps);
-  EXPECT_NEAR(norm.z(), tn.z(), eps);
+  compareVectorsApprox(norm, tn, eps);
 
   delete t;  // Note: when a Test doesn't pass, mem is not dealocated. Flow
              // stops above.
@@ -230,16 +202,14 @@ TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
 
 TEST_F(TransformerTest, computesNormalOfRotatedSphere) {
   SceneElement *s = new Sphere();
-  SceneElement *t = new Transformer(new Transformer(s, rotationOverZ(PI / 5.0f)),
-                                    scale(1.0f, 0.5f, 1.0f));
+  SceneElement *t = new Transformer(
+      new Transformer(s, rotationOverZ(PI / 5.0f)), scale(1.0f, 0.5f, 1.0f));
 
   Vec3f norm = t->normal(Point3f(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
   Vec3f tn(0.0f, 0.97014f, -0.24254f);
 
   float eps = 1.E-5;
-  EXPECT_NEAR(norm.x(), tn.x(), eps);
-  EXPECT_NEAR(norm.y(), tn.y(), eps);
-  EXPECT_NEAR(norm.z(), tn.z(), eps);
+  compareVectorsApprox(norm, tn, eps);
 
   delete t;
 }

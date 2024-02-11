@@ -1,14 +1,10 @@
-#include "tools/tools.h"
-
-#include "gtest/gtest.h"
-
-using namespace testing;
+#include "gtesting.h"
 
 //--------------------------------------------
 //     VEC2
 //--------------------------------------------
 
-class Vector2Test : public Test {
+class Vector2Test : public testing::RTest {
  public:
   Vec2<double> v;
 };
@@ -149,20 +145,18 @@ TEST_F(Vector2Test, TestsInequality) {
 //     VEC3
 //--------------------------------------------
 
-class Vector3Test : public Test {
+class Vector3Test : public testing::RTest {
  public:
-  Vec3<double> v;
+  Vec3f v;
 };
 
 TEST_F(Vector3Test, CreatesVector) {
-  v = Vec3<double>(0., 0., 0.);
-  ASSERT_DOUBLE_EQ(v.x(), 0.);
-  ASSERT_DOUBLE_EQ(v.y(), 0.);
-  ASSERT_DOUBLE_EQ(v.z(), 0.);
+  v = Vec3f(0.f, 0.f, 0.f);
+  compareVectors(v, Vec3f());
 }
 
 TEST_F(Vector3Test, AssertsOutOfBounds) {
-  v = Vec3<double>(1., 2., 0.5);
+  v = Vec3f(1.f, 2.f, 0.5f);
   ASSERT_DEATH(v[3], "");
   ASSERT_DEATH(v[-1], "");
 }
@@ -171,159 +165,131 @@ TEST_F(Vector3Test, SetsCoords) {
   v.setX(5.);
   v[1] = 4.;
   v[2] = 0.2;
-  ASSERT_DOUBLE_EQ(v.x(), 5.);
-  ASSERT_DOUBLE_EQ(v[1], 4.);
-  ASSERT_DOUBLE_EQ(v[2], 0.2);
+  compareVectors(v, Vec3f(5.f, 4.f, 0.2f));
 }
 
 TEST_F(Vector3Test, SetXYZ) {
-  v.setXYZ(-1.24, -5.54, 45.6);
-  ASSERT_DOUBLE_EQ(v.x(), -1.24);
-  ASSERT_DOUBLE_EQ(v.y(), -5.54);
-  ASSERT_DOUBLE_EQ(v.z(), 45.6);
+  v.setXYZ(-1.24f, -5.54f, 45.6f);
+  compareVectors(v, Vec3f(-1.24f, -5.54f, 45.6f));
 
-  v.setXYZ(6.68);
-  ASSERT_DOUBLE_EQ(v.x(), 6.68);
-  ASSERT_DOUBLE_EQ(v.y(), 6.68);
-  ASSERT_DOUBLE_EQ(v.z(), 6.68);
+  v.setXYZ(6.68f);
+  compareVectors(v, Vec3f(6.68f, 6.68f, 6.68f));
 }
 
 TEST_F(Vector3Test, ChangesSign) {
   v.setXYZ(-1.55);
   v = -v;
-  ASSERT_DOUBLE_EQ(v[0], 1.55);
-  ASSERT_DOUBLE_EQ(v[1], 1.55);
-  ASSERT_DOUBLE_EQ(v[2], 1.55);
+  compareVectors(v, Vec3f(1.55f, 1.55f, 1.55f));
 }
 
 TEST_F(Vector3Test, AddsVectorOrNumber) {
-  v = Vec3<double>(0., 0., 5.);
-  v += 4.46;
-  ASSERT_DOUBLE_EQ(v.x(), 4.46);
-  ASSERT_DOUBLE_EQ(v.y(), 4.46);
-  ASSERT_DOUBLE_EQ(v.z(), 9.46);
+  v = Vec3f(0.f, 0.f, 5.f);
+  v += 4.46f;
+  compareVectors(v, Vec3f(4.46f, 4.46f, 9.46f));
 
-  v += Vec3<double>(4., 6., 0.);
-  ASSERT_DOUBLE_EQ(v.x(), 8.46);
-  ASSERT_DOUBLE_EQ(v.y(), 10.46);
-  ASSERT_DOUBLE_EQ(v.z(), 9.46);
+  v += Vec3f(4.f, 6.f, 0.f);
+  compareVectors(v, Vec3f(8.46f, 10.46f, 9.46f));
 }
 
 TEST_F(Vector3Test, SubtractsVectorOrNumber) {
-  v = Vec3<double>(0., 0., 3.);
-  v -= 4.46;
-  ASSERT_DOUBLE_EQ(v.x(), -4.46);
-  ASSERT_DOUBLE_EQ(v.y(), -4.46);
-  ASSERT_DOUBLE_EQ(v.z(), -1.46);
+  v = Vec3f(0.f, 0.f, 3.f);
+  v -= 4.46f;
+  compareVectors(v, Vec3f(-4.46f, -4.46f, -1.46f));
 
-  v -= Vec3<double>(4., 6., 0.);
-  ASSERT_DOUBLE_EQ(v.x(), -8.46);
-  ASSERT_DOUBLE_EQ(v.y(), -10.46);
-  ASSERT_DOUBLE_EQ(v.z(), -1.46);
+  v -= Vec3f(4.f, 6.f, 0.f);
+  compareVectors(v, Vec3f(-8.46f, -10.46f, -1.46f));
 }
 
 TEST_F(Vector3Test, GetsLenghtOfVector) {
-  v = Vec3<double>(0., 0., 0.);
-  ASSERT_DOUBLE_EQ(v.length(), 0.);
-  v = Vec3<double>(1., 1., 1.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(3.));
-  v = Vec3<double>(3., 3., 3.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(27.));
-  v = Vec3<double>(-5., -5., 5.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(75.));
+  v = Vec3f(0.f, 0.f, 0.f);
+  ASSERT_FLOAT_EQ(v.length(), 0.f);
+  v = Vec3f(1.f, 1.f, 1.f);
+  ASSERT_FLOAT_EQ(v.length(), sqrt(3.f));
+  v = Vec3f(3.f, 3.f, 3.f);
+  ASSERT_FLOAT_EQ(v.length(), sqrt(27.f));
+  v = Vec3f(-5.f, -5.f, 5.f);
+  ASSERT_FLOAT_EQ(v.length(), sqrt(75.f));
 }
 
 TEST_F(Vector3Test, MultipliesVectorWithNumber) {
-  v = Vec3<double>(1., 0., 5.);
-  v *= 5.;
-  ASSERT_DOUBLE_EQ(v.x(), 5.);
-  ASSERT_DOUBLE_EQ(v.y(), 0.);
-  ASSERT_DOUBLE_EQ(v.z(), 25.);
+  v = Vec3f(1.f, 0.f, 5.f);
+  v *= 5.f;
+  compareVectors(v, Vec3f(5.f, 0.f, 25.f));
 }
 
 TEST_F(Vector3Test, NormalizesVector) {
-  v = Vec3<double>(4.53, 93.5, -56.3);
-  ASSERT_DOUBLE_EQ(v.normalize().length(), 1.);
+  v = Vec3f(4.53f, 93.5f, -56.3f);
+  ASSERT_DOUBLE_EQ(v.normalize().length(), 1.f);
 }
 
 TEST_F(Vector3Test, DotProduct) {
-  v = Vec3<double>(3., 3., 4.);
-  ASSERT_DOUBLE_EQ(dot(v, Vec3<double>(3., 3., 9.)), 54.);
-  v = Vec3<double>(-1., 5., 9.);
-  ASSERT_DOUBLE_EQ(dot(v, Vec3<double>(-3., 3., 6.)), 72.);
+  v = Vec3f(3.f, 3.f, 4.f);
+  ASSERT_DOUBLE_EQ(dot(v, Vec3f(3.f, 3.f, 9.f)), 54.f);
+  v = Vec3f(-1.f, 5.f, 9.f);
+  ASSERT_FLOAT_EQ(dot(v, Vec3f(-3.f, 3.f, 6.f)), 72.f);
 }
 
 TEST_F(Vector3Test, GetUnitVectorOf) {
-  v = Vec3<double>(4.36, 7.62, 0.466);
+  v = Vec3f(4.36f, 7.62f, 0.466f);
   v = getUnitVectorOf(v);
-  ASSERT_DOUBLE_EQ(v.length(), 1.);
+  ASSERT_FLOAT_EQ(v.length(), 1.f);
 }
 
 TEST_F(Vector3Test, AddsTwoVectors) {
-  v = Vec3<double>(4.532, 45.67, 0.83);
-  v = v + Vec3<double>(0.3456, 124.67, 1.);
-  ASSERT_DOUBLE_EQ(v.x(), 4.8776);
-  ASSERT_DOUBLE_EQ(v.y(), 170.34);
-  ASSERT_DOUBLE_EQ(v.z(), 1.83);
+  v = Vec3f(4.532f, 45.67f, 0.83f);
+  v = v + Vec3f(0.3456f, 124.67f, 1.f);
+  compareVectors(v, Vec3f(4.8776f, 170.34f, 1.83f));
 }
 
 TEST_F(Vector3Test, SubtractsTwoVectors) {
-  v = Vec3<double>(40.54, 2.4, 0.62);
-  v = v - Vec3<double>(4.20, -1.7, -1.);
-  ASSERT_DOUBLE_EQ(v[0], 36.34);
-  ASSERT_DOUBLE_EQ(v[1], 4.1);
-  ASSERT_DOUBLE_EQ(v[2], 1.62);
+  v = Vec3f(40.54f, 2.4f, 0.62f);
+  v = v - Vec3f(4.20f, -1.7f, -1.f);
+  compareVectors(v, Vec3f(36.34f, 4.1f, 1.62f));
 }
 
 TEST_F(Vector3Test, DevidesVectorByNumber) {
-  v = Vec3<double>(36.6, -30.6, 120.2586);
-  v = v / 3.;
-  ASSERT_DOUBLE_EQ(v.x(), 36.6 / 3.);
-  ASSERT_DOUBLE_EQ(v.y(), -30.6 / 3.);
-  ASSERT_DOUBLE_EQ(v.z(), 120.2586 / 3.);
+  v = Vec3f(36.6f, -30.6f, 120.2586f);
+  v = v / 3.f;
+  compareVectors(v, Vec3f(36.6f / 3.f, -30.6f / 3.f, 120.2586f / 3.f));
 }
 
 TEST_F(Vector3Test, DevidesVectorByVector) {
-  v = Vec3<double>(434.5, 93.5, 3858.53);
-  v = v / Vec3<double>(32.5, -16.2, 0.567);
-  ASSERT_DOUBLE_EQ(v.x(), 434.5 / 32.5);
-  ASSERT_DOUBLE_EQ(v.y(), -93.5 / 16.2);
-  ASSERT_DOUBLE_EQ(v.z(), 3858.53 / 0.567);
+  v = Vec3f(434.5f, 93.5f, 3858.53f);
+  v = v / Vec3f(32.5f, -16.2f, 0.567f);
+  compareVectors(v, Vec3f(434.5f / 32.5f, -93.5f / 16.2f, 3858.53f / 0.567f));
 }
 
 TEST_F(Vector3Test, TestsEquality) {
-  v = Vec3<double>(4.2, -6.54, 34855.38596);
-  ASSERT_TRUE(v == Vec3<double>(4.2, -6.54, 34855.38596));
+  v = Vec3f(4.2f, -6.54f, 34855.38596f);
+  ASSERT_TRUE(v == Vec3f(4.2f, -6.54f, 34855.38596f));
 }
 
 TEST_F(Vector3Test, TestsInequality) {
-  v = Vec3<double>(4.2, -6.54, 0.0);
-  ASSERT_TRUE(v != Vec3<double>(4.2, -4.36, 0.0));
+  v = Vec3f(4.2f, -6.54f, 0.f);
+  ASSERT_TRUE(v != Vec3f(4.2f, -4.36f, 0.f));
 }
 
 TEST_F(Vector3Test, reflectsVector1) {
-  v = Vec3d(1., -1., 0.);
-  Vec3d n(0., 1., 0.);
-  Vec3d r = reflect(v, n);
-  ASSERT_TRUE(r == Vec3d(1., 1., 0.));
+  v = Vec3f(1.f, -1.f, 0.f);
+  Vec3f n(0.f, 1.f, 0.f);
+  Vec3f r = reflect(v, n);
+  ASSERT_TRUE(r == Vec3f(1.f, 1.f, 0.f));
 }
 
 TEST_F(Vector3Test, reflectsVector2) {
-  v = Vec3d(0., -1., 0.);
-  Vec3d n(sqrt(2.) / 2., sqrt(2.) / 2., 0.);
-  Vec3d r = reflect(v, n);
+  v = Vec3f(0.f, -1.f, 0.f);
+  Vec3f n(sqrt(2.f) / 2.f, sqrt(2.f) / 2.f, 0.f);
+  Vec3f r = reflect(v, n);
 
-  double eps = 10.E-9;
-  EXPECT_NEAR(r.x(), 1, eps);  // Gtest says that 1 is not equal to 1
-  EXPECT_NEAR(r.y(), 0, eps);  // or 0 != 0
-  EXPECT_NEAR(r.z(), 0, eps);
+  double eps = 10.E-8f;
+  compareVectorsApprox(r, Vec3f(1.f, 0.f, 0.f), eps);
 }
 
 //--------------------------------------------
 //     VEC4
 //--------------------------------------------
 
-class Vector4Test : public Test {
+class Vector4Test : public testing::RTest {
  public:
   Vec4<double> v;
 };
@@ -494,7 +460,7 @@ TEST_F(Vector4Test, TestsInequality) {
 //     MAT2
 //--------------------------------------------
 
-class Matrix2Test : public Test {
+class Matrix2Test : public testing::RTest {
  public:
   Mat2<double> m;
 };
@@ -580,7 +546,7 @@ TEST_F(Matrix2Test, MultipliesTwoMatrices) {
 //     MAT3
 //--------------------------------------------
 
-class Matrix3Test : public Test {
+class Matrix3Test : public testing::RTest {
  public:
   Mat3<double> m;
 };
@@ -771,7 +737,7 @@ TEST_F(Matrix3Test, GetInverseOfMatrix) {
 //     MAT4
 //--------------------------------------------
 
-class Matrix4Test : public Test {
+class Matrix4Test : public testing::RTest {
  public:
   Mat4<double> m4;
 };
@@ -1099,7 +1065,7 @@ TEST_F(Matrix4Test, GetInverseOfMatrix) {
 //     Point3
 //--------------------------------------------
 
-class Point3Test : public Test {
+class Point3Test : public testing::RTest {
  public:
   Point3i p;
 };

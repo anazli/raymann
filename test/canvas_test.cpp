@@ -1,9 +1,8 @@
 #include "container/canvas.h"
-#include "gtest/gtest.h"
 
-using namespace testing;
+#include "gtesting.h"
 
-class CanvasTest : public Test {
+class CanvasTest : public testing::RTest {
  public:
   Canvas c;
 };

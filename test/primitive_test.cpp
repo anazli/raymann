@@ -7,43 +7,41 @@
 #include "gtesting.h"
 #include "transformations/transformer.h"
 
-using namespace testing;
-
-class TCone : public RTest {
+class TCone : public testing::RTest {
  public:
   Cone cone;
   Ray r;
   IntersectionRecord rec;
 };
 
-class CubeTest : public RTest {
+class CubeTest : public testing::RTest {
  public:
   SceneElementPtr box;
   Ray ray;
 };
 
-class CylinderTest : public RTest {
+class CylinderTest : public testing::RTest {
  public:
   Cylinder cyl;
   Ray r;
   IntersectionRecord rec;
 };
 
-class PlaneTest : public RTest {
+class PlaneTest : public testing::RTest {
  public:
   Plane p;
   Ray r;
   IntersectionRecord rec;
 };
 
-class SphereTest : public RTest {
+class SphereTest : public testing::RTest {
  public:
   Sphere s;
   Ray r;
   IntersectionRecord rec;
 };
 
-class TriangleTest : public RTest {
+class TriangleTest : public testing::RTest {
  public:
   Ray r;
   Point3f p1 = Point3f(0.f, 1.f, 0.f);
