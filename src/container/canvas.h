@@ -11,24 +11,15 @@ class BaseCamera;
 
 class Canvas {
  public:
-  Canvas(const int &w = 0, const int &h = 0) : m_width(w), m_height(h) {
-    m_pixels = std::vector(w, std::vector<Vec3f>(h));
-  }
-  int width() const { return m_pixels.size(); }
-  int height() const { return m_pixels[0].size(); }
-  std::string fileName() const { return m_fileName; }
-  // void setWidth(const int &w) { m_width = w; }
-  // void setHeight(const int &h) { m_height = h; }
-  void setFileName(const std::string &fn) { m_fileName = fn; }
-
+  Canvas(int w = 0, int h = 0);
+  int width() const;
+  int height() const;
+  std::string fileName() const;
+  void setFileName(const std::string &fn);
   void render(const SceneElementPtr &world, BaseCameraPtr camera,
               BaseRendererPtr renderer);
-  void writePixel(const int &x, const int &y, const Vec3f &color) {
-    m_pixels[x][y] = color;
-  }
-
-  Vec3f pixel(const int &x, const int &y) const { return m_pixels[x][y]; }
-
+  void writePixel(int x, int y, const Vec3f &color);
+  Vec3f pixel(int x, int y) const;
   void save();
 
  private:

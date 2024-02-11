@@ -24,6 +24,7 @@ class BaseCamera {
  protected:
   BaseCamera();
   BaseCamera(int hs, int vs, float fv);
+
   int m_hsize;
   int m_vsize;
   float m_field_of_view;

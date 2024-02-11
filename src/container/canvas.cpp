@@ -8,6 +8,18 @@ using std::endl;
 using std::list;
 using std::ofstream;
 
+Canvas::Canvas(int w, int h) : m_width(w), m_height(h) {
+  m_pixels = std::vector(w, std::vector<Vec3f>(h));
+}
+
+int Canvas::width() const { return m_pixels.size(); }
+
+int Canvas::height() const { return m_pixels[0].size(); }
+
+std::string Canvas::fileName() const { return m_fileName; }
+
+void Canvas::setFileName(const std::string &fn) { m_fileName = fn; }
+
 void Canvas::render(const SceneElementPtr &world, BaseCameraPtr camera,
                     BaseRendererPtr renderer) {
   for (int j = 0; j < camera->vSize(); ++j) {
@@ -21,8 +33,14 @@ void Canvas::render(const SceneElementPtr &world, BaseCameraPtr camera,
   }
 }
 
+void Canvas::writePixel(int x, int y, const Vec3f &color) {
+  m_pixels[x][y] = color;
+}
+
+Vec3f Canvas::pixel(int x, int y) const { return m_pixels[x][y]; }
+
 void Canvas::save() {
-  assert(fileName() != "");
+  APP_ASSERT(!fileName().empty(), "Cannot save scene, filename is empty!");
 
   ofstream out;
   out.open(fileName());
@@ -33,13 +51,13 @@ void Canvas::save() {
 
   for (int j = 0; j < height(); ++j) {
     for (int i = 0; i < width(); ++i) {
-      m_pixels[i][j] *= 255.;
-      if (m_pixels[i][j].x() > 255.) m_pixels[i][j].setX(255.);
-      if (m_pixels[i][j].x() < 0.) m_pixels[i][j].setX(0.);
-      if (m_pixels[i][j].y() > 255.) m_pixels[i][j].setY(255.);
-      if (m_pixels[i][j].y() < 0.) m_pixels[i][j].setY(0.);
-      if (m_pixels[i][j].z() > 255.) m_pixels[i][j].setZ(255.);
-      if (m_pixels[i][j].z() < 0.) m_pixels[i][j].setZ(0.);
+      m_pixels[i][j] *= 255.f;
+      if (m_pixels[i][j].x() > 255.f) m_pixels[i][j].setX(255.f);
+      if (m_pixels[i][j].x() < 0.f) m_pixels[i][j].setX(0.f);
+      if (m_pixels[i][j].y() > 255.f) m_pixels[i][j].setY(255.f);
+      if (m_pixels[i][j].y() < 0.f) m_pixels[i][j].setY(0.f);
+      if (m_pixels[i][j].z() > 255.f) m_pixels[i][j].setZ(255.f);
+      if (m_pixels[i][j].z() < 0.f) m_pixels[i][j].setZ(0.f);
 
       out << (int)m_pixels[i][j].x() << " " << (int)m_pixels[i][j].y() << " "
           << (int)m_pixels[i][j].z() << " ";
