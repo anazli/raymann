@@ -4,11 +4,11 @@
 
 class CameraTest : public testing::RTest {
  public:
-  RayTracingChalengeCamera c;
+  Camera c;
 };
 
 TEST_F(CameraTest, createsCamera) {
-  c = RayTracingChalengeCamera();
+  c = Camera(0, 0, 0.f);
   c.setHSize(160);
   c.setVSize(120);
   c.setFieldOfView(PI / 2.0f);
@@ -20,19 +20,19 @@ TEST_F(CameraTest, createsCamera) {
 }
 
 TEST_F(CameraTest, pixelSizeForHorCanvas) {
-  c = RayTracingChalengeCamera(200, 125, PI / 2.0f);
+  c = Camera(200, 125, PI / 2.0f);
   c.computePixelSize();
   ASSERT_EQ(c.pixelSize(), 0.01f);
 }
 
 TEST_F(CameraTest, pixelSizeForVerCanvas) {
-  c = RayTracingChalengeCamera(125, 200, PI / 2.0f);
+  c = Camera(125, 200, PI / 2.0f);
   c.computePixelSize();
   ASSERT_EQ(c.pixelSize(), 0.01f);
 }
 
 TEST_F(CameraTest, rayThroughTheCenterOfCanvas) {
-  c = RayTracingChalengeCamera(201, 101, PI / 2.0f);
+  c = Camera(201, 101, PI / 2.0f);
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
   float eps = 1.E-6;
@@ -41,7 +41,7 @@ TEST_F(CameraTest, rayThroughTheCenterOfCanvas) {
 }
 
 TEST_F(CameraTest, rayThroughCornerOfCanvas) {
-  c = RayTracingChalengeCamera(201, 101, PI / 2.0f);
+  c = Camera(201, 101, PI / 2.0f);
   c.computePixelSize();
   Ray r = c.getRay(0, 0);
   float eps = 1.E-5;
@@ -51,7 +51,7 @@ TEST_F(CameraTest, rayThroughCornerOfCanvas) {
 }
 
 TEST_F(CameraTest, rayWhenCameraIsTransformed) {
-  c = RayTracingChalengeCamera(201, 101, PI / 2.0f);
+  c = Camera(201, 101, PI / 2.0f);
   c.setTransform(rotationOverY(PI / 4.0f) * translation(0.0f, -2.0f, 5.0f));
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
