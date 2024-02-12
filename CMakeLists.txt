@@ -11,6 +11,7 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/acceleration/bvh.cpp
             src/acceleration/bvh.h
             src/application/error.h
+            src/application/wavefront_reader.cpp
             src/application/wavefront_reader.h
             src/camera/camera.cpp
             src/camera/camera.h
