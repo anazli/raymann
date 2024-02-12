@@ -88,7 +88,7 @@ TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
 
 TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->createWorld(PointLight());
+  builder->createWorld();
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(translation(Vec3f(2.f, 5.f, -3.f)) *
                                scale(Vec3f(2.f, 2.f, 2.f)));
@@ -194,7 +194,7 @@ TEST_F(BoundingBoxTest, splitBox) {
 
 TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
   WorldBuilder builder;
-  builder.createWorld(PointLight());
+  builder.createWorld();
 
   builder.processSceneElement(new Sphere);
   builder.applyTransformation(translation(-2.f, 0.f, 0.f));
@@ -226,7 +226,7 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
 
 TEST_F(BoundingBoxTest, divideWorld) {
   WorldBuilder builder;
-  builder.createWorld(PointLight());
+  builder.createWorld();
 
   builder.processSceneElement(new Sphere);
   builder.applyTransformation(translation(-2.f, -2.f, 0.f));

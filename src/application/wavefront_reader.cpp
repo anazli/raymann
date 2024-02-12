@@ -23,6 +23,10 @@ bool isPolygonEntry(const string_view &line) {
   return !line.empty() && line[0] == 'f' && line.length() == 11;
 }
 
+bool isGroupEntry(const string_view &line) {
+  return !line.empty() && line[0] == 'g' && isspace(line[1]);
+}
+
 WavefrontReader::WavefrontReader(const string_view &file) { openFile(file); }
 
 void WavefrontReader::parseInput() {
@@ -35,6 +39,8 @@ void WavefrontReader::parseInput() {
         parseTriangleEntry(line);
       } else if (isPolygonEntry(line)) {
         parsePolygonEntry(line);
+      } else if (isGroupEntry(line)) {
+        parseGroupEntry(line);
       }
     }
   }
@@ -47,11 +53,19 @@ void WavefrontReader::openFile(const string_view &file) {
   }
 }
 
+void WavefrontReader::addBuilder(BuilderPtr builder) {
+  m_builder = std::move(builder);
+  m_builder->createWorld();
+  m_finalProduct = m_builder->getProduct();
+}
+
 vector<Vec3f> WavefrontReader::vertexCollection() const { return m_vertices; }
 
 vector<Triangle> WavefrontReader::triangleCollection() const {
   return m_triangles;
 }
+
+SceneElementPtr WavefrontReader::getStructure() const { return m_finalProduct; }
 
 void WavefrontReader::parseVertexEntry(const string_view &line) {
   istringstream ss(line.data());
@@ -75,7 +89,12 @@ void WavefrontReader::parseTriangleEntry(const string_view &line) {
       Point3f p1 = Point3f(m_vertices[stol(i) - 1]);
       Point3f p2 = Point3f(m_vertices[stol(j) - 1]);
       Point3f p3 = Point3f(m_vertices[stol(k) - 1]);
-      m_triangles.push_back(Triangle({p1, p2, p3}));
+      if (m_builder) {
+        m_builder->processSceneElement(new Triangle({p1, p2, p3}));
+        m_builder->addElement();
+      } else {
+        m_triangles.push_back(Triangle({p1, p2, p3}));
+      }
     } catch (...) {
       APP_MSG(line.data());
       APP_ASSERT(false,
@@ -104,11 +123,24 @@ void WavefrontReader::parsePolygonEntry(const string_view &line) {
   }
 }
 
+void WavefrontReader::parseGroupEntry(const std::string_view &line) {
+  SceneElementPtr currentWorld = m_builder->getProduct();
+  if (currentWorld) {  // add parsed world so far
+    m_finalProduct->add(currentWorld);
+  }
+  m_builder->createWorld();
+}
+
 void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {
   for (int i = 1; i < vertices.size() - 1; ++i) {
     Point3f p1 = Point3f(vertices[0]);
     Point3f p2 = Point3f(vertices[i]);
     Point3f p3 = Point3f(vertices[i + 1]);
-    m_triangles.push_back(Triangle({p1, p2, p3}));
+    if (m_builder) {
+      m_builder->processSceneElement(new Triangle({p1, p2, p3}));
+      m_builder->addElement();
+    } else {
+      m_triangles.push_back(Triangle({p1, p2, p3}));
+    }
   }
 }

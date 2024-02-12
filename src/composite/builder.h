@@ -8,9 +8,10 @@
 class Builder {
  public:
   virtual ~Builder() = default;
-  virtual void createWorld(const PointLight &light) = 0;
+  virtual void createWorld() = 0;
   virtual void addWorld() = 0;
   virtual void addElement() = 0;
+  virtual void addLight(const PointLight &light) = 0;
   virtual void processSceneElement(SceneElementRawPtr element) = 0;
   virtual void applyTransformation(const Mat4f &trans) = 0;
   virtual void applyWorldTransformation(const Mat4f &trans) = 0;
@@ -33,9 +34,10 @@ using BuilderPtr = std::unique_ptr<Builder>;
 class WorldBuilder : public Builder {
  public:
   ~WorldBuilder() override = default;
-  void createWorld(const PointLight &light) override;
+  void createWorld() override;
   void addWorld() override;
   void addElement() override;
+  void addLight(const PointLight &light) override;
   void processSceneElement(SceneElementRawPtr element) override;
   void applyTransformation(const Mat4f &trans) override;
   void applyWorldTransformation(const Mat4f &trans) override;
@@ -54,4 +56,5 @@ class WorldBuilder : public Builder {
  private:
   SceneElementRawPtr m_currentElement;
   SceneElementRawPtr m_product;
+  PointLight m_light;
 };

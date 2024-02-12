@@ -5,9 +5,9 @@
 #include "composite/world.h"
 #include "transformations/transformer.h"
 
-void WorldBuilder::createWorld(const PointLight& light) {
+void WorldBuilder::createWorld() {
   m_product = new World;
-  m_product->setLight(light);
+  m_product->setLight(m_light);
 }
 
 void WorldBuilder::addWorld() {
@@ -21,6 +21,8 @@ void WorldBuilder::addElement() {
   SceneElementPtr elem(m_currentElement);
   m_product->add(elem);
 }
+
+void WorldBuilder::addLight(const PointLight& light) { m_light = light; }
 
 void WorldBuilder::processSceneElement(SceneElementRawPtr element) {
   m_currentElement = element;

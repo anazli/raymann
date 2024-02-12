@@ -19,7 +19,8 @@ class WorldTest : public testing::RTest {
 
 TEST_F(WorldTest, createsWorldOfShere) {
   builder = make_unique<WorldBuilder>();
-  builder->createWorld(light);
+  builder->addLight(light);
+  builder->createWorld();
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(Mat4f());
   SceneElementRawPtr sphere = builder->getCurrentElement();
@@ -38,7 +39,8 @@ TEST_F(WorldTest, createsWorldOfShere) {
 TEST_F(WorldTest, createsWorldOfTwoSpheres) {
   Ray r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   builder = make_unique<WorldBuilder>();
-  builder->createWorld(light);
+  builder->addLight(light);
+  builder->createWorld();
   builder->processSceneElement(new Sphere(Point3f(0.0f, 0.0f, 5.0f)));
   SceneElementRawPtr s = builder->getCurrentElement();
   builder->addElement();
@@ -59,7 +61,8 @@ TEST_F(WorldTest, createsWorldOfTwoSpheres) {
 
 TEST_F(WorldTest, whenWorldIsTranformed_parentOfChildIsCorrect) {
   builder = make_unique<WorldBuilder>();
-  builder->createWorld(light);
+  builder->addLight(light);
+  builder->createWorld();
   builder->applyWorldTransformation(Mat4f());
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(Mat4f());
@@ -73,7 +76,8 @@ TEST_F(WorldTest, whenWorldIsTranformed_parentOfChildIsCorrect) {
 TEST_F(WorldTest, intersectingTransformedWorld) {
   Ray r = Ray(Point3f(10.0f, 0.0f, -10.0f), Vec3f(0.0f, 0.0f, 1.0f));
   builder = make_unique<WorldBuilder>();
-  builder->createWorld(light);
+  builder->addLight(light);
+  builder->createWorld();
 
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(scale(2.f, 2.f, 2.f));
@@ -93,12 +97,13 @@ TEST_F(WorldTest, intersectingTransformedWorld) {
 
 TEST_F(WorldTest, convertingPointFromWorldToObjectSpace) {
   builder = make_unique<WorldBuilder>();
+  builder->addLight(light);
 
-  builder->createWorld(light);
+  builder->createWorld();
   builder->applyWorldTransformation(rotationOverY(PI / 2.f));
   SceneElementPtr outerWorld = builder->getProduct();
 
-  builder->createWorld(light);
+  builder->createWorld();
   builder->applyWorldTransformation(scale(2.f, 2.f, 2.f));
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(translation(5.f, 0.f, 0.f));
@@ -119,12 +124,13 @@ TEST_F(WorldTest, convertingPointFromWorldToObjectSpace) {
 
 TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
   builder = make_unique<WorldBuilder>();
+  builder->addLight(light);
 
-  builder->createWorld(light);
+  builder->createWorld();
   builder->applyWorldTransformation(rotationOverY(PI / 2.f));
   SceneElementPtr outerWorld = builder->getProduct();
 
-  builder->createWorld(light);
+  builder->createWorld();
   builder->applyWorldTransformation(scale(1.f, 2.f, 3.f));
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(translation(5.f, 0.f, 0.f));
@@ -146,12 +152,13 @@ TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
 
 TEST_F(WorldTest, findingNormalOfChildObjectOfTransformedWorld) {
   builder = make_unique<WorldBuilder>();
+  builder->addLight(light);
 
-  builder->createWorld(light);
+  builder->createWorld();
   builder->applyWorldTransformation(rotationOverY(PI / 2.f));
   SceneElementPtr outerWorld = builder->getProduct();
 
-  builder->createWorld(light);
+  builder->createWorld();
   builder->applyWorldTransformation(scale(1.f, 2.f, 3.f));
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(translation(5.f, 0.f, 0.f));

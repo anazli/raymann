@@ -129,7 +129,8 @@ TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));
   MaterialProperties prop;
   BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->createWorld(light);
+  builder->addLight(light);
+  builder->createWorld();
   builder->processSceneElement(new Sphere);
   prop.setProperty(Props::COLOR, Vec3f(0.8f, 1.f, 0.6f))
       .setProperty(Props::DIFFUSE, 0.7f)
