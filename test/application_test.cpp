@@ -36,3 +36,31 @@ TEST_F(ApplicationTest, parseValidInput) {
   comparePoints(reader.triangleCollection()[1].point(2),
                 Point3f(reader.vertexCollection()[3]));
 }
+
+TEST_F(ApplicationTest, parseValidPolygonInput) {
+  reader.openFile("valid_input_polygon.txt");
+  reader.parseInput();
+  ASSERT_TRUE(reader.vertexCollection().size() == 5);
+
+  ASSERT_TRUE(reader.triangleCollection().size() == 3);
+  comparePoints(reader.triangleCollection()[0].point(0),
+                Point3f(reader.vertexCollection()[0]));
+  comparePoints(reader.triangleCollection()[0].point(1),
+                Point3f(reader.vertexCollection()[1]));
+  comparePoints(reader.triangleCollection()[0].point(2),
+                Point3f(reader.vertexCollection()[2]));
+
+  comparePoints(reader.triangleCollection()[1].point(0),
+                Point3f(reader.vertexCollection()[0]));
+  comparePoints(reader.triangleCollection()[1].point(1),
+                Point3f(reader.vertexCollection()[2]));
+  comparePoints(reader.triangleCollection()[1].point(2),
+                Point3f(reader.vertexCollection()[3]));
+
+  comparePoints(reader.triangleCollection()[2].point(0),
+                Point3f(reader.vertexCollection()[0]));
+  comparePoints(reader.triangleCollection()[2].point(1),
+                Point3f(reader.vertexCollection()[3]));
+  comparePoints(reader.triangleCollection()[2].point(2),
+                Point3f(reader.vertexCollection()[4]));
+}

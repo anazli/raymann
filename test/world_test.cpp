@@ -76,11 +76,17 @@ TEST_F(WorldTest, intersectingTransformedWorld) {
   builder->createWorld(light);
 
   builder->processSceneElement(new Sphere);
-  builder->applyTransformation(translation(5.f, 0.f, 0.f));
+  builder->applyTransformation(scale(2.f, 2.f, 2.f));
   builder->addElement();
-  builder->applyWorldTransformation(scale(2.f, 2.f, 2.f));
+  builder->applyWorldTransformation(translation(5.f, 0.f, 0.f));
 
   SceneElementPtr world = builder->getProduct();
+  std::cout << (*world->getChildren().begin())->boundingBox().minPoint()
+            << std::endl;
+  std::cout << (*world->getChildren().begin())->boundingBox().maxPoint()
+            << std::endl;
+  std::cout << world->boundingBox().minPoint() << std::endl;
+  std::cout << world->boundingBox().maxPoint() << std::endl;
   EXPECT_TRUE(world->intersect(r, rec));
   EXPECT_EQ(rec.count, 2);
 }

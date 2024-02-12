@@ -17,6 +17,10 @@ bool isTriangleEntry(const std::string_view& line) {
   return !line.empty() && line[0] == 'f' && line.length() == 7;
 }
 
+bool isPolygonEntry(const std::string_view& line) {
+  return !line.empty() && line[0] == 'f' && line.length() == 11;
+}
+
 class WavefrontReader {
  public:
   WavefrontReader(const std::string_view& file = "") { openFile(file); }
@@ -29,6 +33,8 @@ class WavefrontReader {
           parseVertexEntry(line);
         } else if (isTriangleEntry(line)) {
           parseTriangleEntry(line);
+        } else if (isPolygonEntry(line)) {
+          parsePolygonEntry(line);
         }
       }
     }
@@ -73,6 +79,35 @@ class WavefrontReader {
         APP_ASSERT(false,
                    "Error while parsing the line above in wavefront file!");
       }
+    }
+  }
+
+  void parsePolygonEntry(const std::string_view& line) {
+    std::istringstream ss(line.data());
+    std::string v, i, j, k, f, g;
+    if (ss >> v >> i >> j >> k >> f >> g) {
+      try {
+        std::vector<Vec3f> polygonVertices;
+        polygonVertices.push_back(m_vertices[stol(i) - 1]);
+        polygonVertices.push_back(m_vertices[stol(j) - 1]);
+        polygonVertices.push_back(m_vertices[stol(k) - 1]);
+        polygonVertices.push_back(m_vertices[stol(f) - 1]);
+        polygonVertices.push_back(m_vertices[stol(g) - 1]);
+        triangulatePolygon(polygonVertices);
+      } catch (...) {
+        APP_MSG(line.data());
+        APP_ASSERT(false,
+                   "Error while parsing the line above in wavefront file!");
+      }
+    }
+  }
+
+  void triangulatePolygon(std::vector<Vec3f> vertices) {
+    for (int i = 1; i < vertices.size() - 1; ++i) {
+      Point3f p1 = Point3f(vertices[0]);
+      Point3f p2 = Point3f(vertices[i]);
+      Point3f p3 = Point3f(vertices[i + 1]);
+      m_triangles.push_back(Triangle({p1, p2, p3}));
     }
   }
 
