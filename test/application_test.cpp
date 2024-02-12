@@ -1,4 +1,5 @@
 #include "application/wavefront_reader.h"
+#include "composite/iterator.h"
 #include "gtesting.h"
 
 class ApplicationTest : public testing::RTest {
@@ -63,4 +64,40 @@ TEST_F(ApplicationTest, parseValidPolygonInput) {
                 Point3f(reader.vertexCollection()[3]));
   comparePoints(reader.triangleCollection()[2].point(2),
                 Point3f(reader.vertexCollection()[4]));
+}
+
+TEST_F(ApplicationTest, parseFileWithGroups) {
+  reader.openFile("valid_input_groups.txt");
+  reader.addBuilder(std::make_unique<WorldBuilder>());
+  reader.parseInput();
+  /*SceneElementPtr world = reader.getStructure();
+  ASSERT_TRUE(world->getChildren().size() == 2);
+  WorldIterator it(world->getChildren());
+  if (it.first()) {
+    SceneElementRawPtr w1 = it.currentElement();
+    it.advance();
+    SceneElementRawPtr w2 = it.currentElement();
+
+    WorldIterator it1(w1->getChildren());
+    if (it1.first()) {
+      SceneElementRawPtr tr1 = it1.currentElement();
+      Triangle *t1 = dynamic_cast<Triangle *>(tr1);
+      if (t1) {
+        comparePoints(t1->point(0), Point3f(reader.vertexCollection()[0]));
+        comparePoints(t1->point(1), Point3f(reader.vertexCollection()[1]));
+        comparePoints(t1->point(2), Point3f(reader.vertexCollection()[2]));
+      }
+    }
+
+    WorldIterator it2(w1->getChildren());
+    if (it2.first()) {
+      SceneElementRawPtr tr2 = it1.currentElement();
+      Triangle *t2 = dynamic_cast<Triangle *>(tr2);
+      if (t2) {
+        comparePoints(t2->point(0), Point3f(reader.vertexCollection()[0]));
+        comparePoints(t2->point(1), Point3f(reader.vertexCollection()[2]));
+        comparePoints(t2->point(2), Point3f(reader.vertexCollection()[3]));
+      }
+    }
+  }*/
 }

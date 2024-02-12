@@ -124,9 +124,9 @@ void WavefrontReader::parsePolygonEntry(const string_view &line) {
 }
 
 void WavefrontReader::parseGroupEntry(const std::string_view &line) {
-  SceneElementPtr currentWorld = m_builder->getProduct();
-  if (currentWorld) {  // add parsed world so far
-    m_finalProduct->add(currentWorld);
+  if (m_builder->getProduct() &&
+      m_builder->getProduct().get() != m_finalProduct.get()) {
+    m_finalProduct->add(m_builder->getProduct());
   }
   m_builder->createWorld();
 }
