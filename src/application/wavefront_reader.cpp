@@ -95,7 +95,11 @@ void WavefrontReader::parseTriangleEntry(const string_view &line) {
       if (m_builder) {
         SceneElementPtr tr = std::make_shared<Triangle>(
             std::initializer_list<Point3f>{p1, p2, p3});
-        m_currentGroup->add(tr);
+        if (m_currentGroup) {  // if we don't parse any g entry
+          m_currentGroup->add(tr);
+        } else {
+          m_finalProduct->add(tr);
+        }
       } else {
         m_triangles.push_back(Triangle({p1, p2, p3}));
       }
@@ -141,7 +145,11 @@ void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {
     if (m_builder) {
       SceneElementPtr tr = std::make_shared<Triangle>(
           std::initializer_list<Point3f>{p1, p2, p3});
-      m_currentGroup->add(tr);
+      if (m_currentGroup) {
+        m_currentGroup->add(tr);
+      } else {
+        m_finalProduct->add(tr);
+      }
     } else {
       m_triangles.push_back(Triangle({p1, p2, p3}));
     }
