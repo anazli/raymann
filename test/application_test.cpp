@@ -68,9 +68,8 @@ TEST_F(ApplicationTest, parseValidPolygonInput) {
 
 TEST_F(ApplicationTest, parseFileWithGroups) {
   reader.openFile("valid_input_groups.txt");
-  reader.addBuilder(std::make_unique<WorldBuilder>());
   reader.parseInput();
-  /*SceneElementPtr world = reader.getStructure();
+  SceneElementPtr world = reader.getStructure();
   ASSERT_TRUE(world->getChildren().size() == 2);
   WorldIterator it(world->getChildren());
   if (it.first()) {
@@ -99,5 +98,5 @@ TEST_F(ApplicationTest, parseFileWithGroups) {
         comparePoints(t2->point(2), Point3f(reader.vertexCollection()[3]));
       }
     }
-  }*/
+  }
 }

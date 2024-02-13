@@ -14,7 +14,7 @@ class WavefrontReader {
 
   void parseInput();
   void openFile(const std::string_view& file);
-  void addBuilder(BuilderPtr builder);
+  void addLightForModel(const PointLight& light);
 
   std::vector<Vec3f> vertexCollection() const;
   std::vector<Triangle> triangleCollection() const;
@@ -32,4 +32,6 @@ class WavefrontReader {
   std::vector<Triangle> m_triangles;
   BuilderPtr m_builder;
   SceneElementPtr m_finalProduct;
+  SceneElementPtr m_currentGroup;
+  PointLight m_light;
 };

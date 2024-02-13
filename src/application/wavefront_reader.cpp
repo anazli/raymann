@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "application/error.h"
+#include "composite/world.h"
 
 using std::isspace;
 using std::istringstream;
@@ -27,7 +28,10 @@ bool isGroupEntry(const string_view &line) {
   return !line.empty() && line[0] == 'g' && isspace(line[1]);
 }
 
-WavefrontReader::WavefrontReader(const string_view &file) { openFile(file); }
+WavefrontReader::WavefrontReader(const string_view &file) {
+  openFile(file);
+  m_finalProduct = std::make_shared<World>();
+}
 
 void WavefrontReader::parseInput() {
   if (m_inputStream.is_open()) {
@@ -53,10 +57,9 @@ void WavefrontReader::openFile(const string_view &file) {
   }
 }
 
-void WavefrontReader::addBuilder(BuilderPtr builder) {
-  m_builder = std::move(builder);
-  m_builder->createWorld();
-  m_finalProduct = m_builder->getProduct();
+void WavefrontReader::addLightForModel(const PointLight &light) {
+  m_light = light;
+  m_finalProduct->setLight(light);
 }
 
 vector<Vec3f> WavefrontReader::vertexCollection() const { return m_vertices; }
@@ -90,8 +93,9 @@ void WavefrontReader::parseTriangleEntry(const string_view &line) {
       Point3f p2 = Point3f(m_vertices[stol(j) - 1]);
       Point3f p3 = Point3f(m_vertices[stol(k) - 1]);
       if (m_builder) {
-        m_builder->processSceneElement(new Triangle({p1, p2, p3}));
-        m_builder->addElement();
+        SceneElementPtr tr = std::make_shared<Triangle>(
+            std::initializer_list<Point3f>{p1, p2, p3});
+        m_currentGroup->add(tr);
       } else {
         m_triangles.push_back(Triangle({p1, p2, p3}));
       }
@@ -124,11 +128,9 @@ void WavefrontReader::parsePolygonEntry(const string_view &line) {
 }
 
 void WavefrontReader::parseGroupEntry(const std::string_view &line) {
-  if (m_builder->getProduct() &&
-      m_builder->getProduct().get() != m_finalProduct.get()) {
-    m_finalProduct->add(m_builder->getProduct());
-  }
-  m_builder->createWorld();
+  m_currentGroup = std::make_shared<World>();
+  m_currentGroup->setLight(m_light);
+  m_finalProduct->add(m_currentGroup);
 }
 
 void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {
@@ -137,8 +139,9 @@ void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {
     Point3f p2 = Point3f(vertices[i]);
     Point3f p3 = Point3f(vertices[i + 1]);
     if (m_builder) {
-      m_builder->processSceneElement(new Triangle({p1, p2, p3}));
-      m_builder->addElement();
+      SceneElementPtr tr = std::make_shared<Triangle>(
+          std::initializer_list<Point3f>{p1, p2, p3});
+      m_currentGroup->add(tr);
     } else {
       m_triangles.push_back(Triangle({p1, p2, p3}));
     }
