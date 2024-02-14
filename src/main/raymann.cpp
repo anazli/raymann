@@ -16,14 +16,16 @@
 using namespace std;
 
 int main() {
-  auto light = PointLight(Point3f(0.f, 4.9f, -2.f), Vec3f(1.0f, 1.0f, 1.0f));
+  auto light = PointLight(Point3f(0.f, 5.f, -4.f), Vec3f(0.8f, 0.8f, 0.8f));
 
   //----------------------Teapot----------------
 
   WavefrontReader reader("teapot.obj");
   reader.addLightForModel(light);
-  reader.addMaterial(make_unique<ConstantTexture>(Vec3f(1.0f, 0.3f, 0.2f)),
-                     MaterialProperties{});
+  auto prop = MaterialProperties{};
+  prop.setProperty(Props::SPECULAR, 0.4f).setProperty(Props::SHININESS, 5.f);
+  reader.addMaterial(make_unique<ConstantTexture>(Vec3f(0.f, 0.f, 0.9515f)),
+                     prop);
   reader.parseInput();
   SceneElementPtr world = reader.getStructureBVHierarchy();
 
@@ -31,9 +33,9 @@ int main() {
   auto canvas = Canvas(800, 600);
   canvas.setFileName("scenes/scene.ppm");
   BaseCameraPtr camera =
-      make_unique<Camera>(canvas.width(), canvas.height(), 1.112f);
+      make_unique<Camera>(canvas.width(), canvas.height(), 1.212f);
   camera->computePixelSize();
-  auto from = Point3f(0.f, 1.f, -10.f);
+  auto from = Point3f(0.f, 4.f, -8.f);
   auto to = Point3f(0.f, 0.0f, -1.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
