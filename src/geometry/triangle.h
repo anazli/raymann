@@ -9,6 +9,10 @@ class Triangle : public SceneElement {
     m_edgeVec.push_back(m_points[1] - m_points[0]);
     m_edgeVec.push_back(m_points[2] - m_points[0]);
     m_normalVec = cross(m_edgeVec[1], m_edgeVec[0]).normalize();
+
+    m_bBox.addPoint(m_points[0]);
+    m_bBox.addPoint(m_points[1]);
+    m_bBox.addPoint(m_points[2]);
   }
   ~Triangle() override = default;
   Point3f point(int idx) const {
