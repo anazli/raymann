@@ -6,6 +6,7 @@
 #include "composite/builder.h"
 #include "composite/scene_element.h"
 #include "geometry/triangle.h"
+#include "materials/material.h"
 #include "tools/vec3.h"
 
 class WavefrontReader {
@@ -15,10 +16,12 @@ class WavefrontReader {
   void parseInput();
   void openFile(const std::string_view& file);
   void addLightForModel(const PointLight& light);
+  void addMaterial(TexturePtr tex, const MaterialProperties& prop);
 
   std::vector<Vec3f> vertexCollection() const;
   std::vector<Triangle> triangleCollection() const;
   SceneElementPtr getStructure() const;
+  SceneElementPtr getStructureBVHierarchy() const;
 
  private:
   void parseVertexEntry(const std::string_view& line);
@@ -30,8 +33,8 @@ class WavefrontReader {
   std::ifstream m_inputStream;
   std::vector<Vec3f> m_vertices;
   std::vector<Triangle> m_triangles;
-  BuilderPtr m_builder;
   SceneElementPtr m_finalProduct;
   SceneElementPtr m_currentGroup;
   PointLight m_light;
+  BaseMaterialPtr m_material;
 };

@@ -88,9 +88,9 @@ TEST_F(ApplicationTest, parseFileWithGroups) {
       }
     }
 
-    WorldIterator it2(w1->getChildren());
+    WorldIterator it2(w2->getChildren());
     if (it2.first()) {
-      SceneElementRawPtr tr2 = it1.currentElement();
+      SceneElementRawPtr tr2 = it2.currentElement();
       Triangle *t2 = dynamic_cast<Triangle *>(tr2);
       if (t2) {
         comparePoints(t2->point(0), Point3f(reader.vertexCollection()[0]));

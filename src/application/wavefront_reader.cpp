@@ -1,8 +1,10 @@
 #include "application/wavefront_reader.h"
 
 #include <algorithm>
+#include <iterator>
 #include <sstream>
 
+#include "acceleration/bvh.h"
 #include "application/error.h"
 #include "composite/world.h"
 
@@ -17,11 +19,17 @@ bool isVertexEntry(const string_view &line) {
 }
 
 bool isTriangleEntry(const string_view &line) {
-  return !line.empty() && line[0] == 'f' && line.length() == 7;
+  std::istringstream iss{line.data()};
+  int n = std::distance(std::istream_iterator<std::string>{iss},
+                        std::istream_iterator<std::string>{});
+  return !line.empty() && line[0] == 'f' && n == 4;
 }
 
 bool isPolygonEntry(const string_view &line) {
-  return !line.empty() && line[0] == 'f' && line.length() == 11;
+  std::istringstream iss{line.data()};
+  int n = std::distance(std::istream_iterator<std::string>{iss},
+                        std::istream_iterator<std::string>{});
+  return !line.empty() && line[0] == 'f' && n == 6;
 }
 
 bool isGroupEntry(const string_view &line) {
@@ -62,6 +70,11 @@ void WavefrontReader::addLightForModel(const PointLight &light) {
   m_finalProduct->setLight(light);
 }
 
+void WavefrontReader::addMaterial(TexturePtr tex,
+                                  const MaterialProperties &prop) {
+  m_material = std::make_shared<Material>(std::move(tex), prop);
+}
+
 vector<Vec3f> WavefrontReader::vertexCollection() const { return m_vertices; }
 
 vector<Triangle> WavefrontReader::triangleCollection() const {
@@ -69,6 +82,12 @@ vector<Triangle> WavefrontReader::triangleCollection() const {
 }
 
 SceneElementPtr WavefrontReader::getStructure() const { return m_finalProduct; }
+
+SceneElementPtr WavefrontReader::getStructureBVHierarchy() const {
+  BVHierarchy bvh;
+  bvh.divideWorld(m_finalProduct);
+  return m_finalProduct;
+}
 
 void WavefrontReader::parseVertexEntry(const string_view &line) {
   istringstream ss(line.data());
@@ -92,17 +111,15 @@ void WavefrontReader::parseTriangleEntry(const string_view &line) {
       Point3f p1 = Point3f(m_vertices[stol(i) - 1]);
       Point3f p2 = Point3f(m_vertices[stol(j) - 1]);
       Point3f p3 = Point3f(m_vertices[stol(k) - 1]);
-      if (m_builder) {
-        SceneElementPtr tr = std::make_shared<Triangle>(
-            std::initializer_list<Point3f>{p1, p2, p3});
-        if (m_currentGroup) {  // if we don't parse any g entry
-          m_currentGroup->add(tr);
-        } else {
-          m_finalProduct->add(tr);
-        }
+      SceneElementPtr tr = std::make_shared<Triangle>(
+          std::initializer_list<Point3f>{p1, p2, p3});
+      tr->setMaterial(m_material);
+      if (m_currentGroup) {  // if we don't parse any g entry
+        m_currentGroup->add(tr);
       } else {
-        m_triangles.push_back(Triangle({p1, p2, p3}));
+        m_finalProduct->add(tr);
       }
+      m_triangles.push_back(Triangle({p1, p2, p3}));
     } catch (...) {
       APP_MSG(line.data());
       APP_ASSERT(false,
@@ -142,16 +159,14 @@ void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {
     Point3f p1 = Point3f(vertices[0]);
     Point3f p2 = Point3f(vertices[i]);
     Point3f p3 = Point3f(vertices[i + 1]);
-    if (m_builder) {
-      SceneElementPtr tr = std::make_shared<Triangle>(
-          std::initializer_list<Point3f>{p1, p2, p3});
-      if (m_currentGroup) {
-        m_currentGroup->add(tr);
-      } else {
-        m_finalProduct->add(tr);
-      }
+    SceneElementPtr tr =
+        std::make_shared<Triangle>(std::initializer_list<Point3f>{p1, p2, p3});
+    tr->setMaterial(m_material);
+    if (m_currentGroup) {
+      m_currentGroup->add(tr);
     } else {
-      m_triangles.push_back(Triangle({p1, p2, p3}));
+      m_finalProduct->add(tr);
     }
+    m_triangles.push_back(Triangle({p1, p2, p3}));
   }
 }
