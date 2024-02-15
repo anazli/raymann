@@ -19,12 +19,14 @@ class WavefrontReader {
   void addMaterial(TexturePtr tex, const MaterialProperties& prop);
 
   std::vector<Vec3f> vertexCollection() const;
+  std::vector<Vec3f> vertexNormalCollection() const;
   std::vector<Triangle> triangleCollection() const;
   SceneElementPtr getStructure() const;
   SceneElementPtr getStructureBVHierarchy() const;
 
  private:
   void parseVertexEntry(const std::string_view& line);
+  void parseVertexNormalEntry(const std::string_view& line);
   void parseTriangleEntry(const std::string_view& line);
   void parsePolygonEntry(const std::string_view& line);
   void parseGroupEntry(const std::string_view& line);
@@ -32,6 +34,7 @@ class WavefrontReader {
 
   std::ifstream m_inputStream;
   std::vector<Vec3f> m_vertices;
+  std::vector<Vec3f> m_verticesNormals;
   std::vector<Triangle> m_triangles;
   SceneElementPtr m_finalProduct;
   SceneElementPtr m_currentGroup;

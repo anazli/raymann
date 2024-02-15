@@ -51,6 +51,17 @@ class TriangleTest : public testing::RTest {
   IntersectionRecord rec;
 };
 
+class SmoothTriangleTest : public testing::RTest {
+ public:
+  Point3f p1 = Point3f(0.f, 1.f, 0.f);
+  Point3f p2 = Point3f(-1.f, 0.f, 0.f);
+  Point3f p3 = Point3f(1.f, 0.f, 0.f);
+  Vec3f v1 = Vec3f(0.f, 1.f, 0.f);
+  Vec3f v2 = Vec3f(-1.f, 0.f, 0.f);
+  Vec3f v3 = Vec3f(1.f, 0.f, 0.f);
+  SmoothTriangle t = SmoothTriangle(p1, p2, p3, v1, v2, v3);
+};
+
 /*==================================================================
  *		Cone Tests
  *=================================================================*/
@@ -564,4 +575,21 @@ TEST_F(TriangleTest, rayStrikesTriangle) {
   ASSERT_TRUE(t.intersect(r, rec));
   ASSERT_TRUE(rec.count == 1);
   ASSERT_TRUE(rec.t_min() == 2);
+}
+
+TEST_F(SmoothTriangleTest, propertiesAreCorrect) {
+  comparePoints(t.points(0), Point3f(0.f, 1.f, 0.f));
+  comparePoints(t.points(1), Point3f(-1.f, 0.f, 0.f));
+  comparePoints(t.points(2), Point3f(1.f, 0.f, 0.f));
+  compareVectors(t.normals(0), Vec3f(0.f, 1.f, 0.f));
+  compareVectors(t.normals(1), Vec3f(-1.f, 0.f, 0.f));
+  compareVectors(t.normals(2), Vec3f(1.f, 0.f, 0.f));
+}
+
+TEST_F(SmoothTriangleTest, normalInterpolation) {
+  auto r = Ray(Point3f(-0.2f, 0.3f, -2.f), Vec3f(0.f, 0.f, 1.f));
+  IntersectionRecord rec;
+  t.intersect(r, rec);
+  auto v = t.normal(Point3f());
+  compareVectorsApprox(v, Vec3f(-0.2f, 0.3f, 0.f), EPS);
 }

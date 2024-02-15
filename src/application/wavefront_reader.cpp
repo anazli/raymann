@@ -18,6 +18,10 @@ bool isVertexEntry(const string_view &line) {
   return !line.empty() && line[0] == 'v' && isspace(line[1]);
 }
 
+bool isVertexNormalEntry(const string_view &line) {
+  return !line.empty() && line[0] == 'v' && line[1] == 'n' && isspace(line[2]);
+}
+
 bool isTriangleEntry(const string_view &line) {
   std::istringstream iss{line.data()};
   int n = std::distance(std::istream_iterator<std::string>{iss},
@@ -47,6 +51,8 @@ void WavefrontReader::parseInput() {
     while (getline(m_inputStream, line)) {
       if (isVertexEntry(line)) {
         parseVertexEntry(line);
+      } else if (isVertexNormalEntry(line)) {
+        parseVertexNormalEntry(line);
       } else if (isTriangleEntry(line)) {
         parseTriangleEntry(line);
       } else if (isPolygonEntry(line)) {
@@ -77,6 +83,10 @@ void WavefrontReader::addMaterial(TexturePtr tex,
 
 vector<Vec3f> WavefrontReader::vertexCollection() const { return m_vertices; }
 
+std::vector<Vec3f> WavefrontReader::vertexNormalCollection() const {
+  return m_verticesNormals;
+}
+
 vector<Triangle> WavefrontReader::triangleCollection() const {
   return m_triangles;
 }
@@ -95,6 +105,20 @@ void WavefrontReader::parseVertexEntry(const string_view &line) {
   if (ss >> v >> x >> y >> z) {
     try {
       m_vertices.push_back(Vec3f(stof(x), stof(y), stof(z)));
+    } catch (...) {
+      APP_MSG(line.data());
+      APP_ASSERT(false,
+                 "Error while parsing the line above in wavefront file!");
+    }
+  }
+}
+
+void WavefrontReader::parseVertexNormalEntry(const std::string_view &line) {
+  istringstream ss(line.data());
+  string v, x, y, z;
+  if (ss >> v >> x >> y >> z) {
+    try {
+      m_verticesNormals.push_back(Vec3f(stof(x), stof(y), stof(z)));
     } catch (...) {
       APP_MSG(line.data());
       APP_ASSERT(false,
