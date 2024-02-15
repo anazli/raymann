@@ -40,6 +40,20 @@ bool isGroupEntry(const string_view &line) {
   return !line.empty() && line[0] == 'g' && isspace(line[1]);
 }
 
+void handleStringsWithSlash(string &str) {
+  size_t first(0);
+  size_t last(0);
+  while (first != std::string::npos && last != std::string::npos) {
+    first = str.find('/');
+    if (first != std::string::npos) {
+      last = str.find('/', first + 1);
+      if (last != std::string::npos) {
+        str.replace(first, last - first + 1, last - first, ' ');
+      }
+    }
+  }
+}
+
 WavefrontReader::WavefrontReader(const string_view &file) {
   openFile(file);
   m_finalProduct = std::make_shared<World>();
@@ -128,22 +142,56 @@ void WavefrontReader::parseVertexNormalEntry(const std::string_view &line) {
 }
 
 void WavefrontReader::parseTriangleEntry(const string_view &line) {
-  istringstream ss(line.data());
-  string v, i, j, k;
-  if (ss >> v >> i >> j >> k) {
-    try {
-      Point3f p1 = Point3f(m_vertices[stol(i) - 1]);
-      Point3f p2 = Point3f(m_vertices[stol(j) - 1]);
-      Point3f p3 = Point3f(m_vertices[stol(k) - 1]);
-      SceneElementPtr tr = std::make_shared<Triangle>(
-          std::initializer_list<Point3f>{p1, p2, p3});
-      tr->setMaterial(m_material);
-      if (m_currentGroup) {  // if we don't parse any g entry
-        m_currentGroup->add(tr);
-      } else {
-        m_finalProduct->add(tr);
+  if (m_verticesNormals.empty()) {
+    if (std::count_if(line.begin(), line.end(),
+                      [](char c) { return isspace(c); }) == 3) {
+      istringstream ss(line.data());
+      string v, i, j, k;
+      if (ss >> v >> i >> j >> k) {
+        try {
+          auto p1 = Point3f(m_vertices[stol(i) - 1]);
+          auto p2 = Point3f(m_vertices[stol(j) - 1]);
+          auto p3 = Point3f(m_vertices[stol(k) - 1]);
+          SceneElementPtr tr = std::make_shared<Triangle>(
+              std::initializer_list<Point3f>{p1, p2, p3});
+          tr->setMaterial(m_material);
+          if (m_currentGroup) {  // if we don't parse any g entry
+            m_currentGroup->add(tr);
+          } else {
+            m_finalProduct->add(tr);
+          }
+          m_triangles.push_back(Triangle({p1, p2, p3}));
+        } catch (...) {
+          APP_MSG(line.data());
+          APP_ASSERT(false,
+                     "Error while parsing the line above in wavefront file!");
+        }
       }
-      m_triangles.push_back(Triangle({p1, p2, p3}));
+    }
+  } else {
+    try {
+      string str(line);
+      handleStringsWithSlash(str);
+      istringstream ss(str);
+      string v, i, j, k, h, g, o;
+      if (ss >> v >> i >> j >> k >> h >> g >> o) {
+        auto p1 = Point3f(m_vertices[stol(i) - 1]);
+        auto p2 = Point3f(m_vertices[stol(k) - 1]);
+        auto p3 = Point3f(m_vertices[stol(g) - 1]);
+
+        auto n1 = Vec3f(m_verticesNormals[stol(j) - 1]);
+        auto n2 = Vec3f(m_verticesNormals[stol(h) - 1]);
+        auto n3 = Vec3f(m_verticesNormals[stol(o) - 1]);
+
+        SceneElementPtr tr =
+            std::make_shared<SmoothTriangle>(p1, p2, p3, n1, n2, n3);
+        tr->setMaterial(m_material);
+        if (m_currentGroup) {  // if we don't parse any g entry
+          m_currentGroup->add(tr);
+        } else {
+          m_finalProduct->add(tr);
+        }
+      }
     } catch (...) {
       APP_MSG(line.data());
       APP_ASSERT(false,
