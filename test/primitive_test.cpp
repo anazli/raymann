@@ -537,7 +537,7 @@ TEST_F(TriangleTest, constructingTriangle) {
   comparePoints(t.point(0), p1);
   comparePoints(t.point(1), p2);
   comparePoints(t.point(2), p3);
-  compareVectors(t.normal(Point3f()), Vec3f(0.f, 0.f, -1.f));
+  compareVectors(t.normal(Point3f()), Vec3f(0.f, 0.f, 1.f));
   compareVectors(t.edgeVector(0), Vec3f(-1.f, -1.f, 0.f));
   compareVectors(t.edgeVector(1), Vec3f(1.f, -1.f, 0.f));
 }
