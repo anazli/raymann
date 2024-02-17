@@ -8,13 +8,13 @@ class ApplicationTest : public testing::RTest {
 };
 
 TEST_F(ApplicationTest, parseInvalidInput) {
-  reader.openFile("invalid_input.txt");
+  reader.setFileName("invalid_input.txt");
   reader.parseInput();
   EXPECT_TRUE(reader.vertexCollection().size() == 0);
 }
 
 TEST_F(ApplicationTest, parseValidInput) {
-  reader.openFile("valid_input.txt");
+  reader.setFileName("valid_input.txt");
   reader.parseInput();
   ASSERT_TRUE(reader.vertexCollection().size() == 4);
   compareVectors(reader.vertexCollection()[0], Vec3f(1.f, 2.f, 3.f));
@@ -39,7 +39,7 @@ TEST_F(ApplicationTest, parseValidInput) {
 }
 
 TEST_F(ApplicationTest, parseValidInputWithVertexNormals) {
-  reader.openFile("valid_input_vn.txt");
+  reader.setFileName("valid_input_vn.txt");
   reader.parseInput();
   ASSERT_TRUE(reader.vertexNormalCollection().size() == 3);
   compareVectors(reader.vertexNormalCollection()[0], Vec3f(0.f, 0.f, 1.f));
@@ -49,7 +49,7 @@ TEST_F(ApplicationTest, parseValidInputWithVertexNormals) {
 }
 
 TEST_F(ApplicationTest, parseValidPolygonInput) {
-  reader.openFile("valid_input_polygon.txt");
+  reader.setFileName("valid_input_polygon.txt");
   reader.parseInput();
   ASSERT_TRUE(reader.vertexCollection().size() == 5);
 
@@ -77,7 +77,7 @@ TEST_F(ApplicationTest, parseValidPolygonInput) {
 }
 
 TEST_F(ApplicationTest, parseFileWithGroups) {
-  reader.openFile("valid_input_groups.txt");
+  reader.setFileName("valid_input_groups.txt");
   reader.parseInput();
   SceneElementPtr world = reader.getStructure();
   ASSERT_TRUE(world->getChildren().size() == 2);
@@ -112,7 +112,7 @@ TEST_F(ApplicationTest, parseFileWithGroups) {
 }
 
 TEST_F(ApplicationTest, parseFileWithSmoothTriangles) {
-  reader.openFile("valid_input_sm_triangle.txt");
+  reader.setFileName("valid_input_sm_triangle.txt");
   reader.parseInput();
   SceneElementPtr world = reader.getStructure();
   ASSERT_TRUE(world->getChildren().size() == 2);

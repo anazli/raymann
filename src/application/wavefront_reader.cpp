@@ -79,11 +79,8 @@ void WavefrontReader::parseInput() {
   m_inputStream.close();
 }
 
-void WavefrontReader::openFile(const std::string_view &str) {
-  m_file = str;
-  if (!m_file.empty()) {
-    m_inputStream.open(m_file.data());
-  }
+void WavefrontReader::setFileName(const std::string_view &file) {
+  m_file = file;
 }
 
 void WavefrontReader::normalizeVertices() {
@@ -148,6 +145,12 @@ SceneElementPtr WavefrontReader::getStructureBVHierarchy() const {
   BVHierarchy bvh;
   bvh.divideWorld(m_finalProduct);
   return m_finalProduct;
+}
+
+void WavefrontReader::openFile() {
+  if (!m_file.empty()) {
+    m_inputStream.open(m_file.data());
+  }
 }
 
 void WavefrontReader::parseVertexEntry(const string_view &line,
