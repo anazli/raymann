@@ -110,7 +110,7 @@ void WavefrontReader::normalizeVertices() {
     maxZ = std::max(maxZ, elem.z());
   }
   float xrange = maxX - minX;
-  float yrange = maxZ - minY;
+  float yrange = maxY - minY;
   float zrange = maxZ - minZ;
   for (Vec3f &elem : m_verticesNormalized) {
     elem.setX((elem.x() - minX) / xrange * 2.f - 1.f);
