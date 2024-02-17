@@ -14,7 +14,8 @@ class WavefrontReader {
   WavefrontReader(const std::string_view& file = "");
 
   void parseInput();
-  void openFile(const std::string_view& file);
+  void openFile(const std::string_view& str = "");
+  void normalizeVertices();
   void addLightForModel(const PointLight& light);
   void addMaterial(TexturePtr tex, const MaterialProperties& prop);
 
@@ -25,7 +26,7 @@ class WavefrontReader {
   SceneElementPtr getStructureBVHierarchy() const;
 
  private:
-  void parseVertexEntry(const std::string_view& line);
+  void parseVertexEntry(const std::string_view& line, std::vector<Vec3f>& vec);
   void parseVertexNormalEntry(const std::string_view& line);
   void parseTriangleEntry(const std::string_view& line);
   void parsePolygonEntry(const std::string_view& line);
@@ -34,10 +35,12 @@ class WavefrontReader {
 
   std::ifstream m_inputStream;
   std::vector<Vec3f> m_vertices;
+  std::vector<Vec3f> m_verticesNormalized;
   std::vector<Vec3f> m_verticesNormals;
   std::vector<Triangle> m_triangles;
   SceneElementPtr m_finalProduct;
   SceneElementPtr m_currentGroup;
   PointLight m_light;
   BaseMaterialPtr m_material;
+  std::string_view m_file;
 };

@@ -54,17 +54,17 @@ void handleStringsWithSlash(string &str) {
   }
 }
 
-WavefrontReader::WavefrontReader(const string_view &file) {
-  openFile(file);
+WavefrontReader::WavefrontReader(const string_view &file) : m_file(file) {
   m_finalProduct = std::make_shared<World>();
 }
 
 void WavefrontReader::parseInput() {
+  openFile();
   if (m_inputStream.is_open()) {
     string line;
     while (getline(m_inputStream, line)) {
-      if (isVertexEntry(line)) {
-        parseVertexEntry(line);
+      if (isVertexEntry(line) && m_verticesNormalized.empty()) {
+        parseVertexEntry(line, m_vertices);
       } else if (isVertexNormalEntry(line)) {
         parseVertexNormalEntry(line);
       } else if (isTriangleEntry(line)) {
@@ -79,9 +79,46 @@ void WavefrontReader::parseInput() {
   m_inputStream.close();
 }
 
-void WavefrontReader::openFile(const string_view &file) {
-  if (!file.empty()) {
-    m_inputStream.open(file.data());
+void WavefrontReader::openFile(const std::string_view &str) {
+  m_file = str;
+  if (!m_file.empty()) {
+    m_inputStream.open(m_file.data());
+  }
+}
+
+void WavefrontReader::normalizeVertices() {
+  openFile();
+  if (m_inputStream.is_open()) {
+    string line;
+    while (getline(m_inputStream, line)) {
+      if (isVertexEntry(line)) {
+        parseVertexEntry(line, m_verticesNormalized);
+      }
+    }
+  }
+  m_inputStream.close();
+
+  float minX = limit::max();
+  float maxX = -limit::max();
+  float minY = limit::max();
+  float maxY = -limit::max();
+  float minZ = limit::max();
+  float maxZ = -limit::max();
+  for (const Vec3f &elem : m_verticesNormalized) {
+    minX = std::min(minX, elem.x());
+    maxX = std::max(maxX, elem.x());
+    minY = std::min(minY, elem.y());
+    maxY = std::max(maxY, elem.y());
+    minZ = std::min(minZ, elem.z());
+    maxZ = std::max(maxZ, elem.z());
+  }
+  float xrange = maxX - minX;
+  float yrange = maxZ - minY;
+  float zrange = maxZ - minZ;
+  for (Vec3f &elem : m_verticesNormalized) {
+    elem.setX((elem.x() - minX) / xrange * 2.f - 1.f);
+    elem.setY((elem.y() - minY) / yrange * 2.f - 1.f);
+    elem.setZ((elem.z() - minZ) / zrange * 2.f - 1.f);
   }
 }
 
@@ -113,12 +150,13 @@ SceneElementPtr WavefrontReader::getStructureBVHierarchy() const {
   return m_finalProduct;
 }
 
-void WavefrontReader::parseVertexEntry(const string_view &line) {
+void WavefrontReader::parseVertexEntry(const string_view &line,
+                                       std::vector<Vec3f> &vec) {
   istringstream ss(line.data());
   string v, x, y, z;
   if (ss >> v >> x >> y >> z) {
     try {
-      m_vertices.push_back(Vec3f(stof(x), stof(y), stof(z)));
+      vec.push_back(Vec3f(stof(x), stof(y), stof(z)));
     } catch (...) {
       APP_MSG(line.data());
       APP_ASSERT(false,
@@ -149,9 +187,16 @@ void WavefrontReader::parseTriangleEntry(const string_view &line) {
       string v, i, j, k;
       if (ss >> v >> i >> j >> k) {
         try {
-          auto p1 = Point3f(m_vertices[stoi(i) - 1]);
-          auto p2 = Point3f(m_vertices[stoi(j) - 1]);
-          auto p3 = Point3f(m_vertices[stoi(k) - 1]);
+          Point3f p1, p2, p3;
+          if (m_verticesNormalized.empty()) {
+            p1 = Point3f(m_vertices[stoi(i) - 1]);
+            p2 = Point3f(m_vertices[stoi(j) - 1]);
+            p3 = Point3f(m_vertices[stoi(k) - 1]);
+          } else {
+            p1 = Point3f(m_verticesNormalized[stoi(i) - 1]);
+            p2 = Point3f(m_verticesNormalized[stoi(j) - 1]);
+            p3 = Point3f(m_verticesNormalized[stoi(k) - 1]);
+          }
           SceneElementPtr tr = std::make_shared<Triangle>(
               std::initializer_list<Point3f>{p1, p2, p3});
           tr->setMaterial(m_material);
