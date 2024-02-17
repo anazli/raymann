@@ -84,6 +84,7 @@ void BVHierarchy::divideWorld(const SceneElementPtr &world,
         world->add(worldpair.second);
       }
     }
+    if (world->getChildren().empty()) return;
     for (const auto &elem : world->getChildren()) {
       divideWorld(elem, threshold);
     }

@@ -149,9 +149,9 @@ void WavefrontReader::parseTriangleEntry(const string_view &line) {
       string v, i, j, k;
       if (ss >> v >> i >> j >> k) {
         try {
-          auto p1 = Point3f(m_vertices[abs(stoi(i)) - 1]);
-          auto p2 = Point3f(m_vertices[abs(stoi(j)) - 1]);
-          auto p3 = Point3f(m_vertices[abs(stoi(k)) - 1]);
+          auto p1 = Point3f(m_vertices[stoi(i) - 1]);
+          auto p2 = Point3f(m_vertices[stoi(j) - 1]);
+          auto p3 = Point3f(m_vertices[stoi(k) - 1]);
           SceneElementPtr tr = std::make_shared<Triangle>(
               std::initializer_list<Point3f>{p1, p2, p3});
           tr->setMaterial(m_material);
@@ -175,13 +175,35 @@ void WavefrontReader::parseTriangleEntry(const string_view &line) {
       istringstream ss(str);
       string v, i, j, k, h, g, o;
       if (ss >> v >> i >> j >> k >> h >> g >> o) {
-        auto p1 = Point3f(m_vertices[abs(stoi(i)) - 1]);
-        auto p2 = Point3f(m_vertices[abs(stoi(k)) - 1]);
-        auto p3 = Point3f(m_vertices[abs(stoi(g)) - 1]);
+        size_t vertSize = m_vertices.size();
+        Point3f p1, p2, p3;
+        if (stoi(i) < 0)
+          p1 = Point3f(m_vertices[vertSize + stoi(i) - 1]);
+        else
+          p1 = Point3f(m_vertices[stoi(i) - 1]);
+        if (stoi(j) < 0)
+          p2 = Point3f(m_vertices[vertSize + stoi(k) - 1]);
+        else
+          p2 = Point3f(m_vertices[stoi(k) - 1]);
+        if (stoi(k) < 0)
+          p3 = Point3f(m_vertices[vertSize + stoi(g) - 1]);
+        else
+          p3 = Point3f(m_vertices[stoi(g) - 1]);
 
-        auto n1 = Vec3f(m_verticesNormals[abs(stoi(j)) - 1]);
-        auto n2 = Vec3f(m_verticesNormals[abs(stoi(h)) - 1]);
-        auto n3 = Vec3f(m_verticesNormals[abs(stoi(o)) - 1]);
+        size_t vertNormSize = m_verticesNormals.size();
+        Vec3f n1, n2, n3;
+        if (stoi(j) < 0)
+          n1 = Vec3f(m_verticesNormals[vertNormSize + stoi(j) - 1]);
+        else
+          n1 = Vec3f(m_verticesNormals[stoi(j) - 1]);
+        if (stoi(h) < 0)
+          n2 = Vec3f(m_verticesNormals[vertNormSize + stoi(h) - 1]);
+        else
+          n2 = Vec3f(m_verticesNormals[stoi(h) - 1]);
+        if (stoi(o) < 0)
+          n3 = Vec3f(m_verticesNormals[vertNormSize + stoi(o) - 1]);
+        else
+          n3 = Vec3f(m_verticesNormals[stoi(o) - 1]);
 
         SceneElementPtr tr =
             std::make_shared<SmoothTriangle>(p1, p2, p3, n1, n2, n3);
