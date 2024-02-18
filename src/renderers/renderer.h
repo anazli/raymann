@@ -2,10 +2,13 @@
 
 #include <memory>
 
+#include "camera/camera.h"
 #include "composite/scene_element.h"
 
 class BaseRenderer {
  public:
+  BaseRenderer() = default;
+  BaseRenderer(const BaseCameraPtr &cam) : m_camera(cam) {}
   virtual ~BaseRenderer() = default;
   virtual void visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
                                      const Ray &ray) = 0;
@@ -21,6 +24,7 @@ class BaseRenderer {
   }
   void setBackgroundColor(const Vec3f &color) { m_background_color = color; }
   Vec3f backgroundColor() const { return m_background_color; }
+  void attachCamera(const BaseCameraPtr &cam) { m_camera = cam; }
 
  protected:
   IntersectionRecord m_closestHit;
@@ -29,6 +33,7 @@ class BaseRenderer {
   float m_tmin = MAXFLOAT;
   float m_x;
   float m_y;
+  BaseCameraPtr m_camera;
 };
 
 using BaseRendererPtr = std::unique_ptr<BaseRenderer>;

@@ -35,7 +35,7 @@ class BaseCamera {
   float m_pixel_size;
 };
 
-using BaseCameraPtr = std::unique_ptr<BaseCamera>;
+using BaseCameraPtr = std::shared_ptr<BaseCamera>;
 
 class Camera : public BaseCamera {
  public:
