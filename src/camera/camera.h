@@ -32,6 +32,7 @@ class BaseCamera {
   Point3f m_to;
   Vec3f m_up;
   Mat4f m_transform;
+  Mat4f m_transformInv;
   float m_pixel_size;
 };
 
