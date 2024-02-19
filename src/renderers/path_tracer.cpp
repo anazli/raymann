@@ -11,7 +11,7 @@ void BruteForceMC::visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
 void BruteForceMC::visitSceneElementComposite(
     const SceneElementRawPtr elementComp, const Ray &ray) {
   if (elementComp->isWorld()) {
-    m_out_color = Vec3f(0.f, 0.f, 0.f);
+    auto col = Vec3f();
     for (int s = 0; s < m_samples; ++s) {
       auto u = static_cast<float>(m_x + drand48()) /
                static_cast<float>(m_camera->hSize());
@@ -19,9 +19,9 @@ void BruteForceMC::visitSceneElementComposite(
                static_cast<float>(m_camera->vSize());
 
       Ray newRay = m_camera->getRay(u, v);
-      m_out_color = m_out_color + computeColor(elementComp, newRay, 0);
+      col = col + computeColor(elementComp, newRay, m_samples);
     }
-    m_out_color = m_out_color / static_cast<float>(m_samples);
+    m_out_color = col / static_cast<float>(m_samples);
   }
 }
 
@@ -31,9 +31,9 @@ Vec3f BruteForceMC::computeColor(const SceneElementRawPtr world, const Ray &ray,
   if (world->intersect(ray, record)) {
     Ray scattered;
     Vec3f attenuation;
-    if (rec < 10 && record.object->getMaterial()->scatter(
-                        ray, record, attenuation, scattered)) {
-      return attenuation * computeColor(world, scattered, rec + 1);
+    if (rec > 0 && record.object->getMaterial()->scatter(
+                       ray, record, attenuation, scattered)) {
+      return attenuation * computeColor(world, scattered, rec - 1);
     } else {
       return Vec3f(0.f, 0.f, 0.f);
     }

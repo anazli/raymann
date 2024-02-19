@@ -22,7 +22,7 @@ int main() {
   builder->addLight(light);
   builder->createWorld();
   //----------------------Floor---------------------
-  auto prop_floor = MaterialProperties{};
+  /*auto prop_floor = MaterialProperties{};
   prop_floor.setProperty(Props::SPECULAR, 0.f)
       .setProperty(Props::REFLECTION, 0.4f);
   builder->processSceneElement(new Plane);
@@ -42,7 +42,7 @@ int main() {
                                rotationOverX(-1.5708f));
   builder->applyLambertianMaterial(
       make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)), prop_wall);
-  builder->addElement();
+  builder->addElement();*/
 
   //----------------------Red Sphere----------------
   auto prop_red = MaterialProperties{};
@@ -50,7 +50,7 @@ int main() {
       .setProperty(Props::SHININESS, 5.f);
   prop_red.setProperty(Props::SHININESS, 50.f);
   builder->processSceneElement(new Sphere);
-  builder->applyTransformation(translation(-0.6f, 1.f, 0.6f));
+  // builder->applyTransformation(translation(-0.6f, 1.f, 0.6f));
   builder->applyLambertianMaterial(
       make_unique<ConstantTexture>(Vec3f(1.0f, 0.3f, 0.2f)), prop_red);
   builder->addElement();
@@ -63,12 +63,12 @@ int main() {
   BaseCameraPtr camera =
       make_shared<Camera>(canvas.width(), canvas.height(), 1.152f);
   camera->computePixelSize();
-  auto from = Point3f(-2.6f, 3.5f, -4.9f);
-  auto to = Point3f(-0.6f, 1.0f, -0.8f);
+  auto from = Point3f(0.f, 0.f, -4.9f);
+  auto to = Point3f(0.f, 0.0f, 0.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
-  BaseRendererPtr renderer = make_unique<BruteForceMC>(camera);
+  BaseRendererPtr renderer = make_unique<BruteForceMC>(camera, 20);
   renderer->setBackgroundColor(Vec3f(0.5f, 0.3f, 0.3f));
   chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
   canvas.render(world, camera, std::move(renderer));
