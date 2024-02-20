@@ -1,6 +1,7 @@
 #ifndef MAT4_H
 #define MAT4_H
 
+#include "application/error.h"
 #include "mat3.h"
 #include "vec4.h"
 
@@ -173,7 +174,7 @@ Mat3<T> Mat4<T>::minor(const int& i, const int& j) const {
 template <typename T>
 Mat4<T> Mat4<T>::inverse() const {
   T det = determinant();
-  if (det == 0) throw "Matrix is not invertible!";
+  APP_ASSERT(det != 0, "Matrix is not invertible!");
   Mat4<T> inv;
   for (int i = 0; i < 4; ++i) {
     for (int j = 0; j < 4; ++j) {
@@ -342,10 +343,10 @@ template <typename T>
 Mat4<T> rotationOverX(const T& rad) {
   Mat4<T> ret;
   ret.identity();
-  ret[1][1] = cos(rad);
-  ret[1][2] = -sin(rad);
-  ret[2][1] = sin(rad);
-  ret[2][2] = cos(rad);
+  ret[1][1] = static_cast<T>(cos(rad));
+  ret[1][2] = -static_cast<T>(sin(rad));
+  ret[2][1] = static_cast<T>(sin(rad));
+  ret[2][2] = static_cast<T>(cos(rad));
   return ret;
 }
 
@@ -353,10 +354,10 @@ template <typename T>
 Mat4<T> rotationOverY(const T& rad) {
   Mat4<T> ret;
   ret.identity();
-  ret[0][0] = cos(rad);
-  ret[0][2] = sin(rad);
-  ret[2][0] = -sin(rad);
-  ret[2][2] = cos(rad);
+  ret[0][0] = static_cast<T>(cos(rad));
+  ret[0][2] = static_cast<T>(sin(rad));
+  ret[2][0] = -static_cast<T>(sin(rad));
+  ret[2][2] = static_cast<T>(cos(rad));
   return ret;
 }
 
@@ -364,10 +365,10 @@ template <typename T>
 Mat4<T> rotationOverZ(const T& rad) {
   Mat4<T> ret;
   ret.identity();
-  ret[0][0] = cos(rad);
-  ret[0][1] = -sin(rad);
-  ret[1][0] = sin(rad);
-  ret[1][1] = cos(rad);
+  ret[0][0] = static_cast<T>(cos(rad));
+  ret[0][1] = -static_cast<T>(sin(rad));
+  ret[1][0] = static_cast<T>(sin(rad));
+  ret[1][1] = static_cast<T>(cos(rad));
   return ret;
 }
 
