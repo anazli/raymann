@@ -5,7 +5,7 @@
 #include "composite/scene_element.h"
 
 using std::uniform_real_distribution;
-std::mt19937 gen(13759327u);
+std::mt19937 gen(1984);
 
 Vec3f randomVectorOnUnitSphere() {
   uniform_real_distribution<float> rand(0.f, 1.f);
@@ -16,16 +16,16 @@ Vec3f randomVectorOnUnitSphere() {
     dsq = xi1 * xi1 + xi2 * xi2;
   }
 
-  float ranh = 2.f * sqrt(1.f - dsq);
-  float dmx = xi1 * ranh;
-  float dmy = xi2 * ranh;
-  float dmz = 1.f - 2.f * dsq;
+  auto ranh = 2.f * sqrt(1.f - dsq);
+  auto dmx = xi1 * ranh;
+  auto dmy = xi2 * ranh;
+  auto dmz = 1.f - 2.f * dsq;
 
   return Vec3f(dmx, dmy, dmz);
 }
 
 float schlick(float cosine, float ref_idx) {
-  float r0 = (1.f - ref_idx) / (1.f + ref_idx);
+  auto r0 = (1.f - ref_idx) / (1.f + ref_idx);
   r0 = r0 * r0;
   return r0 + (1.f - r0) * pow((1.f - cosine), 5);
 }
@@ -36,9 +36,9 @@ Vec3f reflect(const Vec3f& v, const Vec3f& n) {
 
 bool refract(const Vec3f& v, const Vec3f& n, float ni_over_nt,
              Vec3f& refracted) {
-  Vec3f uv = getUnitVectorOf(v);
-  float dt = dot(uv, n);
-  float discriminant = 1.f - ni_over_nt * ni_over_nt * (1.f - dt * dt);
+  auto uv = getUnitVectorOf(v);
+  auto dt = dot(uv, n);
+  auto discriminant = 1.f - ni_over_nt * ni_over_nt * (1.f - dt * dt);
   if (discriminant > 0) {
     refracted =
         ni_over_nt * (uv - n * dt) - n * static_cast<float>(sqrt(discriminant));
@@ -72,9 +72,9 @@ Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
 
 bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
                          Vec3f& attenuation, Ray& scattered) const {
-  Point3f target = rec.point(r_in) + randomVectorOnUnitSphere() +
-                   rec.object->normal(rec.point(r_in));
-  scattered = Ray(rec.point(r_in), target - rec.point(r_in));
+  auto point = rec.point(r_in);
+  auto target = point + randomVectorOnUnitSphere() + rec.object->normal(point);
+  scattered = Ray(point, target - point);
   attenuation = m_tex->value(0, 0, Vec3f());
   return true;
 }
@@ -89,11 +89,12 @@ Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
 
 bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
                     Vec3f& attenuation, Ray& scattered) const {
-  Vec3f reflected = reflect(getUnitVectorOf(r_in.direction()), rec.normal);
-  scattered =
-      Ray(rec.point(r_in), reflected + m_fuzz * randomVectorOnUnitSphere());
+  auto point = rec.point(r_in);
+  Vec3f reflected =
+      reflect(getUnitVectorOf(r_in.direction()), rec.object->normal(point));
+  scattered = Ray(point, reflected + m_fuzz * randomVectorOnUnitSphere());
   attenuation = m_tex->value(0, 0, Vec3f());
-  return (dot(scattered.direction(), rec.object->normal(rec.point(r_in))) > 0);
+  return (dot(scattered.direction(), rec.object->normal(point)) > 0);
 }
 
 Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
@@ -101,14 +102,15 @@ Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
 
 bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
                          Vec3f& attenuation, Ray& scattered) const {
+  auto point = rec.point(r_in);
+  Vec3f normal = rec.object->normal(point);
   Vec3f outward_normal;
-  Vec3f reflected = reflect(r_in.direction(), rec.normal);
+  Vec3f reflected = reflect(r_in.direction(), normal);
   float ni_over_nt;
   attenuation = Vec3f(1.f, 1.f, 1.f);
   Vec3f refracted;
   float reflect_prob;
   float cosine;
-  Vec3f normal = rec.object->normal(rec.point(r_in));
   if (dot(r_in.direction(), normal) > 0) {
     outward_normal = -normal;
     ni_over_nt = ref_idx;
@@ -126,9 +128,9 @@ bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
     reflect_prob = 1.f;
 
   if (drand48() < reflect_prob)
-    scattered = Ray(rec.point(r_in), reflected);
+    scattered = Ray(point, reflected);
   else
-    scattered = Ray(rec.point(r_in), refracted);
+    scattered = Ray(point, refracted);
 
   return true;
 }
