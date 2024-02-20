@@ -1,7 +1,7 @@
 #include "camera/camera.h"
 
 void BaseCamera::computePixelSize() {
-  APP_ASSERT(m_hsize > 0 && m_vsize > 0,
+  APP_ASSERT(m_hsize >= 0 && m_vsize >= 0,
              "Camera: negative horizontal or vertical size found!")
   auto half_view = tan(m_field_of_view / 2.0f);
   auto aspect = static_cast<float>(m_hsize) / m_vsize;
