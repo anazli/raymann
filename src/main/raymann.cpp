@@ -21,45 +21,38 @@ int main() {
   auto builder = make_unique<WorldBuilder>();
   builder->addLight(light);
   builder->createWorld();
-  //----------------------Floor---------------------
-  builder->processSceneElement(new Plane);
-  builder->applyTransformation(rotationOverY(0.31415f));
+
+  //----------------------1st Sphere----------------
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(translation(-0.6f, -1.f, 0.6f) *
+                               scale(6.f, 1.f, 6.f));
   builder->applyLambertianMaterial(
-      make_unique<ConstantTexture>(Vec3f(0.65f, 0.65f, 0.65f)),
+      make_unique<ConstantTexture>(Vec3f(0.4f, 0.4f, 0.4f)),
       MaterialProperties{});
   builder->addElement();
 
-  //----------------------North Wall---------------------
-  builder->processSceneElement(new Plane);
-  builder->applyTransformation(translation(0.f, 0.f, 5.f) *
-                               rotationOverX(-1.5708f));
-  builder->applyLambertianMaterial(
-      make_unique<ConstantTexture>(Vec3f(0.55f, 0.55f, 0.55f)),
-      MaterialProperties{});
-  builder->addElement();
-
-  //----------------------Red Sphere----------------
+  //----------------------2nd Sphere----------------
   builder->processSceneElement(new Sphere);
   builder->applyTransformation(translation(-0.6f, 1.f, 0.6f));
   builder->applyLambertianMaterial(
-      make_unique<ConstantTexture>(Vec3f(1.0f, 0.3f, 0.2f)),
+      make_unique<ConstantTexture>(Vec3f(0.4f, 0.4f, 0.4f)),
       MaterialProperties{});
   builder->addElement();
 
   SceneElementPtr world = builder->getProductBVHierarchy();
 
   //----------------------------------------------------------------------------
-  auto canvas = Canvas(200, 200);
+  auto canvas = Canvas(300, 300);
   canvas.setFileName("scenes/scene.ppm");
   BaseCameraPtr camera =
       make_shared<Camera>(canvas.width(), canvas.height(), 1.152f);
-  auto from = Point3f(-2.6f, 3.5f, -4.f);
+  auto from = Point3f(-2.6f, 1.5f, -4.f);
   auto to = Point3f(-0.6f, 1.0f, -0.8f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
   BaseRendererPtr renderer = make_unique<BruteForceMC>(camera, 50);
-  renderer->setBackgroundColor(Vec3f(0.5f, 0.3f, 0.3f));
+  renderer->setBackgroundColor(Vec3f(0.8f, 0.8f, 0.8f));
   chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
   canvas.render(world, camera, std::move(renderer));
   canvas.save();

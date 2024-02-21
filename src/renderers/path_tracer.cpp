@@ -28,7 +28,7 @@ void BruteForceMC::visitSceneElementComposite(
       auto v = ay + rand(gen1) * (by - ay);
 
       auto newRay = m_camera->getRay(u, v);
-      col = col + computeColor(elementComp, newRay, 20);
+      col = col + computeColor(elementComp, newRay, 30);
     }
     col = col / static_cast<float>(m_samples);
     m_out_color = Vec3f(static_cast<float>(sqrt(col.x())),
