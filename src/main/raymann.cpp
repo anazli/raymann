@@ -12,6 +12,7 @@
 #include "geometry/sphere.h"
 #include "renderers/path_tracer.h"
 #include "renderers/phong_model.h"
+#include "stochastic/stochastic_method.h"
 #include "textures/texture.h"
 
 using namespace std;
@@ -39,19 +40,19 @@ int main() {
       MaterialProperties{});
   builder->addElement();
 
-  SceneElementPtr world = builder->getProductBVHierarchy();
+  auto world = builder->getProductBVHierarchy();
 
   //----------------------------------------------------------------------------
   auto canvas = Canvas(300, 300);
   canvas.setFileName("scenes/scene.ppm");
-  BaseCameraPtr camera =
-      make_shared<Camera>(canvas.width(), canvas.height(), 1.152f);
+  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.152f);
   auto from = Point3f(-2.6f, 1.5f, -4.f);
   auto to = Point3f(-0.6f, 1.0f, -0.8f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
-  BaseRendererPtr renderer = make_unique<BruteForceMC>(camera, 50);
+  BaseRendererPtr renderer =
+      make_unique<PathTracer>(std::make_unique<BruteForceMC>(camera));
   renderer->setBackgroundColor(Vec3f(0.8f, 0.8f, 0.8f));
   chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
   canvas.render(world, camera, std::move(renderer));

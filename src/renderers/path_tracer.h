@@ -2,10 +2,10 @@
 
 #include "renderers/renderer.h"
 
-class BruteForceMC : public BaseRenderer {
+class PathTracer : public BaseRenderer {
  public:
-  BruteForceMC(const BaseCameraPtr &cam, int samples = 10);
-  ~BruteForceMC() override = default;
+  PathTracer(std::unique_ptr<StochasticMethod> stMethod);
+  ~PathTracer() override = default;
   void visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
                              const Ray &ray) override;
   void visitSceneElementComposite(const SceneElementRawPtr elementComp,
@@ -13,6 +13,9 @@ class BruteForceMC : public BaseRenderer {
   Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
                      int rec = 5) override;
 
+  void attachStochasticMethod(
+      std::unique_ptr<StochasticMethod> stMethod) override;
+
  private:
-  int m_samples;
+  std::unique_ptr<StochasticMethod> m_stochasticMethod;
 };
