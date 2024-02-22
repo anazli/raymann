@@ -35,10 +35,14 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/materials/material.h
             src/materials/material_properties.cpp
             src/materials/material_properties.h
+            src/renderers/renderer.cpp
+            src/renderers/renderer.h
             src/renderers/path_tracer.cpp
             src/renderers/path_tracer.h
             src/renderers/phong_model.cpp
             src/renderers/phong_model.h
+            src/stochastic/stochastic_method.cpp
+            src/stochastic/stochastic_method.h
             src/textures/perlin.cpp
             src/textures/perlin.h
             src/textures/texture.h

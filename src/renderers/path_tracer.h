@@ -2,18 +2,20 @@
 
 #include "renderers/renderer.h"
 
-/*class BasicPathTracer : public BaseRenderer {
+class PathTracer : public BaseRenderer {
  public:
-  BasicPathTracer(const BaseCameraPtr &cam);
-  ~BasicPathTracer() override = default;
-  void visitSceneElementLeaf(SceneElement &elementLeaf, const Ray &ray) override;
-  void visitSceneElementComposite(const SceneElementPtr &elementComp,
+  PathTracer(std::unique_ptr<StochasticMethod> stMethod);
+  ~PathTracer() override = default;
+  void visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
+                             const Ray &ray) override;
+  void visitSceneElementComposite(const SceneElementRawPtr elementComp,
                                   const Ray &ray) override;
-
-  Vec3f computeColor(const SceneElementPtr &world, const Ray &ray,
+  Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
                      int rec = 5) override;
 
+  void attachStochasticMethod(
+      std::unique_ptr<StochasticMethod> stMethod) override;
+
  private:
-  IntersectionRecord findClosestHit(const SceneElementPtr &world, const Ray &r);
-  BaseCameraPtr m_cam;
-};*/
+  std::unique_ptr<StochasticMethod> m_stochasticMethod;
+};

@@ -9,7 +9,7 @@ class BaseCamera {
  public:
   virtual ~BaseCamera() = default;
   virtual Ray getRay(int pixel_x, int pixel_y) const = 0;
-  virtual void computePixelSize();
+  void computePixelSize();
   void setParamVectors(const Point3f &from, const Point3f &to, const Vec3f &up);
   void setHSize(int hs);
   void setVSize(int vs);
@@ -17,6 +17,9 @@ class BaseCamera {
   float fieldOfView() const;
   int hSize() const;
   int vSize() const;
+  Point3f getFromPoint() const;
+  Point3f getToPoint() const;
+  Vec3f getUpVector() const;
   void setTransform(const Mat4f &m);
   Mat4f transform() const;
   float pixelSize() const;
@@ -34,9 +37,11 @@ class BaseCamera {
   Mat4f m_transform;
   Mat4f m_transformInv;
   float m_pixel_size;
+  float m_half_width;
+  float m_half_height;
 };
 
-using BaseCameraPtr = std::unique_ptr<BaseCamera>;
+using BaseCameraPtr = std::shared_ptr<BaseCamera>;
 
 class Camera : public BaseCamera {
  public:
@@ -45,15 +50,4 @@ class Camera : public BaseCamera {
   ~Camera() override = default;
 
   Ray getRay(int pixel_x, int pixel_y) const override;
-  void computePixelSize() override;
-
- private:
-  float halfWidth() const;
-  float halfHeight() const;
-  Point3f getFromPoint() const;
-  Point3f getToPoint() const;
-  Vec3f getUpVector() const;
-
-  float m_half_width;
-  float m_half_height;
 };

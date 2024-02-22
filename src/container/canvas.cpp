@@ -18,7 +18,7 @@ std::string Canvas::fileName() const { return m_fileName; }
 
 void Canvas::setFileName(const std::string &fn) { m_fileName = fn; }
 
-void Canvas::render(const SceneElementPtr &world, BaseCameraPtr camera,
+void Canvas::render(const SceneElementPtr &world, const BaseCameraPtr &camera,
                     BaseRendererPtr renderer) {
   for (int j = 0; j < camera->vSize(); ++j) {
     for (int i = 0; i < camera->hSize(); ++i) {

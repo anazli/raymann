@@ -67,12 +67,15 @@ class IntersectionRecord {
   float t1 = -limit::max();
   float t2 = -limit::max();
   float t_min() const {
-    if (t1 <= 0.0f && t2 > 0.0f)
-      return t2;
-    else if (t2 <= 0.0f && t1 > 0.0f)
-      return t1;
-    else if (t1 > 0.0f && t2 > 0.0f)
-      return std::min(t1, t2);
+    if ((t1 < limit::max() && t1 > 0.001f) ||
+        (t2 < limit::max() && t2 > 0.001f)) {
+      if (t1 <= 0.0f && t2 > 0.0f)
+        return t2;
+      else if (t2 <= 0.0f && t1 > 0.0f)
+        return t1;
+      else if (t1 > 0.0f && t2 > 0.0f)
+        return std::min(t1, t2);
+    }
     return -1.0f;  // TODO: to be fixed for negative intersections
   }
   Point3f point(const Ray &r) const { return r.position(t_min()); }

@@ -8,7 +8,7 @@ class CameraTest : public testing::RTest {
 };
 
 TEST_F(CameraTest, createsCamera) {
-  c = Camera(0, 0, 0.f);
+  c = Camera(0.f, 0.f, 0.f);
   c.setHSize(160);
   c.setVSize(120);
   c.setFieldOfView(PI / 2.0f);
