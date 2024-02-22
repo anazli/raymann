@@ -90,11 +90,11 @@ Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
 bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
                     Vec3f& attenuation, Ray& scattered) const {
   auto point = rec.point(r_in);
-  Vec3f reflected =
-      reflect(getUnitVectorOf(r_in.direction()), rec.object->normal(point));
+  auto normal = rec.object->normal(point);
+  Vec3f reflected = reflect(getUnitVectorOf(r_in.direction()), normal);
   scattered = Ray(point, reflected + m_fuzz * randomVectorOnUnitSphere());
   attenuation = m_tex->value(0, 0, Vec3f());
-  return (dot(scattered.direction(), rec.object->normal(point)) > 0);
+  return (dot(scattered.direction(), normal) > 0);
 }
 
 Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
