@@ -47,9 +47,21 @@ bool refract(const Vec3f& v, const Vec3f& n, float ni_over_nt,
     return false;
 }
 
+void BaseMaterial::setTexture(TexturePtr tex) {}
+
+TextureRawPtr BaseMaterial::getTexture() const { return nullptr; }
+
+void BaseMaterial::setProperties(const MaterialProperties &prop) {}
+
 MaterialProperties BaseMaterial::getProperties() const {
   return MaterialProperties();
 }
+
+Vec3f BaseMaterial::emmit(float u, float v, const Vec3f &p) {
+  return Vec3f();
+}
+
+bool BaseMaterial::isEmissive() const { return false; }
 
 Material::Material(TexturePtr tex, const MaterialProperties& prop)
     : BaseMaterial(std::move(tex), prop) {}
@@ -134,3 +146,18 @@ bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
 
   return true;
 }
+
+EmissiveMaterial::EmissiveMaterial(TexturePtr tex,
+                                   const MaterialProperties& prop)
+    : BaseMaterial(std::move(tex), prop) {}
+
+bool EmissiveMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
+                               Vec3f& attenuation, Ray& scattered) const {
+  return false;
+}
+
+Vec3f EmissiveMaterial::emmit(float u, float v, const Vec3f& p) {
+  return m_tex->value(u, v, p);
+}
+
+bool EmissiveMaterial::isEmissive() const { return true; }

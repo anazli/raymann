@@ -17,7 +17,7 @@ class WavefrontReader {
   void setFileName(const std::string_view& file);
   void normalizeVertices();
   void addLightForModel(const PointLight& light);
-  void addMaterial(TexturePtr tex, const MaterialProperties& prop);
+  void addMaterial(BaseMaterialPtr mat);
 
   std::vector<Vec3f> vertexCollection() const;
   std::vector<Vec3f> vertexNormalCollection() const;

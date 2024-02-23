@@ -124,10 +124,7 @@ void WavefrontReader::addLightForModel(const PointLight &light) {
   m_finalProduct->setLight(light);
 }
 
-void WavefrontReader::addMaterial(TexturePtr tex,
-                                  const MaterialProperties &prop) {
-  m_material = std::make_shared<Material>(std::move(tex), prop);
-}
+void WavefrontReader::addMaterial(BaseMaterialPtr mat) { m_material = mat; }
 
 vector<Vec3f> WavefrontReader::vertexCollection() const { return m_vertices; }
 

@@ -17,12 +17,15 @@ class Builder {
   virtual void applyWorldTransformation(const Mat4f &trans) = 0;
   virtual void applyMaterial(TexturePtr tex,
                              const MaterialProperties &prop) = 0;
-  virtual void applyLambertianMaterial(TexturePtr tex,
-                                       const MaterialProperties &prop) = 0;
-  virtual void applyMetalMaterial(const float &f, TexturePtr tex,
-                                  const MaterialProperties &prop) = 0;
-  virtual void applyDielectricMaterial(const float &ri, TexturePtr tex,
-                                       const MaterialProperties &prop) = 0;
+  virtual void applyLambertianMaterial(
+      TexturePtr tex,
+      const MaterialProperties &prop = MaterialProperties{}) = 0;
+  virtual void applyMetalMaterial(
+      const float &f, TexturePtr tex,
+      const MaterialProperties &prop = MaterialProperties{}) = 0;
+  virtual void applyDielectricMaterial(
+      const float &ri, TexturePtr tex,
+      const MaterialProperties &prop = MaterialProperties{}) = 0;
   virtual void createBBoxForElement(const BoundingBox &box) = 0;
   virtual SceneElementPtr getProduct() = 0;
   virtual SceneElementPtr getProductBVHierarchy() = 0;
@@ -42,12 +45,15 @@ class WorldBuilder : public Builder {
   void applyTransformation(const Mat4f &trans) override;
   void applyWorldTransformation(const Mat4f &trans) override;
   void applyMaterial(TexturePtr tex, const MaterialProperties &prop) override;
-  void applyLambertianMaterial(TexturePtr tex,
-                               const MaterialProperties &prop) override;
-  void applyMetalMaterial(const float &f, TexturePtr tex,
-                          const MaterialProperties &prop) override;
-  void applyDielectricMaterial(const float &ri, TexturePtr tex,
-                               const MaterialProperties &prop) override;
+  void applyLambertianMaterial(
+      TexturePtr tex,
+      const MaterialProperties &prop = MaterialProperties{}) override;
+  void applyMetalMaterial(
+      const float &f, TexturePtr tex,
+      const MaterialProperties &prop = MaterialProperties{}) override;
+  void applyDielectricMaterial(
+      const float &ri, TexturePtr tex,
+      const MaterialProperties &prop = MaterialProperties{}) override;
   virtual void createBBoxForElement(const BoundingBox &box) override;
   SceneElementPtr getProduct() override;
   SceneElementPtr getProductBVHierarchy() override;

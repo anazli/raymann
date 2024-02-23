@@ -7,12 +7,14 @@ class IntersectionRecord;
 
 class BaseMaterial {
  public:
-  virtual void setTexture(TexturePtr tex) {}
-  virtual TextureRawPtr getTexture() const { return nullptr; }
-  virtual void setProperties(const MaterialProperties& prop) {}
+  virtual void setTexture(TexturePtr tex);
+  virtual TextureRawPtr getTexture() const;
+  virtual void setProperties(const MaterialProperties& prop);
   virtual MaterialProperties getProperties() const;
   virtual bool scatter(const Ray& r_in, const IntersectionRecord& rec,
                        Vec3f& attenuation, Ray& scattered) const = 0;
+  virtual Vec3f emmit(float u = 0.f, float v = 0.f, const Vec3f& p = Vec3f());
+  virtual bool isEmissive() const;
 
  protected:
   BaseMaterial(TexturePtr tex,
@@ -46,7 +48,8 @@ class Lambertian : public BaseMaterial {
 
 class Metal : public BaseMaterial {
  public:
-  Metal(float f, TexturePtr tex, const MaterialProperties& prop);
+  Metal(float f, TexturePtr tex,
+        const MaterialProperties& prop = MaterialProperties());
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
                Vec3f& attenuation, Ray& scattered) const override;
 
@@ -56,11 +59,22 @@ class Metal : public BaseMaterial {
 
 class Dielectric : public BaseMaterial {
  public:
-  Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop);
-
+  Dielectric(float ri, TexturePtr tex,
+             const MaterialProperties& prop = MaterialProperties());
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
                Vec3f& attenuation, Ray& scattered) const override;
 
  private:
   float ref_idx;
+};
+
+class EmissiveMaterial : public BaseMaterial {
+ public:
+  EmissiveMaterial(TexturePtr tex,
+                   const MaterialProperties& prop = MaterialProperties());
+
+  bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+               Vec3f& attenuation, Ray& scattered) const override;
+  Vec3f emmit(float u = 0.f, float v = 0.f, const Vec3f& p = Vec3f()) override;
+  bool isEmissive() const override;
 };

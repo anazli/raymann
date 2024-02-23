@@ -10,51 +10,52 @@
 #include "geometry/cylinder.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
+#include "renderers/path_tracer.h"
 #include "renderers/phong_model.h"
+#include "stochastic/stochastic_method.h"
 #include "textures/texture.h"
 
 using namespace std;
 
 int main() {
-  auto light = PointLight(Point3f(80.f, 70.f, 200.f), Vec3f(1.f, 1.f, 1.f));
+  auto light = PointLight(Point3f(-4.9f, 4.9f, -1.f), Vec3f(1.0f, 1.0f, 1.0f));
+  auto builder = make_unique<WorldBuilder>();
+  builder->addLight(light);
+  builder->createWorld();
 
-  WavefrontReader reader("dragon.obj");
-  reader.addLightForModel(light);
-  auto dragon_props = MaterialProperties{};
-  dragon_props.setProperty(Props::SPECULAR, 0.4f)
-      .setProperty(Props::SHININESS, 5.f);
-  reader.addMaterial(make_unique<ConstantTexture>(Vec3f(0.08f, 0.683f, 0.382f)),
-                     dragon_props);
-  reader.parseInput();
-  SceneElementPtr world = reader.getStructureBVHierarchy();
+  //----------------------1st Sphere----------------
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(translation(-0.6f, -1.f, 0.6f) *
+                               scale(6.f, 1.f, 6.f));
+  builder->applyMetalMaterial(
+      0.9f, make_unique<ConstantTexture>(Vec3f(0.4f, 0.4f, 0.4f)),
+      MaterialProperties{});
+  builder->addElement();
 
-  BuilderPtr builder = make_unique<WorldBuilder>();
-  auto floor_props = MaterialProperties{};
-  floor_props.setProperty(Props::SPECULAR, 0.4f)
-      .setProperty(Props::REFLECTION, 0.f);
-  builder->processSceneElement(new Plane);
-  builder->applyTransformation(translation(0.f, -40.f, 0.f) *
-                               rotationOverY(PI));
-  builder->applyMaterial(
-      make_unique<ConstantTexture>(Vec3f(0.35f, 0.35f, 0.65f)), floor_props);
-  SceneElementPtr floor(builder->getCurrentElement());
-  world->add(floor);
+  //----------------------2nd Sphere----------------
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(translation(-0.6f, 1.f, 0.6f));
+  builder->applyLambertianMaterial(
+      make_unique<ConstantTexture>(Vec3f(1.0f, 0.4f, 0.4f)),
+      MaterialProperties{});
+  builder->addElement();
+
+  auto world = builder->getProductBVHierarchy();
 
   //----------------------------------------------------------------------------
-  auto canvas = Canvas(1200, 800);
+  auto canvas = Canvas(300, 300);
   canvas.setFileName("scenes/scene.ppm");
-  BaseCameraPtr camera =
-      make_unique<Camera>(canvas.width(), canvas.height(), 1.5f);
-  camera->computePixelSize();
-  auto from = Point3f(0.f, -15.f, 130.f);
-  auto to = Point3f(30.f, 30.0f, -40.f);
+  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.152f);
+  auto from = Point3f(-2.6f, 1.5f, -4.f);
+  auto to = Point3f(-0.6f, 1.0f, -0.8f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
-  BaseRendererPtr renderer = make_unique<PhongModel>();
-  renderer->setBackgroundColor(Vec3f(0.5f, 0.3f, 0.3f));
+  BaseRendererPtr renderer =
+      make_unique<PathTracer>(std::make_unique<BruteForceMC>(camera));
+  renderer->setBackgroundColor(Vec3f(0.8f, 0.8f, 0.8f));
   chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
-  canvas.render(world, std::move(camera), std::move(renderer));
+  canvas.render(world, camera, std::move(renderer));
   canvas.save();
 
   chrono::time_point<chrono::steady_clock> end = chrono::steady_clock::now();

@@ -21,10 +21,14 @@ Vec3f PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
   if (world->intersect(ray, record)) {
     Ray scattered;
     Vec3f attenuation;
+    Vec3f emittedColor = record.object->getMaterial()->emmit();
+    if (record.object->getMaterial()->isEmissive()) {
+      return emittedColor;
+    }
     if (rec > 0 && record.object->getMaterial()->scatter(
                        ray, record, attenuation, scattered)) {
-      return attenuation * world->getLight().intensity() *
-             computeColor(world, scattered, rec - 1);
+      return emittedColor + attenuation * world->getLight().intensity() *
+                                computeColor(world, scattered, rec - 1);
     } else {
       return Vec3f();
     }
