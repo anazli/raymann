@@ -50,6 +50,14 @@ void WorldBuilder::applyLambertianMaterial(TexturePtr tex,
   BaseMaterialPtr matptr = std::make_shared<Lambertian>(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
+
+void WorldBuilder::applyEmissiveMaterial(TexturePtr tex,
+                                         const MaterialProperties& prop) {
+  APP_ASSERT(m_currentElement, "SceneElement not created yet!");
+  BaseMaterialPtr matptr =
+      std::make_shared<EmissiveMaterial>(std::move(tex), prop);
+  m_currentElement->setMaterial(matptr);
+}
 void WorldBuilder::applyMetalMaterial(const float& f, TexturePtr tex,
                                       const MaterialProperties& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");

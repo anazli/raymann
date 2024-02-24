@@ -20,6 +20,9 @@ class Builder {
   virtual void applyLambertianMaterial(
       TexturePtr tex,
       const MaterialProperties &prop = MaterialProperties{}) = 0;
+  virtual void applyEmissiveMaterial(
+      TexturePtr tex,
+      const MaterialProperties &prop = MaterialProperties{}) = 0;
   virtual void applyMetalMaterial(
       const float &f, TexturePtr tex,
       const MaterialProperties &prop = MaterialProperties{}) = 0;
@@ -48,6 +51,8 @@ class WorldBuilder : public Builder {
   void applyLambertianMaterial(
       TexturePtr tex,
       const MaterialProperties &prop = MaterialProperties{}) override;
+  void applyEmissiveMaterial(TexturePtr tex, const MaterialProperties &prop =
+                                                 MaterialProperties{}) override;
   void applyMetalMaterial(
       const float &f, TexturePtr tex,
       const MaterialProperties &prop = MaterialProperties{}) override;
