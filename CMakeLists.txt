@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.22)
 project(raymann VERSION 0.1 LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(EXE raymann)
+
+find_package(TBB REQUIRED)
+find_package(Threads REQUIRED)
 
 set(SOURCES src/acceleration/bounding_box.cpp
             src/acceleration/bounding_box.h
@@ -57,6 +60,10 @@ target_include_directories(${EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
 set_target_properties(${EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
 target_compile_options(${EXE} PRIVATE "-g")
 target_link_options(${EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
+target_link_libraries(${EXE} PRIVATE
+                Threads::Threads
+                TBB::tbb
+)
 
 
 if(BUILD_TESTING)

@@ -1,10 +1,13 @@
 #include "canvas.h"
 
+#include <algorithm>
+#include <execution>
 #include <fstream>
 
 using std::endl;
 using std::list;
 using std::ofstream;
+using std::execution::par;
 
 Canvas::Canvas(int w, int h) : m_width(w), m_height(h) {
   m_pixels = std::vector(w, std::vector<Vec3f>(h));
@@ -20,15 +23,16 @@ void Canvas::setFileName(const std::string &fn) { m_fileName = fn; }
 
 void Canvas::render(const SceneElementPtr &world, const BaseCameraPtr &camera,
                     BaseRendererPtr renderer) {
-  for (int j = 0; j < camera->vSize(); ++j) {
-    for (int i = 0; i < camera->hSize(); ++i) {
+  fillImageResolutionIterators(camera->hSize(), camera->vSize());
+  std::for_each(par, m_vContainer.begin(), m_vContainer.end(), [&](int j) {
+    std::for_each(par, m_hContainer.begin(), m_hContainer.end(), [&](int i) {
       auto color = Vec3f{};
       renderer->setPixelInfo(i, j);
       world->accept(*renderer, camera->getRay(i, j));
       color = renderer->getColor();
       writePixel(i, j, color);
-    }
-  }
+    });
+  });
 }
 
 void Canvas::writePixel(int x, int y, const Vec3f &color) {
@@ -64,4 +68,9 @@ void Canvas::save() {
   }
 
   out.close();
+}
+
+void Canvas::fillImageResolutionIterators(int hSize, int vSize) {
+  for (int i = 0; i < hSize; ++i) m_hContainer.push_back(i);
+  for (int j = 0; j < vSize; ++j) m_vContainer.push_back(j);
 }

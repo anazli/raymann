@@ -8,6 +8,7 @@ class StochasticMethod {
  public:
   StochasticMethod(const BaseCameraPtr &cam, int pixelSamples = 50,
                    int materialDepth = 30);
+  virtual ~StochasticMethod() = default;
   virtual Vec3f computeColor(BaseRendererRawPtr renderer,
                              const SceneElementRawPtr world) = 0;
   float randomNumber();
@@ -26,6 +27,7 @@ class BruteForceMC : public StochasticMethod {
  public:
   BruteForceMC(const BaseCameraPtr &cam, int pixelSamples = 50,
                int materialDepth = 30);
+  ~BruteForceMC() override = default;
   Vec3f computeColor(BaseRendererRawPtr renderer,
                      const SceneElementRawPtr world) override;
 };

@@ -22,8 +22,11 @@ class Canvas {
   void save();
 
  private:
+  void fillImageResolutionIterators(int hSize, int vSize);
   int m_width;
   int m_height;
   std::string m_fileName;
   std::vector<std::vector<Vec3f>> m_pixels;
+  std::vector<int> m_hContainer;
+  std::vector<int> m_vContainer;
 };
