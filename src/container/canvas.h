@@ -17,6 +17,8 @@ class Canvas {
   void setFileName(const std::string &fn);
   void render(const SceneElementPtr &world, const BaseCameraPtr &camera,
               BaseRendererPtr renderer);
+  void renderParallel(const SceneElementPtr &world, const BaseCameraPtr &camera,
+                      BaseRendererPtr renderer);
   void writePixel(int x, int y, const Vec3f &color);
   Vec3f pixel(int x, int y) const;
   void save();
