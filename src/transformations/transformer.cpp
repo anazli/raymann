@@ -30,10 +30,19 @@ bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
 }
 
 Vec3f Transformer::normal(const Point3f& p) const {
-  Point3f world_point(p);
-  Point3f local_point = pointFromWorldToObjectSpace(world_point);
-  Vec3f local_normal = SceneElementDecorator::normal(local_point);
-  return vectorFromObjectToWorldSpace(local_normal);
+  // This is meant for normal calculation when world is transformed.
+  //  The vectorFromObjectToWorldSpace from SceneElement is called here
+  //  which does inversion and leads to big performance overhead. TODO:
+  //  Refactor. Disabled for the moment.
+  //  Point3f world_point(p);
+  //  Point3f local_point = pointFromWorldToObjectSpace(world_point);
+  //  Vec3f local_normal = SceneElementDecorator::normal(local_point);
+  //  return vectorFromObjectToWorldSpace(local_normal);
+  Vec4f v4 = p;
+  Point3f object_point = m_inverseTransf * v4;
+  Vec3f object_normal = SceneElementDecorator::normal(object_point);
+  Vec3f world_normal = m_inverseTransfTransp * Vec4f(object_normal);
+  return world_normal.normalize();
 }
 
 void Transformer::add(SceneElementPtr item) {
