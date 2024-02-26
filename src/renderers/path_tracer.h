@@ -4,7 +4,7 @@
 
 class PathTracer : public BaseRenderer {
  public:
-  PathTracer(std::unique_ptr<StochasticMethod> stMethod);
+  PathTracer(std::unique_ptr<StochasticSampler> stMethod);
   ~PathTracer() override = default;
   void visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
                              const Ray &ray) override;
@@ -14,8 +14,8 @@ class PathTracer : public BaseRenderer {
                      int rec = 5) override;
 
   void attachStochasticMethod(
-      std::unique_ptr<StochasticMethod> stMethod) override;
+      std::unique_ptr<StochasticSampler> stMethod) override;
 
  private:
-  std::unique_ptr<StochasticMethod> m_stochasticMethod;
+  std::unique_ptr<StochasticSampler> m_stochasticSampler;
 };

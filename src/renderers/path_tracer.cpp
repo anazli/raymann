@@ -3,8 +3,8 @@
 #include "composite/world.h"
 #include "stochastic/stochastic_method.h"
 
-PathTracer::PathTracer(std::unique_ptr<StochasticMethod> stMethod) {
-  m_stochasticMethod = std::move(stMethod);
+PathTracer::PathTracer(std::unique_ptr<StochasticSampler> stMethod) {
+  m_stochasticSampler = std::move(stMethod);
 }
 
 void PathTracer::visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
@@ -12,7 +12,7 @@ void PathTracer::visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
 
 void PathTracer::visitSceneElementComposite(
     const SceneElementRawPtr elementComp, const Ray &ray) {
-  m_out_color = m_stochasticMethod->computeColor(this, elementComp);
+  m_out_color = m_stochasticSampler->computeColor(this, elementComp);
 }
 
 Vec3f PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
@@ -27,14 +27,17 @@ Vec3f PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
     }
     if (rec > 0 && record.object->getMaterial()->scatter(
                        ray, record, attenuation, scattered)) {
-      return emittedColor +
-             attenuation * computeColor(world, scattered, rec - 1);
+      // auto scPdf = m_stochasticSampler->scatteringPDF(ray, record,
+      // scattered);
+      return emittedColor + attenuation * /*scPdf **/
+                                computeColor(world, scattered, rec - 1);  // /
+      // m_stochasticMethod->pdf();
     }
   }
   return m_background_color;
 }
 
 void PathTracer::attachStochasticMethod(
-    std::unique_ptr<StochasticMethod> stMethod) {
-  m_stochasticMethod = std::move(stMethod);
+    std::unique_ptr<StochasticSampler> stMethod) {
+  m_stochasticSampler = std::move(stMethod);
 }

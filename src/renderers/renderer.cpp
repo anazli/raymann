@@ -3,7 +3,7 @@
 #include "stochastic/stochastic_method.h"
 
 void BaseRenderer::attachStochasticMethod(
-    std::unique_ptr<StochasticMethod> stMethod) {}
+    std::unique_ptr<StochasticSampler> stMethod) {}
 
 Vec3f BaseRenderer::getColor() const { return m_out_color; }
 

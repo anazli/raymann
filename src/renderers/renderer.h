@@ -5,7 +5,7 @@
 #include "camera/camera.h"
 #include "composite/scene_element.h"
 
-class StochasticMethod;
+class StochasticSampler;
 
 class BaseRenderer {
  public:
@@ -18,7 +18,7 @@ class BaseRenderer {
   virtual Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
                              int rec = 5) = 0;
   virtual void attachStochasticMethod(
-      std::unique_ptr<StochasticMethod> stMethod);
+      std::unique_ptr<StochasticSampler> stMethod);
 
   Vec3f getColor() const;
   void setPixelInfo(const int &x, const int y);

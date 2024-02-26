@@ -4,13 +4,16 @@
 
 #include "renderers/renderer.h"
 
-class StochasticMethod {
+class StochasticSampler {
  public:
-  StochasticMethod(const BaseCameraPtr &cam, int pixelSamples = 50,
-                   int materialDepth = 30);
-  virtual ~StochasticMethod() = default;
+  StochasticSampler(const BaseCameraPtr &cam, int pixelSamples = 50,
+                    int materialDepth = 30);
+  virtual ~StochasticSampler() = default;
   virtual Vec3f computeColor(BaseRendererRawPtr renderer,
                              const SceneElementRawPtr world) = 0;
+  virtual float scatteringPDF(const Ray &r, const IntersectionRecord &record,
+                              const Ray &scatteredRay) const;
+  virtual float pdf() const;
   float randomNumber();
 
  protected:
@@ -19,15 +22,31 @@ class StochasticMethod {
   int m_materialDepth;
   std::uniform_real_distribution<float> rand;
   std::mt19937 gen;
+  float m_pdf;
 };
 
-using StochasticMethodPtr = std::unique_ptr<StochasticMethod>();
+using StochasticSamplerPtr = std::unique_ptr<StochasticSampler>();
 
-class BruteForceMC : public StochasticMethod {
+class BruteForceSampler : public StochasticSampler {
  public:
-  BruteForceMC(const BaseCameraPtr &cam, int pixelSamples = 50,
-               int materialDepth = 30);
-  ~BruteForceMC() override = default;
+  BruteForceSampler(const BaseCameraPtr &cam, int pixelSamples = 50,
+                    int materialDepth = 30);
+  ~BruteForceSampler() override = default;
   Vec3f computeColor(BaseRendererRawPtr renderer,
                      const SceneElementRawPtr world) override;
+  float scatteringPDF(const Ray &r, const IntersectionRecord &record,
+                      const Ray &scatteredRay) const override;
+  float pdf() const override;
+};
+
+class StratifiedSampler : public StochasticSampler {
+ public:
+  StratifiedSampler(const BaseCameraPtr &cam, int pixelSamples = 50,
+                    int materialDepth = 30);
+  ~StratifiedSampler() override = default;
+  Vec3f computeColor(BaseRendererRawPtr renderer,
+                     const SceneElementRawPtr world) override;
+  // float scatteringPDF(const Ray &r, const IntersectionRecord &record,
+  //                     const Ray &scatteredRay) const override;
+  // float pdf() const override;
 };
