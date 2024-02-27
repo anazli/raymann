@@ -119,21 +119,22 @@ int main() {
   //----------------------------------------------------------------------------
   SceneElementPtr world = builder->getProductBVHierarchy();
 
-  auto canvas = Canvas(800, 600);
+  auto canvas = Canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 2.2f);
-  auto from = Point3f(278.f, 278.f, -800.f);
+  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 2.0f);
+  auto from = Point3f(278.f, 276.f, -800.f);
   auto to = Point3f(278.f, 278.f, 0.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
   int samplesPerPixel = 500;
   int materialDepth = 70;
-  BaseRendererPtr renderer = make_unique<PathTracer>(
-      std::make_unique<BruteForceMC>(camera, samplesPerPixel, materialDepth));
+  BaseRendererPtr renderer =
+      make_unique<PathTracer>(std::make_unique<StratifiedSampler>(
+          camera, samplesPerPixel, materialDepth));
   renderer->setBackgroundColor(Vec3f(0.3f, 0.3f, 0.3f));
   chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
-  canvas.render(world, camera, std::move(renderer));
+  canvas.renderParallel(world, camera, std::move(renderer));
   canvas.save();
 
   chrono::time_point<chrono::steady_clock> end = chrono::steady_clock::now();
