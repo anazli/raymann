@@ -68,16 +68,19 @@ Vec3f StratifiedSampler::computeColor(BaseRendererRawPtr renderer,
                                       const SceneElementRawPtr world) {
   if (world->isWorld() && renderer) {
     auto col = Vec3f();
-    auto sqrtN = sqrt(m_samplesPerPixel);
-    auto interval = m_camera->pixelSize() / sqrtN;
-    for (int x = 0; x < static_cast<int>(sqrtN); ++x) {
-      for (int y = 0; y < static_cast<int>(sqrtN); ++y) {
-        auto ax = x - interval;
-        auto bx = x + interval;
+    auto x = renderer->getPixelInfoX();
+    auto y = renderer->getPixelInfoY();
+    auto sqrtN = floor(sqrt(m_samplesPerPixel));
+    auto stratumInterval = m_camera->pixelSize() / 2.f;
+    auto strataInterval = m_camera->pixelSize() / sqrtN;
+    for (int i = 0; i < sqrtN; ++i) {
+      for (int j = 0; j < sqrtN; ++j) {
+        auto ax = x - stratumInterval + i * strataInterval;
+        auto bx = ax + strataInterval;
         auto u = ax + randomNumber() * (bx - ax);
 
-        auto ay = y - interval;
-        auto by = y + interval;
+        auto ay = y - stratumInterval + j * strataInterval;
+        auto by = ay + strataInterval;
         auto v = ay + randomNumber() * (by - ay);
 
         auto newRay = m_camera->getRay(u, v);
