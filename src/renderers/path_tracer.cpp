@@ -25,8 +25,9 @@ Vec3f PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
     if (record.object->getMaterial()->isEmissive()) {
       return emittedColor;
     }
-    if (rec > 0 && record.object->getMaterial()->scatter(
-                       ray, record, attenuation, scattered)) {
+    if (rec > 0 &&
+        record.object->getMaterial()->scatter(ray, record, attenuation,
+                                              scattered, m_stochasticSampler)) {
       // auto scPdf = m_stochasticSampler->scatteringPDF(ray, record,
       // scattered);
       return emittedColor + attenuation * /*scPdf **/

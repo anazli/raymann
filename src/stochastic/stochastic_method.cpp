@@ -17,7 +17,14 @@ float StochasticSampler::scatteringPDF(const Ray &r,
 
 float StochasticSampler::pdf() const { return 1.f; }
 
+void StochasticSampler::setPdf(float val) { m_pdf = val; }
+
 float StochasticSampler::randomNumber() { return rand(gen); }
+
+float StochasticSampler::randomNumber(float a, float b) {
+  std::uniform_real_distribution<float> rnd(a, b);
+  return rnd(gen);
+}
 
 BruteForceSampler::BruteForceSampler(const BaseCameraPtr &cam, int pixelSamples,
                                      int materialDepth)
@@ -53,9 +60,10 @@ Vec3f BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
 float BruteForceSampler::scatteringPDF(const Ray &r,
                                        const IntersectionRecord &record,
                                        const Ray &scatteredRay) const {
-  auto cTheta = dot(record.object->normal(record.point(r)),
-                    Vec3f(scatteredRay.direction()).normalize());
-  return cTheta < 0 ? 0 : cTheta / PI;
+  // auto cTheta = dot(record.object->normal(record.point(r)),
+  //                   Vec3f(scatteredRay.direction()).normalize());
+  // return cTheta < 0 ? 0 : cTheta / PI;
+  return 1.f / (2.f * PI);
 }
 
 float BruteForceSampler::pdf() const { return m_pdf; }

@@ -14,7 +14,9 @@ class StochasticSampler {
   virtual float scatteringPDF(const Ray &r, const IntersectionRecord &record,
                               const Ray &scatteredRay) const;
   virtual float pdf() const;
+  void setPdf(float val);
   float randomNumber();
+  float randomNumber(float a, float b);
 
  protected:
   BaseCameraPtr m_camera;
@@ -25,7 +27,7 @@ class StochasticSampler {
   float m_pdf;
 };
 
-using StochasticSamplerPtr = std::unique_ptr<StochasticSampler>();
+using StochasticSamplerPtr = std::unique_ptr<StochasticSampler>;
 
 class BruteForceSampler : public StochasticSampler {
  public:
