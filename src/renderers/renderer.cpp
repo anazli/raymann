@@ -21,3 +21,11 @@ void BaseRenderer::setBackgroundColor(const Vec3f &color) {
 }
 
 Vec3f BaseRenderer::backgroundColor() const { return m_background_color; }
+
+void BaseRenderer::addDiffuseLight(SceneElementRawPtr light) {
+  m_diffuseLight = light;
+}
+
+SceneElementRawPtr BaseRenderer::getDiffuseLight() const {
+  return m_diffuseLight;
+}

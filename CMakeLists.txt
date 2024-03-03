@@ -44,6 +44,10 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/renderers/path_tracer.h
             src/renderers/phong_model.cpp
             src/renderers/phong_model.h
+            src/stochastic/pdf.cpp
+            src/stochastic/pdf.h
+            src/stochastic/random.cpp
+            src/stochastic/random.h
             src/stochastic/stochastic_method.cpp
             src/stochastic/stochastic_method.h
             src/textures/perlin.cpp
@@ -96,7 +100,7 @@ if(BUILD_TESTING)
 
   add_executable(${TEST_EXE} ${TEST_SOURCES})
   target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/test)
-  target_link_libraries(${TEST_EXE} gtest_main gtest pthread)
+  target_link_libraries(${TEST_EXE} gtest_main gtest pthread Threads::Threads TBB::tbb)
   set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
   target_compile_options(${TEST_EXE} PRIVATE "-g")
   target_link_options(${TEST_EXE} PRIVATE "-lstdc++" PRIVATE "-lm")

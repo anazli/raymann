@@ -5,6 +5,7 @@
 
 class IntersectionRecord;
 class StochasticSampler;
+class StochasticPdf;
 
 class BaseMaterial {
  public:
@@ -13,12 +14,13 @@ class BaseMaterial {
   virtual TextureRawPtr getTexture() const;
   virtual void setProperties(const MaterialProperties& prop);
   virtual MaterialProperties getProperties() const;
-  virtual bool scatter(
-      const Ray& r_in, const IntersectionRecord& rec, Vec3f& attenuation,
-      Ray& scattered,
-      const std::unique_ptr<StochasticSampler>& sampler) const = 0;
+  virtual bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+                       Vec3f& attenuation, Ray& scattered) const = 0;
   virtual Vec3f emmit(float u = 0.f, float v = 0.f, const Vec3f& p = Vec3f());
   virtual bool isEmissive() const;
+  virtual float scatteringPDF(const Ray& r, const IntersectionRecord& record,
+                              const Ray& scatteredRay) const;
+  std::shared_ptr<StochasticPdf> pdf() const;
 
  protected:
   BaseMaterial(TexturePtr tex,
@@ -26,6 +28,7 @@ class BaseMaterial {
       : m_tex(std::move(tex)), m_prop(prop) {}
   TexturePtr m_tex;
   MaterialProperties m_prop;
+  std::shared_ptr<StochasticPdf> m_pdf;
 };
 
 using BaseMaterialPtr = std::shared_ptr<BaseMaterial>;
@@ -39,10 +42,8 @@ class Material : public BaseMaterial {
   TextureRawPtr getTexture() const override;
   void setProperties(const MaterialProperties& prop) override;
   MaterialProperties getProperties() const override;
-  bool scatter(
-      const Ray& r_in, const IntersectionRecord& rec, Vec3f& attenuation,
-      Ray& scattered,
-      const std::unique_ptr<StochasticSampler>& sampler) const override;
+  bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+               Vec3f& attenuation, Ray& scattered) const override;
 };
 
 class Lambertian : public BaseMaterial {
@@ -50,10 +51,10 @@ class Lambertian : public BaseMaterial {
   Lambertian(TexturePtr tex,
              const MaterialProperties& prop = MaterialProperties());
   ~Lambertian() override = default;
-  bool scatter(
-      const Ray& r_in, const IntersectionRecord& rec, Vec3f& attenuation,
-      Ray& scattered,
-      const std::unique_ptr<StochasticSampler>& sampler) const override;
+  bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+               Vec3f& attenuation, Ray& scattered) const override;
+  float scatteringPDF(const Ray& r, const IntersectionRecord& record,
+                      const Ray& scatteredRay) const override;
 };
 
 class Isotropic : public BaseMaterial {
@@ -61,10 +62,10 @@ class Isotropic : public BaseMaterial {
   Isotropic(TexturePtr tex,
             const MaterialProperties& prop = MaterialProperties());
   ~Isotropic() override = default;
-  bool scatter(
-      const Ray& r_in, const IntersectionRecord& rec, Vec3f& attenuation,
-      Ray& scattered,
-      const std::unique_ptr<StochasticSampler>& sampler) const override;
+  bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+               Vec3f& attenuation, Ray& scattered) const override;
+  float scatteringPDF(const Ray& r, const IntersectionRecord& record,
+                      const Ray& scatteredRay) const override;
 };
 
 class Metal : public BaseMaterial {
@@ -72,10 +73,8 @@ class Metal : public BaseMaterial {
   Metal(float f, TexturePtr tex,
         const MaterialProperties& prop = MaterialProperties());
   ~Metal() override = default;
-  bool scatter(
-      const Ray& r_in, const IntersectionRecord& rec, Vec3f& attenuation,
-      Ray& scattered,
-      const std::unique_ptr<StochasticSampler>& sampler) const override;
+  bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+               Vec3f& attenuation, Ray& scattered) const override;
 
  private:
   float m_fuzz;
@@ -86,10 +85,8 @@ class Dielectric : public BaseMaterial {
   Dielectric(float ri, TexturePtr tex,
              const MaterialProperties& prop = MaterialProperties());
   ~Dielectric() override = default;
-  bool scatter(
-      const Ray& r_in, const IntersectionRecord& rec, Vec3f& attenuation,
-      Ray& scattered,
-      const std::unique_ptr<StochasticSampler>& sampler) const override;
+  bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+               Vec3f& attenuation, Ray& scattered) const override;
 
  private:
   float ref_idx;
@@ -100,10 +97,8 @@ class EmissiveMaterial : public BaseMaterial {
   EmissiveMaterial(TexturePtr tex,
                    const MaterialProperties& prop = MaterialProperties());
   ~EmissiveMaterial() override = default;
-  bool scatter(
-      const Ray& r_in, const IntersectionRecord& rec, Vec3f& attenuation,
-      Ray& scattered,
-      const std::unique_ptr<StochasticSampler>& sampler) const override;
+  bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+               Vec3f& attenuation, Ray& scattered) const override;
   Vec3f emmit(float u = 0.f, float v = 0.f, const Vec3f& p = Vec3f()) override;
   bool isEmissive() const override;
 };

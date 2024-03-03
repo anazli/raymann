@@ -1,41 +1,10 @@
 #include "materials/material.h"
 
-#include <random>
-
 #include "composite/scene_element.h"
+#include "stochastic/pdf.h"
+#include "stochastic/random.h"
 #include "stochastic/stochastic_method.h"
 #include "tools/orthonormal.h"
-
-using std::uniform_real_distribution;
-std::mt19937 gen(1984);
-
-Vec3f randomVectorOnUnitSphere() {
-  uniform_real_distribution<float> rand(0.f, 1.f);
-  float xi1{0.f}, xi2{0.f}, dsq{2.f};
-  while (dsq >= 1.f) {
-    xi1 = 1.f - 2.f * rand(gen);
-    xi2 = 1.f - 2.f * rand(gen);
-    dsq = xi1 * xi1 + xi2 * xi2;
-  }
-
-  auto ranh = 2.f * sqrt(1.f - dsq);
-  auto dmx = xi1 * ranh;
-  auto dmy = xi2 * ranh;
-  auto dmz = 1.f - 2.f * dsq;
-
-  return Vec3f(dmx, dmy, dmz);
-}
-
-Vec3f randomCosineDirection() {
-  uniform_real_distribution<float> rand(0.f, 1.f);
-  auto r1 = rand(gen);
-  auto r2 = rand(gen);
-  auto phi = 2.f * PI * r1;
-  auto x = cos(phi) * sqrt(r2);
-  auto y = sin(phi) * sqrt(r2);
-  auto z = sqrt(1.f - r2);
-  return Vec3f(x, y, z);
-}
 
 float schlick(float cosine, float ref_idx) {
   auto r0 = (1.f - ref_idx) / (1.f + ref_idx);
@@ -74,6 +43,14 @@ Vec3f BaseMaterial::emmit(float u, float v, const Vec3f& p) { return Vec3f(); }
 
 bool BaseMaterial::isEmissive() const { return false; }
 
+float BaseMaterial::scatteringPDF(const Ray& r,
+                                  const IntersectionRecord& record,
+                                  const Ray& scatteredRay) const {
+  return 1.f;
+}
+
+std::shared_ptr<StochasticPdf> BaseMaterial::pdf() const { return m_pdf; }
+
 Material::Material(TexturePtr tex, const MaterialProperties& prop)
     : BaseMaterial(std::move(tex), prop) {}
 
@@ -86,41 +63,50 @@ void Material::setProperties(const MaterialProperties& prop) { m_prop = prop; }
 MaterialProperties Material::getProperties() const { return m_prop; }
 
 bool Material::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                       Vec3f& attenuation, Ray& scattered,
-                       const StochasticSamplerPtr& sampler) const {
+                       Vec3f& attenuation, Ray& scattered) const {
   return false;
 }
 
 Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
-    : BaseMaterial(std::move(tex), prop) {}
+    : BaseMaterial(std::move(tex), prop) {
+  m_pdf = std::make_shared<CosPdf>();
+}
 
 bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                         Vec3f& attenuation, Ray& scattered,
-                         const StochasticSamplerPtr& sampler) const {
-  /*auto point = rec.point(r_in);
+                         Vec3f& attenuation, Ray& scattered) const {
+  auto point = rec.point(r_in);
   OrthoNormalBasis orthnb;
   orthnb.buildFromW(rec.object->normal(point));
-  auto scatterDir = orthnb.local(randomCosineDirection());
+  auto scatterDir = orthnb.local(Random::randomCosineDirection());
   scattered = Ray(point, Vec3f(scatterDir).normalize());
   attenuation = m_tex->value(0, 0, Vec3f());
-  sampler->setPdf(dot(orthnb.w(), scattered.direction()) / PI);*/
-  auto point = rec.point(r_in);
-  auto target = point + randomVectorOnUnitSphere() + rec.object->normal(point);
-  scattered = Ray(point, target - point);
-  attenuation = m_tex->value(0, 0, Vec3f());
+  m_pdf->setFromW(rec.object->normal(point));
   return true;
 }
 
+float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
+                                const Ray& scatteredRay) const {
+  auto cTheta = dot(record.object->normal(record.point(r)),
+                    Vec3f(scatteredRay.direction()).normalize());
+  return cTheta < 0 ? 0 : cTheta / PI;
+}
+
 Isotropic::Isotropic(TexturePtr tex, const MaterialProperties& prop)
-    : BaseMaterial(std::move(tex), prop) {}
+    : BaseMaterial(std::move(tex), prop) {
+  m_pdf = std::make_shared<SpherePdf>();
+}
 
 bool Isotropic::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                        Vec3f& attenuation, Ray& scattered,
-                        const StochasticSamplerPtr& sampler) const {
-  scattered = Ray(rec.point(r_in), randomVectorOnUnitSphere().normalize());
+                        Vec3f& attenuation, Ray& scattered) const {
+  scattered =
+      Ray(rec.point(r_in), Random::randomVectorOnUnitSphere().normalize());
   attenuation = m_tex->value(0.f, 0.f, Vec3f());
-  sampler->setPdf(1.f / (4.f * PI));
   return true;
+}
+
+float Isotropic::scatteringPDF(const Ray& r, const IntersectionRecord& record,
+                               const Ray& scatteredRay) const {
+  return 1.f / (4.f * PI);
 }
 
 Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
@@ -132,12 +118,12 @@ Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
 }
 
 bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                    Vec3f& attenuation, Ray& scattered,
-                    const StochasticSamplerPtr& sampler) const {
+                    Vec3f& attenuation, Ray& scattered) const {
   auto point = rec.point(r_in);
   auto normal = rec.object->normal(point);
   Vec3f reflected = reflect(getUnitVectorOf(r_in.direction()), normal);
-  scattered = Ray(point, reflected + m_fuzz * randomVectorOnUnitSphere());
+  scattered =
+      Ray(point, reflected + m_fuzz * Random::randomVectorOnUnitSphere());
   attenuation = m_tex->value(0, 0, Vec3f());
   return (dot(scattered.direction(), normal) > 0);
 }
@@ -146,8 +132,7 @@ Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
     : ref_idx(ri), BaseMaterial(std::move(tex), prop) {}
 
 bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                         Vec3f& attenuation, Ray& scattered,
-                         const StochasticSamplerPtr& sampler) const {
+                         Vec3f& attenuation, Ray& scattered) const {
   auto point = rec.point(r_in);
   Vec3f normal = rec.object->normal(point);
   Vec3f outward_normal;
@@ -186,8 +171,7 @@ EmissiveMaterial::EmissiveMaterial(TexturePtr tex,
     : BaseMaterial(std::move(tex), prop) {}
 
 bool EmissiveMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                               Vec3f& attenuation, Ray& scattered,
-                               const StochasticSamplerPtr& sampler) const {
+                               Vec3f& attenuation, Ray& scattered) const {
   return false;
 }
 

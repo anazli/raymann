@@ -1,29 +1,27 @@
 #include "stochastic/stochastic_method.h"
 
+#include "stochastic/random.h"
+
 StochasticSampler::StochasticSampler(const BaseCameraPtr &cam, int pixelSamples,
                                      int materialDepth)
     : m_camera(cam),
       m_samplesPerPixel(pixelSamples),
-      m_materialDepth(materialDepth) {
-  rand = std::uniform_real_distribution<float>(0.f, 1.f);
-  gen.seed(19844343409u);
+      m_materialDepth(materialDepth) {}
+
+Vec3f StochasticSampler::colorCorrection(Vec3f &color) {
+  color = color / static_cast<float>(m_samplesPerPixel);
+  return Vec3f(static_cast<float>(sqrt(color.x())),
+               static_cast<float>(sqrt(color.y())),
+               static_cast<float>(sqrt(color.z())));
 }
 
-float StochasticSampler::scatteringPDF(const Ray &r,
-                                       const IntersectionRecord &record,
-                                       const Ray &scatteredRay) const {
-  return 1.f;
-}
-
-float StochasticSampler::pdf() const { return 1.f; }
-
-void StochasticSampler::setPdf(float val) { m_pdf = val; }
-
-float StochasticSampler::randomNumber() { return rand(gen); }
-
-float StochasticSampler::randomNumber(float a, float b) {
-  std::uniform_real_distribution<float> rnd(a, b);
-  return rnd(gen);
+void StochasticSampler::addRandomSample(Vec3f &outputColor,
+                                        const Vec3f &randomSampleColor) {
+  Vec3f tempColor(randomSampleColor);
+  if (tempColor.x() != tempColor.x()) tempColor.setX(0.f);
+  if (tempColor.y() != tempColor.y()) tempColor.setY(0.f);
+  if (tempColor.z() != tempColor.z()) tempColor.setZ(0.f);
+  outputColor = outputColor + tempColor;
 }
 
 BruteForceSampler::BruteForceSampler(const BaseCameraPtr &cam, int pixelSamples,
@@ -40,33 +38,20 @@ Vec3f BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
     for (int s = 0; s < m_samplesPerPixel; ++s) {
       auto ax = x - interval;
       auto bx = x + interval;
-      auto u = ax + randomNumber() * (bx - ax);
+      auto u = ax + Random::randomNumber() * (bx - ax);
 
       auto ay = y - interval;
       auto by = y + interval;
-      auto v = ay + randomNumber() * (by - ay);
+      auto v = ay + Random::randomNumber() * (by - ay);
 
       auto newRay = m_camera->getRay(u, v);
-      col = col + renderer->computeColor(world, newRay, m_materialDepth);
+      Vec3f sColor = renderer->computeColor(world, newRay, m_materialDepth);
+      addRandomSample(col, sColor);
     }
-    col = col / static_cast<float>(m_samplesPerPixel);
-    return Vec3f(static_cast<float>(sqrt(col.x())),
-                 static_cast<float>(sqrt(col.y())),
-                 static_cast<float>(sqrt(col.z())));
+    return colorCorrection(col);
   }
   return Vec3f();
 }
-
-float BruteForceSampler::scatteringPDF(const Ray &r,
-                                       const IntersectionRecord &record,
-                                       const Ray &scatteredRay) const {
-  // auto cTheta = dot(record.object->normal(record.point(r)),
-  //                   Vec3f(scatteredRay.direction()).normalize());
-  // return cTheta < 0 ? 0 : cTheta / PI;
-  return 1.f / (2.f * PI);
-}
-
-float BruteForceSampler::pdf() const { return m_pdf; }
 
 StratifiedSampler::StratifiedSampler(const BaseCameraPtr &cam, int pixelSamples,
                                      int materialDepth)
@@ -85,20 +70,18 @@ Vec3f StratifiedSampler::computeColor(BaseRendererRawPtr renderer,
       for (int j = 0; j < sqrtN; ++j) {
         auto ax = x - stratumInterval + i * strataInterval;
         auto bx = ax + strataInterval;
-        auto u = ax + randomNumber() * (bx - ax);
+        auto u = ax + Random::randomNumber() * (bx - ax);
 
         auto ay = y - stratumInterval + j * strataInterval;
         auto by = ay + strataInterval;
-        auto v = ay + randomNumber() * (by - ay);
+        auto v = ay + Random::randomNumber() * (by - ay);
 
         auto newRay = m_camera->getRay(u, v);
-        col = col + renderer->computeColor(world, newRay, m_materialDepth);
+        Vec3f sColor = renderer->computeColor(world, newRay, m_materialDepth);
+        addRandomSample(col, sColor);
       }
     }
-    col = col / static_cast<float>(m_samplesPerPixel);
-    return Vec3f(static_cast<float>(sqrt(col.x())),
-                 static_cast<float>(sqrt(col.y())),
-                 static_cast<float>(sqrt(col.z())));
+    return colorCorrection(col);
   }
   return Vec3f();
 }

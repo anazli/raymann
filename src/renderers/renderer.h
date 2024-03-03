@@ -26,9 +26,12 @@ class BaseRenderer {
   float getPixelInfoY() const;
   void setBackgroundColor(const Vec3f &color);
   Vec3f backgroundColor() const;
+  void addDiffuseLight(SceneElementRawPtr light);
+  SceneElementRawPtr getDiffuseLight() const;
 
  protected:
   IntersectionRecord m_closestHit;
+  SceneElementRawPtr m_diffuseLight;
   Vec3f m_out_color;
   Vec3f m_background_color;
   float m_tmin = MAXFLOAT;

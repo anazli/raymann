@@ -110,6 +110,11 @@ Vec3<T> operator+(const Vec3<T> &v, const Point3<T> &p) {
 }
 
 template <typename T>
+Point3<T> operator+(const Point3<T> &p, const T &v) {
+  return Point3<T>(p.x() + v, p.y() + v, p.z() + v);
+}
+
+template <typename T>
 bool operator==(const Point3<T> &p1, const Point3<T> &p2) {
   return (p1.x() == p2.x()) && (p1.y() == p2.y()) && (p1.z() == p2.z());
 }

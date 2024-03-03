@@ -48,6 +48,14 @@ BoundingBox& SceneElement::boundingBox() { return m_bBox; }
 
 const BoundingBox& SceneElement::boundingBox() const { return m_bBox; }
 
+float SceneElement::pdf(const Point3f& origin, const Vec3f& direction) {
+  return 1.f;
+}
+
+Vec3f SceneElement::random(const Point3f& origin) {
+  return Vec3f(1.f, 0.f, 0.f);
+}
+
 // size_t SceneElement::getId() const { return 0; /*m_id*/ }
 
 Point3f SceneElement::pointFromWorldToObjectSpace(const Point3f& point) const {

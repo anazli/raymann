@@ -18,38 +18,123 @@
 using namespace std;
 
 int main() {
-  auto light = PointLight(Point3f(80.f, 70.f, 200.f), Vec3f(1.f, 1.f, 1.f));
+  auto light = PointLight(Point3f(0.f, 0.f, 2.f), Vec3f(1.0f, 1.0f, 1.0f));
+  auto builder = make_unique<WorldBuilder>();
+  builder->createWorld();
+  auto eps = 0.05f;
+  auto white = Vec3f(0.73f, 0.73f, 0.73f);
+  auto green = Vec3f(0.12f, 0.45f, 0.15f);
+  auto red = Vec3f(0.65f, 0.05f, 0.05f);
+  auto diffuseLight = Vec3f(9.f, 9.f, 9.f);
 
-  WavefrontReader reader("dragon.obj");
-  reader.addLightForModel(light);
-  reader.addMaterial(make_shared<Lambertian>(
-      make_unique<ConstantTexture>(Vec3f(0.08f, 0.683f, 0.382f))));
-  reader.parseInput();
-  SceneElementPtr world = reader.getStructureBVHierarchy();
+  /*---------------------------------------------------------------------------
+   *				Floor
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Cube);
+  builder->applyTransformation(translation(278.f, 0.f, -245.f) *
+                               scale(279.f, eps, 556.f));
+  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->addElement();
 
-  BuilderPtr builder = make_unique<WorldBuilder>();
-  builder->processSceneElement(new Plane);
-  builder->applyTransformation(translation(0.f, -40.f, 0.f) *
-                               rotationOverY(PI));
-  builder->applyLambertianMaterial(
-      make_unique<ConstantTexture>(Vec3f(0.25f, 0.25f, 0.75f)));
-  SceneElementPtr floor(builder->getCurrentElement());
-  world->add(floor);
+  /*---------------------------------------------------------------------------
+   *				Ceil
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Cube);
+  builder->applyTransformation(translation(278.f, 555.f, -245.f) *
+                               scale(279.f, eps, 556.f));
+  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->addElement();
 
-  auto canvas = Canvas(600, 600);
+  /*---------------------------------------------------------------------------
+   *				Left Wall
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Cube);
+  builder->applyTransformation(translation(0.f, 278.f, -245.f) *
+                               scale(eps, 279.f, 556.f));
+  builder->applyLambertianMaterial(make_unique<ConstantTexture>(green));
+  builder->addElement();
+  /*---------------------------------------------------------------------------
+   *				Right Wall
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Cube);
+  builder->applyTransformation(translation(555.f, 278.f, -245.f) *
+                               scale(eps, 279.f, 556.f));
+  builder->applyLambertianMaterial(make_unique<ConstantTexture>(red));
+  builder->addElement();
+
+  /*---------------------------------------------------------------------------
+   *				Center Wall
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Cube);
+  builder->applyTransformation(translation(0.f, 278.f, -245.f) *
+                               scale(556.f, 279.f, eps));
+  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->addElement();
+
+  /*---------------------------------------------------------------------------
+   *				Light Wall
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Cube);
+  builder->applyTransformation(translation(277.f, 554.5f, -455.f) *
+                               scale(80.f, eps, 30.f));
+  builder->applyEmissiveMaterial(make_unique<ConstantTexture>(diffuseLight));
+  SceneElementRawPtr diffuseLightElem = builder->getCurrentElement();
+  builder->addElement();
+
+  /*---------------------------------------------------------------------------
+   *				Left Box
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Cube);
+  builder->applyTransformation(translation(195.f, 1.f, -380.f) *
+                               scale(60.f, 240.f, 60.f) * rotationOverY(-0.4f));
+  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->addElement();
+
+  /*---------------------------------------------------------------------------
+   *				Right Box
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Cube);
+  builder->applyTransformation(translation(367.f, 1.f, -440.f) *
+                               scale(60.f, 90.f, 60.f) * rotationOverY(0.3f));
+  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->addElement();
+
+  /*---------------------------------------------------------------------------
+   *				Upper Sphere
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(translation(200.f, 300.f, -385.f) *
+                               scale(60.f, 60.f, 60.f));
+  builder->applyDielectricMaterial(1.5f, make_unique<ConstantTexture>(white));
+  builder->addElement();
+
+  /*---------------------------------------------------------------------------
+   *				Bottom Sphere
+   * -------------------------------------------------------------------------*/
+  builder->processSceneElement(new Sphere);
+  builder->applyTransformation(translation(200.f, 30.f, -500.f) *
+                               scale(60.f, 60.f, 60.f));
+  builder->applyMetalMaterial(0.2f, make_unique<ConstantTexture>(white));
+  builder->addElement();
+
+  //----------------------------------------------------------------------------
+  SceneElementPtr world = builder->getProductBVHierarchy();
+
+  auto canvas = Canvas(400, 400);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.5f);
-  auto from = Point3f(0.f, -15.f, 130.f);
-  auto to = Point3f(30.f, 30.0f, -40.f);
+  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.7f);
+  auto from = Point3f(278.f, 276.f, -800.f);
+  auto to = Point3f(278.f, 278.f, 0.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
   int samplesPerPixel = 100;
-  int materialDepth = 30;
+  int materialDepth = 50;
   BaseRendererPtr renderer =
-      make_unique<PathTracer>(std::make_unique<StratifiedSampler>(
+      make_unique<PathTracer>(std::make_unique<BruteForceSampler>(
           camera, samplesPerPixel, materialDepth));
-  renderer->setBackgroundColor(Vec3f(0.55f, 0.4f, 0.4f));
+  renderer->setBackgroundColor(Vec3f(0.3f, 0.3f, 0.3f));
+  renderer->addDiffuseLight(diffuseLightElem);
   chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
   canvas.renderParallel(world, camera, std::move(renderer));
   canvas.save();

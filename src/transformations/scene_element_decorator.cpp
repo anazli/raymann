@@ -60,6 +60,15 @@ const BoundingBox& SceneElementDecorator::boundingBox() const {
   return m_element->boundingBox();
 }
 
+float SceneElementDecorator::pdf(const Point3f& origin,
+                                 const Vec3f& direction) {
+  return m_element->pdf(origin, direction);
+}
+
+Vec3f SceneElementDecorator::random(const Point3f& origin) {
+  return m_element->random(origin);
+}
+
 Point3f SceneElementDecorator::pointFromWorldToObjectSpace(
     const Point3f& point) const {
   return m_element->pointFromWorldToObjectSpace(point);

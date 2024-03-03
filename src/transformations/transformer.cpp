@@ -95,6 +95,14 @@ const BoundingBox& Transformer::boundingBox() const {
   return SceneElementDecorator::boundingBox();
 }
 
+float Transformer::pdf(const Point3f& origin, const Vec3f& direction) {
+  return SceneElementDecorator::pdf(origin, direction);
+}
+
+Vec3f Transformer::random(const Point3f& origin) {
+  return SceneElementDecorator::random(origin);
+}
+
 Point3f Transformer::pointFromWorldToObjectSpace(const Point3f& point) const {
   Point3f p(point);
   if (getParent()) {

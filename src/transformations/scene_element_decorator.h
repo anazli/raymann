@@ -21,6 +21,8 @@ class SceneElementDecorator : public SceneElement {
   void setBoundingBox(const BoundingBox &box) override;
   BoundingBox &boundingBox() override;
   const BoundingBox &boundingBox() const override;
+  float pdf(const Point3f &origin, const Vec3f &direction) override;
+  Vec3f random(const Point3f &origin) override;
 
   Point3f pointFromWorldToObjectSpace(const Point3f &point) const override;
   Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const override;

@@ -41,6 +41,8 @@ class SceneElement {
   virtual void setBoundingBox(const BoundingBox &box);
   virtual BoundingBox &boundingBox();
   virtual const BoundingBox &boundingBox() const;
+  virtual float pdf(const Point3f &origin, const Vec3f &direction);
+  virtual Vec3f random(const Point3f &origin);
   void setMaterial(BaseMaterialPtr mat);
   BaseMaterialPtr getMaterial() const;
   // size_t getId() const;

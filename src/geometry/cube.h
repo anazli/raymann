@@ -3,6 +3,7 @@
 #include <limits>
 
 #include "composite/scene_element.h"
+#include "stochastic/random.h"
 
 class Cube : public SceneElement {
  public:
@@ -39,6 +40,27 @@ class Cube : public SceneElement {
     else if (max_coord == fabs(p.y()))
       return Vec3f(0.f, p.y(), 0.f);
     return Vec3f(0.f, 0.f, p.z());
+  }
+
+  float pdf(const Point3f &origin, const Vec3f &direction) override {
+    IntersectionRecord rec;
+    auto minp = boundingBox().minPoint();
+    auto maxp = boundingBox().maxPoint();
+    auto area = (maxp.x() - minp.x()) * (maxp.z() - minp.z());
+    if (!intersect(Ray(origin, direction), rec)) return 1.f;
+
+    auto distSquared =
+        rec.t_min() * rec.t_min() * direction.length() * direction.length();
+    auto cosine = fabs(dot(direction, normal(origin)) / direction.length());
+
+    return distSquared / (cosine * area);
+  }
+  Vec3f random(const Point3f &origin) override {
+    auto minp = boundingBox().minPoint();
+    auto maxp = boundingBox().maxPoint();
+    auto p = minp + (Random::randomNumber() * (maxp.x() - minp.x())) +
+             (Random::randomNumber() * (maxp.z() - minp.z()));
+    return p - origin;
   }
 
  private:
