@@ -23,6 +23,7 @@ class Sphere : public SceneElement {
       record.t1 = (-b - sqrt(discr)) / (2. * a);
       record.t2 = (-b + sqrt(discr)) / (2. * a);
       record.count = 2;
+      record.saved_point = record.point(r);
       return true;
     }
     return false;

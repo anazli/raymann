@@ -18,35 +18,37 @@ void PathTracer::visitSceneElementComposite(
 
 Vec3f PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
                                int rec) {
+  if (rec < 0) return Vec3f();
   IntersectionRecord record;
-  if (world->intersect(ray, record)) {
-    Ray scattered;
-    Vec3f attenuation;
-    Vec3f emittedColor = record.object->getMaterial()->emmit();
-    if (record.object->getMaterial()->isEmissive()) {
-      return emittedColor;
-    }
-    if (rec > 0 && record.object->getMaterial()->scatter(
-                       ray, record, attenuation, scattered)) {
-      auto scatPdf =
-          record.object->getMaterial()->scatteringPDF(ray, record, scattered);
-      auto point = record.point(scattered);
+  if (!world->intersect(ray, record)) return m_background_color;
 
-      float pdf = 1.f;
-      StochasticPdfPtr lightPdf;
-      if (m_diffuseLight) {
-        lightPdf = std::make_shared<PrimitivePdf>(m_diffuseLight, point);
-      }
-      StochasticPdfPtr cosPdf =
-          std::make_shared<CosPdf>(record.object->normal(point));
-      CombinedPdf mixPdf(lightPdf, cosPdf);
-      scattered = Ray(point, mixPdf.generate());
-      pdf = mixPdf.value(scattered.direction());
-      return emittedColor + attenuation * scatPdf *
-                                computeColor(world, scattered, rec - 1) / pdf;
-    }
+  Vec3f emittedColor = record.object->getMaterial()->emmit();
+
+  Ray scattered;
+  Vec3f attenuation;
+  if (!record.object->getMaterial()->scatter(ray, record, attenuation,
+                                             scattered)) {
+    return emittedColor;
   }
-  return m_background_color;
+
+  if (record.object->getMaterial()->getType() == MaterialType::DIELECTRIC ||
+      record.object->getMaterial()->getType() == MaterialType::METAL) {
+    return attenuation * computeColor(world, scattered, rec - 1);
+  }
+
+  StochasticPdfPtr lightPdf;
+  if (m_diffuseLight) {
+    lightPdf =
+        std::make_shared<PrimitivePdf>(m_diffuseLight, record.point(scattered));
+  }
+  CombinedPdf mixPdf(lightPdf, record.object->getMaterial()->pdf(), 0.7f);
+  auto rayFromPdf = Ray(record.point(ray), mixPdf.generate());
+  auto scatPdf = record.object->getMaterial()->scatteringPDF(scattered, record,
+                                                             rayFromPdf);
+  auto pdf = mixPdf.value(rayFromPdf.direction());
+
+  return emittedColor +
+         attenuation * scatPdf * computeColor(world, rayFromPdf, rec - 1) / pdf;
 }
 
 void PathTracer::attachStochasticMethod(

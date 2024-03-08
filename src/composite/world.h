@@ -4,7 +4,7 @@
 
 #include "composite/scene_element.h"
 
-using SceneElementContainer = std::list<SceneElementPtr>;
+using SceneElementContainer = std::vector<SceneElementPtr>;
 
 class World : public SceneElement {
   friend class WorldIterator;
@@ -22,8 +22,11 @@ class World : public SceneElement {
   SceneElementContainer &getChildren() override;
   void setLight(const PointLight &light) override;
   PointLight getLight() const override;
+  float pdf(const Point3f &origin, const Vec3f &direction) override;
+  Vec3f random(const Point3f &origin) override;
 
  private:
   SceneElementContainer m_sceneElementContainer;
+  std::vector<SceneElementPtr> m_vector;
   PointLight m_light;
 };

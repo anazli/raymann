@@ -46,7 +46,7 @@ class PrimitivePdf : public StochasticPdf {
 
 class CombinedPdf : public StochasticPdf {
  public:
-  CombinedPdf(StochasticPdfPtr pdf1, StochasticPdfPtr pdf2);
+  CombinedPdf(StochasticPdfPtr pdf1, StochasticPdfPtr pdf2, float ratio = 0.5f);
   ~CombinedPdf() override = default;
   float value(const Vec3f &direction) const override;
   Vec3f generate() const override;
@@ -54,4 +54,5 @@ class CombinedPdf : public StochasticPdf {
  private:
   StochasticPdfPtr m_firstPdf;
   StochasticPdfPtr m_secondPdf;
+  float m_ratio;
 };

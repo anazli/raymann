@@ -7,6 +7,14 @@ class IntersectionRecord;
 class StochasticSampler;
 class StochasticPdf;
 
+enum class MaterialType {
+  LAMBERTIAN,
+  ISOTROPIC,
+  DIFFUSE_LIGHT,
+  METAL,
+  DIELECTRIC
+};
+
 class BaseMaterial {
  public:
   virtual ~BaseMaterial() = default;
@@ -21,6 +29,7 @@ class BaseMaterial {
   virtual float scatteringPDF(const Ray& r, const IntersectionRecord& record,
                               const Ray& scatteredRay) const;
   std::shared_ptr<StochasticPdf> pdf() const;
+  MaterialType getType() const;
 
  protected:
   BaseMaterial(TexturePtr tex,
@@ -29,6 +38,7 @@ class BaseMaterial {
   TexturePtr m_tex;
   MaterialProperties m_prop;
   std::shared_ptr<StochasticPdf> m_pdf;
+  MaterialType m_type;
 };
 
 using BaseMaterialPtr = std::shared_ptr<BaseMaterial>;

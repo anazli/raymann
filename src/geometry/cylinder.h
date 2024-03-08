@@ -55,6 +55,7 @@ class Cylinder : public SceneElement {
         hitAnything = true;
       }
     }
+    record.saved_point = record.point(r);
     if (intersectCaps(r, record)) hitAnything = true;
     return hitAnything;
   }

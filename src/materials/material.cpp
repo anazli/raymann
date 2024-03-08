@@ -51,6 +51,8 @@ float BaseMaterial::scatteringPDF(const Ray& r,
 
 std::shared_ptr<StochasticPdf> BaseMaterial::pdf() const { return m_pdf; }
 
+MaterialType BaseMaterial::getType() const { return m_type; }
+
 Material::Material(TexturePtr tex, const MaterialProperties& prop)
     : BaseMaterial(std::move(tex), prop) {}
 
@@ -70,23 +72,28 @@ bool Material::scatter(const Ray& r_in, const IntersectionRecord& rec,
 Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
     : BaseMaterial(std::move(tex), prop) {
   m_pdf = std::make_shared<CosPdf>();
+  m_type = MaterialType::LAMBERTIAN;
 }
 
 bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
                          Vec3f& attenuation, Ray& scattered) const {
+  // auto point = rec.point(r_in);
+  // OrthoNormalBasis orthnb;
+  // orthnb.buildFromW(rec.object->normal(point));
+  // auto scatterDir = orthnb.local(Random::randomCosineDirection());
   auto point = rec.point(r_in);
-  OrthoNormalBasis orthnb;
-  orthnb.buildFromW(rec.object->normal(point));
-  auto scatterDir = orthnb.local(Random::randomCosineDirection());
-  scattered = Ray(point, Vec3f(scatterDir).normalize());
-  attenuation = m_tex->value(0, 0, Vec3f());
+  auto target =
+      point + Random::randomVectorOnUnitSphere() + rec.object->normal(point);
+  scattered = Ray(point, target - point);
   m_pdf->setFromW(rec.object->normal(point));
+  attenuation = m_tex->value(0, 0, Vec3f());
+  // m_pdf->setFromW(rec.object->normal(point));
   return true;
 }
 
 float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
                                 const Ray& scatteredRay) const {
-  auto cTheta = dot(record.object->normal(record.point(r)),
+  auto cTheta = dot(record.object->normal(record.point(scatteredRay)),
                     Vec3f(scatteredRay.direction()).normalize());
   return cTheta < 0 ? 0 : cTheta / PI;
 }
@@ -94,6 +101,7 @@ float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
 Isotropic::Isotropic(TexturePtr tex, const MaterialProperties& prop)
     : BaseMaterial(std::move(tex), prop) {
   m_pdf = std::make_shared<SpherePdf>();
+  m_type = MaterialType::ISOTROPIC;
 }
 
 bool Isotropic::scatter(const Ray& r_in, const IntersectionRecord& rec,
@@ -115,6 +123,7 @@ Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
     m_fuzz = f;
   else
     m_fuzz = 1.f;
+  m_type = MaterialType::METAL;
 }
 
 bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
@@ -129,7 +138,9 @@ bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
 }
 
 Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
-    : ref_idx(ri), BaseMaterial(std::move(tex), prop) {}
+    : ref_idx(ri), BaseMaterial(std::move(tex), prop) {
+  m_type = MaterialType::DIELECTRIC;
+}
 
 bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
                          Vec3f& attenuation, Ray& scattered) const {
@@ -168,7 +179,9 @@ bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
 
 EmissiveMaterial::EmissiveMaterial(TexturePtr tex,
                                    const MaterialProperties& prop)
-    : BaseMaterial(std::move(tex), prop) {}
+    : BaseMaterial(std::move(tex), prop) {
+  m_type = MaterialType::DIFFUSE_LIGHT;
+}
 
 bool EmissiveMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
                                Vec3f& attenuation, Ray& scattered) const {

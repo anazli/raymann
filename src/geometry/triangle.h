@@ -43,6 +43,7 @@ class Triangle : public SceneElement {
 
     record.t1 = inv_det * dot(m_edgeVec[1], cross_s_edge1);
     record.count++;
+    record.saved_point = record.point(r);
     return true;
   }
   Vec3f normal(const Point3f &p) const override { return m_normalVec; }

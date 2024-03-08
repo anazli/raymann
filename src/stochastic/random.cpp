@@ -7,6 +7,11 @@ float Random::randomNumber(float a, float b) {
   return rnd(m_gen);
 }
 
+float Random::randomInteger(int a, int b) {
+  std::uniform_int_distribution<int> rnd(a, b);
+  return rnd(m_gen);
+}
+
 Vec3f Random::randomVectorOnUnitSphere() {
   float xi1{0.f}, xi2{0.f}, dsq{2.f};
   while (dsq >= 1.f) {

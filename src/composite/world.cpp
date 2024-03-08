@@ -4,6 +4,7 @@
 
 #include "composite/iterator.h"
 #include "renderers/renderer.h"
+#include "stochastic/random.h"
 
 using std::list;
 using std::shared_ptr;
@@ -73,3 +74,19 @@ SceneElementContainer& World::getChildren() { return m_sceneElementContainer; }
 void World::setLight(const PointLight& light) { m_light = light; }
 
 PointLight World::getLight() const { return m_light; }
+
+float World::pdf(const Point3f& origin, const Vec3f& direction) {
+  auto weight = 1.f / m_sceneElementContainer.size();
+  auto sum = 0.f;
+
+  for (const auto& object : m_sceneElementContainer)
+    sum += weight * object->pdf(origin, direction);
+
+  return sum;
+}
+
+Vec3f World::random(const Point3f& origin) {
+  auto int_size = static_cast<int>(m_sceneElementContainer.size());
+  return m_sceneElementContainer[Random::randomInteger(0, int_size - 1)]
+      ->random(origin);
+}

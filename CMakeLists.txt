@@ -32,6 +32,7 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/geometry/cube.h
             src/geometry/cylinder.h
             src/geometry/plane.h
+            src/geometry/quad.h
             src/geometry/sphere.h
             src/geometry/triangle.h
             src/materials/material.cpp

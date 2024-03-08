@@ -32,8 +32,9 @@ float PrimitivePdf::value(const Vec3f &direction) const {
 
 Vec3f PrimitivePdf::generate() const { return m_element->random(m_origin); }
 
-CombinedPdf::CombinedPdf(StochasticPdfPtr pdf1, StochasticPdfPtr pdf2)
-    : m_firstPdf(pdf1), m_secondPdf(pdf2) {}
+CombinedPdf::CombinedPdf(StochasticPdfPtr pdf1, StochasticPdfPtr pdf2,
+                         float ratio)
+    : m_firstPdf(pdf1), m_secondPdf(pdf2), m_ratio(ratio) {}
 
 float CombinedPdf::value(const Vec3f &direction) const {
   if (m_firstPdf && m_secondPdf) {
@@ -44,10 +45,9 @@ float CombinedPdf::value(const Vec3f &direction) const {
 }
 
 Vec3f CombinedPdf::generate() const {
-  if (m_firstPdf && Random::randomNumber() < 0.5f) {
+  if (m_firstPdf && Random::randomNumber() < m_ratio) {
     return m_firstPdf->generate();
-  }
-  if (m_secondPdf) {
+  } else if (m_secondPdf) {
     return m_secondPdf->generate();
   }
   return Vec3f();

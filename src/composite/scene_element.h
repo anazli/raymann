@@ -27,13 +27,13 @@ class SceneElement {
   virtual SceneElementType elementType() const;
   virtual bool intersect(const Ray &r, IntersectionRecord &record);
   virtual void add(std::shared_ptr<SceneElement> item);
-  virtual std::list<std::shared_ptr<SceneElement>>::iterator remove(
+  virtual std::vector<std::shared_ptr<SceneElement>>::iterator remove(
       SceneElement *item, std::shared_ptr<SceneElement> removedElem);
   virtual bool isWorld() const;
   virtual Vec3f normal(const Point3f &p) const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);
-  virtual std::list<std::shared_ptr<SceneElement>> getChildren() const;
-  virtual std::list<std::shared_ptr<SceneElement>> &getChildren();
+  virtual std::vector<std::shared_ptr<SceneElement>> getChildren() const;
+  virtual std::vector<std::shared_ptr<SceneElement>> &getChildren();
   virtual void setParent(SceneElement *parent);
   virtual SceneElement *getParent() const;
   virtual void setLight(const PointLight &light);
@@ -81,6 +81,7 @@ class IntersectionRecord {
     return -1.0f;  // TODO: to be fixed for negative intersections
   }
   Point3f point(const Ray &r) const { return r.position(t_min()); }
+  Point3f saved_point;
   Vec3f eye(const Ray &r) const { return -r.direction(); }
   bool inside = false;
   Point3f over_point_from_refl_surf;
