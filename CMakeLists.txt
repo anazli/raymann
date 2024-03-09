@@ -18,6 +18,8 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/application/wavefront_reader.h
             src/camera/camera.cpp
             src/camera/camera.h
+            src/color/spectrum.cpp
+            src/color/spectrum.h
             src/composite/builder.cpp
             src/composite/builder.h
             src/composite/iterator.cpp
