@@ -20,6 +20,8 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/camera/camera.h
             src/color/spectrum.cpp
             src/color/spectrum.h
+            src/color/em_spectrum.cpp
+            src/color/em_spectrum.h
             src/color/rgb_spectrum.cpp
             src/color/rgb_spectrum.h
             src/composite/builder.cpp

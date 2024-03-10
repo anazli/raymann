@@ -1,11 +1,17 @@
 #pragma once
 #include "color/spectrum.h"
+#include "tools/vec3.h"
 
 class RGBSpectrum : public Spectrum {
  public:
-  RGBSpectrum(float value = 0.f, int samplesSize = 60);
+  RGBSpectrum(float value = 0.f);
 
- private:
-  static constexpr float m_lowerLim = 400.f;
-  static constexpr float m_upperLim = 700.f;
+  Vec3f toRGB() const;
+  Vec3f toXYZ() const;
+  float y() const;
 };
+
+RGBSpectrum fromRGB(const Vec3f &v);
+RGBSpectrum fromXYZ(const Vec3f &xyz);
+Vec3f RGBToXYZ(const Vec3f &rgb);
+Vec3f XYZToRGB(const Vec3f xyz);
