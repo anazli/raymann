@@ -18,6 +18,12 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/application/wavefront_reader.h
             src/camera/camera.cpp
             src/camera/camera.h
+            src/color/spectrum.cpp
+            src/color/spectrum.h
+            src/color/em_spectrum.cpp
+            src/color/em_spectrum.h
+            src/color/rgb_spectrum.cpp
+            src/color/rgb_spectrum.h
             src/composite/builder.cpp
             src/composite/builder.h
             src/composite/iterator.cpp
@@ -89,6 +95,7 @@ if(BUILD_TESTING)
                    test/boundingBox_test.cpp
                    test/camera_test.cpp
                    test/canvas_test.cpp
+                   test/color_test.cpp
                    test/material_test.cpp
                    test/primitive_test.cpp
                    test/properties_test.cpp
