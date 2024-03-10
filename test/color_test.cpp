@@ -1,4 +1,4 @@
-#include "color/spectrum.h"
+#include "color/coeff_spectrum.h"
 #include "gtesting.h"
 
 class ColorTest : public testing::RTest {

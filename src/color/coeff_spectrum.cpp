@@ -1,4 +1,4 @@
-#include "color/spectrum.h"
+#include "color/coeff_spectrum.h"
 
 #include <algorithm>
 #include <cmath>
@@ -55,7 +55,7 @@ CoeffSpectrum CoeffSpectrum::clamp(float low, float high) {
   std::transform(m_samples.begin(), m_samples.end(), m_samples.begin(),
                  [&low, &high](float &elem) {
                    elem = std::clamp(elem, low, high);
-                   return elem1;
+                   return elem;
                  });
   return *this;
 }
