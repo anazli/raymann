@@ -43,3 +43,4 @@ CoeffSpectrum operator/(const CoeffSpectrum &l, const float &f);
 CoeffSpectrum sqrt(const CoeffSpectrum &s);
 CoeffSpectrum exp(const CoeffSpectrum &s);
 CoeffSpectrum pow(const CoeffSpectrum &s, const int &p);
+CoeffSpectrum lerp(float t, const CoeffSpectrum &l, const CoeffSpectrum &r);

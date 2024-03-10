@@ -55,7 +55,7 @@ CoeffSpectrum CoeffSpectrum::clamp(float low, float high) {
   std::transform(m_samples.begin(), m_samples.end(), m_samples.begin(),
                  [&low, &high](float &elem) {
                    elem = std::clamp(elem, low, high);
-                   return elem;
+                   return elem1;
                  });
   return *this;
 }
@@ -171,4 +171,8 @@ CoeffSpectrum pow(const CoeffSpectrum &s, const int &p) {
                    return elem1;
                  });
   return ret;
+}
+
+CoeffSpectrum lerp(float t, const CoeffSpectrum &l, const CoeffSpectrum &r) {
+  return (1.f - t) * l + t * r;
 }
