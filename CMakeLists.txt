@@ -91,6 +91,7 @@ if(BUILD_TESTING)
                    test/boundingBox_test.cpp
                    test/camera_test.cpp
                    test/canvas_test.cpp
+                   test/color_test.cpp
                    test/material_test.cpp
                    test/primitive_test.cpp
                    test/properties_test.cpp
