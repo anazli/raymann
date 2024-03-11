@@ -18,7 +18,6 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/application/wavefront_reader.h
             src/camera/camera.cpp
             src/camera/camera.h
-            src/color/spectrum.cpp
             src/color/spectrum.h
             src/color/em_spectrum.cpp
             src/color/em_spectrum.h
@@ -41,6 +40,8 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/geometry/quad.h
             src/geometry/sphere.h
             src/geometry/triangle.h
+            src/interaction/brdf_model.cpp
+            src/interaction/brdf_model.h
             src/materials/material.cpp
             src/materials/material.h
             src/materials/material_properties.cpp

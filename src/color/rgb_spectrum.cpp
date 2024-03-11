@@ -2,7 +2,9 @@
 
 #include "application/error.h"
 
-RGBSpectrum::RGBSpectrum(float value) : Spectrum(value, 3) {}
+RGBSpectrum::RGBSpectrum(float value) : Spectrum(value) {}
+
+RGBSpectrum::RGBSpectrum(const Spectrum<3> &other) : Spectrum<3>(other) {}
 
 Vec3f RGBSpectrum::toRGB() const {
   return Vec3f(m_samples[0], m_samples[1], m_samples[2]);

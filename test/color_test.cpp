@@ -3,8 +3,8 @@
 
 class ColorTest : public testing::RTest {
  public:
-  Spectrum s1;
-  Spectrum s2;
+  Spectrum<10> s1;
+  Spectrum<10> s2;
   ColorTest() {
     s1.samples()[0] = 1.f;
     s1.samples()[1] = 2.f;
@@ -64,12 +64,12 @@ TEST_F(ColorTest, clampSpectrum) {
 }
 
 TEST_F(ColorTest, spectrumEquality) {
-  Spectrum s3 = s1;
+  Spectrum<10> s3 = s1;
   ASSERT_TRUE(s1 == s3);
 }
 
 TEST_F(ColorTest, spectrumInequality) {
-  Spectrum s3;
+  Spectrum<10> s3;
   s3.samples()[0] = 4.f;
   s3.samples()[1] = 5.f;
   s3.samples()[2] = 6.f;
@@ -78,13 +78,13 @@ TEST_F(ColorTest, spectrumInequality) {
 
 TEST_F(ColorTest, spectrumIsBlackTest) {
   EXPECT_FALSE(s1.isBlack());
-  Spectrum s3(0.f);
+  Spectrum<10> s3(0.f);
   EXPECT_TRUE(s3.isBlack());
 }
 
 TEST_F(ColorTest, spectrumHasNaNsTest) {
   EXPECT_FALSE(s1.hasNaNs());
-  Spectrum s3(0.f);
+  Spectrum<10> s3(0.f);
   s3.samples()[s3.samples().size() - 1] = std::nan("9");
   EXPECT_TRUE(s3.hasNaNs());
 }
