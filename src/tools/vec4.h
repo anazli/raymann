@@ -1,5 +1,4 @@
-#ifndef VEC4_H
-#define VEC4_H
+#pragma once
 
 #include <cassert>
 #include <iostream>
@@ -17,9 +16,8 @@ class Point3;
 template <class T>
 class Vec4 {
  public:
-  Vec4<T>(const T& p1 = static_cast<T>(0), const T& p2 = static_cast<T>(0),
-          const T& p3 = static_cast<T>(0), const T& p4 = static_cast<T>(0))
-      : m_x{p1}, m_y{p2}, m_z{p3}, m_w{p4} {}
+  Vec4<T>() = default;
+  Vec4<T>(T p1, T p2, T p3, T p4) : m_x{p1}, m_y{p2}, m_z{p3}, m_w{p4} {}
 
   Vec4<T>(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()}, m_w{v.w()} {}
   Vec4<T>(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
@@ -30,19 +28,19 @@ class Vec4 {
   T z() const { return m_z; }
   T w() const { return m_w; }
 
-  void setX(const T& p) { m_x = p; }
-  void setY(const T& p) { m_y = p; }
-  void setZ(const T& p) { m_z = p; }
-  void setW(const T& p) { m_w = p; }
+  void setX(T p) { m_x = p; }
+  void setY(T p) { m_y = p; }
+  void setZ(T p) { m_z = p; }
+  void setW(T p) { m_w = p; }
 
-  void setXYZW(const T& num) {
+  void setXYZW(T num) {
     setX(num);
     setY(num);
     setZ(num);
     setW(num);
   }
 
-  void setXYZW(const T& p1, const T& p2, const T& p3, const T& p4) {
+  void setXYZW(T p1, T p2, T p3, T p4) {
     setX(p1);
     setY(p2);
     setZ(p3);
@@ -97,13 +95,13 @@ class Vec4 {
   Vec4<T> operator++(int);
   Vec4<T> operator--(int);
 
-  Vec4<T>& operator+=(const T& num);
+  Vec4<T>& operator+=(T num);
 
   Vec4<T>& operator+=(const Vec4<T>& v);
-  Vec4<T>& operator-=(const T& num);
+  Vec4<T>& operator-=(T num);
 
   Vec4<T>& operator-=(const Vec4<T>& v);
-  Vec4<T>& operator*=(const T& num);
+  Vec4<T>& operator*=(T num);
 
   Vec4<T>& normalize();
   double length() const {
@@ -128,17 +126,17 @@ class Vec4 {
   }
 
   void zero() {
-    m_x = (T)0;
-    m_y = (T)0;
-    m_z = (T)0;
-    m_w = (T)0;
+    m_x = T{};
+    m_y = T{};
+    m_z = T{};
+    m_w = T{};
   }
 
  private:
-  T m_x;
-  T m_y;
-  T m_z;
-  T m_w;
+  T m_x = T{};
+  T m_y = T{};
+  T m_z = T{};
+  T m_w = T{};
 };
 
 typedef Vec4<double> Vec4d;
@@ -176,7 +174,7 @@ Vec4<T> Vec4<T>::operator--(int) {
 }
 
 template <typename T>
-Vec4<T>& Vec4<T>::operator+=(const T& num) {
+Vec4<T>& Vec4<T>::operator+=(T num) {
   *this = (*this) + num;  // use of binary + operator
   return *this;
 }
@@ -188,7 +186,7 @@ Vec4<T>& Vec4<T>::operator+=(const Vec4<T>& v) {
 }
 
 template <typename T>
-Vec4<T>& Vec4<T>::operator-=(const T& num) {
+Vec4<T>& Vec4<T>::operator-=(T num) {
   *this = (*this) - num;
   return *this;
 }
@@ -200,7 +198,7 @@ Vec4<T>& Vec4<T>::operator-=(const Vec4<T>& v) {
 }
 
 template <typename T>
-Vec4<T>& Vec4<T>::operator*=(const T& num) {
+Vec4<T>& Vec4<T>::operator*=(T num) {
   *this = (*this) * num;
   return *this;
 }
@@ -237,12 +235,12 @@ Vec4<T> operator+(const Vec4<T>& v1, const Vec4<T>& v2) {
 }
 
 template <typename T>
-Vec4<T> operator+(const Vec4<T>& v, const T& num) {
+Vec4<T> operator+(const Vec4<T>& v, T num) {
   return Vec4<T>(v.x() + num, v.y() + num, v.z() + num, v.w() + num);
 }
 
 template <typename T>
-Vec4<T> operator+(const T& num, const Vec4<T>& v) {
+Vec4<T> operator+(T num, const Vec4<T>& v) {
   return v + num;
 }
 
@@ -253,12 +251,12 @@ Vec4<T> operator-(const Vec4<T>& v1, const Vec4<T>& v2) {
 }
 
 template <typename T>
-Vec4<T> operator-(const Vec4<T>& v, const T& num) {
+Vec4<T> operator-(const Vec4<T>& v, T num) {
   return Vec4<T>(v.x() - num, v.y() - num, v.z() - num, v.w() - num);
 }
 
 template <typename T>
-Vec4<T> operator-(const T& num, const Vec4<T>& v) {
+Vec4<T> operator-(T num, const Vec4<T>& v) {
   return v - num;
 }
 
@@ -269,12 +267,12 @@ Vec4<T> operator*(const Vec4<T>& v1, const Vec4<T>& v2) {
 }
 
 template <typename T>
-Vec4<T> operator*(const Vec4<T>& v, const T& num) {
+Vec4<T> operator*(const Vec4<T>& v, T num) {
   return Vec4<T>(v.x() * num, v.y() * num, v.z() * num, v.w() * num);
 }
 
 template <typename T>
-Vec4<T> operator*(const T& num, const Vec4<T>& v) {
+Vec4<T> operator*(T num, const Vec4<T>& v) {
   return v * num;
 }
 
@@ -287,7 +285,7 @@ Vec4<T> operator/(const Vec4<T>& v1, const Vec4<T>& v2) {
 }
 
 template <typename T>
-Vec4<T> operator/(const Vec4<T>& v, const T& num) {
+Vec4<T> operator/(const Vec4<T>& v, T num) {
   double e = 1.E-30;
   return Vec4<T>(v.x() / (num + e), v.y() / (num + e), v.z() / (num + e),
                  v.w() / (num + e));
@@ -314,5 +312,3 @@ template <typename T>
 Vec4<T> getUnitVectorOf(const Vec4<T>& v) {
   return v / (v.length() + 1.E-30);
 }
-
-#endif  // VEC4_H
