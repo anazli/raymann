@@ -118,7 +118,7 @@ class Mat4 {
   Mat4<T> transpose() const;
   T coFactor(const int& i, const int& j) const {
     Mat3<T> mi = minor(i, j);
-    T C = T(pow(-1, i + 1 + j + 1)) * mi.determinant();
+    T C = T(pow(-1., i + 1. + j + 1.)) * mi.determinant();
     return C;
   }
 
