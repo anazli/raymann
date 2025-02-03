@@ -8,23 +8,15 @@ Current Scene
 
 Building
 --------
-To build this repository, first clone it and create a build folder.
 ```bash
-$ git clone https://github.com/anazli/raymann.git
-$ cd raymann
-$ mkdir build
-$ cd build
+$ cmake -S . -B build -DBUILD_TESTING=OFF
+$ cmake --build build
 ```
-Building without tests
+To run all tests:
 ```bash
-$ cmake .. -DBUILD_TESTING=OFF
-$ make
-```
-To build and run all tests:
-```bash
-$ cmake .. -DBUILD_TESTING=ON
-$ make
-$ make test
+$ cmake -S . -B build -DBUILD_TESTING=OFF
+$ cmake --build build
+$ ctest --test-dir build
 ```
 Running
 -------
