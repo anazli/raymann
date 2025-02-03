@@ -16,12 +16,12 @@ class Point3;
 template <class T>
 class Vec4 {
  public:
-  Vec4<T>() = default;
-  Vec4<T>(T p1, T p2, T p3, T p4) : m_x{p1}, m_y{p2}, m_z{p3}, m_w{p4} {}
+  Vec4() = default;
+  Vec4(T p1, T p2, T p3, T p4) : m_x{p1}, m_y{p2}, m_z{p3}, m_w{p4} {}
 
-  Vec4<T>(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()}, m_w{v.w()} {}
-  Vec4<T>(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
-  Vec4<T>(const Point3<T>& p) : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
+  Vec4(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()}, m_w{v.w()} {}
+  Vec4(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
+  Vec4(const Point3<T>& p) : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }

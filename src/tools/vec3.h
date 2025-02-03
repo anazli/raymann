@@ -1,5 +1,4 @@
-#ifndef VEC3_H
-#define VEC3_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -11,28 +10,27 @@
 template <class T>
 class Vec3 {
  public:
-  Vec3<T>(const T& p1 = static_cast<T>(0), const T& p2 = static_cast<T>(0),
-          const T& p3 = static_cast<T>(0))
-      : m_x{p1}, m_y{p2}, m_z{p3} {}
+  Vec3() = default;
+  Vec3(T p1, T p2, T p3) : m_x{p1}, m_y{p2}, m_z{p3} {}
 
-  Vec3<T>(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
-  Vec3<T>(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
+  Vec3(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
+  Vec3(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
   T z() const { return m_z; }
 
-  void setX(const T& p) { m_x = p; }
-  void setY(const T& p) { m_y = p; }
-  void setZ(const T& p) { m_z = p; }
+  void setX(T p) { m_x = p; }
+  void setY(T p) { m_y = p; }
+  void setZ(T p) { m_z = p; }
 
-  void setXYZ(const T& num) {
+  void setXYZ(T num) {
     setX(num);
     setY(num);
     setZ(num);
   }
 
-  void setXYZ(const T& p1, const T& p2, const T& p3) {
+  void setXYZ(T p1, T p2, T p3) {
     setX(p1);
     setY(p2);
     setZ(p3);
@@ -74,14 +72,14 @@ class Vec3 {
   Vec3<T> operator++(int);
   Vec3<T> operator--(int);
 
-  Vec3<T>& operator+=(const T& num);
+  Vec3<T>& operator+=(T num);
   Vec3<T>& operator+=(const Vec3<T>& v);
-  Vec3<T>& operator-=(const T& num);
+  Vec3<T>& operator-=(T num);
   Vec3<T>& operator-=(const Vec3<T>& v);
-  Vec3<T>& operator*=(const T& num);
+  Vec3<T>& operator*=(T num);
 
   Vec3<T>& normalize();
-  T length() const { return sqrt(x() * x() + y() * y() + z() * z()); }
+  float length() const { return sqrt(x() * x() + y() * y() + z() * z()); }
 
   bool isValid() {
     if (m_x * 0. != m_x * 0.) {
@@ -98,15 +96,15 @@ class Vec3 {
   }
 
   void zero() {
-    m_x = (T)0;
-    m_y = (T)0;
-    m_z = (T)0;
+    m_x = T{};
+    m_y = T{};
+    m_z = T{};
   }
 
  private:
-  T m_x;
-  T m_y;
-  T m_z;
+  T m_x = T{};
+  T m_y = T{};
+  T m_z = T{};
 };
 
 typedef Vec3<double> Vec3d;
@@ -144,7 +142,7 @@ Vec3<T> Vec3<T>::operator--(int) {
 }
 
 template <typename T>
-Vec3<T>& Vec3<T>::operator+=(const T& num) {
+Vec3<T>& Vec3<T>::operator+=(T num) {
   *this = (*this) + num;  // use of binary + operator
   return *this;
 }
@@ -156,7 +154,7 @@ Vec3<T>& Vec3<T>::operator+=(const Vec3<T>& v) {
 }
 
 template <typename T>
-Vec3<T>& Vec3<T>::operator-=(const T& num) {
+Vec3<T>& Vec3<T>::operator-=(T num) {
   *this = (*this) - num;
   return *this;
 }
@@ -168,7 +166,7 @@ Vec3<T>& Vec3<T>::operator-=(const Vec3<T>& v) {
 }
 
 template <typename T>
-Vec3<T>& Vec3<T>::operator*=(const T& num) {
+Vec3<T>& Vec3<T>::operator*=(T num) {
   *this = (*this) * num;
   return *this;
 }
@@ -208,12 +206,12 @@ Vec3<T> operator+(const Vec3<T>& v1, const Vec3<T>& v2) {
 }
 
 template <typename T>
-Vec3<T> operator+(const Vec3<T>& v, const T& num) {
+Vec3<T> operator+(const Vec3<T>& v, T num) {
   return Vec3<T>(v.x() + num, v.y() + num, v.z() + num);
 }
 
 template <typename T>
-Vec3<T> operator+(const T& num, const Vec3<T>& v) {
+Vec3<T> operator+(T num, const Vec3<T>& v) {
   return v + num;
 }
 
@@ -223,12 +221,12 @@ Vec3<T> operator-(const Vec3<T>& v1, const Vec3<T>& v2) {
 }
 
 template <typename T>
-Vec3<T> operator-(const Vec3<T>& v, const T& num) {
+Vec3<T> operator-(const Vec3<T>& v, T num) {
   return Vec3<T>(v.x() - num, v.y() - num, v.z() - num);
 }
 
 template <typename T>
-Vec3<T> operator-(const T& num, const Vec3<T>& v) {
+Vec3<T> operator-(T num, const Vec3<T>& v) {
   return v - num;
 }
 
@@ -238,12 +236,12 @@ Vec3<T> operator*(const Vec3<T>& v1, const Vec3<T>& v2) {
 }
 
 template <typename T>
-Vec3<T> operator*(const Vec3<T>& v, const T& num) {
+Vec3<T> operator*(const Vec3<T>& v, T num) {
   return Vec3<T>(v.x() * num, v.y() * num, v.z() * num);
 }
 
 template <typename T>
-Vec3<T> operator*(const T& num, const Vec3<T>& v) {
+Vec3<T> operator*(T num, const Vec3<T>& v) {
   return v * num;
 }
 
@@ -254,7 +252,7 @@ Vec3<T> operator/(const Vec3<T>& v1, const Vec3<T>& v2) {
 }
 
 template <typename T>
-Vec3<T> operator/(const Vec3<T>& v, const T& num) {
+Vec3<T> operator/(const Vec3<T>& v, T num) {
   T e = 1.E-30;
   return Vec3<T>(v.x() / (num + e), v.y() / (num + e), v.z() / (num + e));
 }
@@ -323,5 +321,3 @@ randomVectorOnUnitSphere()  //!< Returns a random vector on a unit sphere.
   Vec3<T> ret(dmx, dmy, dmz);
   return ret;
 }*/
-
-#endif  // VEC3_H

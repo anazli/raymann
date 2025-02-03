@@ -1,5 +1,4 @@
-#ifndef VEC2_H
-#define VEC2_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -9,22 +8,22 @@
 template <class T>
 class Vec2 {
  public:
-  Vec2(const T& p1 = static_cast<T>(0), const T& p2 = static_cast<T>(0))
-      : m_x{p1}, m_y{p2} {}
+  Vec2() = default;
+  Vec2(T p1, T p2) : m_x{p1}, m_y{p2} {}
   Vec2(const Vec2<T>& v) : m_x{v.x()}, m_y{v.y()} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
 
-  void setX(const T& p) { m_x = p; }
-  void setY(const T& p) { m_y = p; }
+  void setX(T p) { m_x = p; }
+  void setY(T p) { m_y = p; }
 
-  void setXY(const T& num) {
+  void setXY(T num) {
     setX(num);
     setY(num);
   }
 
-  void setXY(const T& p1, const T& p2) {
+  void setXY(T p1, T p2) {
     setX(p1);
     setY(p2);
   }
@@ -54,13 +53,13 @@ class Vec2 {
   Vec2<T> operator++(int);
   Vec2<T> operator--(int);
 
-  Vec2<T>& operator+=(const T& num);
+  Vec2<T>& operator+=(T num);
 
   Vec2<T>& operator+=(const Vec2<T>& v);
-  Vec2<T>& operator-=(const T& num);
+  Vec2<T>& operator-=(T num);
 
   Vec2<T>& operator-=(const Vec2<T>& v);
-  Vec2<T>& operator*=(const T& num);
+  Vec2<T>& operator*=(T num);
 
   Vec2<T>& normalize();
   double length() const { return sqrt(x() * x() + y() * y()); }
@@ -77,8 +76,8 @@ class Vec2 {
   }
 
  private:
-  T m_x;
-  T m_y;
+  T m_x = T{};
+  T m_y = T{};
 };
 
 typedef Vec2<double> Vec2d;
@@ -116,7 +115,7 @@ Vec2<T> Vec2<T>::operator--(int) {
 }
 
 template <typename T>
-Vec2<T>& Vec2<T>::operator+=(const T& num) {
+Vec2<T>& Vec2<T>::operator+=(T num) {
   *this = (*this) + num;  // use of binary + operator
   return *this;
 }
@@ -128,7 +127,7 @@ Vec2<T>& Vec2<T>::operator+=(const Vec2& v) {
 }
 
 template <typename T>
-Vec2<T>& Vec2<T>::operator-=(const T& num) {
+Vec2<T>& Vec2<T>::operator-=(T num) {
   *this = (*this) - num;
   return *this;
 }
@@ -140,7 +139,7 @@ Vec2<T>& Vec2<T>::operator-=(const Vec2<T>& v) {
 }
 
 template <typename T>
-Vec2<T>& Vec2<T>::operator*=(const T& num) {
+Vec2<T>& Vec2<T>::operator*=(T num) {
   *this = (*this) * num;
   return *this;
 }
@@ -183,14 +182,14 @@ Vec2<T> operator+(const Vec2<T>& v1, const Vec2<T>& v2)
 }
 
 template <typename T>
-Vec2<T> operator+(const Vec2<T>& v, const T& num)
+Vec2<T> operator+(const Vec2<T>& v, T num)
 
 {
   return Vec2<T>(v.x() + num, v.y() + num);
 }
 
 template <typename T>
-Vec2<T> operator+(const T& num, const Vec2<T>& v) {
+Vec2<T> operator+(T num, const Vec2<T>& v) {
   return v + num;
 }
 
@@ -200,12 +199,12 @@ Vec2<T> operator-(const Vec2<T>& v1, const Vec2<T>& v2) {
 }
 
 template <typename T>
-Vec2<T> operator-(const Vec2<T>& v, const T& num) {
+Vec2<T> operator-(const Vec2<T>& v, T num) {
   return Vec2<T>(v.x() - num, v.y() - num);
 }
 
 template <typename T>
-Vec2<T> operator-(const T& num, const Vec2<T>& v) {
+Vec2<T> operator-(T num, const Vec2<T>& v) {
   return v - num;
 }
 
@@ -215,12 +214,12 @@ Vec2<T> operator*(const Vec2<T>& v1, const Vec2<T>& v2) {
 }
 
 template <typename T>
-Vec2<T> operator*(const Vec2<T>& v, const T& num) {
+Vec2<T> operator*(const Vec2<T>& v, T num) {
   return Vec2<T>(v.x() * num, v.y() * num);
 }
 
 template <typename T>
-Vec2<T> operator*(const T& num, const Vec2<T>& v) {
+Vec2<T> operator*(T num, const Vec2<T>& v) {
   return v * num;
 }
 
@@ -231,7 +230,7 @@ Vec2<T> operator/(const Vec2<T>& v1, const Vec2<T>& v2) {
 }
 
 template <typename T>
-Vec2<T> operator/(const Vec2<T>& v, const T& num) {
+Vec2<T> operator/(const Vec2<T>& v, T num) {
   T e = 1.E-30;
   return Vec2<T>(v.x() / (num + e), v.y() / (num + e));
 }
@@ -260,5 +259,3 @@ template <typename T>
 Vec2<T> getUnitVectorOf(const Vec2<T>& v) {
   return v / (v.length() + (T)1.E-30);
 }
-
-#endif  // VEC2_H
