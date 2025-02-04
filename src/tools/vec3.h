@@ -24,9 +24,9 @@ class Vec3 {
   void setY(T num) { m_y = num; }
   void setZ(T num) { m_z = num; }
 
-  void setXYZ(T num) { m_x = m_y = m_z = num; }
+  void set(T num) { m_x = m_y = m_z = num; }
 
-  void setXYZ(T num1, T num2, T num3) {
+  void set(T num1, T num2, T num3) {
     m_x = num1;
     m_y = num2;
     m_z = num3;
@@ -100,7 +100,7 @@ template <typename T>
 inline std::istream& operator>>(std::istream& in, Vec3<T>& v) {
   T x, y, z;
   in >> x >> y >> z;
-  v.setXYZ(x, y, z);
+  v.set(x, y, z);
   return in;
 }
 

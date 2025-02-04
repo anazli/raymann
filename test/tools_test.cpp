@@ -171,15 +171,15 @@ TEST_F(Vector3Test, SetsCoords) {
 }
 
 TEST_F(Vector3Test, SetXYZ) {
-  v.setXYZ(-1.24f, -5.54f, 45.6f);
+  v.set(-1.24f, -5.54f, 45.6f);
   compareVectors(v, Vec3f(-1.24f, -5.54f, 45.6f));
 
-  v.setXYZ(6.68f);
+  v.set(6.68f);
   compareVectors(v, Vec3f(6.68f, 6.68f, 6.68f));
 }
 
 TEST_F(Vector3Test, ChangesSign) {
-  v.setXYZ(-1.55);
+  v.set(-1.55);
   v = -v;
   compareVectors(v, Vec3f(1.55f, 1.55f, 1.55f));
 }
