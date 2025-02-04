@@ -107,7 +107,13 @@ if(BUILD_TESTING)
   target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest ${PROJECT_NAME}-lib)
   target_compile_options(${PROJECT_NAME_TEST} PRIVATE "-g")
   target_link_options(${PROJECT_NAME_TEST} PRIVATE "-lstdc++" PRIVATE "-lm")
-  target_compile_definitions(${PROJECT_NAME_TEST} PRIVATE -DWORKING_DIRECTORY_DEFINE=\"$<TARGET_FILE_DIR:${PROJECT_NAME_TEST}>/\")
   gtest_discover_tests(${PROJECT_NAME_TEST} WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME_TEST}>)
   enable_testing()
+
+  add_custom_command(
+    TARGET ${PROJECT_NAME_TEST}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/test/test_data ${CMAKE_CURRENT_BINARY_DIR}/test_data
+    COMMENT "Copy test_data"
+  )
 endif()
