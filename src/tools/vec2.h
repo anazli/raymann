@@ -44,7 +44,7 @@ class Vec2 {
   Vec2<T> operator+() const { return Vec2<T>(m_x, m_y); };
   Vec2<T> operator-() const { return Vec2<T>(-m_x, -m_y); }
 
-  Vec2<T>& normalize();
+  void normalize();
   float length() const { return sqrt(m_x * m_x + m_y * m_y); }
 
  private:
@@ -61,10 +61,9 @@ typedef Vec2<int> Vec2i;
 //--------------------------------------------
 
 template <typename T>
-Vec2<T>& Vec2<T>::normalize() {
+void Vec2<T>::normalize() {
   auto l = this->length();
   *this = (*this) / (l + 1.E-30);
-  return *this;
 }
 
 //--------------------------------------------
