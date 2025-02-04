@@ -35,46 +35,6 @@ class Mat4 {
     return *this;
   }
 
-  Mat4<T>& operator+=(const Mat4<T>& c) {
-    m_vec[0] += c[0];
-    m_vec[1] += c[1];
-    m_vec[2] += c[2];
-    m_vec[3] += c[3];
-    return *this;
-  }
-
-  Mat4<T>& operator+=(T num) {
-    m_vec[0] += num;
-    m_vec[1] += num;
-    m_vec[2] += num;
-    m_vec[3] += num;
-    return *this;
-  }
-
-  Mat4<T>& operator-=(const Mat4<T>& c) {
-    m_vec[0] -= c[0];
-    m_vec[1] -= c[1];
-    m_vec[2] -= c[2];
-    m_vec[3] -= c[3];
-    return *this;
-  }
-
-  Mat4<T>& operator-=(T num) {
-    m_vec[0] -= num;
-    m_vec[1] -= num;
-    m_vec[2] -= num;
-    m_vec[3] -= num;
-    return *this;
-  }
-
-  Mat4<T>& operator*=(T num) {
-    m_vec[0] *= num;
-    m_vec[1] *= num;
-    m_vec[2] *= num;
-    m_vec[3] *= num;
-    return *this;
-  }
-
   Vec4<T> operator[](int i) const {
     assert(i >= 0 && i <= 3);
     if (i == 0) return m_vec[0];
@@ -239,8 +199,18 @@ Mat4<T> operator+(const Mat4<T>& m1, const Mat4<T>& m2) {
 }
 
 template <typename T>
+Mat4<T> operator+(const Mat4<T>& m1, T num) {
+  return Mat4<T>(m1[0] + num, m1[1] + num, m1[2] + num, m1[3] + num);
+}
+
+template <typename T>
 Mat4<T> operator-(const Mat4<T>& m1, const Mat4<T>& m2) {
   return Mat4<T>(m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3]);
+}
+
+template <typename T>
+Mat4<T> operator-(const Mat4<T>& m1, T num) {
+  return Mat4<T>(m1[0] - num, m1[1] - num, m1[2] - num, m1[3] - num);
 }
 
 template <typename T>
@@ -280,6 +250,11 @@ Vec4<T> operator*(const Mat4<T>& m, const Vec4<T>& v) {
   ret[2] = dot(m[2], v);
   ret[3] = dot(m[3], v);
   return ret;
+}
+
+template <typename T>
+Mat4<T> operator*(const Mat4<T>& m1, T num) {
+  return Mat4<T>(m1[0] * num, m1[1] * num, m1[2] * num, m1[3] * num);
 }
 
 template <typename T>

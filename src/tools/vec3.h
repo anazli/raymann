@@ -90,8 +90,7 @@ typedef Vec3<int> Vec3i;
 
 template <typename T>
 void Vec3<T>::normalize() {
-  T norm = this->length() + 1.E-30;
-  *this = (*this) / norm;
+  *this = (*this) / (this->length() + 1.E-30f);
 }
 
 //--------------------------------------------

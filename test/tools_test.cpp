@@ -346,13 +346,13 @@ TEST_F(Vector4Test, ChangesSign) {
 
 TEST_F(Vector4Test, AddsVectorOrNumber) {
   v = Vec4<double>(0., 0., 5., 3.5);
-  v += 4.46;
+  v = v + 4.46;
   ASSERT_DOUBLE_EQ(v.x(), 4.46);
   ASSERT_DOUBLE_EQ(v.y(), 4.46);
   ASSERT_DOUBLE_EQ(v.z(), 9.46);
   ASSERT_DOUBLE_EQ(v.w(), 7.96);
 
-  v += Vec4<double>(4., 6., 0., 45.);
+  v = v + Vec4<double>(4., 6., 0., 45.);
   ASSERT_DOUBLE_EQ(v.x(), 8.46);
   ASSERT_DOUBLE_EQ(v.y(), 10.46);
   ASSERT_DOUBLE_EQ(v.z(), 9.46);
@@ -361,13 +361,13 @@ TEST_F(Vector4Test, AddsVectorOrNumber) {
 
 TEST_F(Vector4Test, SubtractsVectorOrNumber) {
   v = Vec4<double>(0., 0., 3., -5.5);
-  v -= 4.46;
+  v = v - 4.46;
   ASSERT_DOUBLE_EQ(v.x(), -4.46);
   ASSERT_DOUBLE_EQ(v.y(), -4.46);
   ASSERT_DOUBLE_EQ(v.z(), -1.46);
   ASSERT_DOUBLE_EQ(v.w(), -9.96);
 
-  v -= Vec4<double>(4., 6., 0., -1.2);
+  v = v - Vec4<double>(4., 6., 0., -1.2);
   ASSERT_DOUBLE_EQ(v.x(), -8.46);
   ASSERT_DOUBLE_EQ(v.y(), -10.46);
   ASSERT_DOUBLE_EQ(v.z(), -1.46);
@@ -387,7 +387,7 @@ TEST_F(Vector4Test, GetsLenghtOfVector) {
 
 TEST_F(Vector4Test, MultipliesVectorWithNumber) {
   v = Vec4<double>(1., 0., 5., -9.);
-  v *= 5.;
+  v = v * 5.;
   ASSERT_DOUBLE_EQ(v.x(), 5.);
   ASSERT_DOUBLE_EQ(v.y(), 0.);
   ASSERT_DOUBLE_EQ(v.z(), 25.);
@@ -795,7 +795,7 @@ TEST_F(Matrix4Test, CreatesMatrix) {
 
 TEST_F(Matrix4Test, AddsAmatrixOrNumber) {
   m4 = Mat4<double>(0.);
-  m4 += Mat4<double>(-1.);
+  m4 = m4 + Mat4<double>(-1.);
   ASSERT_DOUBLE_EQ(m4[0][0], -1.);
   ASSERT_DOUBLE_EQ(m4[0][1], -1.);
   ASSERT_DOUBLE_EQ(m4[0][2], -1.);
@@ -815,7 +815,7 @@ TEST_F(Matrix4Test, AddsAmatrixOrNumber) {
   ASSERT_DOUBLE_EQ(m4[3][1], -1.);
   ASSERT_DOUBLE_EQ(m4[3][2], -1.);
   ASSERT_DOUBLE_EQ(m4[3][3], -1.);
-  m4 += 5.05;
+  m4 = m4 + 5.05;
   ASSERT_DOUBLE_EQ(m4[0][0], 4.05);
   ASSERT_DOUBLE_EQ(m4[0][1], 4.05);
   ASSERT_DOUBLE_EQ(m4[0][2], 4.05);
@@ -839,7 +839,7 @@ TEST_F(Matrix4Test, AddsAmatrixOrNumber) {
 
 TEST_F(Matrix4Test, SubtractsAmatrixOrNumber) {
   m4 = Mat4<double>(0.);
-  m4 -= Mat4<double>(1.);
+  m4 = m4 - Mat4<double>(1.);
   ASSERT_DOUBLE_EQ(m4[0][0], -1.);
   ASSERT_DOUBLE_EQ(m4[0][1], -1.);
   ASSERT_DOUBLE_EQ(m4[0][2], -1.);
@@ -859,31 +859,31 @@ TEST_F(Matrix4Test, SubtractsAmatrixOrNumber) {
   ASSERT_DOUBLE_EQ(m4[3][1], -1.);
   ASSERT_DOUBLE_EQ(m4[3][2], -1.);
   ASSERT_DOUBLE_EQ(m4[3][3], -1.);
-  m4 -= -5.05;
-  ASSERT_DOUBLE_EQ(m4[0][0], 4.05);
-  ASSERT_DOUBLE_EQ(m4[0][1], 4.05);
-  ASSERT_DOUBLE_EQ(m4[0][2], 4.05);
-  ASSERT_DOUBLE_EQ(m4[0][3], 4.05);
+  m4 = m4 - 5.05;
+  ASSERT_DOUBLE_EQ(m4[0][0], -6.05);
+  ASSERT_DOUBLE_EQ(m4[0][1], -6.05);
+  ASSERT_DOUBLE_EQ(m4[0][2], -6.05);
+  ASSERT_DOUBLE_EQ(m4[0][3], -6.05);
 
-  ASSERT_DOUBLE_EQ(m4[1][0], 4.05);
-  ASSERT_DOUBLE_EQ(m4[1][1], 4.05);
-  ASSERT_DOUBLE_EQ(m4[1][2], 4.05);
-  ASSERT_DOUBLE_EQ(m4[1][3], 4.05);
+  ASSERT_DOUBLE_EQ(m4[1][0], -6.05);
+  ASSERT_DOUBLE_EQ(m4[1][1], -6.05);
+  ASSERT_DOUBLE_EQ(m4[1][2], -6.05);
+  ASSERT_DOUBLE_EQ(m4[1][3], -6.05);
 
-  ASSERT_DOUBLE_EQ(m4[2][0], 4.05);
-  ASSERT_DOUBLE_EQ(m4[2][1], 4.05);
-  ASSERT_DOUBLE_EQ(m4[2][2], 4.05);
-  ASSERT_DOUBLE_EQ(m4[2][3], 4.05);
+  ASSERT_DOUBLE_EQ(m4[2][0], -6.05);
+  ASSERT_DOUBLE_EQ(m4[2][1], -6.05);
+  ASSERT_DOUBLE_EQ(m4[2][2], -6.05);
+  ASSERT_DOUBLE_EQ(m4[2][3], -6.05);
 
-  ASSERT_DOUBLE_EQ(m4[3][0], 4.05);
-  ASSERT_DOUBLE_EQ(m4[3][1], 4.05);
-  ASSERT_DOUBLE_EQ(m4[3][2], 4.05);
-  ASSERT_DOUBLE_EQ(m4[3][3], 4.05);
+  ASSERT_DOUBLE_EQ(m4[3][0], -6.05);
+  ASSERT_DOUBLE_EQ(m4[3][1], -6.05);
+  ASSERT_DOUBLE_EQ(m4[3][2], -6.05);
+  ASSERT_DOUBLE_EQ(m4[3][3], -6.05);
 }
 
 TEST_F(Matrix4Test, MultipliesWithNumber) {
   m4 = Mat4<double>(6.28);
-  m4 *= 0.;
+  m4 = m4 * 0.;
   ASSERT_DOUBLE_EQ(m4[0][0], 0.);
   ASSERT_DOUBLE_EQ(m4[0][1], 0.);
   ASSERT_DOUBLE_EQ(m4[0][2], 0.);

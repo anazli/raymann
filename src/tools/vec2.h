@@ -64,8 +64,7 @@ typedef Vec2<int> Vec2i;
 
 template <typename T>
 void Vec2<T>::normalize() {
-  auto l = this->length();
-  *this = (*this) / (l + 1.E-30);
+  *this = (*this) / (this->length() + 1.E-30);
 }
 
 //--------------------------------------------

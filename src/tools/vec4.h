@@ -82,37 +82,14 @@ class Vec4 {
     return *this;
   }
 
+  auto operator<=>(const Vec4<T>&) const = default;
+
   Vec4<T> operator+() const { return Vec4<T>(m_x, m_y, m_z, m_w); };
   Vec4<T> operator-() const { return Vec4<T>(-m_x, -m_y, -m_z, -m_w); }
-
-  Vec4<T>& operator+=(T num);
-
-  Vec4<T>& operator+=(const Vec4<T>& v);
-  Vec4<T>& operator-=(T num);
-
-  Vec4<T>& operator-=(const Vec4<T>& v);
-  Vec4<T>& operator*=(T num);
 
   Vec4<T>& normalize();
   double length() const {
     return sqrt(x() * x() + y() * y() + z() * z() + w() * w());
-  }
-
-  bool isValid() {
-    if (m_x * 0. != m_x * 0.) {
-      return false;
-    }
-    if (m_y * 0. != m_y * 0.) {
-      return false;
-    }
-    if (m_z * 0. != m_z * 0.) {
-      return false;
-    }
-    if (m_w * 0. != m_w * 0.) {
-      return false;
-    }
-
-    return true;
   }
 
   void zero() {
@@ -138,39 +115,8 @@ typedef Vec4<int> Vec4i;
 //--------------------------------------------
 
 template <typename T>
-Vec4<T>& Vec4<T>::operator+=(T num) {
-  *this = (*this) + num;  // use of binary + operator
-  return *this;
-}
-
-template <typename T>
-Vec4<T>& Vec4<T>::operator+=(const Vec4<T>& v) {
-  *this = (*this) + v;
-  return *this;
-}
-
-template <typename T>
-Vec4<T>& Vec4<T>::operator-=(T num) {
-  *this = (*this) - num;
-  return *this;
-}
-
-template <typename T>
-Vec4<T>& Vec4<T>::operator-=(const Vec4<T>& v) {
-  *this = (*this) - v;
-  return *this;
-}
-
-template <typename T>
-Vec4<T>& Vec4<T>::operator*=(T num) {
-  *this = (*this) * num;
-  return *this;
-}
-
-template <typename T>
 Vec4<T>& Vec4<T>::normalize() {
-  T norm = this->length();
-  *this = (*this) / (norm + (T)1.E-30);
+  *this = (*this) / (this->length() + (T)1.E-30);
   return *this;
 }
 
@@ -242,28 +188,15 @@ Vec4<T> operator*(T num, const Vec4<T>& v) {
 
 template <typename T>
 Vec4<T> operator/(const Vec4<T>& v1, const Vec4<T>& v2) {
-  if (v2.x() == 0. || v2.y() == 0. || v2.z() == 0. || v2.w() == 0.)
-    throw "Division by zero!";
-  return Vec4<T>(v1.x() / v2.x(), v1.y() / v2.y(), v1.z() / v2.z(),
-                 v1.w() / v2.w());
+  auto d = v2 + 1.E-30;
+  return Vec4<T>(v1.x() / d.x(), v1.y() / d.y(), v1.z() / d.z(),
+                 v1.w() / d.w());
 }
 
 template <typename T>
 Vec4<T> operator/(const Vec4<T>& v, T num) {
-  double e = 1.E-30;
-  return Vec4<T>(v.x() / (num + e), v.y() / (num + e), v.z() / (num + e),
-                 v.w() / (num + e));
-}
-
-template <typename T>
-bool operator==(const Vec4<T>& v1, const Vec4<T>& v2) {
-  return (v1.x() == v2.x() && v1.y() == v2.y() && v1.z() == v2.z() &&
-          v1.w() == v2.w());
-}
-
-template <typename T>
-bool operator!=(const Vec4<T>& v1, const Vec4<T>& v2) {
-  return !(v1 == v2);
+  num += 1.E-30;
+  return Vec4<T>(v.x() / num, v.y() / num, v.z() / num, v.w() / num);
 }
 
 template <typename T>
