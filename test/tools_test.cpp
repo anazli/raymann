@@ -1107,7 +1107,7 @@ TEST_F(Point3Test, subtractsVectorFromPoint) {
 TEST_F(Point3Test, addsVectorToPoint) {
   p = Point3i(0, -1, -8);
   Vec3i v = Vec3i(-4, 5, 9);
-  p += v;
+  p = p + v;
   ASSERT_EQ(p.x(), -4);
   ASSERT_EQ(p.y(), 4);
   ASSERT_EQ(p.z(), 1);

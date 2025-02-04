@@ -43,29 +43,22 @@ class Point3 {
     return m_z;
   }
 
-  Point3<T> &operator=(const Point3<T> &v) {
-    m_x = v.x();
-    m_y = v.y();
-    m_z = v.z();
+  Point3<T> &operator=(const Point3<T> &rhs) {
+    m_x = rhs.m_x;
+    m_y = rhs.m_y;
+    m_z = rhs.m_z;
     return *this;
   }
 
-  Point3<T> &operator=(const Vec4<T> &v) {
-    m_x = v.x();
-    m_y = v.y();
-    m_z = v.z();
+  Point3<T> &operator=(const Vec4<T> &vec4) {
+    m_x = vec4.x();
+    m_y = vec4.y();
+    m_z = vec4.z();
     return *this;
   }
 
-  Point3<T> operator+(const Vec3<T> &v) const {
-    return Point3<T>(x() + v.x(), y() + v.y(), z() + v.z());
-  }
-
-  Point3<T> &operator+=(const Vec3<T> &v) {
-    m_x += v.x();
-    m_y += v.y();
-    m_z += v.z();
-    return *this;
+  Point3<T> operator+(const Vec3<T> &vec3) const {
+    return Point3<T>(x() + vec3.x(), y() + vec3.y(), z() + vec3.z());
   }
 
   Vec3<T> operator-(const Point3<T> &p) const {  // Point - Point = Vector
