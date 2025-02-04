@@ -35,6 +35,8 @@ class Mat4 {
     return *this;
   }
 
+  auto operator<=>(const Mat4<T>&) const = default;
+
   Vec4<T> operator[](int i) const {
     assert(i >= 0 && i <= 3);
     if (i == 0) return m_vec[0];
@@ -72,9 +74,7 @@ class Mat4 {
   Mat4<T> inverse() const;
   Mat4<T> transpose() const;
   T coFactor(int i, int j) const {
-    Mat3<T> mi = minor(i, j);
-    T C = T(pow(-1., i + 1. + j + 1.)) * mi.determinant();
-    return C;
+    return T(pow(-1., i + 1. + j + 1.)) * minor(i, j).determinant();
   }
 
   void Orient(const Vec3<T>& pos, const Vec3<T>& fwd, const Vec3<T>& up);
@@ -100,29 +100,23 @@ T Mat4<T>::determinant() const {
     Mat3<T> mi = minor(0, j);
     det += m_vec[0][j] * coFactor(0, j);
   }
-
   return det;
 }
 
 template <typename T>
 Mat3<T> Mat4<T>::minor(int i, int j) const {
   Mat3<T> mi;
-
   int yy = 0;
   for (int y = 0; y < 4; y++) {
     if (y == j) continue;
-
     int xx = 0;
     for (int x = 0; x < 4; x++) {
       if (x == i) continue;
-
       mi[xx][yy] = m_vec[x][y];
       xx++;
     }
-
     yy++;
   }
-
   return mi;
 }
 
@@ -173,7 +167,7 @@ void Mat4<T>::Orient(const Vec3<T>& pos, const Vec3<T>& fwd,
   m_vec[0] = Vec4<T>(fwd.x(), left.x(), up.x(), pos.x());
   m_vec[1] = Vec4<T>(fwd.y(), left.y(), up.y(), pos.y());
   m_vec[2] = Vec4<T>(fwd.z(), left.z(), up.z(), pos.z());
-  m_vec[3] = Vec4<T>((T)0, (T)0, (T)0, (T)1);
+  m_vec[3] = Vec4<T>(T{0}, T{0}, T{0}, T{1});
 }
 template <typename T>
 void Mat4<T>::LookAt(const Vec3<T>& pos, const Vec3<T>& lookAt,
@@ -190,7 +184,7 @@ void Mat4<T>::LookAt(const Vec3<T>& pos, const Vec3<T>& lookAt,
   m_vec[0] = Vec4<T>(right.x(), right.y(), right.z(), -dot(pos, right));
   m_vec[1] = Vec4<T>(up.x(), up.y(), up.z(), -dot(pos, up));
   m_vec[2] = Vec4<T>(fwd.x(), fwd.y(), fwd.z(), -dot(pos, fwd));
-  m_vec[3] = Vec4<T>((T)0, (T)0, (T)0, (T)1);
+  m_vec[3] = Vec4<T>(T{0}, T{0}, T{0}, T{1});
 }
 
 template <typename T>
@@ -255,16 +249,6 @@ Vec4<T> operator*(const Mat4<T>& m, const Vec4<T>& v) {
 template <typename T>
 Mat4<T> operator*(const Mat4<T>& m1, T num) {
   return Mat4<T>(m1[0] * num, m1[1] * num, m1[2] * num, m1[3] * num);
-}
-
-template <typename T>
-bool operator==(const Mat4<T>& m1, const Mat4<T>& m2) {
-  return m1[0] == m2[0] && m1[1] == m2[1] && m1[2] == m2[2] && m1[3] == m2[3];
-}
-
-template <typename T>
-bool operator!=(const Mat4<T>& m1, const Mat4<T>& m2) {
-  return !(m1 == m2);
 }
 
 template <typename T>
