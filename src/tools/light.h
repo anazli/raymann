@@ -5,7 +5,8 @@
 
 class PointLight {
  public:
-  PointLight(const Point3f &pos = Point3f(), const Vec3f &inten = Vec3f())
+  PointLight() = default;
+  PointLight(const Point3f &pos, const Vec3f &inten)
       : m_position(pos), m_intensity(inten) {}
 
   void setPosition(const Point3f &pos) { m_position = pos; }

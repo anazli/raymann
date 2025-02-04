@@ -1,5 +1,4 @@
-#ifndef MAT4_H
-#define MAT4_H
+#pragma once
 
 #include "application/error.h"
 #include "mat3.h"
@@ -8,24 +7,20 @@
 template <class T>
 class Mat4 {
  public:
-  Mat4<T>() {
-    m_vec[0] = Vec4<T>(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0),
-                       static_cast<T>(0));
-    m_vec[1] = Vec4<T>(static_cast<T>(0), static_cast<T>(1), static_cast<T>(0),
-                       static_cast<T>(0));
-    m_vec[2] = Vec4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(1),
-                       static_cast<T>(0));
-    m_vec[3] = Vec4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0),
-                       static_cast<T>(1));
+  Mat4() {
+    m_vec[0] = Vec4<T>(T{1}, T{0}, T{0}, T{0});
+    m_vec[1] = Vec4<T>(T{0}, T{1}, T{0}, T{0});
+    m_vec[2] = Vec4<T>(T{0}, T{0}, T{1}, T{0});
+    m_vec[3] = Vec4<T>(T{0}, T{0}, T{0}, T{1});
   }
-  Mat4<T>(const T& num) {
-    m_vec[0].setXYZW(num);
-    m_vec[1].setXYZW(num);
-    m_vec[2].setXYZW(num);
-    m_vec[3].setXYZW(num);
+  Mat4(T num) {
+    m_vec[0].set(num);
+    m_vec[1].set(num);
+    m_vec[2].set(num);
+    m_vec[3].set(num);
   }
-  Mat4<T>(const Vec4<T>& row1, const Vec4<T>& row2, const Vec4<T>& row3,
-          const Vec4<T>& row4) {
+  Mat4(const Vec4<T>& row1, const Vec4<T>& row2, const Vec4<T>& row3,
+       const Vec4<T>& row4) {
     m_vec[0] = row1;
     m_vec[1] = row2;
     m_vec[2] = row3;
@@ -40,45 +35,7 @@ class Mat4 {
     return *this;
   }
 
-  Mat4<T>& operator+=(const Mat4<T>& c) {
-    m_vec[0] += c[0];
-    m_vec[1] += c[1];
-    m_vec[2] += c[2];
-    m_vec[3] += c[3];
-    return *this;
-  }
-
-  Mat4<T>& operator+=(const T& num) {
-    m_vec[0] += num;
-    m_vec[1] += num;
-    m_vec[2] += num;
-    m_vec[3] += num;
-    return *this;
-  }
-
-  Mat4<T>& operator-=(const Mat4<T>& c) {
-    m_vec[0] -= c[0];
-    m_vec[1] -= c[1];
-    m_vec[2] -= c[2];
-    m_vec[3] -= c[3];
-    return *this;
-  }
-
-  Mat4<T>& operator-=(const T& num) {
-    m_vec[0] -= num;
-    m_vec[1] -= num;
-    m_vec[2] -= num;
-    m_vec[3] -= num;
-    return *this;
-  }
-
-  Mat4<T>& operator*=(const T& num) {
-    m_vec[0] *= num;
-    m_vec[1] *= num;
-    m_vec[2] *= num;
-    m_vec[3] *= num;
-    return *this;
-  }
+  auto operator<=>(const Mat4<T>&) const = default;
 
   Vec4<T> operator[](int i) const {
     assert(i >= 0 && i <= 3);
@@ -113,13 +70,11 @@ class Mat4 {
   }
 
   T determinant() const;
-  Mat3<T> minor(const int& i, const int& j) const;
+  Mat3<T> minor(int i, int j) const;
   Mat4<T> inverse() const;
   Mat4<T> transpose() const;
-  T coFactor(const int& i, const int& j) const {
-    Mat3<T> mi = minor(i, j);
-    T C = T(pow(-1, i + 1 + j + 1)) * mi.determinant();
-    return C;
+  T coFactor(int i, int j) const {
+    return T(pow(-1., i + 1. + j + 1.)) * minor(i, j).determinant();
   }
 
   void Orient(const Vec3<T>& pos, const Vec3<T>& fwd, const Vec3<T>& up);
@@ -145,29 +100,23 @@ T Mat4<T>::determinant() const {
     Mat3<T> mi = minor(0, j);
     det += m_vec[0][j] * coFactor(0, j);
   }
-
   return det;
 }
 
 template <typename T>
-Mat3<T> Mat4<T>::minor(const int& i, const int& j) const {
+Mat3<T> Mat4<T>::minor(int i, int j) const {
   Mat3<T> mi;
-
   int yy = 0;
   for (int y = 0; y < 4; y++) {
     if (y == j) continue;
-
     int xx = 0;
     for (int x = 0; x < 4; x++) {
       if (x == i) continue;
-
       mi[xx][yy] = m_vec[x][y];
       xx++;
     }
-
     yy++;
   }
-
   return mi;
 }
 
@@ -218,7 +167,7 @@ void Mat4<T>::Orient(const Vec3<T>& pos, const Vec3<T>& fwd,
   m_vec[0] = Vec4<T>(fwd.x(), left.x(), up.x(), pos.x());
   m_vec[1] = Vec4<T>(fwd.y(), left.y(), up.y(), pos.y());
   m_vec[2] = Vec4<T>(fwd.z(), left.z(), up.z(), pos.z());
-  m_vec[3] = Vec4<T>((T)0, (T)0, (T)0, (T)1);
+  m_vec[3] = Vec4<T>(T{0}, T{0}, T{0}, T{1});
 }
 template <typename T>
 void Mat4<T>::LookAt(const Vec3<T>& pos, const Vec3<T>& lookAt,
@@ -235,7 +184,7 @@ void Mat4<T>::LookAt(const Vec3<T>& pos, const Vec3<T>& lookAt,
   m_vec[0] = Vec4<T>(right.x(), right.y(), right.z(), -dot(pos, right));
   m_vec[1] = Vec4<T>(up.x(), up.y(), up.z(), -dot(pos, up));
   m_vec[2] = Vec4<T>(fwd.x(), fwd.y(), fwd.z(), -dot(pos, fwd));
-  m_vec[3] = Vec4<T>((T)0, (T)0, (T)0, (T)1);
+  m_vec[3] = Vec4<T>(T{0}, T{0}, T{0}, T{1});
 }
 
 template <typename T>
@@ -244,8 +193,18 @@ Mat4<T> operator+(const Mat4<T>& m1, const Mat4<T>& m2) {
 }
 
 template <typename T>
+Mat4<T> operator+(const Mat4<T>& m1, T num) {
+  return Mat4<T>(m1[0] + num, m1[1] + num, m1[2] + num, m1[3] + num);
+}
+
+template <typename T>
 Mat4<T> operator-(const Mat4<T>& m1, const Mat4<T>& m2) {
   return Mat4<T>(m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3]);
+}
+
+template <typename T>
+Mat4<T> operator-(const Mat4<T>& m1, T num) {
+  return Mat4<T>(m1[0] - num, m1[1] - num, m1[2] - num, m1[3] - num);
 }
 
 template <typename T>
@@ -288,17 +247,12 @@ Vec4<T> operator*(const Mat4<T>& m, const Vec4<T>& v) {
 }
 
 template <typename T>
-bool operator==(const Mat4<T>& m1, const Mat4<T>& m2) {
-  return m1[0] == m2[0] && m1[1] == m2[1] && m1[2] == m2[2] && m1[3] == m2[3];
+Mat4<T> operator*(const Mat4<T>& m1, T num) {
+  return Mat4<T>(m1[0] * num, m1[1] * num, m1[2] * num, m1[3] * num);
 }
 
 template <typename T>
-bool operator!=(const Mat4<T>& m1, const Mat4<T>& m2) {
-  return !(m1 == m2);
-}
-
-template <typename T>
-Mat4<T> translation(const T& x, const T& y, const T& z) {
+Mat4<T> translation(T x, T y, T z) {
   Mat4<T> ret;
   ret.identity();
   ret[0][3] = x;
@@ -318,7 +272,7 @@ Mat4<T> translation(const Vec3<T>& v) {
 }
 
 template <typename T>
-Mat4<T> scale(const T& x, const T& y, const T& z) {
+Mat4<T> scale(T x, T y, T z) {
   Mat4<T> ret;
   ret.identity();
   ret[0][0] = x;
@@ -340,7 +294,7 @@ Mat4<T> scale(const Vec3<T>& v) {
 // TODO: floating point errors ~ E-8
 
 template <typename T>
-Mat4<T> rotationOverX(const T& rad) {
+Mat4<T> rotationOverX(T rad) {
   Mat4<T> ret;
   ret.identity();
   ret[1][1] = static_cast<T>(cos(rad));
@@ -351,7 +305,7 @@ Mat4<T> rotationOverX(const T& rad) {
 }
 
 template <typename T>
-Mat4<T> rotationOverY(const T& rad) {
+Mat4<T> rotationOverY(T rad) {
   Mat4<T> ret;
   ret.identity();
   ret[0][0] = static_cast<T>(cos(rad));
@@ -362,7 +316,7 @@ Mat4<T> rotationOverY(const T& rad) {
 }
 
 template <typename T>
-Mat4<T> rotationOverZ(const T& rad) {
+Mat4<T> rotationOverZ(T rad) {
   Mat4<T> ret;
   ret.identity();
   ret[0][0] = static_cast<T>(cos(rad));
@@ -375,8 +329,8 @@ Mat4<T> rotationOverZ(const T& rad) {
 template <typename T>
 Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
                        const Vec3<T>& up) {
-  Vec3f forward = Vec3f(to - from).normalize();
-  Vec3f up_norm = Vec3f(up).normalize();
+  Vec3f forward = getUnitVectorOf(to - from);
+  Vec3f up_norm = getUnitVectorOf(up);
   Vec3f left = cross(forward, up_norm);
   Vec3f up_res = cross(left, forward);
 
@@ -390,5 +344,3 @@ Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
 }
 
 // TODO: Shearing
-
-#endif  // MAT4

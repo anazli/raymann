@@ -8,7 +8,7 @@ class Triangle : public SceneElement {
   Triangle(const std::initializer_list<Point3f> &points) : m_points(points) {
     m_edgeVec.push_back(m_points[1] - m_points[0]);
     m_edgeVec.push_back(m_points[2] - m_points[0]);
-    m_normalVec = cross(m_edgeVec[0], m_edgeVec[1]).normalize();
+    m_normalVec = getUnitVectorOf(cross(m_edgeVec[0], m_edgeVec[1]));
 
     m_bBox.addPoint(m_points[0]);
     m_bBox.addPoint(m_points[1]);

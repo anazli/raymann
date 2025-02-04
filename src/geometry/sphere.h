@@ -30,7 +30,7 @@ class Sphere : public SceneElement {
   }
 
   Vec3f normal(const Point3f &p) const override {
-    return (p - m_center).normalize();
+    return getUnitVectorOf(p - m_center);
   }
 
   float pdf(const Point3f &origin, const Vec3f &direction) override {

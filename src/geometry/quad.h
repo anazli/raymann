@@ -8,7 +8,7 @@ class Quad : public SceneElement {
   Quad(const Point3f& origin, const Vec3f& uAxis, const Vec3f& vAxis)
       : m_origin(origin), m_uAxis(uAxis), m_vAxis(vAxis) {
     auto n = cross(m_uAxis, m_vAxis);
-    auto normalV = Vec3f(n).normalize();
+    auto normalV = getUnitVectorOf(n);
     m_dParam = dot(normalV, Vec3f(m_origin));
     m_wParam = normalV / dot(n, n);
 
@@ -39,7 +39,8 @@ class Quad : public SceneElement {
 
   Vec3f normal(const Point3f& p) const override {
     auto n = cross(m_uAxis, m_vAxis);
-    return n.normalize();
+    n.normalize();
+    return n;
   }
 
   float pdf(const Point3f& origin, const Vec3f& direction) override {

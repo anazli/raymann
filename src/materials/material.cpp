@@ -94,7 +94,7 @@ bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
 float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
                                 const Ray& scatteredRay) const {
   auto cTheta = dot(record.object->normal(record.point(scatteredRay)),
-                    Vec3f(scatteredRay.direction()).normalize());
+                    getUnitVectorOf(scatteredRay.direction()));
   return cTheta < 0 ? 0 : cTheta / PI;
 }
 
@@ -107,7 +107,7 @@ Isotropic::Isotropic(TexturePtr tex, const MaterialProperties& prop)
 bool Isotropic::scatter(const Ray& r_in, const IntersectionRecord& rec,
                         Vec3f& attenuation, Ray& scattered) const {
   scattered =
-      Ray(rec.point(r_in), Random::randomVectorOnUnitSphere().normalize());
+      Ray(rec.point(r_in), getUnitVectorOf(Random::randomVectorOnUnitSphere()));
   attenuation = m_tex->value(0.f, 0.f, Vec3f());
   return true;
 }

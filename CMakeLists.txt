@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.25)
 project(raymann VERSION 0.1 LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project(raymann CXX)
 set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
-set(EXE raymann)
 
-set(SOURCES src/acceleration/bounding_box.cpp
+add_library(${PROJECT_NAME}-lib 
+            src/acceleration/bounding_box.cpp
             src/acceleration/bounding_box.h
             src/acceleration/bvh.cpp
             src/acceleration/bvh.h
@@ -63,11 +64,13 @@ set(SOURCES src/acceleration/bounding_box.cpp
             src/transformations/transformer.h
 )
 
-add_executable(${EXE} src/main/raymann.cpp ${SOURCES})
-target_include_directories(${EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src)
-set_target_properties(${EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
-target_compile_options(${EXE} PRIVATE "-g")
-target_link_options(${EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
+target_include_directories(${PROJECT_NAME}-lib PUBLIC ${PROJECT_SOURCE_DIR}/src)
+
+add_executable(${PROJECT_NAME} src/main/raymann.cpp)
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
+target_compile_options(${PROJECT_NAME} PRIVATE "-g")
+target_link_options(${PROJECT_NAME} PRIVATE "-lstdc++" PRIVATE "-lm")
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)
 
 if(BUILD_TESTING)
   include(FetchContent)
@@ -80,9 +83,12 @@ if(BUILD_TESTING)
   FetchContent_MakeAvailable(googletest)
   include(GoogleTest)
 
+  set(PROJECT_NAME_TEST ${PROJECT_NAME}-test)
 
-  set(TEST_EXE raymannTests)
-  set(TEST_SOURCES test/gtesting.h
+  add_executable(${PROJECT_NAME_TEST})
+
+  target_sources(${PROJECT_NAME_TEST} 
+           PRIVATE test/gtesting.h
                    test/application_test.cpp
                    test/boundingBox_test.cpp
                    test/camera_test.cpp
@@ -95,16 +101,19 @@ if(BUILD_TESTING)
                    test/tools_test.cpp
                    test/transformer_test.cpp
                    test/world_test.cpp
-                   ${SOURCES}
   )
 
-  add_executable(${TEST_EXE} ${TEST_SOURCES})
-  target_include_directories(${TEST_EXE} PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/test)
-  target_link_libraries(${TEST_EXE} gtest_main gtest)
-  set_target_properties(${TEST_EXE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_TEST_DIR})
-  target_compile_options(${TEST_EXE} PRIVATE "-g")
-  target_link_options(${TEST_EXE} PRIVATE "-lstdc++" PRIVATE "-lm")
-  add_test(${TEST_EXE} ${RUN_TEST_DIR}/${TEST_EXE} WORKING_DIRECTORY ${RUN_TEST_DIR})
-  gtest_discover_tests(${TEST_EXE})
+  target_include_directories(${PROJECT_NAME_TEST} PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/test)
+  target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest ${PROJECT_NAME}-lib)
+  target_compile_options(${PROJECT_NAME_TEST} PRIVATE "-g")
+  target_link_options(${PROJECT_NAME_TEST} PRIVATE "-lstdc++" PRIVATE "-lm")
+  gtest_discover_tests(${PROJECT_NAME_TEST} WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME_TEST}>)
   enable_testing()
+
+  add_custom_command(
+    TARGET ${PROJECT_NAME_TEST}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/test/test_data ${CMAKE_CURRENT_BINARY_DIR}/test_data
+    COMMENT "Copy test_data"
+  )
 endif()

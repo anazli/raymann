@@ -1,17 +1,16 @@
-#ifndef MAT2_H
-#define MAT2_H
+#pragma once
 
 #include "vec2.h"
 
 template <class T>
 class Mat2 {
  public:
-  Mat2<T>() {}
-  Mat2<T>(const T& num) {
-    m_vec[0].setXY(num);
-    m_vec[1].setXY(num);
+  Mat2() = default;
+  Mat2(T num) {
+    m_vec[0].set(num);
+    m_vec[1].set(num);
   }
-  Mat2<T>(const Vec2<T>& row1, const Vec2<T>& row2) {
+  Mat2(const Vec2<T>& row1, const Vec2<T>& row2) {
     m_vec[0] = row1;
     m_vec[1] = row2;
   }
@@ -19,36 +18,6 @@ class Mat2 {
   Mat2<T>& operator=(const Mat2<T>& c) {
     m_vec[0] = c[0];
     m_vec[1] = c[1];
-    return *this;
-  }
-
-  Mat2<T>& operator+=(const Mat2<T>& c) {
-    m_vec[0] += c[0];
-    m_vec[1] += c[1];
-    return *this;
-  }
-
-  Mat2<T>& operator+=(const T& num) {
-    m_vec[0] += num;
-    m_vec[1] += num;
-    return *this;
-  }
-
-  Mat2<T>& operator-=(const Mat2<T>& c) {
-    m_vec[0] -= c[0];
-    m_vec[1] -= c[1];
-    return *this;
-  }
-
-  Mat2<T>& operator-=(const T& num) {
-    m_vec[0] -= num;
-    m_vec[1] -= num;
-    return *this;
-  }
-
-  Mat2<T>& operator*=(const T& num) {
-    m_vec[0] *= num;
-    m_vec[1] *= num;
     return *this;
   }
 
@@ -82,8 +51,23 @@ Mat2<T> operator+(const Mat2<T>& m1, const Mat2<T>& m2) {
 }
 
 template <typename T>
+Mat2<T> operator+(const Mat2<T>& m1, T num) {
+  return Mat2<T>(m1[0] + num, m1[1] + num);
+}
+
+template <typename T>
 Mat2<T> operator-(const Mat2<T>& m1, const Mat2<T>& m2) {
   return Mat2<T>(m1[0] - m2[0], m1[1] - m2[1]);
+}
+
+template <typename T>
+Mat2<T> operator-(const Mat2<T>& m1, T num) {
+  return Mat2<T>(m1[0] - num, m1[1] - num);
+}
+
+template <typename T>
+Mat2<T> operator*(const Mat2<T>& m1, T num) {
+  return Mat2<T>(m1[0] * num, m1[1] * num);
 }
 
 template <typename T>
@@ -96,5 +80,3 @@ Mat2<T> operator*(const Mat2<T>& m1, const Mat2<T>& m2) {
 
   return ret;
 }
-
-#endif  // MAT2

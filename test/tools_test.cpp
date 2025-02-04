@@ -29,17 +29,17 @@ TEST_F(Vector2Test, SetsCoords) {
 }
 
 TEST_F(Vector2Test, SetXY) {
-  v.setXY(-1.24, -5.54);
+  v.set(-1.24, -5.54);
   ASSERT_DOUBLE_EQ(v.x(), -1.24);
   ASSERT_DOUBLE_EQ(v.y(), -5.54);
 
-  v.setXY(6.68);
+  v.set(6.68);
   ASSERT_DOUBLE_EQ(v.x(), 6.68);
   ASSERT_DOUBLE_EQ(v.y(), 6.68);
 }
 
 TEST_F(Vector2Test, ChangesSign) {
-  v.setXY(-1.55);
+  v.set(-1.55);
   v = -v;
   ASSERT_DOUBLE_EQ(v[0], 1.55);
   ASSERT_DOUBLE_EQ(v[1], 1.55);
@@ -47,47 +47,49 @@ TEST_F(Vector2Test, ChangesSign) {
 
 TEST_F(Vector2Test, AddsVectorOrNumber) {
   v = Vec2<double>(0., 0.);
-  v += 4.46;
+  v = v + 4.46;
   ASSERT_DOUBLE_EQ(v.x(), 4.46);
   ASSERT_DOUBLE_EQ(v.y(), 4.46);
 
-  v += Vec2<double>(4., 6.);
+  v = v + Vec2<double>(4., 6.);
   ASSERT_DOUBLE_EQ(v.x(), 8.46);
   ASSERT_DOUBLE_EQ(v.y(), 10.46);
 }
 
 TEST_F(Vector2Test, SubtractsVectorOrNumber) {
   v = Vec2<double>(0., 0.);
-  v -= 4.46;
+  v = v - 4.46;
   ASSERT_DOUBLE_EQ(v.x(), -4.46);
   ASSERT_DOUBLE_EQ(v.y(), -4.46);
 
-  v -= Vec2<double>(4., 6.);
+  v = v - Vec2<double>(4., 6.);
   ASSERT_DOUBLE_EQ(v.x(), -8.46);
   ASSERT_DOUBLE_EQ(v.y(), -10.46);
 }
 
 TEST_F(Vector2Test, GetsLenghtOfVector) {
   v = Vec2<double>(0., 0.);
+  auto eps = 1E-6;
   ASSERT_DOUBLE_EQ(v.length(), 0.);
   v = Vec2<double>(1., 1.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(2.));
+  EXPECT_NEAR(v.length(), sqrt(2.), eps);
   v = Vec2<double>(3., 3.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(18.));
+  EXPECT_NEAR(v.length(), sqrt(18.), eps);
   v = Vec2<double>(-5., -5.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(50.));
+  EXPECT_NEAR(v.length(), sqrt(50.), eps);
 }
 
 TEST_F(Vector2Test, MultipliesVectorWithNumber) {
   v = Vec2<double>(1., 0.);
-  v *= 5.;
+  v = v * 5.;
   ASSERT_DOUBLE_EQ(v.x(), 5.);
   ASSERT_DOUBLE_EQ(v.y(), 0.);
 }
 
 TEST_F(Vector2Test, NormalizesVector) {
   v = Vec2<double>(4.53, 93.5);
-  ASSERT_DOUBLE_EQ(v.normalize().length(), 1.);
+  v.normalize();
+  ASSERT_DOUBLE_EQ(v.length(), 1.);
 }
 
 TEST_F(Vector2Test, DotProduct) {
@@ -169,34 +171,34 @@ TEST_F(Vector3Test, SetsCoords) {
 }
 
 TEST_F(Vector3Test, SetXYZ) {
-  v.setXYZ(-1.24f, -5.54f, 45.6f);
+  v.set(-1.24f, -5.54f, 45.6f);
   compareVectors(v, Vec3f(-1.24f, -5.54f, 45.6f));
 
-  v.setXYZ(6.68f);
+  v.set(6.68f);
   compareVectors(v, Vec3f(6.68f, 6.68f, 6.68f));
 }
 
 TEST_F(Vector3Test, ChangesSign) {
-  v.setXYZ(-1.55);
+  v.set(-1.55);
   v = -v;
   compareVectors(v, Vec3f(1.55f, 1.55f, 1.55f));
 }
 
 TEST_F(Vector3Test, AddsVectorOrNumber) {
   v = Vec3f(0.f, 0.f, 5.f);
-  v += 4.46f;
+  v = v + 4.46f;
   compareVectors(v, Vec3f(4.46f, 4.46f, 9.46f));
 
-  v += Vec3f(4.f, 6.f, 0.f);
+  v = v + Vec3f(4.f, 6.f, 0.f);
   compareVectors(v, Vec3f(8.46f, 10.46f, 9.46f));
 }
 
 TEST_F(Vector3Test, SubtractsVectorOrNumber) {
   v = Vec3f(0.f, 0.f, 3.f);
-  v -= 4.46f;
+  v = v - 4.46f;
   compareVectors(v, Vec3f(-4.46f, -4.46f, -1.46f));
 
-  v -= Vec3f(4.f, 6.f, 0.f);
+  v = v - Vec3f(4.f, 6.f, 0.f);
   compareVectors(v, Vec3f(-8.46f, -10.46f, -1.46f));
 }
 
@@ -212,14 +214,14 @@ TEST_F(Vector3Test, GetsLenghtOfVector) {
 }
 
 TEST_F(Vector3Test, MultipliesVectorWithNumber) {
-  v = Vec3f(1.f, 0.f, 5.f);
-  v *= 5.f;
+  v = Vec3f(1.f, 0.f, 5.f) * 5.f;
   compareVectors(v, Vec3f(5.f, 0.f, 25.f));
 }
 
 TEST_F(Vector3Test, NormalizesVector) {
   v = Vec3f(4.53f, 93.5f, -56.3f);
-  ASSERT_DOUBLE_EQ(v.normalize().length(), 1.f);
+  v.normalize();
+  ASSERT_DOUBLE_EQ(v.length(), 1.f);
 }
 
 TEST_F(Vector3Test, DotProduct) {
@@ -320,13 +322,13 @@ TEST_F(Vector4Test, SetsCoords) {
 }
 
 TEST_F(Vector4Test, SetXYZ) {
-  v.setXYZW(-1.24, -5.54, 45.6, -0.5);
+  v.set(-1.24, -5.54, 45.6, -0.5);
   ASSERT_DOUBLE_EQ(v.x(), -1.24);
   ASSERT_DOUBLE_EQ(v.y(), -5.54);
   ASSERT_DOUBLE_EQ(v.z(), 45.6);
   ASSERT_DOUBLE_EQ(v.w(), -0.5);
 
-  v.setXYZW(6.68);
+  v.set(6.68);
   ASSERT_DOUBLE_EQ(v.x(), 6.68);
   ASSERT_DOUBLE_EQ(v.y(), 6.68);
   ASSERT_DOUBLE_EQ(v.z(), 6.68);
@@ -334,7 +336,7 @@ TEST_F(Vector4Test, SetXYZ) {
 }
 
 TEST_F(Vector4Test, ChangesSign) {
-  v.setXYZW(-1.55);
+  v.set(-1.55);
   v = -v;
   ASSERT_DOUBLE_EQ(v[0], 1.55);
   ASSERT_DOUBLE_EQ(v[1], 1.55);
@@ -344,13 +346,13 @@ TEST_F(Vector4Test, ChangesSign) {
 
 TEST_F(Vector4Test, AddsVectorOrNumber) {
   v = Vec4<double>(0., 0., 5., 3.5);
-  v += 4.46;
+  v = v + 4.46;
   ASSERT_DOUBLE_EQ(v.x(), 4.46);
   ASSERT_DOUBLE_EQ(v.y(), 4.46);
   ASSERT_DOUBLE_EQ(v.z(), 9.46);
   ASSERT_DOUBLE_EQ(v.w(), 7.96);
 
-  v += Vec4<double>(4., 6., 0., 45.);
+  v = v + Vec4<double>(4., 6., 0., 45.);
   ASSERT_DOUBLE_EQ(v.x(), 8.46);
   ASSERT_DOUBLE_EQ(v.y(), 10.46);
   ASSERT_DOUBLE_EQ(v.z(), 9.46);
@@ -359,13 +361,13 @@ TEST_F(Vector4Test, AddsVectorOrNumber) {
 
 TEST_F(Vector4Test, SubtractsVectorOrNumber) {
   v = Vec4<double>(0., 0., 3., -5.5);
-  v -= 4.46;
+  v = v - 4.46;
   ASSERT_DOUBLE_EQ(v.x(), -4.46);
   ASSERT_DOUBLE_EQ(v.y(), -4.46);
   ASSERT_DOUBLE_EQ(v.z(), -1.46);
   ASSERT_DOUBLE_EQ(v.w(), -9.96);
 
-  v -= Vec4<double>(4., 6., 0., -1.2);
+  v = v - Vec4<double>(4., 6., 0., -1.2);
   ASSERT_DOUBLE_EQ(v.x(), -8.46);
   ASSERT_DOUBLE_EQ(v.y(), -10.46);
   ASSERT_DOUBLE_EQ(v.z(), -1.46);
@@ -385,7 +387,7 @@ TEST_F(Vector4Test, GetsLenghtOfVector) {
 
 TEST_F(Vector4Test, MultipliesVectorWithNumber) {
   v = Vec4<double>(1., 0., 5., -9.);
-  v *= 5.;
+  v = v * 5.;
   ASSERT_DOUBLE_EQ(v.x(), 5.);
   ASSERT_DOUBLE_EQ(v.y(), 0.);
   ASSERT_DOUBLE_EQ(v.z(), 25.);
@@ -394,7 +396,8 @@ TEST_F(Vector4Test, MultipliesVectorWithNumber) {
 
 TEST_F(Vector4Test, NormalizesVector) {
   v = Vec4<double>(4.53, 93.5, -56.3, -100.00001);
-  ASSERT_DOUBLE_EQ(v.normalize().length(), 1.);
+  v.normalize();
+  ASSERT_DOUBLE_EQ(v.length(), 1.);
 }
 
 TEST_F(Vector4Test, DotProduct) {
@@ -484,12 +487,12 @@ TEST_F(Matrix2Test, CreatesMatrix) {
 
 TEST_F(Matrix2Test, AddsAmatrixOrNumber) {
   m = Mat2<double>(0.);
-  m += Mat2<double>(-1.);
+  m = m + Mat2<double>(-1.);
   ASSERT_DOUBLE_EQ(m[0][0], -1.);
   ASSERT_DOUBLE_EQ(m[0][1], -1.);
   ASSERT_DOUBLE_EQ(m[1][0], -1.);
   ASSERT_DOUBLE_EQ(m[1][1], -1.);
-  m += 5.05;
+  m = m + 5.05;
   ASSERT_DOUBLE_EQ(m[0][0], 4.05);
   ASSERT_DOUBLE_EQ(m[0][1], 4.05);
   ASSERT_DOUBLE_EQ(m[1][0], 4.05);
@@ -498,21 +501,21 @@ TEST_F(Matrix2Test, AddsAmatrixOrNumber) {
 
 TEST_F(Matrix2Test, SubtractsAmatrixOrNumber) {
   m = Mat2<double>(0.);
-  m -= Mat2<double>(1.);
+  m = m - Mat2<double>(1.);
   ASSERT_DOUBLE_EQ(m[0][0], -1.);
   ASSERT_DOUBLE_EQ(m[0][1], -1.);
   ASSERT_DOUBLE_EQ(m[1][0], -1.);
   ASSERT_DOUBLE_EQ(m[1][1], -1.);
-  m -= -5.05;
-  ASSERT_DOUBLE_EQ(m[0][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[0][1], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][1], 4.05);
+  m = m - 5.05;
+  ASSERT_DOUBLE_EQ(m[0][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[0][1], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][1], -6.05);
 }
 
 TEST_F(Matrix2Test, MultipliesWithNumber) {
   m = Mat2<double>(6.28);
-  m *= 0.;
+  m = m * 0.;
   ASSERT_DOUBLE_EQ(m[0][0], 0.);
   ASSERT_DOUBLE_EQ(m[0][1], 0.);
   ASSERT_DOUBLE_EQ(m[1][0], 0.);
@@ -585,7 +588,7 @@ TEST_F(Matrix3Test, CreatesMatrix) {
 
 TEST_F(Matrix3Test, AddsAmatrixOrNumber) {
   m = Mat3<double>(0.);
-  m += Mat3<double>(-1.);
+  m = m + Mat3<double>(-1.);
   ASSERT_DOUBLE_EQ(m[0][0], -1.);
   ASSERT_DOUBLE_EQ(m[0][1], -1.);
   ASSERT_DOUBLE_EQ(m[0][2], -1.);
@@ -597,7 +600,7 @@ TEST_F(Matrix3Test, AddsAmatrixOrNumber) {
   ASSERT_DOUBLE_EQ(m[2][0], -1.);
   ASSERT_DOUBLE_EQ(m[2][1], -1.);
   ASSERT_DOUBLE_EQ(m[2][2], -1.);
-  m += 5.05;
+  m = m + 5.05;
   ASSERT_DOUBLE_EQ(m[0][0], 4.05);
   ASSERT_DOUBLE_EQ(m[0][1], 4.05);
   ASSERT_DOUBLE_EQ(m[0][2], 4.05);
@@ -613,7 +616,7 @@ TEST_F(Matrix3Test, AddsAmatrixOrNumber) {
 
 TEST_F(Matrix3Test, SubtractsAmatrixOrNumber) {
   m = Mat3<double>(0.);
-  m -= Mat3<double>(1.);
+  m = m - Mat3<double>(1.);
   ASSERT_DOUBLE_EQ(m[0][0], -1.);
   ASSERT_DOUBLE_EQ(m[0][1], -1.);
   ASSERT_DOUBLE_EQ(m[0][2], -1.);
@@ -623,21 +626,21 @@ TEST_F(Matrix3Test, SubtractsAmatrixOrNumber) {
   ASSERT_DOUBLE_EQ(m[2][0], -1.);
   ASSERT_DOUBLE_EQ(m[2][1], -1.);
   ASSERT_DOUBLE_EQ(m[2][2], -1.);
-  m -= -5.05;
-  ASSERT_DOUBLE_EQ(m[0][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[0][1], 4.05);
-  ASSERT_DOUBLE_EQ(m[0][2], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][1], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][2], 4.05);
-  ASSERT_DOUBLE_EQ(m[2][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[2][1], 4.05);
-  ASSERT_DOUBLE_EQ(m[2][2], 4.05);
+  m = m - 5.05;
+  ASSERT_DOUBLE_EQ(m[0][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[0][1], -6.05);
+  ASSERT_DOUBLE_EQ(m[0][2], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][1], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][2], -6.05);
+  ASSERT_DOUBLE_EQ(m[2][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[2][1], -6.05);
+  ASSERT_DOUBLE_EQ(m[2][2], -6.05);
 }
 
 TEST_F(Matrix3Test, MultipliesWithNumber) {
   m = Mat3<double>(6.28);
-  m *= 0.;
+  m = m * 0.;
   ASSERT_DOUBLE_EQ(m[0][0], 0.);
   ASSERT_DOUBLE_EQ(m[0][1], 0.);
   ASSERT_DOUBLE_EQ(m[0][2], 0.);
@@ -793,7 +796,7 @@ TEST_F(Matrix4Test, CreatesMatrix) {
 
 TEST_F(Matrix4Test, AddsAmatrixOrNumber) {
   m4 = Mat4<double>(0.);
-  m4 += Mat4<double>(-1.);
+  m4 = m4 + Mat4<double>(-1.);
   ASSERT_DOUBLE_EQ(m4[0][0], -1.);
   ASSERT_DOUBLE_EQ(m4[0][1], -1.);
   ASSERT_DOUBLE_EQ(m4[0][2], -1.);
@@ -813,7 +816,7 @@ TEST_F(Matrix4Test, AddsAmatrixOrNumber) {
   ASSERT_DOUBLE_EQ(m4[3][1], -1.);
   ASSERT_DOUBLE_EQ(m4[3][2], -1.);
   ASSERT_DOUBLE_EQ(m4[3][3], -1.);
-  m4 += 5.05;
+  m4 = m4 + 5.05;
   ASSERT_DOUBLE_EQ(m4[0][0], 4.05);
   ASSERT_DOUBLE_EQ(m4[0][1], 4.05);
   ASSERT_DOUBLE_EQ(m4[0][2], 4.05);
@@ -837,7 +840,7 @@ TEST_F(Matrix4Test, AddsAmatrixOrNumber) {
 
 TEST_F(Matrix4Test, SubtractsAmatrixOrNumber) {
   m4 = Mat4<double>(0.);
-  m4 -= Mat4<double>(1.);
+  m4 = m4 - Mat4<double>(1.);
   ASSERT_DOUBLE_EQ(m4[0][0], -1.);
   ASSERT_DOUBLE_EQ(m4[0][1], -1.);
   ASSERT_DOUBLE_EQ(m4[0][2], -1.);
@@ -857,31 +860,31 @@ TEST_F(Matrix4Test, SubtractsAmatrixOrNumber) {
   ASSERT_DOUBLE_EQ(m4[3][1], -1.);
   ASSERT_DOUBLE_EQ(m4[3][2], -1.);
   ASSERT_DOUBLE_EQ(m4[3][3], -1.);
-  m4 -= -5.05;
-  ASSERT_DOUBLE_EQ(m4[0][0], 4.05);
-  ASSERT_DOUBLE_EQ(m4[0][1], 4.05);
-  ASSERT_DOUBLE_EQ(m4[0][2], 4.05);
-  ASSERT_DOUBLE_EQ(m4[0][3], 4.05);
+  m4 = m4 - 5.05;
+  ASSERT_DOUBLE_EQ(m4[0][0], -6.05);
+  ASSERT_DOUBLE_EQ(m4[0][1], -6.05);
+  ASSERT_DOUBLE_EQ(m4[0][2], -6.05);
+  ASSERT_DOUBLE_EQ(m4[0][3], -6.05);
 
-  ASSERT_DOUBLE_EQ(m4[1][0], 4.05);
-  ASSERT_DOUBLE_EQ(m4[1][1], 4.05);
-  ASSERT_DOUBLE_EQ(m4[1][2], 4.05);
-  ASSERT_DOUBLE_EQ(m4[1][3], 4.05);
+  ASSERT_DOUBLE_EQ(m4[1][0], -6.05);
+  ASSERT_DOUBLE_EQ(m4[1][1], -6.05);
+  ASSERT_DOUBLE_EQ(m4[1][2], -6.05);
+  ASSERT_DOUBLE_EQ(m4[1][3], -6.05);
 
-  ASSERT_DOUBLE_EQ(m4[2][0], 4.05);
-  ASSERT_DOUBLE_EQ(m4[2][1], 4.05);
-  ASSERT_DOUBLE_EQ(m4[2][2], 4.05);
-  ASSERT_DOUBLE_EQ(m4[2][3], 4.05);
+  ASSERT_DOUBLE_EQ(m4[2][0], -6.05);
+  ASSERT_DOUBLE_EQ(m4[2][1], -6.05);
+  ASSERT_DOUBLE_EQ(m4[2][2], -6.05);
+  ASSERT_DOUBLE_EQ(m4[2][3], -6.05);
 
-  ASSERT_DOUBLE_EQ(m4[3][0], 4.05);
-  ASSERT_DOUBLE_EQ(m4[3][1], 4.05);
-  ASSERT_DOUBLE_EQ(m4[3][2], 4.05);
-  ASSERT_DOUBLE_EQ(m4[3][3], 4.05);
+  ASSERT_DOUBLE_EQ(m4[3][0], -6.05);
+  ASSERT_DOUBLE_EQ(m4[3][1], -6.05);
+  ASSERT_DOUBLE_EQ(m4[3][2], -6.05);
+  ASSERT_DOUBLE_EQ(m4[3][3], -6.05);
 }
 
 TEST_F(Matrix4Test, MultipliesWithNumber) {
   m4 = Mat4<double>(6.28);
-  m4 *= 0.;
+  m4 = m4 * 0.;
   ASSERT_DOUBLE_EQ(m4[0][0], 0.);
   ASSERT_DOUBLE_EQ(m4[0][1], 0.);
   ASSERT_DOUBLE_EQ(m4[0][2], 0.);
@@ -1075,11 +1078,11 @@ TEST_F(Point3Test, createsPoint) {
   ASSERT_EQ(p.x(), 0);
   ASSERT_EQ(p.y(), 0);
   ASSERT_EQ(p.z(), 0);
-  p = Point3i(1, -8);
+  p = Point3i(1, -8, 0);
   ASSERT_EQ(p.x(), 1);
   ASSERT_EQ(p.y(), -8);
   ASSERT_EQ(p.z(), 0);
-  p = Point3i(9);
+  p = Point3i(9, 0, 0);
   ASSERT_EQ(p.x(), 9);
   ASSERT_EQ(p.y(), 0);
   ASSERT_EQ(p.z(), 0);
@@ -1098,7 +1101,7 @@ TEST_F(Point3Test, subtractsPointFromPoint) {
 TEST_F(Point3Test, subtractsVectorFromPoint) {
   p = Point3i(3, 4, 5);
   Vec3i v = Vec3i(3, 4, 5);
-  p -= v;
+  p = p - v;
   ASSERT_EQ(p.x(), 0);
   ASSERT_EQ(p.y(), 0);
   ASSERT_EQ(p.z(), 0);
@@ -1107,7 +1110,7 @@ TEST_F(Point3Test, subtractsVectorFromPoint) {
 TEST_F(Point3Test, addsVectorToPoint) {
   p = Point3i(0, -1, -8);
   Vec3i v = Vec3i(-4, 5, 9);
-  p += v;
+  p = p + v;
   ASSERT_EQ(p.x(), -4);
   ASSERT_EQ(p.y(), 4);
   ASSERT_EQ(p.z(), 1);

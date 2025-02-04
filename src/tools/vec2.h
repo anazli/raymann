@@ -1,5 +1,4 @@
-#ifndef VEC2_H
-#define VEC2_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -9,24 +8,19 @@
 template <class T>
 class Vec2 {
  public:
-  Vec2(const T& p1 = static_cast<T>(0), const T& p2 = static_cast<T>(0))
-      : m_x{p1}, m_y{p2} {}
-  Vec2(const Vec2<T>& v) : m_x{v.x()}, m_y{v.y()} {}
+  Vec2() = default;
+  Vec2(T p1, T p2) : m_x{p1}, m_y{p2} {}
+  Vec2(const Vec2<T>& other) : m_x{other.m_x}, m_y{other.m_y} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
 
-  void setX(const T& p) { m_x = p; }
-  void setY(const T& p) { m_y = p; }
-
-  void setXY(const T& num) {
-    setX(num);
-    setY(num);
-  }
-
-  void setXY(const T& p1, const T& p2) {
-    setX(p1);
-    setY(p2);
+  void setX(T num) { m_x = num; }
+  void setY(T num) { m_y = num; }
+  void set(T num) { m_x = m_y = num; }
+  void set(T num1, T num2) {
+    m_x = num1;
+    m_y = num2;
   }
 
   T operator[](int i) const {
@@ -41,44 +35,23 @@ class Vec2 {
     return m_y;
   }
 
-  Vec2& operator=(const Vec2& v) {
-    m_x = v.x();
-    m_y = v.y();
+  Vec2& operator=(const Vec2& other) {
+    m_x = other.m_x;
+    m_y = other.m_y;
     return *this;
   }
 
+  auto operator<=>(const Vec2<T>&) const = default;
+
   Vec2<T> operator+() const { return Vec2<T>(m_x, m_y); };
   Vec2<T> operator-() const { return Vec2<T>(-m_x, -m_y); }
-  Vec2<T>& operator++();
-  Vec2<T>& operator--();
-  Vec2<T> operator++(int);
-  Vec2<T> operator--(int);
 
-  Vec2<T>& operator+=(const T& num);
-
-  Vec2<T>& operator+=(const Vec2<T>& v);
-  Vec2<T>& operator-=(const T& num);
-
-  Vec2<T>& operator-=(const Vec2<T>& v);
-  Vec2<T>& operator*=(const T& num);
-
-  Vec2<T>& normalize();
-  double length() const { return sqrt(x() * x() + y() * y()); }
-
-  bool isValid() {
-    if (m_x * 0. != m_x * 0.) {
-      return false;
-    }
-    if (m_y * 0. != m_y * 0.) {
-      return false;
-    }
-
-    return true;
-  }
+  void normalize();
+  float length() const { return sqrt(m_x * m_x + m_y * m_y); }
 
  private:
-  T m_x;
-  T m_y;
+  T m_x = T{};
+  T m_y = T{};
 };
 
 typedef Vec2<double> Vec2d;
@@ -90,66 +63,8 @@ typedef Vec2<int> Vec2i;
 //--------------------------------------------
 
 template <typename T>
-Vec2<T>& Vec2<T>::operator++() {
-  *this += 1;  // use of += member operator
-  return *this;
-}
-
-template <typename T>
-Vec2<T>& Vec2<T>::operator--() {
-  *this -= 1;
-  return *this;
-}
-
-template <typename T>
-Vec2<T> Vec2<T>::operator++(int) {
-  Vec2 temp(m_x, m_y);
-  ++(*this);  // use of prefix ++ operator
-  return temp;
-}
-
-template <typename T>
-Vec2<T> Vec2<T>::operator--(int) {
-  Vec2 temp(m_x, m_y);
-  --(*this);
-  return temp;
-}
-
-template <typename T>
-Vec2<T>& Vec2<T>::operator+=(const T& num) {
-  *this = (*this) + num;  // use of binary + operator
-  return *this;
-}
-
-template <typename T>
-Vec2<T>& Vec2<T>::operator+=(const Vec2& v) {
-  *this = (*this) + v;
-  return *this;
-}
-
-template <typename T>
-Vec2<T>& Vec2<T>::operator-=(const T& num) {
-  *this = (*this) - num;
-  return *this;
-}
-
-template <typename T>
-Vec2<T>& Vec2<T>::operator-=(const Vec2<T>& v) {
-  *this = (*this) - v;
-  return *this;
-}
-
-template <typename T>
-Vec2<T>& Vec2<T>::operator*=(const T& num) {
-  *this = (*this) * num;
-  return *this;
-}
-
-template <typename T>
-Vec2<T>& Vec2<T>::normalize() {
-  double norm = this->length();
-  *this = (*this) / (norm + 1.E-30);
-  return *this;
+void Vec2<T>::normalize() {
+  *this = (*this) / (this->length() + 1.E-30);
 }
 
 //--------------------------------------------
@@ -160,7 +75,7 @@ template <typename T>
 inline std::istream& operator>>(std::istream& in, Vec2<T>& v) {
   T x, y;
   in >> x >> y;
-  v.setXY(x, y);
+  v.set(x, y);
   return in;
 }
 
@@ -176,21 +91,17 @@ inline std::ostream& operator<<(std::ostream& out, const Vec2<T>& v) {
 //--------------------------------------------
 
 template <typename T>
-Vec2<T> operator+(const Vec2<T>& v1, const Vec2<T>& v2)
-
-{
+Vec2<T> operator+(const Vec2<T>& v1, const Vec2<T>& v2) {
   return Vec2<T>(v1.x() + v2.x(), v1.y() + v2.y());
 }
 
 template <typename T>
-Vec2<T> operator+(const Vec2<T>& v, const T& num)
-
-{
+Vec2<T> operator+(const Vec2<T>& v, T num) {
   return Vec2<T>(v.x() + num, v.y() + num);
 }
 
 template <typename T>
-Vec2<T> operator+(const T& num, const Vec2<T>& v) {
+Vec2<T> operator+(T num, const Vec2<T>& v) {
   return v + num;
 }
 
@@ -200,12 +111,12 @@ Vec2<T> operator-(const Vec2<T>& v1, const Vec2<T>& v2) {
 }
 
 template <typename T>
-Vec2<T> operator-(const Vec2<T>& v, const T& num) {
+Vec2<T> operator-(const Vec2<T>& v, T num) {
   return Vec2<T>(v.x() - num, v.y() - num);
 }
 
 template <typename T>
-Vec2<T> operator-(const T& num, const Vec2<T>& v) {
+Vec2<T> operator-(T num, const Vec2<T>& v) {
   return v - num;
 }
 
@@ -215,50 +126,39 @@ Vec2<T> operator*(const Vec2<T>& v1, const Vec2<T>& v2) {
 }
 
 template <typename T>
-Vec2<T> operator*(const Vec2<T>& v, const T& num) {
+Vec2<T> operator*(const Vec2<T>& v, T num) {
   return Vec2<T>(v.x() * num, v.y() * num);
 }
 
 template <typename T>
-Vec2<T> operator*(const T& num, const Vec2<T>& v) {
+Vec2<T> operator*(T num, const Vec2<T>& v) {
   return v * num;
 }
 
 template <typename T>
 Vec2<T> operator/(const Vec2<T>& v1, const Vec2<T>& v2) {
-  if (v2.x() == (T)0 || v2.y() == (T)0) throw "Division by zero!";
-  return Vec2<T>(v1.x() / v2.x(), v1.y() / v2.y());
+  auto eps = 1.E-30;
+  auto d = v2 + eps;
+  return Vec2<T>(v1.x() / d.x(), v1.y() / d.y());
 }
 
 template <typename T>
-Vec2<T> operator/(const Vec2<T>& v, const T& num) {
-  T e = 1.E-30;
-  return Vec2<T>(v.x() / (num + e), v.y() / (num + e));
-}
-
-template <typename T>
-bool operator==(const Vec2<T>& v1, const Vec2<T>& v2) {
-  return (v1.x() == v2.x() && v1.y() == v2.y());
-}
-
-template <typename T>
-bool operator!=(const Vec2<T>& v1, const Vec2<T>& v2) {
-  return !(v1 == v2);
+Vec2<T> operator/(const Vec2<T>& v, T num) {
+  num += 1.E-30;
+  return Vec2<T>(v.x() / num, v.y() / num);
 }
 
 //--------------------------------------------
-// General methods
+// Other vector operations
 //--------------------------------------------
 
 template <typename T>
 T dot(const Vec2<T>& v1, const Vec2<T>& v2) {
-  Vec2<T> v = v1 * v2;
+  auto v = v1 * v2;
   return v.x() + v.y();
 }
 
 template <typename T>
 Vec2<T> getUnitVectorOf(const Vec2<T>& v) {
-  return v / (v.length() + (T)1.E-30);
+  return v / (v.length() + 1.E-30);
 }
-
-#endif  // VEC2_H

@@ -65,7 +65,8 @@ Point3f SceneElement::pointFromWorldToObjectSpace(const Point3f& point) const {
 Vec3f SceneElement::vectorFromObjectToWorldSpace(const Vec3f vec) const {
   Vec3f v(vec);
   v = Mat4f().inverse().transpose() * Vec4f(v);
-  return v.normalize();
+  v.normalize();
+  return v;
 }
 
 SceneElement::SceneElement(const BoundingBox& props) : m_bBox(props) {}

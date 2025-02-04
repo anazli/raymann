@@ -1,5 +1,4 @@
-#ifndef TOOLS_H
-#define TOOLS_H
+#pragma once
 
 #include <cmath>
 #include <limits>
@@ -16,7 +15,5 @@
 #include "vec4.h"
 
 const float PI = acos(-1.);
-const float EPS = std::numeric_limits<float>::epsilon();
-const float EPS1 = 0.000002f;
-
-#endif  // TOOLS_H
+constexpr float EPS = std::numeric_limits<float>::epsilon();
+constexpr float EPS1 = 0.000002f;
