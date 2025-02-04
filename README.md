@@ -14,7 +14,7 @@ $ cmake --build build
 ```
 To run all tests:
 ```bash
-$ cmake -S . -B build -DBUILD_TESTING=OFF
+$ cmake -S . -B build -DBUILD_TESTING=ON
 $ cmake --build build
 $ ctest --test-dir build
 ```
@@ -25,12 +25,6 @@ To run the program, from the main directory
 $ cd ..
 $ bin/raymann
 ```
-
-To run a certain testcase, you can run from the main directory its binary located in test/bin, for example the ray tests:
-```bash
-$ test/bin/TestRay
-```
-
 Docker
 ------
 To build the Docker container run
