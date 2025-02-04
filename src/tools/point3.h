@@ -58,19 +58,19 @@ class Point3 {
   }
 
   Point3<T> operator+(const Vec3<T> &vec3) const {
-    return Point3<T>(x() + vec3.x(), y() + vec3.y(), z() + vec3.z());
+    return Point3<T>(m_x + vec3.x(), m_y + vec3.y(), m_z + vec3.z());
   }
 
-  Vec3<T> operator-(const Point3<T> &p) const {  // Point - Point = Vector
-    return Vec3<T>(x() - p.x(), y() - p.y(), z() - p.z());
+  Vec3<T> operator-(const Point3<T> &rhs) const {  // Point - Point = Vector
+    return Vec3<T>(m_x - rhs.m_x, m_y - rhs.m_y, m_z - rhs.m_z);
   }
 
-  Vec3<T> operator+(const Point3<T> &p) const {
-    return Vec3<T>(x() + p.x(), y() + p.y(), z() + p.z());
+  Vec3<T> operator+(const Point3<T> &rhs) const {
+    return Vec3<T>(m_x + rhs.m_x, m_y + rhs.m_y, m_z + rhs.m_z);
   }
 
   Point3<T> operator-(const Vec3<T> &v) const {  // Point - Vector = Point
-    return Point3<T>(x() - v.x(), y() - v.y(), z() - v.z());
+    return Point3<T>(m_x - v.x(), m_y - v.y(), m_z - v.z());
   }
 
   Point3<T> &operator-=(const Vec3<T> &v) {
@@ -104,8 +104,8 @@ Vec3<T> operator+(const Vec3<T> &v, const Point3<T> &p) {
 }
 
 template <typename T>
-Point3<T> operator+(const Point3<T> &p, T v) {
-  return Point3<T>(p.x() + v, p.y() + v, p.z() + v);
+Point3<T> operator+(const Point3<T> &p, T num) {
+  return Point3<T>(p.x() + num, p.y() + num, p.z() + num);
 }
 
 template <typename T>
@@ -126,11 +126,11 @@ std::ostream &operator<<(std::ostream &out, const Point3<T> &p) {
 }
 
 template <typename T>
-Point3<T> operator*(const Point3<T> &v, T num) {
-  return Point3<T>(v.x() * num, v.y() * num, v.z() * num);
+Point3<T> operator*(const Point3<T> &p, T num) {
+  return Point3<T>(p.x() * num, p.y() * num, p.z() * num);
 }
 
 template <typename T>
-Point3<T> operator*(T num, const Point3<T> &v) {
-  return v * num;
+Point3<T> operator*(T num, const Point3<T> &p) {
+  return p * num;
 }
