@@ -587,7 +587,7 @@ TEST_F(Matrix3Test, CreatesMatrix) {
 
 TEST_F(Matrix3Test, AddsAmatrixOrNumber) {
   m = Mat3<double>(0.);
-  m += Mat3<double>(-1.);
+  m = m + Mat3<double>(-1.);
   ASSERT_DOUBLE_EQ(m[0][0], -1.);
   ASSERT_DOUBLE_EQ(m[0][1], -1.);
   ASSERT_DOUBLE_EQ(m[0][2], -1.);
@@ -599,7 +599,7 @@ TEST_F(Matrix3Test, AddsAmatrixOrNumber) {
   ASSERT_DOUBLE_EQ(m[2][0], -1.);
   ASSERT_DOUBLE_EQ(m[2][1], -1.);
   ASSERT_DOUBLE_EQ(m[2][2], -1.);
-  m += 5.05;
+  m = m + 5.05;
   ASSERT_DOUBLE_EQ(m[0][0], 4.05);
   ASSERT_DOUBLE_EQ(m[0][1], 4.05);
   ASSERT_DOUBLE_EQ(m[0][2], 4.05);
@@ -615,7 +615,7 @@ TEST_F(Matrix3Test, AddsAmatrixOrNumber) {
 
 TEST_F(Matrix3Test, SubtractsAmatrixOrNumber) {
   m = Mat3<double>(0.);
-  m -= Mat3<double>(1.);
+  m = m - Mat3<double>(1.);
   ASSERT_DOUBLE_EQ(m[0][0], -1.);
   ASSERT_DOUBLE_EQ(m[0][1], -1.);
   ASSERT_DOUBLE_EQ(m[0][2], -1.);
@@ -625,21 +625,21 @@ TEST_F(Matrix3Test, SubtractsAmatrixOrNumber) {
   ASSERT_DOUBLE_EQ(m[2][0], -1.);
   ASSERT_DOUBLE_EQ(m[2][1], -1.);
   ASSERT_DOUBLE_EQ(m[2][2], -1.);
-  m -= -5.05;
-  ASSERT_DOUBLE_EQ(m[0][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[0][1], 4.05);
-  ASSERT_DOUBLE_EQ(m[0][2], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][1], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][2], 4.05);
-  ASSERT_DOUBLE_EQ(m[2][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[2][1], 4.05);
-  ASSERT_DOUBLE_EQ(m[2][2], 4.05);
+  m = m - 5.05;
+  ASSERT_DOUBLE_EQ(m[0][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[0][1], -6.05);
+  ASSERT_DOUBLE_EQ(m[0][2], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][1], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][2], -6.05);
+  ASSERT_DOUBLE_EQ(m[2][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[2][1], -6.05);
+  ASSERT_DOUBLE_EQ(m[2][2], -6.05);
 }
 
 TEST_F(Matrix3Test, MultipliesWithNumber) {
   m = Mat3<double>(6.28);
-  m *= 0.;
+  m = m * 0.;
   ASSERT_DOUBLE_EQ(m[0][0], 0.);
   ASSERT_DOUBLE_EQ(m[0][1], 0.);
   ASSERT_DOUBLE_EQ(m[0][2], 0.);

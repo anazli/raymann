@@ -29,41 +29,6 @@ class Mat3 {
     return *this;
   }
 
-  Mat3<T>& operator+=(const Mat3<T>& c) {
-    m_vec[0] = m_vec[0] + c[0];
-    m_vec[1] = m_vec[1] + c[1];
-    m_vec[2] = m_vec[2] + c[2];
-    return *this;
-  }
-
-  Mat3<T>& operator+=(T num) {
-    m_vec[0] = m_vec[0] + num;
-    m_vec[1] = m_vec[1] + num;
-    m_vec[2] = m_vec[2] + num;
-    return *this;
-  }
-
-  Mat3<T>& operator-=(const Mat3<T>& c) {
-    m_vec[0] = m_vec[0] - c[0];
-    m_vec[1] = m_vec[1] - c[1];
-    m_vec[2] = m_vec[2] - c[2];
-    return *this;
-  }
-
-  Mat3<T>& operator-=(T num) {
-    m_vec[0] = m_vec[0] - num;
-    m_vec[1] = m_vec[1] - num;
-    m_vec[2] = m_vec[2] - num;
-    return *this;
-  }
-
-  Mat3<T>& operator*=(T num) {
-    m_vec[0] = m_vec[0] * num;
-    m_vec[1] = m_vec[1] * num;
-    m_vec[2] = m_vec[2] * num;
-    return *this;
-  }
-
   Vec3<T> operator[](int i) const {
     assert(i >= 0 && i <= 2);
     if (i == 0) return m_vec[0];
@@ -97,9 +62,7 @@ class Mat3 {
   Mat3<T> inverse() const;
   Mat3<T> transpose() const;
   T coFactor(int i, int j) const {
-    Mat2<T> mi = minor(i, j);
-    T C = T(pow(-1., i + 1. + j + 1.)) * mi.determinant();
-    return C;
+    return T(pow(-1., i + 1. + j + 1.)) * minor(i, j).determinant();
   }
 
  private:
@@ -130,22 +93,17 @@ T Mat3<T>::determinant() const {
 template <typename T>
 Mat2<T> Mat3<T>::minor(int i, int j) const {
   Mat2<T> mi;
-
   int yy = 0;
   for (int y = 0; y < 3; y++) {
     if (y == j) continue;
-
     int xx = 0;
     for (int x = 0; x < 3; x++) {
       if (x == i) continue;
-
       mi[xx][yy] = m_vec[x][y];
       xx++;
     }
-
     yy++;
   }
-
   return mi;
 }
 
@@ -160,7 +118,7 @@ Mat3<T> Mat3<T>::inverse() const {
 
   T det = determinant();
   T invDet = 1. / det;
-  inv *= invDet;
+  inv = inv * invDet;
   return inv;
 }
 
@@ -188,8 +146,18 @@ Mat3<T> operator+(const Mat3<T>& m1, const Mat3<T>& m2) {
 }
 
 template <typename T>
+Mat3<T> operator+(const Mat3<T>& m1, T num) {
+  return Mat3<T>(m1[0] + num, m1[1] + num, m1[2] + num);
+}
+
+template <typename T>
 Mat3<T> operator-(const Mat3<T>& m1, const Mat3<T>& m2) {
   return Mat3<T>(m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2]);
+}
+
+template <typename T>
+Mat3<T> operator-(const Mat3<T>& m1, T num) {
+  return Mat3<T>(m1[0] - num, m1[1] - num, m1[2] - num);
 }
 
 template <typename T>
@@ -211,6 +179,11 @@ Mat3<T> operator*(const Mat3<T>& m1, const Mat3<T>& m2) {
   /* 00 01 02
    * 10 11 12
    * 20 21 22*/
+}
+
+template <typename T>
+Mat3<T> operator*(const Mat3<T>& m1, T num) {
+  return Mat3<T>(m1[0] * num, m1[1] * num, m1[2] * num);
 }
 
 template <typename T>
