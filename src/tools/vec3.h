@@ -63,11 +63,6 @@ class Vec3 {
   Vec3<T> operator+() const { return Vec3<T>(m_x, m_y, m_z); };
   Vec3<T> operator-() const { return Vec3<T>(-m_x, -m_y, -m_z); }
 
-  Vec3<T>& operator++();
-  Vec3<T>& operator--();
-  Vec3<T> operator++(int);
-  Vec3<T> operator--(int);
-
   Vec3<T>& operator+=(T num);
   Vec3<T>& operator+=(const Vec3<T>& v);
   Vec3<T>& operator-=(T num);
@@ -96,32 +91,6 @@ typedef Vec3<int> Vec3i;
 //--------------------------------------------
 // Overloaded Member operators (input, output)
 //--------------------------------------------
-
-template <typename T>
-Vec3<T>& Vec3<T>::operator++() {
-  *this += 1;  // use of += member operator
-  return *this;
-}
-
-template <typename T>
-Vec3<T>& Vec3<T>::operator--() {
-  *this -= 1;
-  return *this;
-}
-
-template <typename T>
-Vec3<T> Vec3<T>::operator++(int) {
-  Vec3<T> temp(m_x, m_y, m_z);
-  ++(*this);  // use of prefix ++ operator
-  return temp;
-}
-
-template <typename T>
-Vec3<T> Vec3<T>::operator--(int) {
-  Vec3<T> temp(m_x, m_y, m_z);
-  --(*this);
-  return temp;
-}
 
 template <typename T>
 Vec3<T>& Vec3<T>::operator+=(T num) {
