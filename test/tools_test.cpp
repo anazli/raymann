@@ -186,19 +186,19 @@ TEST_F(Vector3Test, ChangesSign) {
 
 TEST_F(Vector3Test, AddsVectorOrNumber) {
   v = Vec3f(0.f, 0.f, 5.f);
-  v += 4.46f;
+  v = v + 4.46f;
   compareVectors(v, Vec3f(4.46f, 4.46f, 9.46f));
 
-  v += Vec3f(4.f, 6.f, 0.f);
+  v = v + Vec3f(4.f, 6.f, 0.f);
   compareVectors(v, Vec3f(8.46f, 10.46f, 9.46f));
 }
 
 TEST_F(Vector3Test, SubtractsVectorOrNumber) {
   v = Vec3f(0.f, 0.f, 3.f);
-  v -= 4.46f;
+  v = v - 4.46f;
   compareVectors(v, Vec3f(-4.46f, -4.46f, -1.46f));
 
-  v -= Vec3f(4.f, 6.f, 0.f);
+  v = v - Vec3f(4.f, 6.f, 0.f);
   compareVectors(v, Vec3f(-8.46f, -10.46f, -1.46f));
 }
 
@@ -214,8 +214,7 @@ TEST_F(Vector3Test, GetsLenghtOfVector) {
 }
 
 TEST_F(Vector3Test, MultipliesVectorWithNumber) {
-  v = Vec3f(1.f, 0.f, 5.f);
-  v *= 5.f;
+  v = Vec3f(1.f, 0.f, 5.f) * 5.f;
   compareVectors(v, Vec3f(5.f, 0.f, 25.f));
 }
 

@@ -63,12 +63,6 @@ class Vec3 {
   Vec3<T> operator+() const { return Vec3<T>(m_x, m_y, m_z); };
   Vec3<T> operator-() const { return Vec3<T>(-m_x, -m_y, -m_z); }
 
-  Vec3<T>& operator+=(T num);
-  Vec3<T>& operator+=(const Vec3<T>& v);
-  Vec3<T>& operator-=(T num);
-  Vec3<T>& operator-=(const Vec3<T>& v);
-  Vec3<T>& operator*=(T num);
-
   void normalize();
   float length() const { return sqrt(x() * x() + y() * y() + z() * z()); }
 
@@ -91,36 +85,6 @@ typedef Vec3<int> Vec3i;
 //--------------------------------------------
 // Overloaded Member operators (input, output)
 //--------------------------------------------
-
-template <typename T>
-Vec3<T>& Vec3<T>::operator+=(T num) {
-  *this = (*this) + num;  // use of binary + operator
-  return *this;
-}
-
-template <typename T>
-Vec3<T>& Vec3<T>::operator+=(const Vec3<T>& v) {
-  *this = (*this) + v;
-  return *this;
-}
-
-template <typename T>
-Vec3<T>& Vec3<T>::operator-=(T num) {
-  *this = (*this) - num;
-  return *this;
-}
-
-template <typename T>
-Vec3<T>& Vec3<T>::operator-=(const Vec3<T>& v) {
-  *this = (*this) - v;
-  return *this;
-}
-
-template <typename T>
-Vec3<T>& Vec3<T>::operator*=(T num) {
-  *this = (*this) * num;
-  return *this;
-}
 
 template <typename T>
 void Vec3<T>::normalize() {

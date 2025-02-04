@@ -67,7 +67,7 @@ void Canvas::save() {
 
   for (int j = 0; j < height(); ++j) {
     for (int i = 0; i < width(); ++i) {
-      m_pixels[i][j] *= 255.f;
+      m_pixels[i][j] = m_pixels[i][j] * 255.f;
       if (m_pixels[i][j].x() > 255.f) m_pixels[i][j].setX(255.f);
       if (m_pixels[i][j].x() < 0.f) m_pixels[i][j].setX(0.f);
       if (m_pixels[i][j].y() > 255.f) m_pixels[i][j].setY(255.f);

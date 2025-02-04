@@ -30,37 +30,37 @@ class Mat3 {
   }
 
   Mat3<T>& operator+=(const Mat3<T>& c) {
-    m_vec[0] += c[0];
-    m_vec[1] += c[1];
-    m_vec[2] += c[2];
+    m_vec[0] = m_vec[0] + c[0];
+    m_vec[1] = m_vec[1] + c[1];
+    m_vec[2] = m_vec[2] + c[2];
     return *this;
   }
 
   Mat3<T>& operator+=(T num) {
-    m_vec[0] += num;
-    m_vec[1] += num;
-    m_vec[2] += num;
+    m_vec[0] = m_vec[0] + num;
+    m_vec[1] = m_vec[1] + num;
+    m_vec[2] = m_vec[2] + num;
     return *this;
   }
 
   Mat3<T>& operator-=(const Mat3<T>& c) {
-    m_vec[0] -= c[0];
-    m_vec[1] -= c[1];
-    m_vec[2] -= c[2];
+    m_vec[0] = m_vec[0] - c[0];
+    m_vec[1] = m_vec[1] - c[1];
+    m_vec[2] = m_vec[2] - c[2];
     return *this;
   }
 
   Mat3<T>& operator-=(T num) {
-    m_vec[0] -= num;
-    m_vec[1] -= num;
-    m_vec[2] -= num;
+    m_vec[0] = m_vec[0] - num;
+    m_vec[1] = m_vec[1] - num;
+    m_vec[2] = m_vec[2] - num;
     return *this;
   }
 
   Mat3<T>& operator*=(T num) {
-    m_vec[0] *= num;
-    m_vec[1] *= num;
-    m_vec[2] *= num;
+    m_vec[0] = m_vec[0] * num;
+    m_vec[1] = m_vec[1] * num;
+    m_vec[2] = m_vec[2] * num;
     return *this;
   }
 
