@@ -19,7 +19,7 @@ class Vec4 {
   Vec4() = default;
   Vec4(T p1, T p2, T p3, T p4) : m_x{p1}, m_y{p2}, m_z{p3}, m_w{p4} {}
 
-  Vec4(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()}, m_w{v.w()} {}
+  Vec4(const Vec4<T>& v) : m_x{v.m_x}, m_y{v.m_y}, m_z{v.m_z}, m_w{v.m_w} {}
   Vec4(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
   Vec4(const Point3<T>& p) : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
 
@@ -28,23 +28,18 @@ class Vec4 {
   T z() const { return m_z; }
   T w() const { return m_w; }
 
-  void setX(T p) { m_x = p; }
-  void setY(T p) { m_y = p; }
-  void setZ(T p) { m_z = p; }
-  void setW(T p) { m_w = p; }
+  void setX(T num) { m_x = num; }
+  void setY(T num) { m_y = num; }
+  void setZ(T num) { m_z = num; }
+  void setW(T num) { m_w = num; }
 
-  void setXYZW(T num) {
-    setX(num);
-    setY(num);
-    setZ(num);
-    setW(num);
-  }
+  void setXYZW(T num) { m_x = m_y = m_z = m_w = num; }
 
-  void setXYZW(T p1, T p2, T p3, T p4) {
-    setX(p1);
-    setY(p2);
-    setZ(p3);
-    setW(p4);
+  void setXYZW(T num1, T num2, T num3, T num4) {
+    m_x = num1;
+    m_y = num2;
+    m_z = num3;
+    m_w = num4;
   }
 
   T operator[](int i) const {
@@ -64,10 +59,10 @@ class Vec4 {
   }
 
   Vec4<T>& operator=(const Vec4<T>& v) {
-    m_x = v.x();
-    m_y = v.y();
-    m_z = v.z();
-    m_w = v.w();
+    m_x = v.m_x;
+    m_y = v.m_y;
+    m_z = v.m_z;
+    m_w = v.m_w;
     return *this;
   }
 
@@ -75,7 +70,7 @@ class Vec4 {
     m_x = v.x();
     m_y = v.y();
     m_z = v.z();
-    m_w = (T)0;
+    m_w = T{0};
     return *this;
   }
 
@@ -83,17 +78,12 @@ class Vec4 {
     m_x = p.x();
     m_y = p.y();
     m_z = p.z();
-    m_w = (T)1;
+    m_w = T{1};
     return *this;
   }
 
   Vec4<T> operator+() const { return Vec4<T>(m_x, m_y, m_z, m_w); };
   Vec4<T> operator-() const { return Vec4<T>(-m_x, -m_y, -m_z, -m_w); }
-
-  Vec4<T>& operator++();
-  Vec4<T>& operator--();
-  Vec4<T> operator++(int);
-  Vec4<T> operator--(int);
 
   Vec4<T>& operator+=(T num);
 
@@ -146,32 +136,6 @@ typedef Vec4<int> Vec4i;
 //--------------------------------------------
 // Overloaded Member operators
 //--------------------------------------------
-
-template <typename T>
-Vec4<T>& Vec4<T>::operator++() {
-  *this += 1;  // use of += member operator
-  return *this;
-}
-
-template <typename T>
-Vec4<T>& Vec4<T>::operator--() {
-  *this -= 1;
-  return *this;
-}
-
-template <typename T>
-Vec4<T> Vec4<T>::operator++(int) {
-  Vec4<T> temp(m_x, m_y, m_z, m_w);
-  ++(*this);  // use of prefix ++ operator
-  return temp;
-}
-
-template <typename T>
-Vec4<T> Vec4<T>::operator--(int) {
-  Vec4<T> temp(m_x, m_y, m_z, m_w);
-  --(*this);
-  return temp;
-}
 
 template <typename T>
 Vec4<T>& Vec4<T>::operator+=(T num) {
