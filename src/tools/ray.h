@@ -4,30 +4,33 @@
 
 class Ray {
  public:
-  Ray() {}
-  Ray(const Point3f &ori, const Vec3f &dir) : m_ori(ori), m_dir(dir) {}
+  Ray() = default;
+  Ray(const Point3f &origin, const Vec3f &direction)
+      : m_origin(origin), m_direction(direction) {}
 
-  void setOrigin(const Point3f &ori) { m_ori = ori; }
-  void setDirection(const Vec3f &dir) { m_dir = dir; }
-  Point3f origin() const { return m_ori; }
-  Vec3f direction() const { return m_dir; }
-  Point3f position(const float &t) const { return origin() + t * direction(); }
-  Ray transform(const Mat4f &m) const {
-    Ray ret;
+  void setOrigin(const Point3f &origin) { m_origin = origin; }
+  void setDirection(const Vec3f &direction) { m_direction = direction; }
+  Point3f origin() const { return m_origin; }
+  Vec3f direction() const { return m_direction; }
+  Point3f position(const float &parameter) const {
+    return origin() + parameter * direction();
+  }
+  Ray transform(const Mat4f &matrix) const {
+    Ray transformed_ray;
 
-    Vec4f v4(origin());
-    v4 = m * v4;
-    Point3f new_o = v4;
-    ret.setOrigin(new_o);
+    Vec4f vector4d(origin());
+    vector4d = matrix * vector4d;
+    Point3f new_origin = vector4d;
+    transformed_ray.setOrigin(new_origin);
 
-    v4 = direction();
-    v4 = m * v4;
-    Vec4f new_d = v4;
-    ret.setDirection(new_d);
-    return ret;
+    vector4d = direction();
+    vector4d = matrix * vector4d;
+    Vec4f new_direction = vector4d;
+    transformed_ray.setDirection(new_direction);
+    return transformed_ray;
   }
 
  private:
-  Point3f m_ori;
-  Vec3f m_dir;
+  Point3f m_origin;
+  Vec3f m_direction;
 };

@@ -4,6 +4,7 @@
 
 class OrthoNormalBasis {
  public:
+  OrthoNormalBasis() = default;
   Vec3f u() const { return m_u; }
   Vec3f v() const { return m_v; }
   Vec3f w() const { return m_w; }
