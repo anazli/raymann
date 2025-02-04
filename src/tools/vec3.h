@@ -12,7 +12,6 @@ class Vec3 {
  public:
   Vec3() = default;
   Vec3(T p1, T p2, T p3) : m_x{p1}, m_y{p2}, m_z{p3} {}
-
   Vec3(const Vec3<T>& other) : m_x{other.m_x}, m_y{other.m_y}, m_z{other.m_z} {}
   Vec3(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
 
@@ -23,9 +22,7 @@ class Vec3 {
   void setX(T num) { m_x = num; }
   void setY(T num) { m_y = num; }
   void setZ(T num) { m_z = num; }
-
   void set(T num) { m_x = m_y = m_z = num; }
-
   void set(T num1, T num2, T num3) {
     m_x = num1;
     m_y = num2;

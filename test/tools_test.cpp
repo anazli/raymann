@@ -322,13 +322,13 @@ TEST_F(Vector4Test, SetsCoords) {
 }
 
 TEST_F(Vector4Test, SetXYZ) {
-  v.setXYZW(-1.24, -5.54, 45.6, -0.5);
+  v.set(-1.24, -5.54, 45.6, -0.5);
   ASSERT_DOUBLE_EQ(v.x(), -1.24);
   ASSERT_DOUBLE_EQ(v.y(), -5.54);
   ASSERT_DOUBLE_EQ(v.z(), 45.6);
   ASSERT_DOUBLE_EQ(v.w(), -0.5);
 
-  v.setXYZW(6.68);
+  v.set(6.68);
   ASSERT_DOUBLE_EQ(v.x(), 6.68);
   ASSERT_DOUBLE_EQ(v.y(), 6.68);
   ASSERT_DOUBLE_EQ(v.z(), 6.68);
@@ -336,7 +336,7 @@ TEST_F(Vector4Test, SetXYZ) {
 }
 
 TEST_F(Vector4Test, ChangesSign) {
-  v.setXYZW(-1.55);
+  v.set(-1.55);
   v = -v;
   ASSERT_DOUBLE_EQ(v[0], 1.55);
   ASSERT_DOUBLE_EQ(v[1], 1.55);

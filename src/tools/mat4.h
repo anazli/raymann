@@ -14,10 +14,10 @@ class Mat4 {
     m_vec[3] = Vec4<T>(T{0}, T{0}, T{0}, T{1});
   }
   Mat4(T num) {
-    m_vec[0].setXYZW(num);
-    m_vec[1].setXYZW(num);
-    m_vec[2].setXYZW(num);
-    m_vec[3].setXYZW(num);
+    m_vec[0].set(num);
+    m_vec[1].set(num);
+    m_vec[2].set(num);
+    m_vec[3].set(num);
   }
   Mat4(const Vec4<T>& row1, const Vec4<T>& row2, const Vec4<T>& row3,
        const Vec4<T>& row4) {

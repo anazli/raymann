@@ -18,7 +18,6 @@ class Vec4 {
  public:
   Vec4() = default;
   Vec4(T p1, T p2, T p3, T p4) : m_x{p1}, m_y{p2}, m_z{p3}, m_w{p4} {}
-
   Vec4(const Vec4<T>& v) : m_x{v.m_x}, m_y{v.m_y}, m_z{v.m_z}, m_w{v.m_w} {}
   Vec4(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
   Vec4(const Point3<T>& p) : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
@@ -32,10 +31,8 @@ class Vec4 {
   void setY(T num) { m_y = num; }
   void setZ(T num) { m_z = num; }
   void setW(T num) { m_w = num; }
-
-  void setXYZW(T num) { m_x = m_y = m_z = m_w = num; }
-
-  void setXYZW(T num1, T num2, T num3, T num4) {
+  void set(T num) { m_x = m_y = m_z = m_w = num; }
+  void set(T num1, T num2, T num3, T num4) {
     m_x = num1;
     m_y = num2;
     m_z = num3;
@@ -127,7 +124,7 @@ template <typename T>
 std::istream& operator>>(std::istream& in, Vec4<T>& v) {
   T x, y, z, w;
   in >> x >> y >> z >> w;
-  v.setXYZW(x, y, z, w);
+  v.set(x, y, z, w);
   return in;
 }
 
