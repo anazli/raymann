@@ -7,8 +7,8 @@ class Mat2 {
  public:
   Mat2() = default;
   Mat2(T num) {
-    m_vec[0].setXY(num);
-    m_vec[1].setXY(num);
+    m_vec[0].set(num);
+    m_vec[1].set(num);
   }
   Mat2(const Vec2<T>& row1, const Vec2<T>& row2) {
     m_vec[0] = row1;

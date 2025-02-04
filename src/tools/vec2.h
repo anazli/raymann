@@ -10,22 +10,19 @@ class Vec2 {
  public:
   Vec2() = default;
   Vec2(T p1, T p2) : m_x{p1}, m_y{p2} {}
-  Vec2(const Vec2<T>& v) : m_x{v.x()}, m_y{v.y()} {}
+  Vec2(const Vec2<T>& v) : m_x{v.m_x}, m_y{v.m_y} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
 
-  void setX(T p) { m_x = p; }
-  void setY(T p) { m_y = p; }
+  void setX(T num) { m_x = num; }
+  void setY(T num) { m_y = num; }
 
-  void setXY(T num) {
-    setX(num);
-    setY(num);
-  }
+  void set(T num) { m_x = m_y = num; }
 
-  void setXY(T p1, T p2) {
-    setX(p1);
-    setY(p2);
+  void set(T num1, T num2) {
+    m_x = num1;
+    m_y = num2;
   }
 
   T operator[](int i) const {
@@ -40,9 +37,9 @@ class Vec2 {
     return m_y;
   }
 
-  Vec2& operator=(const Vec2& v) {
-    m_x = v.x();
-    m_y = v.y();
+  Vec2& operator=(const Vec2& other) {
+    m_x = other.m_x;
+    m_y = other.m_y;
     return *this;
   }
 
@@ -62,7 +59,7 @@ class Vec2 {
   Vec2<T>& operator*=(T num);
 
   Vec2<T>& normalize();
-  double length() const { return sqrt(x() * x() + y() * y()); }
+  float length() const { return sqrt(m_x * m_x + m_y * m_y); }
 
   bool isValid() {
     if (m_x * 0. != m_x * 0.) {
@@ -159,7 +156,7 @@ template <typename T>
 inline std::istream& operator>>(std::istream& in, Vec2<T>& v) {
   T x, y;
   in >> x >> y;
-  v.setXY(x, y);
+  v.set(x, y);
   return in;
 }
 

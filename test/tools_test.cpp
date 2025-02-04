@@ -29,17 +29,17 @@ TEST_F(Vector2Test, SetsCoords) {
 }
 
 TEST_F(Vector2Test, SetXY) {
-  v.setXY(-1.24, -5.54);
+  v.set(-1.24, -5.54);
   ASSERT_DOUBLE_EQ(v.x(), -1.24);
   ASSERT_DOUBLE_EQ(v.y(), -5.54);
 
-  v.setXY(6.68);
+  v.set(6.68);
   ASSERT_DOUBLE_EQ(v.x(), 6.68);
   ASSERT_DOUBLE_EQ(v.y(), 6.68);
 }
 
 TEST_F(Vector2Test, ChangesSign) {
-  v.setXY(-1.55);
+  v.set(-1.55);
   v = -v;
   ASSERT_DOUBLE_EQ(v[0], 1.55);
   ASSERT_DOUBLE_EQ(v[1], 1.55);
@@ -69,13 +69,14 @@ TEST_F(Vector2Test, SubtractsVectorOrNumber) {
 
 TEST_F(Vector2Test, GetsLenghtOfVector) {
   v = Vec2<double>(0., 0.);
+  auto eps = 1E-6;
   ASSERT_DOUBLE_EQ(v.length(), 0.);
   v = Vec2<double>(1., 1.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(2.));
+  EXPECT_NEAR(v.length(), sqrt(2.), eps);
   v = Vec2<double>(3., 3.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(18.));
+  EXPECT_NEAR(v.length(), sqrt(18.), eps);
   v = Vec2<double>(-5., -5.);
-  ASSERT_DOUBLE_EQ(v.length(), sqrt(50.));
+  EXPECT_NEAR(v.length(), sqrt(50.), eps);
 }
 
 TEST_F(Vector2Test, MultipliesVectorWithNumber) {
