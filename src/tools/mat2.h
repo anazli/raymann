@@ -1,17 +1,16 @@
-#ifndef MAT2_H
-#define MAT2_H
+#pragma once
 
 #include "vec2.h"
 
 template <class T>
 class Mat2 {
  public:
-  Mat2<T>() {}
-  Mat2<T>(const T& num) {
+  Mat2() = default;
+  Mat2(T num) {
     m_vec[0].setXY(num);
     m_vec[1].setXY(num);
   }
-  Mat2<T>(const Vec2<T>& row1, const Vec2<T>& row2) {
+  Mat2(const Vec2<T>& row1, const Vec2<T>& row2) {
     m_vec[0] = row1;
     m_vec[1] = row2;
   }
@@ -28,7 +27,7 @@ class Mat2 {
     return *this;
   }
 
-  Mat2<T>& operator+=(const T& num) {
+  Mat2<T>& operator+=(T num) {
     m_vec[0] += num;
     m_vec[1] += num;
     return *this;
@@ -40,13 +39,13 @@ class Mat2 {
     return *this;
   }
 
-  Mat2<T>& operator-=(const T& num) {
+  Mat2<T>& operator-=(T num) {
     m_vec[0] -= num;
     m_vec[1] -= num;
     return *this;
   }
 
-  Mat2<T>& operator*=(const T& num) {
+  Mat2<T>& operator*=(T num) {
     m_vec[0] *= num;
     m_vec[1] *= num;
     return *this;
@@ -96,5 +95,3 @@ Mat2<T> operator*(const Mat2<T>& m1, const Mat2<T>& m2) {
 
   return ret;
 }
-
-#endif  // MAT2

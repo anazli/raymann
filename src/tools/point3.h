@@ -15,20 +15,19 @@ class Vec3;
 template <class T>
 class Point3 {
  public:
-  Point3<T>(const T &x = T(), const T &y = T(), const T &z = T())
-      : m_x(x), m_y(y), m_z(z) {}
-
-  Point3<T>(const Point3<T> &p) : m_x(p.x()), m_y(p.y()), m_z(p.z()) {}
-  Point3<T>(const Vec4<T> &v) : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
+  Point3() = default;
+  Point3(T x, T y, T z) : m_x(x), m_y(y), m_z(z) {}
+  Point3(const Point3<T> &p) : m_x(p.x()), m_y(p.y()), m_z(p.z()) {}
+  Point3(const Vec4<T> &v) : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
   T z() const { return m_z; }
 
-  void setX(const T &x) { m_x = x; }
-  void setY(const T &y) { m_y = y; }
-  void setZ(const T &z) { m_z = z; }
-  void setAll(const T &n) { m_x = m_y = m_z = n; }
+  void setX(T x) { m_x = x; }
+  void setY(T y) { m_y = y; }
+  void setZ(T z) { m_z = z; }
+  void setAll(T n) { m_x = m_y = m_z = n; }
 
   T operator[](int i) const {
     assert(i >= 0 && i <= 2);
@@ -91,7 +90,9 @@ class Point3 {
   // auto operator<=>(const Point3<T> &) const = default;
 
  private:
-  T m_x, m_y, m_z;
+  T m_x = T{};
+  T m_y = T{};
+  T m_z = T{};
 };
 
 typedef Point3<double> Point3d;
@@ -110,7 +111,7 @@ Vec3<T> operator+(const Vec3<T> &v, const Point3<T> &p) {
 }
 
 template <typename T>
-Point3<T> operator+(const Point3<T> &p, const T &v) {
+Point3<T> operator+(const Point3<T> &p, T v) {
   return Point3<T>(p.x() + v, p.y() + v, p.z() + v);
 }
 
@@ -132,11 +133,11 @@ std::ostream &operator<<(std::ostream &out, const Point3<T> &p) {
 }
 
 template <typename T>
-Point3<T> operator*(const Point3<T> &v, const T &num) {
+Point3<T> operator*(const Point3<T> &v, T num) {
   return Point3<T>(v.x() * num, v.y() * num, v.z() * num);
 }
 
 template <typename T>
-Point3<T> operator*(const T &num, const Point3<T> &v) {
+Point3<T> operator*(T num, const Point3<T> &v) {
   return v * num;
 }

@@ -1075,11 +1075,11 @@ TEST_F(Point3Test, createsPoint) {
   ASSERT_EQ(p.x(), 0);
   ASSERT_EQ(p.y(), 0);
   ASSERT_EQ(p.z(), 0);
-  p = Point3i(1, -8);
+  p = Point3i(1, -8, 0);
   ASSERT_EQ(p.x(), 1);
   ASSERT_EQ(p.y(), -8);
   ASSERT_EQ(p.z(), 0);
-  p = Point3i(9);
+  p = Point3i(9, 0, 0);
   ASSERT_EQ(p.x(), 9);
   ASSERT_EQ(p.y(), 0);
   ASSERT_EQ(p.z(), 0);
