@@ -87,8 +87,8 @@ class Vec4 {
   Vec4<T> operator+() const { return Vec4<T>(m_x, m_y, m_z, m_w); };
   Vec4<T> operator-() const { return Vec4<T>(-m_x, -m_y, -m_z, -m_w); }
 
-  Vec4<T>& normalize();
-  double length() const {
+  void normalize();
+  float length() const {
     return sqrt(x() * x() + y() * y() + z() * z() + w() * w());
   }
 
@@ -115,9 +115,8 @@ typedef Vec4<int> Vec4i;
 //--------------------------------------------
 
 template <typename T>
-Vec4<T>& Vec4<T>::normalize() {
+void Vec4<T>::normalize() {
   *this = (*this) / (this->length() + (T)1.E-30);
-  return *this;
 }
 
 //--------------------------------------------

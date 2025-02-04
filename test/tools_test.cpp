@@ -396,7 +396,8 @@ TEST_F(Vector4Test, MultipliesVectorWithNumber) {
 
 TEST_F(Vector4Test, NormalizesVector) {
   v = Vec4<double>(4.53, 93.5, -56.3, -100.00001);
-  ASSERT_DOUBLE_EQ(v.normalize().length(), 1.);
+  v.normalize();
+  ASSERT_DOUBLE_EQ(v.length(), 1.);
 }
 
 TEST_F(Vector4Test, DotProduct) {
