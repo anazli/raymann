@@ -486,12 +486,12 @@ TEST_F(Matrix2Test, CreatesMatrix) {
 
 TEST_F(Matrix2Test, AddsAmatrixOrNumber) {
   m = Mat2<double>(0.);
-  m += Mat2<double>(-1.);
+  m = m + Mat2<double>(-1.);
   ASSERT_DOUBLE_EQ(m[0][0], -1.);
   ASSERT_DOUBLE_EQ(m[0][1], -1.);
   ASSERT_DOUBLE_EQ(m[1][0], -1.);
   ASSERT_DOUBLE_EQ(m[1][1], -1.);
-  m += 5.05;
+  m = m + 5.05;
   ASSERT_DOUBLE_EQ(m[0][0], 4.05);
   ASSERT_DOUBLE_EQ(m[0][1], 4.05);
   ASSERT_DOUBLE_EQ(m[1][0], 4.05);
@@ -500,21 +500,21 @@ TEST_F(Matrix2Test, AddsAmatrixOrNumber) {
 
 TEST_F(Matrix2Test, SubtractsAmatrixOrNumber) {
   m = Mat2<double>(0.);
-  m -= Mat2<double>(1.);
+  m = m - Mat2<double>(1.);
   ASSERT_DOUBLE_EQ(m[0][0], -1.);
   ASSERT_DOUBLE_EQ(m[0][1], -1.);
   ASSERT_DOUBLE_EQ(m[1][0], -1.);
   ASSERT_DOUBLE_EQ(m[1][1], -1.);
-  m -= -5.05;
-  ASSERT_DOUBLE_EQ(m[0][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[0][1], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][0], 4.05);
-  ASSERT_DOUBLE_EQ(m[1][1], 4.05);
+  m = m - 5.05;
+  ASSERT_DOUBLE_EQ(m[0][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[0][1], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][0], -6.05);
+  ASSERT_DOUBLE_EQ(m[1][1], -6.05);
 }
 
 TEST_F(Matrix2Test, MultipliesWithNumber) {
   m = Mat2<double>(6.28);
-  m *= 0.;
+  m = m * 0.;
   ASSERT_DOUBLE_EQ(m[0][0], 0.);
   ASSERT_DOUBLE_EQ(m[0][1], 0.);
   ASSERT_DOUBLE_EQ(m[1][0], 0.);
@@ -1100,7 +1100,7 @@ TEST_F(Point3Test, subtractsPointFromPoint) {
 TEST_F(Point3Test, subtractsVectorFromPoint) {
   p = Point3i(3, 4, 5);
   Vec3i v = Vec3i(3, 4, 5);
-  p -= v;
+  p = p - v;
   ASSERT_EQ(p.x(), 0);
   ASSERT_EQ(p.y(), 0);
   ASSERT_EQ(p.z(), 0);

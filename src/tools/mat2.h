@@ -21,36 +21,6 @@ class Mat2 {
     return *this;
   }
 
-  Mat2<T>& operator+=(const Mat2<T>& c) {
-    m_vec[0] = m_vec[0] + c[0];
-    m_vec[1] = m_vec[1] + c[1];
-    return *this;
-  }
-
-  Mat2<T>& operator+=(T num) {
-    m_vec[0] = m_vec[0] + num;
-    m_vec[1] = m_vec[1] + num;
-    return *this;
-  }
-
-  Mat2<T>& operator-=(const Mat2<T>& c) {
-    m_vec[0] = m_vec[0] - c[0];
-    m_vec[1] = m_vec[1] - c[1];
-    return *this;
-  }
-
-  Mat2<T>& operator-=(T num) {
-    m_vec[0] = m_vec[0] - num;
-    m_vec[1] = m_vec[1] - num;
-    return *this;
-  }
-
-  Mat2<T>& operator*=(T num) {
-    m_vec[0] = m_vec[0] * num;
-    m_vec[1] = m_vec[1] * num;
-    return *this;
-  }
-
   Vec2<T> operator[](int i) const {
     assert(i >= 0 && i <= 1);
     if (i == 0) return m_vec[0];
@@ -81,8 +51,23 @@ Mat2<T> operator+(const Mat2<T>& m1, const Mat2<T>& m2) {
 }
 
 template <typename T>
+Mat2<T> operator+(const Mat2<T>& m1, T num) {
+  return Mat2<T>(m1[0] + num, m1[1] + num);
+}
+
+template <typename T>
 Mat2<T> operator-(const Mat2<T>& m1, const Mat2<T>& m2) {
   return Mat2<T>(m1[0] - m2[0], m1[1] - m2[1]);
+}
+
+template <typename T>
+Mat2<T> operator-(const Mat2<T>& m1, T num) {
+  return Mat2<T>(m1[0] - num, m1[1] - num);
+}
+
+template <typename T>
+Mat2<T> operator*(const Mat2<T>& m1, T num) {
+  return Mat2<T>(m1[0] * num, m1[1] * num);
 }
 
 template <typename T>
