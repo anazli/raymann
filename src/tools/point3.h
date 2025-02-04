@@ -75,15 +75,6 @@ class Point3 {
     return Point3<T>(m_x - v.x(), m_y - v.y(), m_z - v.z());
   }
 
-  Point3<T> &operator-=(const Vec3<T> &v) {
-    m_x -= v.x();
-    m_y -= v.y();
-    m_z -= v.z();
-    return *this;
-  }
-
-  // auto operator<=>(const Point3<T> &) const = default;
-
  private:
   T m_x = T{};
   T m_y = T{};

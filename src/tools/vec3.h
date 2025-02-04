@@ -196,34 +196,3 @@ template <typename T>
 Vec3<T> reflect(const Vec3<T>& in, const Vec3<T>& normal) {
   return in - normal * T{2} * dot(in, normal);
 }
-
-/*template <typename T>
-Vec3<T> randomVector(
-    const T& a = 0.,
-    const T& b = 1.)  //!< Returns a vector with uniformly random
-                      //!< components in the interval [a,b].
-{
-  std::uniform_real_distribution<T> rand(a, b);
-  return Vec3<T>(rand(gen), rand(gen), rand(gen));
-}
-
-template <typename T>
-Vec3<T>
-randomVectorOnUnitSphere()  //!< Returns a random vector on a unit sphere.
-{
-  std::uniform_real_distribution<T> rand(0., 1.);
-  T xi1, xi2, dsq = 2;
-  while (dsq >= 1.) {
-    xi1 = 1. - 2. * rand(gen);
-    xi2 = 1. - 2. * rand(gen);
-    dsq = xi1 * xi1 + xi2 * xi2;
-  }
-
-  T ranh = 2. * sqrt(1. - dsq);
-  T dmx = xi1 * ranh;
-  T dmy = xi2 * ranh;
-  T dmz = 1. - 2. * dsq;
-
-  Vec3<T> ret(dmx, dmy, dmz);
-  return ret;
-}*/
