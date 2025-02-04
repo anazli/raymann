@@ -60,6 +60,8 @@ class Vec3 {
     return *this;
   }
 
+  auto operator<=>(const Vec3<T>&) const = default;
+
   Vec3<T> operator+() const { return Vec3<T>(m_x, m_y, m_z); };
   Vec3<T> operator-() const { return Vec3<T>(-m_x, -m_y, -m_z); }
 
@@ -169,16 +171,6 @@ template <typename T>
 Vec3<T> operator/(const Vec3<T>& v, T num) {
   num += 1.E-30;
   return Vec3<T>(v.x() / num, v.y() / num, v.z() / num);
-}
-
-template <typename T>
-bool operator==(const Vec3<T>& v1, const Vec3<T>& v2) {
-  return (v1.x() == v2.x() && v1.y() == v2.y() && v1.z() == v2.z());
-}
-
-template <typename T>
-bool operator!=(const Vec3<T>& v1, const Vec3<T>& v2) {
-  return !(v1 == v2);
 }
 
 template <typename T>

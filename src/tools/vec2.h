@@ -41,6 +41,8 @@ class Vec2 {
     return *this;
   }
 
+  auto operator<=>(const Vec2<T>&) const = default;
+
   Vec2<T> operator+() const { return Vec2<T>(m_x, m_y); };
   Vec2<T> operator-() const { return Vec2<T>(-m_x, -m_y); }
 
@@ -145,16 +147,6 @@ template <typename T>
 Vec2<T> operator/(const Vec2<T>& v, T num) {
   num += 1.E-30;
   return Vec2<T>(v.x() / num, v.y() / num);
-}
-
-template <typename T>
-bool operator==(const Vec2<T>& v1, const Vec2<T>& v2) {
-  return (v1.x() == v2.x() && v1.y() == v2.y());
-}
-
-template <typename T>
-bool operator!=(const Vec2<T>& v1, const Vec2<T>& v2) {
-  return !(v1 == v2);
 }
 
 //--------------------------------------------
