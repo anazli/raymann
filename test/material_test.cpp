@@ -44,7 +44,7 @@ TEST_F(MaterialTest, lightsWithEyeBetweenLightAndSurface) {
   Point3f p(0.0f, 0.0f, 0.0f);
   Vec3f m_color(1.0f, 1.0f, 1.0f);
   Vec3f effective_color = m_color * light.intensity();
-  Vec3f lightv = (light.position() - p).normalize();
+  Vec3f lightv = getUnitVectorOf(light.position() - p);
   float m_ambient = 0.1f;
   float m_diffuse = 0.9f;
   float m_specular = 0.9f;
@@ -83,7 +83,7 @@ TEST_F(MaterialTest, lightingWithSurfaceInShadow) {
   Point3f p(0.0f, 0.0f, 0.0f);
   Vec3f m_color(1.0f, 1.0f, 1.0f);
   Vec3f effective_color = m_color * light.intensity();
-  Vec3f lightv = (light.position() - p).normalize();
+  Vec3f lightv = getUnitVectorOf(light.position() - p);
   float m_ambient = 0.1f;
   float m_diffuse = 0.9f;
   float m_specular = 0.9f;

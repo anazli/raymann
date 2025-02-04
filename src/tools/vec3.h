@@ -74,22 +74,8 @@ class Vec3 {
   Vec3<T>& operator-=(const Vec3<T>& v);
   Vec3<T>& operator*=(T num);
 
-  Vec3<T>& normalize();
+  void normalize();
   float length() const { return sqrt(x() * x() + y() * y() + z() * z()); }
-
-  bool isValid() {
-    if (m_x * 0. != m_x * 0.) {
-      return false;
-    }
-    if (m_y * 0. != m_y * 0.) {
-      return false;
-    }
-    if (m_z * 0. != m_z * 0.) {
-      return false;
-    }
-
-    return true;
-  }
 
   void zero() {
     m_x = T{};
@@ -168,10 +154,9 @@ Vec3<T>& Vec3<T>::operator*=(T num) {
 }
 
 template <typename T>
-Vec3<T>& Vec3<T>::normalize() {
+void Vec3<T>::normalize() {
   T norm = this->length() + 1.E-30;
   *this = (*this) / norm;
-  return *this;
 }
 
 //--------------------------------------------

@@ -37,7 +37,7 @@ Vec3f PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
   auto normal_vec = m_closestHit.inside
                         ? -m_closestHit.object->normal(over_point)
                         : m_closestHit.object->normal(over_point);
-  auto lightv = (world->getLight().position() - over_point).normalize();
+  auto lightv = getUnitVectorOf(world->getLight().position() - over_point);
 
   auto effective_color =
       m_closestHit.object->getMaterial()->getTexture()->value(
@@ -201,7 +201,7 @@ bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3f& p) {
     auto light = world->getLight();
     auto v = p - light.position();
     auto distance = v.length();
-    auto r = Ray(light.position(), v.normalize());
+    auto r = Ray(light.position(), getUnitVectorOf(v));
     auto closestShadowedHit = IntersectionRecord{};
     if (world->intersect(r, closestShadowedHit)) {
       if (closestShadowedHit.object) {

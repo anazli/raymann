@@ -17,10 +17,10 @@ class OrthoNormalBasis {
   }
 
   void buildFromW(const Vec3f& w) {
-    auto unit_w = Vec3f(w).normalize();
+    auto unit_w = getUnitVectorOf(w);
     auto a =
         (fabs(unit_w.x()) > 0.9f) ? Vec3f(0.f, 1.f, 0.f) : Vec3f(1.f, 0.f, 0.f);
-    auto v = Vec3f(cross(unit_w, a)).normalize();
+    auto v = getUnitVectorOf(cross(unit_w, a));
     auto u = cross(unit_w, v);
     m_u = u;
     m_v = v;

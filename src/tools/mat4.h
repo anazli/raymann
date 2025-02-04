@@ -370,8 +370,8 @@ Mat4<T> rotationOverZ(T rad) {
 template <typename T>
 Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
                        const Vec3<T>& up) {
-  Vec3f forward = Vec3f(to - from).normalize();
-  Vec3f up_norm = Vec3f(up).normalize();
+  Vec3f forward = getUnitVectorOf(to - from);
+  Vec3f up_norm = getUnitVectorOf(up);
   Vec3f left = cross(forward, up_norm);
   Vec3f up_res = cross(left, forward);
 

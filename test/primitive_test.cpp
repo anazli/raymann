@@ -231,15 +231,15 @@ TEST_F(CubeTest, normalOnSurfaceOfCube) {
 
 TEST_F(CylinderTest, rayMissesTheCylinder) {
   cyl = Cylinder();
-  r = Ray(Point3f(1.f, 0.f, 0.f), Vec3f(0.f, 1.f, 0.f).normalize());
+  r = Ray(Point3f(1.f, 0.f, 0.f), getUnitVectorOf(Vec3f(0.f, 1.f, 0.f)));
   rec = IntersectionRecord();
   EXPECT_FALSE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 0);
-  r = Ray(Point3f(0.f, 0.f, 0.f), Vec3f(0.f, 1.f, 0.f).normalize());
+  r = Ray(Point3f(0.f, 0.f, 0.f), getUnitVectorOf(Vec3f(0.f, 1.f, 0.f)));
   rec = IntersectionRecord();
   EXPECT_FALSE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 0);
-  r = Ray(Point3f(0.f, 0.f, -5.f), Vec3f(1.f, 1.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, 0.f, -5.f), getUnitVectorOf(Vec3f(1.f, 1.f, 1.f)));
   rec = IntersectionRecord();
   EXPECT_FALSE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 0);
@@ -247,19 +247,19 @@ TEST_F(CylinderTest, rayMissesTheCylinder) {
 
 TEST_F(CylinderTest, rayHitsTheCylinder) {
   cyl = Cylinder();
-  r = Ray(Point3f(1.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  r = Ray(Point3f(1.f, 0.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
   rec = IntersectionRecord();
   EXPECT_TRUE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_FLOAT_EQ(rec.t1, 5.f);
   EXPECT_FLOAT_EQ(rec.t2, 5.f);
-  r = Ray(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, 0.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
   rec = IntersectionRecord();
   EXPECT_TRUE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_FLOAT_EQ(rec.t1, 4.f);
   EXPECT_FLOAT_EQ(rec.t2, 6.f);
-  r = Ray(Point3f(0.5f, 0.f, -5.f), Vec3f(0.1f, 1.f, 1.f).normalize());
+  r = Ray(Point3f(0.5f, 0.f, -5.f), getUnitVectorOf(Vec3f(0.1f, 1.f, 1.f)));
   rec = IntersectionRecord();
   EXPECT_TRUE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 2);
@@ -290,27 +290,27 @@ TEST_F(CylinderTest, normalVectorOnCylinder) {
 
 TEST_F(CylinderTest, intersectConstrainedCylinder) {
   cyl = Cylinder(1, 2);
-  r = Ray(Point3f(0.f, 1.5f, 0.f), Vec3f(0.1f, 1.f, 0.f).normalize());
+  r = Ray(Point3f(0.f, 1.5f, 0.f), getUnitVectorOf(Vec3f(0.1f, 1.f, 0.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
-  r = Ray(Point3f(0.f, 3.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, 3.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
-  r = Ray(Point3f(0.f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, 0.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
-  r = Ray(Point3f(0.f, 2.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, 2.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
-  r = Ray(Point3f(0.f, 1.f, -5.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, 1.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
-  r = Ray(Point3f(0.f, 1.5f, -2.f), Vec3f(0.f, 0.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, 1.5f, -2.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 2);
@@ -318,23 +318,23 @@ TEST_F(CylinderTest, intersectConstrainedCylinder) {
 
 TEST_F(CylinderTest, intersectClosedCylinder) {
   cyl = Cylinder(1, 2, true);
-  r = Ray(Point3f(0.f, 3.f, 0.f), Vec3f(0.1f, -1.f, 0.f).normalize());
+  r = Ray(Point3f(0.f, 3.f, 0.f), getUnitVectorOf(Vec3f(0.1f, -1.f, 0.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 2);
-  r = Ray(Point3f(0.f, 3.f, -2.f), Vec3f(0.f, -1.f, 2.f).normalize());
+  r = Ray(Point3f(0.f, 3.f, -2.f), getUnitVectorOf(Vec3f(0.f, -1.f, 2.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 2);
-  r = Ray(Point3f(0.f, 4.f, -2.f), Vec3f(0.f, -1.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, 4.f, -2.f), getUnitVectorOf(Vec3f(0.f, -1.f, 1.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 1);
-  r = Ray(Point3f(0.f, 0.f, -2.f), Vec3f(0.f, 1.f, 2.f).normalize());
+  r = Ray(Point3f(0.f, 0.f, -2.f), getUnitVectorOf(Vec3f(0.f, 1.f, 2.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 2);
-  r = Ray(Point3f(0.f, -1.f, -2.f), Vec3f(0.f, 1.f, 1.f).normalize());
+  r = Ray(Point3f(0.f, -1.f, -2.f), getUnitVectorOf(Vec3f(0.f, 1.f, 1.f)));
   rec = IntersectionRecord();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 1);
@@ -342,7 +342,7 @@ TEST_F(CylinderTest, intersectClosedCylinder) {
 
 TEST_F(CylinderTest, normalVectorOnEndCaps) {
   cyl = Cylinder(1, 2, true);
-  r = Ray(Point3f(0.f, 3.f, 0.f), Vec3f(0.1f, -1.f, 0.f).normalize());
+  r = Ray(Point3f(0.f, 3.f, 0.f), getUnitVectorOf(Vec3f(0.1f, -1.f, 0.f)));
 
   Vec3f vect1(0.f, -1.f, 0.f);
   Vec3f vect2(0.f, 1.f, 0.f);
@@ -526,7 +526,7 @@ TEST_F(SphereTest, normalIsNormalizedVector) {
   s = Sphere();
   Vec3f n = s.normal(
       Point3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
-  ASSERT_TRUE(n == n.normalize());
+  EXPECT_NEAR(1.f, getUnitVectorOf(n).length(), 1.E-6);
 }
 
 /*==================================================================

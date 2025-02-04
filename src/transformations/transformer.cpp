@@ -42,7 +42,7 @@ Vec3f Transformer::normal(const Point3f& p) const {
   Point3f object_point = m_inverseTransf * v4;
   Vec3f object_normal = SceneElementDecorator::normal(object_point);
   Vec3f world_normal = m_inverseTransfTransp * Vec4f(object_normal);
-  return world_normal.normalize();
+  return getUnitVectorOf(world_normal);
 }
 
 void Transformer::add(SceneElementPtr item) {
@@ -114,7 +114,7 @@ Point3f Transformer::pointFromWorldToObjectSpace(const Point3f& point) const {
 Vec3f Transformer::vectorFromObjectToWorldSpace(const Vec3f vec) const {
   Vec3f v(vec);
   v = m_inverseTransfTransp * Vec4f(v);
-  v = v.normalize();
+  v.normalize();
   if (getParent()) {
     v = getParent()->vectorFromObjectToWorldSpace(v);
   }

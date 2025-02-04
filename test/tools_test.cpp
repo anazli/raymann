@@ -221,7 +221,8 @@ TEST_F(Vector3Test, MultipliesVectorWithNumber) {
 
 TEST_F(Vector3Test, NormalizesVector) {
   v = Vec3f(4.53f, 93.5f, -56.3f);
-  ASSERT_DOUBLE_EQ(v.normalize().length(), 1.f);
+  v.normalize();
+  ASSERT_DOUBLE_EQ(v.length(), 1.f);
 }
 
 TEST_F(Vector3Test, DotProduct) {

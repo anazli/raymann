@@ -71,7 +71,8 @@ Ray Camera::getRay(int pixel_x, int pixel_y) const {
   auto world_y = m_half_height - yoffset;
   auto pixel = m_transformInv * Vec4f(world_x, world_y, -1.0f, 1.0f);
   ray.setOrigin(m_transformInv * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
-  ray.setDirection(
-      (Point3f(pixel.x(), pixel.y(), pixel.z()) - ray.origin()).normalize());
+  auto dir =
+      getUnitVectorOf(Point3f(pixel.x(), pixel.y(), pixel.z()) - ray.origin());
+  ray.setDirection(dir);
   return ray;
 }
