@@ -47,22 +47,22 @@ TEST_F(Vector2Test, ChangesSign) {
 
 TEST_F(Vector2Test, AddsVectorOrNumber) {
   v = Vec2<double>(0., 0.);
-  v += 4.46;
+  v = v + 4.46;
   ASSERT_DOUBLE_EQ(v.x(), 4.46);
   ASSERT_DOUBLE_EQ(v.y(), 4.46);
 
-  v += Vec2<double>(4., 6.);
+  v = v + Vec2<double>(4., 6.);
   ASSERT_DOUBLE_EQ(v.x(), 8.46);
   ASSERT_DOUBLE_EQ(v.y(), 10.46);
 }
 
 TEST_F(Vector2Test, SubtractsVectorOrNumber) {
   v = Vec2<double>(0., 0.);
-  v -= 4.46;
+  v = v - 4.46;
   ASSERT_DOUBLE_EQ(v.x(), -4.46);
   ASSERT_DOUBLE_EQ(v.y(), -4.46);
 
-  v -= Vec2<double>(4., 6.);
+  v = v - Vec2<double>(4., 6.);
   ASSERT_DOUBLE_EQ(v.x(), -8.46);
   ASSERT_DOUBLE_EQ(v.y(), -10.46);
 }
@@ -81,7 +81,7 @@ TEST_F(Vector2Test, GetsLenghtOfVector) {
 
 TEST_F(Vector2Test, MultipliesVectorWithNumber) {
   v = Vec2<double>(1., 0.);
-  v *= 5.;
+  v = v * 5.;
   ASSERT_DOUBLE_EQ(v.x(), 5.);
   ASSERT_DOUBLE_EQ(v.y(), 0.);
 }

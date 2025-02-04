@@ -22,32 +22,32 @@ class Mat2 {
   }
 
   Mat2<T>& operator+=(const Mat2<T>& c) {
-    m_vec[0] += c[0];
-    m_vec[1] += c[1];
+    m_vec[0] = m_vec[0] + c[0];
+    m_vec[1] = m_vec[1] + c[1];
     return *this;
   }
 
   Mat2<T>& operator+=(T num) {
-    m_vec[0] += num;
-    m_vec[1] += num;
+    m_vec[0] = m_vec[0] + num;
+    m_vec[1] = m_vec[1] + num;
     return *this;
   }
 
   Mat2<T>& operator-=(const Mat2<T>& c) {
-    m_vec[0] -= c[0];
-    m_vec[1] -= c[1];
+    m_vec[0] = m_vec[0] - c[0];
+    m_vec[1] = m_vec[1] - c[1];
     return *this;
   }
 
   Mat2<T>& operator-=(T num) {
-    m_vec[0] -= num;
-    m_vec[1] -= num;
+    m_vec[0] = m_vec[0] - num;
+    m_vec[1] = m_vec[1] - num;
     return *this;
   }
 
   Mat2<T>& operator*=(T num) {
-    m_vec[0] *= num;
-    m_vec[1] *= num;
+    m_vec[0] = m_vec[0] * num;
+    m_vec[1] = m_vec[1] * num;
     return *this;
   }
 
