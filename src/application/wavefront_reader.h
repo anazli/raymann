@@ -11,10 +11,10 @@
 
 class WavefrontReader {
  public:
-  WavefrontReader(const std::string_view& file = "");
+  WavefrontReader(std::string_view file = "");
 
   void parseInput();
-  void setFileName(const std::string_view& file);
+  void setFileName(std::string_view file);
   void normalizeVertices();
   void addLightForModel(const PointLight& light);
   void addMaterial(BaseMaterialPtr mat);
@@ -27,11 +27,11 @@ class WavefrontReader {
 
  private:
   void openFile();
-  void parseVertexEntry(const std::string_view& line, std::vector<Vec3f>& vec);
-  void parseVertexNormalEntry(const std::string_view& line);
-  void parseTriangleEntry(const std::string_view& line);
-  void parsePolygonEntry(const std::string_view& line);
-  void parseGroupEntry(const std::string_view& line);
+  void parseVertexEntry(std::string_view line, std::vector<Vec3f>& vec);
+  void parseVertexNormalEntry(std::string_view line);
+  void parseTriangleEntry(std::string_view line);
+  void parsePolygonEntry(std::string_view line);
+  void parseGroupEntry(std::string_view line);
   void triangulatePolygon(std::vector<Vec3f> vertices);
 
   std::ifstream m_inputStream;
@@ -43,5 +43,5 @@ class WavefrontReader {
   SceneElementPtr m_currentGroup;
   PointLight m_light;
   BaseMaterialPtr m_material;
-  std::string_view m_file;
+  std::string m_file;
 };

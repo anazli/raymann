@@ -1,24 +1,26 @@
+#include <filesystem>
+
 #include "application/wavefront_reader.h"
 #include "composite/iterator.h"
 #include "gtesting.h"
 
-namespace {
-const auto TEST_DIR = std::string("test_data/");
-}
-
 class ApplicationTest : public testing::RTest {
  public:
+  void SetUp() override {
+    test_directory = std::filesystem::current_path().string() + "/test_data/";
+  }
   WavefrontReader reader;
+  std::string test_directory;
 };
 
 TEST_F(ApplicationTest, parseInvalidInput) {
-  reader.setFileName(TEST_DIR + "invalid_input.txt");
+  reader.setFileName(test_directory + "invalid_input.txt");
   reader.parseInput();
   EXPECT_TRUE(reader.vertexCollection().size() == 0);
 }
 
 TEST_F(ApplicationTest, parseValidInput) {
-  reader.setFileName(TEST_DIR + "valid_input.txt");
+  reader.setFileName(test_directory + "valid_input.txt");
   reader.parseInput();
   ASSERT_TRUE(reader.vertexCollection().size() == 4);
   compareVectors(reader.vertexCollection()[0], Vec3f(1.f, 2.f, 3.f));
@@ -43,7 +45,7 @@ TEST_F(ApplicationTest, parseValidInput) {
 }
 
 TEST_F(ApplicationTest, parseValidInputWithVertexNormals) {
-  reader.setFileName(TEST_DIR + "valid_input_vn.txt");
+  reader.setFileName(test_directory + "valid_input_vn.txt");
   reader.parseInput();
   ASSERT_TRUE(reader.vertexNormalCollection().size() == 3);
   compareVectors(reader.vertexNormalCollection()[0], Vec3f(0.f, 0.f, 1.f));
@@ -53,7 +55,7 @@ TEST_F(ApplicationTest, parseValidInputWithVertexNormals) {
 }
 
 TEST_F(ApplicationTest, parseValidPolygonInput) {
-  reader.setFileName(TEST_DIR + "valid_input_polygon.txt");
+  reader.setFileName(test_directory + "valid_input_polygon.txt");
   reader.parseInput();
   ASSERT_TRUE(reader.vertexCollection().size() == 5);
 
@@ -81,7 +83,7 @@ TEST_F(ApplicationTest, parseValidPolygonInput) {
 }
 
 TEST_F(ApplicationTest, parseFileWithGroups) {
-  reader.setFileName(TEST_DIR + "valid_input_groups.txt");
+  reader.setFileName(test_directory + "valid_input_groups.txt");
   reader.parseInput();
   SceneElementPtr world = reader.getStructure();
   ASSERT_TRUE(world->getChildren().size() == 2);
@@ -116,7 +118,7 @@ TEST_F(ApplicationTest, parseFileWithGroups) {
 }
 
 TEST_F(ApplicationTest, parseFileWithSmoothTriangles) {
-  reader.setFileName(TEST_DIR + "valid_input_sm_triangle.txt");
+  reader.setFileName(test_directory + "valid_input_sm_triangle.txt");
   reader.parseInput();
   SceneElementPtr world = reader.getStructure();
   ASSERT_TRUE(world->getChildren().size() == 2);

@@ -14,29 +14,29 @@ using std::string;
 using std::string_view;
 using std::vector;
 
-bool isVertexEntry(const string_view &line) {
+bool isVertexEntry(string_view line) {
   return !line.empty() && line[0] == 'v' && isspace(line[1]);
 }
 
-bool isVertexNormalEntry(const string_view &line) {
+bool isVertexNormalEntry(string_view line) {
   return !line.empty() && line[0] == 'v' && line[1] == 'n' && isspace(line[2]);
 }
 
-bool isTriangleEntry(const string_view &line) {
+bool isTriangleEntry(string_view line) {
   std::istringstream iss{line.data()};
   int n = std::distance(std::istream_iterator<std::string>{iss},
                         std::istream_iterator<std::string>{});
   return !line.empty() && line[0] == 'f' && n == 4;
 }
 
-bool isPolygonEntry(const string_view &line) {
+bool isPolygonEntry(string_view line) {
   std::istringstream iss{line.data()};
   int n = std::distance(std::istream_iterator<std::string>{iss},
                         std::istream_iterator<std::string>{});
   return !line.empty() && line[0] == 'f' && n == 6;
 }
 
-bool isGroupEntry(const string_view &line) {
+bool isGroupEntry(string_view line) {
   return !line.empty() && line[0] == 'g' && isspace(line[1]);
 }
 
@@ -54,7 +54,7 @@ void handleStringsWithSlash(string &str) {
   }
 }
 
-WavefrontReader::WavefrontReader(const string_view &file) : m_file(file) {
+WavefrontReader::WavefrontReader(string_view file) : m_file(file) {
   m_finalProduct = std::make_shared<World>();
 }
 
@@ -79,9 +79,7 @@ void WavefrontReader::parseInput() {
   m_inputStream.close();
 }
 
-void WavefrontReader::setFileName(const std::string_view &file) {
-  m_file = file;
-}
+void WavefrontReader::setFileName(std::string_view file) { m_file = file; }
 
 void WavefrontReader::normalizeVertices() {
   openFile();
@@ -150,7 +148,7 @@ void WavefrontReader::openFile() {
   }
 }
 
-void WavefrontReader::parseVertexEntry(const string_view &line,
+void WavefrontReader::parseVertexEntry(string_view line,
                                        std::vector<Vec3f> &vec) {
   istringstream ss(line.data());
   string v, x, y, z;
@@ -165,7 +163,7 @@ void WavefrontReader::parseVertexEntry(const string_view &line,
   }
 }
 
-void WavefrontReader::parseVertexNormalEntry(const std::string_view &line) {
+void WavefrontReader::parseVertexNormalEntry(std::string_view line) {
   istringstream ss(line.data());
   string v, x, y, z;
   if (ss >> v >> x >> y >> z) {
@@ -179,7 +177,7 @@ void WavefrontReader::parseVertexNormalEntry(const std::string_view &line) {
   }
 }
 
-void WavefrontReader::parseTriangleEntry(const string_view &line) {
+void WavefrontReader::parseTriangleEntry(string_view line) {
   if (m_verticesNormals.empty()) {
     if (std::count_if(line.begin(), line.end(),
                       [](char c) { return isspace(c); }) == 3) {
@@ -267,7 +265,7 @@ void WavefrontReader::parseTriangleEntry(const string_view &line) {
   }
 }
 
-void WavefrontReader::parsePolygonEntry(const string_view &line) {
+void WavefrontReader::parsePolygonEntry(string_view line) {
   istringstream ss(line.data());
   string v, i, j, k, f, g;
   if (ss >> v >> i >> j >> k >> f >> g) {
@@ -287,7 +285,7 @@ void WavefrontReader::parsePolygonEntry(const string_view &line) {
   }
 }
 
-void WavefrontReader::parseGroupEntry(const std::string_view &line) {
+void WavefrontReader::parseGroupEntry(std::string_view line) {
   m_currentGroup = std::make_shared<World>();
   m_currentGroup->setLight(m_light);
   m_finalProduct->add(m_currentGroup);
