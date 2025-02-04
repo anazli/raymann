@@ -13,27 +13,23 @@ class Vec3 {
   Vec3() = default;
   Vec3(T p1, T p2, T p3) : m_x{p1}, m_y{p2}, m_z{p3} {}
 
-  Vec3(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
+  Vec3(const Vec3<T>& other) : m_x{other.m_x}, m_y{other.m_y}, m_z{other.m_z} {}
   Vec3(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
   T z() const { return m_z; }
 
-  void setX(T p) { m_x = p; }
-  void setY(T p) { m_y = p; }
-  void setZ(T p) { m_z = p; }
+  void setX(T num) { m_x = num; }
+  void setY(T num) { m_y = num; }
+  void setZ(T num) { m_z = num; }
 
-  void setXYZ(T num) {
-    setX(num);
-    setY(num);
-    setZ(num);
-  }
+  void setXYZ(T num) { m_x = m_y = m_z = num; }
 
-  void setXYZ(T p1, T p2, T p3) {
-    setX(p1);
-    setY(p2);
-    setZ(p3);
+  void setXYZ(T num1, T num2, T num3) {
+    m_x = num1;
+    m_y = num2;
+    m_z = num3;
   }
 
   T operator[](int i) const {
@@ -50,10 +46,10 @@ class Vec3 {
     return m_z;
   }
 
-  Vec3<T>& operator=(const Vec3<T>& v) {
-    m_x = v.x();
-    m_y = v.y();
-    m_z = v.z();
+  Vec3<T>& operator=(const Vec3<T>& rhs) {
+    m_x = rhs.m_x;
+    m_y = rhs.m_y;
+    m_z = rhs.m_z;
     return *this;
   }
 
@@ -173,7 +169,7 @@ Vec3<T>& Vec3<T>::operator*=(T num) {
 
 template <typename T>
 Vec3<T>& Vec3<T>::normalize() {
-  T norm = this->length() + static_cast<T>(1.E-30);
+  T norm = this->length() + 1.E-30;
   *this = (*this) / norm;
   return *this;
 }
@@ -247,14 +243,14 @@ Vec3<T> operator*(T num, const Vec3<T>& v) {
 
 template <typename T>
 Vec3<T> operator/(const Vec3<T>& v1, const Vec3<T>& v2) {
-  if (v2.x() == 0. || v2.y() == 0. || v2.z() == 0.) throw "Division by zero!";
-  return Vec3<T>(v1.x() / v2.x(), v1.y() / v2.y(), v1.z() / v2.z());
+  auto d = v2 + static_cast<T>(1.E-30);
+  return Vec3<T>(v1.x() / d.x(), v1.y() / d.y(), v1.z() / d.z());
 }
 
 template <typename T>
 Vec3<T> operator/(const Vec3<T>& v, T num) {
-  T e = 1.E-30;
-  return Vec3<T>(v.x() / (num + e), v.y() / (num + e), v.z() / (num + e));
+  num += 1.E-30;
+  return Vec3<T>(v.x() / num, v.y() / num, v.z() / num);
 }
 
 template <typename T>
@@ -283,12 +279,12 @@ Vec3<T> cross(const Vec3<T>& v1, const Vec3<T>& v2) {
 
 template <typename T>
 Vec3<T> getUnitVectorOf(const Vec3<T>& v) {
-  return v / (v.length() + static_cast<T>(1.E-30));
+  return v / static_cast<T>(v.length() + 1.E-30);
 }
 
 template <typename T>
 Vec3<T> reflect(const Vec3<T>& in, const Vec3<T>& normal) {
-  return in - normal * static_cast<T>(2) * dot(in, normal);
+  return in - normal * T{2} * dot(in, normal);
 }
 
 /*template <typename T>
