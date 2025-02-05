@@ -81,9 +81,7 @@ class Point3 {
   T m_z = T{};
 };
 
-typedef Point3<double> Point3d;
-typedef Point3<float> Point3f;
-typedef Point3<int> Point3i;
+using Point3D = Point3<float>;
 
 template <typename T>
 Vec3<T> operator-(const Vec3<T> &v,      // TODO: Cannot be (Smth is wrong)

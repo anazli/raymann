@@ -41,9 +41,7 @@ class Mat2 {
   Vec2<T> m_vec[2];
 };
 
-typedef Mat2<double> Mat2d;
-typedef Mat2<float> Mat2f;
-typedef Mat2<int> Mat2i;
+using Mat2D = Mat2<float>;
 
 template <typename T>
 Mat2<T> operator+(const Mat2<T>& m1, const Mat2<T>& m2) {

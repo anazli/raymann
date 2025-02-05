@@ -59,7 +59,7 @@ SceneElementContainer::iterator World::remove(SceneElementRawPtr item,
 
 bool World::isWorld() const { return true; }
 
-Vec3f World::normal(const Point3f& p) const { return Vec3f(); }
+Vec3D World::normal(const Point3D& p) const { return Vec3D(); }
 
 void World::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementComposite(this, ray);
@@ -75,7 +75,7 @@ void World::setLight(const PointLight& light) { m_light = light; }
 
 PointLight World::getLight() const { return m_light; }
 
-float World::pdf(const Point3f& origin, const Vec3f& direction) {
+float World::pdf(const Point3D& origin, const Vec3D& direction) {
   auto weight = 1.f / m_sceneElementContainer.size();
   auto sum = 0.f;
 
@@ -85,7 +85,7 @@ float World::pdf(const Point3f& origin, const Vec3f& direction) {
   return sum;
 }
 
-Vec3f World::random(const Point3f& origin) {
+Vec3D World::random(const Point3D& origin) {
   auto int_size = static_cast<int>(m_sceneElementContainer.size());
   return m_sceneElementContainer[Random::randomInteger(0, int_size - 1)]
       ->random(origin);

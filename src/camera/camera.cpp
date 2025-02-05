@@ -15,8 +15,8 @@ void BaseCamera::computePixelSize() {
   m_pixel_size = (m_half_width * 2.0f) / m_hsize;
 }
 
-void BaseCamera::setParamVectors(const Point3f &from, const Point3f &to,
-                                 const Vec3f &up) {
+void BaseCamera::setParamVectors(const Point3D &from, const Point3D &to,
+                                 const Vec3D &up) {
   m_from = from;
   m_to = to;
   m_up = up;
@@ -33,18 +33,18 @@ int BaseCamera::hSize() const { return m_hsize; }
 
 int BaseCamera::vSize() const { return m_vsize; }
 
-Point3f BaseCamera::getFromPoint() const { return m_from; }
+Point3D BaseCamera::getFromPoint() const { return m_from; }
 
-Point3f BaseCamera::getToPoint() const { return m_to; }
+Point3D BaseCamera::getToPoint() const { return m_to; }
 
-Vec3f BaseCamera::getUpVector() const { return m_up; }
+Vec3D BaseCamera::getUpVector() const { return m_up; }
 
-void BaseCamera::setTransform(const Mat4f &m) {
+void BaseCamera::setTransform(const Mat4D &m) {
   m_transform = m;
   m_transformInv = m_transform.inverse();
 }
 
-Mat4f BaseCamera::transform() const { return m_transform; }
+Mat4D BaseCamera::transform() const { return m_transform; }
 
 float BaseCamera::pixelSize() const { return m_pixel_size; }
 
@@ -69,10 +69,10 @@ Ray Camera::getRay(int pixel_x, int pixel_y) const {
   auto yoffset = (fpixel_y + 0.5f) * m_pixel_size;
   auto world_x = m_half_width - xoffset;
   auto world_y = m_half_height - yoffset;
-  auto pixel = m_transformInv * Vec4f(world_x, world_y, -1.0f, 1.0f);
-  ray.setOrigin(m_transformInv * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+  auto pixel = m_transformInv * Vec4D(world_x, world_y, -1.0f, 1.0f);
+  ray.setOrigin(m_transformInv * Vec4D(0.0f, 0.0f, 0.0f, 1.0f));
   auto dir =
-      getUnitVectorOf(Point3f(pixel.x(), pixel.y(), pixel.z()) - ray.origin());
+      getUnitVectorOf(Point3D(pixel.x(), pixel.y(), pixel.z()) - ray.origin());
   ray.setDirection(dir);
   return ray;
 }

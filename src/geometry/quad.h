@@ -5,11 +5,11 @@
 
 class Quad : public SceneElement {
  public:
-  Quad(const Point3f& origin, const Vec3f& uAxis, const Vec3f& vAxis)
+  Quad(const Point3D& origin, const Vec3D& uAxis, const Vec3D& vAxis)
       : m_origin(origin), m_uAxis(uAxis), m_vAxis(vAxis) {
     auto n = cross(m_uAxis, m_vAxis);
     auto normalV = getUnitVectorOf(n);
-    m_dParam = dot(normalV, Vec3f(m_origin));
+    m_dParam = dot(normalV, Vec3D(m_origin));
     m_wParam = normalV / dot(n, n);
 
     m_area = n.length();
@@ -20,11 +20,11 @@ class Quad : public SceneElement {
   bool intersect(const Ray& r, IntersectionRecord& record) override {
     auto normalV = normal(record.point(r));
     auto denom = dot(normalV, r.direction());
-    auto dParam = dot(normalV, Vec3f(m_origin));
+    auto dParam = dot(normalV, Vec3D(m_origin));
 
     if (fabs(denom) < EPS) return false;
 
-    auto t = (dParam - dot(normalV, Vec3f(r.origin()))) / denom;
+    auto t = (dParam - dot(normalV, Vec3D(r.origin()))) / denom;
     auto intersection = r.position(t);
     auto planarHitptVector = intersection - m_origin;
 
@@ -37,13 +37,13 @@ class Quad : public SceneElement {
     return true;
   }
 
-  Vec3f normal(const Point3f& p) const override {
+  Vec3D normal(const Point3D& p) const override {
     auto n = cross(m_uAxis, m_vAxis);
     n.normalize();
     return n;
   }
 
-  float pdf(const Point3f& origin, const Vec3f& direction) override {
+  float pdf(const Point3D& origin, const Vec3D& direction) override {
     IntersectionRecord rec;
     if (!intersect(Ray(origin, direction), rec)) return 1.f;
 
@@ -54,7 +54,7 @@ class Quad : public SceneElement {
     return distSquared / (cosine * m_area);
   }
 
-  Vec3f random(const Point3f& origin) override {
+  Vec3D random(const Point3D& origin) override {
     return m_origin + (Random::randomNumber() * m_uAxis) +
            (Random::randomNumber() * m_vAxis) - origin;
   }
@@ -67,10 +67,10 @@ class Quad : public SceneElement {
     return true;
   }
 
-  Point3f m_origin;
-  Vec3f m_uAxis;
-  Vec3f m_vAxis;
+  Point3D m_origin;
+  Vec3D m_uAxis;
+  Vec3D m_vAxis;
   float m_dParam;
-  Vec3f m_wParam;
+  Vec3D m_wParam;
   float m_area;
 };

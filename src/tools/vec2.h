@@ -54,9 +54,7 @@ class Vec2 {
   T m_y = T{};
 };
 
-typedef Vec2<double> Vec2d;
-typedef Vec2<float> Vec2f;
-typedef Vec2<int> Vec2i;
+using Vec2D = Vec2<float>;
 
 //--------------------------------------------
 // Overloaded Member operators

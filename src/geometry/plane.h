@@ -6,8 +6,8 @@ class Plane : public SceneElement {
  public:
   Plane() {
     m_elementType = SceneElementType::PLANE;
-    m_bBox.minPoint() = Point3f(-limit::infinity(), 0.f, -limit::infinity());
-    m_bBox.maxPoint() = Point3f(limit::infinity(), 0.f, limit::infinity());
+    m_bBox.minPoint() = Point3D(-limit::infinity(), 0.f, -limit::infinity());
+    m_bBox.maxPoint() = Point3D(limit::infinity(), 0.f, limit::infinity());
   }
   ~Plane() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override {
@@ -19,7 +19,7 @@ class Plane : public SceneElement {
     record.saved_point = record.point(r);
     return true;
   }
-  Vec3f normal(const Point3f &p) const override {
-    return Vec3f(0.0f, 1.0f, 0.0f);
+  Vec3D normal(const Point3D &p) const override {
+    return Vec3D(0.0f, 1.0f, 0.0f);
   }
 };

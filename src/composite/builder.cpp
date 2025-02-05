@@ -28,12 +28,12 @@ void WorldBuilder::processSceneElement(SceneElementRawPtr element) {
   m_currentElement = element;
 }
 
-void WorldBuilder::applyTransformation(const Mat4f& trans) {
+void WorldBuilder::applyTransformation(const Mat4D& trans) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   m_currentElement = new Transformer(m_currentElement, trans);
 }
 
-void WorldBuilder::applyWorldTransformation(const Mat4f& trans) {
+void WorldBuilder::applyWorldTransformation(const Mat4D& trans) {
   APP_ASSERT(m_product, "World not created yet!");
   m_product = new Transformer(m_product, trans);
 }

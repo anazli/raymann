@@ -12,12 +12,12 @@ float schlick(float cosine, float ref_idx) {
   return r0 + (1.f - r0) * pow((1.f - cosine), 5);
 }
 
-Vec3f reflect(const Vec3f& v, const Vec3f& n) {
+Vec3D reflect(const Vec3D& v, const Vec3D& n) {
   return v - 2.f * dot(v, n) * n;
 }
 
-bool refract(const Vec3f& v, const Vec3f& n, float ni_over_nt,
-             Vec3f& refracted) {
+bool refract(const Vec3D& v, const Vec3D& n, float ni_over_nt,
+             Vec3D& refracted) {
   auto uv = getUnitVectorOf(v);
   auto dt = dot(uv, n);
   auto discriminant = 1.f - ni_over_nt * ni_over_nt * (1.f - dt * dt);
@@ -39,7 +39,7 @@ MaterialProperties BaseMaterial::getProperties() const {
   return MaterialProperties();
 }
 
-Vec3f BaseMaterial::emmit(float u, float v, const Vec3f& p) { return Vec3f(); }
+Vec3D BaseMaterial::emmit(float u, float v, const Vec3D& p) { return Vec3D(); }
 
 bool BaseMaterial::isEmissive() const { return false; }
 
@@ -65,7 +65,7 @@ void Material::setProperties(const MaterialProperties& prop) { m_prop = prop; }
 MaterialProperties Material::getProperties() const { return m_prop; }
 
 bool Material::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                       Vec3f& attenuation, Ray& scattered) const {
+                       Vec3D& attenuation, Ray& scattered) const {
   return false;
 }
 
@@ -76,7 +76,7 @@ Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
 }
 
 bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                         Vec3f& attenuation, Ray& scattered) const {
+                         Vec3D& attenuation, Ray& scattered) const {
   // auto point = rec.point(r_in);
   // OrthoNormalBasis orthnb;
   // orthnb.buildFromW(rec.object->normal(point));
@@ -86,7 +86,7 @@ bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
       point + Random::randomVectorOnUnitSphere() + rec.object->normal(point);
   scattered = Ray(point, target - point);
   m_pdf->setFromW(rec.object->normal(point));
-  attenuation = m_tex->value(0, 0, Vec3f());
+  attenuation = m_tex->value(0, 0, Vec3D());
   // m_pdf->setFromW(rec.object->normal(point));
   return true;
 }
@@ -105,10 +105,10 @@ Isotropic::Isotropic(TexturePtr tex, const MaterialProperties& prop)
 }
 
 bool Isotropic::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                        Vec3f& attenuation, Ray& scattered) const {
+                        Vec3D& attenuation, Ray& scattered) const {
   scattered =
       Ray(rec.point(r_in), getUnitVectorOf(Random::randomVectorOnUnitSphere()));
-  attenuation = m_tex->value(0.f, 0.f, Vec3f());
+  attenuation = m_tex->value(0.f, 0.f, Vec3D());
   return true;
 }
 
@@ -127,13 +127,13 @@ Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
 }
 
 bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                    Vec3f& attenuation, Ray& scattered) const {
+                    Vec3D& attenuation, Ray& scattered) const {
   auto point = rec.point(r_in);
   auto normal = rec.object->normal(point);
-  Vec3f reflected = reflect(getUnitVectorOf(r_in.direction()), normal);
+  Vec3D reflected = reflect(getUnitVectorOf(r_in.direction()), normal);
   scattered =
       Ray(point, reflected + m_fuzz * Random::randomVectorOnUnitSphere());
-  attenuation = m_tex->value(0, 0, Vec3f());
+  attenuation = m_tex->value(0, 0, Vec3D());
   return (dot(scattered.direction(), normal) > 0);
 }
 
@@ -143,14 +143,14 @@ Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
 }
 
 bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                         Vec3f& attenuation, Ray& scattered) const {
+                         Vec3D& attenuation, Ray& scattered) const {
   auto point = rec.point(r_in);
-  Vec3f normal = rec.object->normal(point);
-  Vec3f outward_normal;
-  Vec3f reflected = reflect(r_in.direction(), normal);
+  Vec3D normal = rec.object->normal(point);
+  Vec3D outward_normal;
+  Vec3D reflected = reflect(r_in.direction(), normal);
   float ni_over_nt;
-  attenuation = Vec3f(1.f, 1.f, 1.f);
-  Vec3f refracted;
+  attenuation = Vec3D(1.f, 1.f, 1.f);
+  Vec3D refracted;
   float reflect_prob;
   float cosine;
   if (dot(r_in.direction(), normal) > 0) {
@@ -184,11 +184,11 @@ EmissiveMaterial::EmissiveMaterial(TexturePtr tex,
 }
 
 bool EmissiveMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                               Vec3f& attenuation, Ray& scattered) const {
+                               Vec3D& attenuation, Ray& scattered) const {
   return false;
 }
 
-Vec3f EmissiveMaterial::emmit(float u, float v, const Vec3f& p) {
+Vec3D EmissiveMaterial::emmit(float u, float v, const Vec3D& p) {
   return m_tex->value(u, v, p);
 }
 

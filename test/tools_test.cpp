@@ -149,16 +149,16 @@ TEST_F(Vector2Test, TestsInequality) {
 
 class Vector3Test : public testing::RTest {
  public:
-  Vec3f v;
+  Vec3D v;
 };
 
 TEST_F(Vector3Test, CreatesVector) {
-  v = Vec3f(0.f, 0.f, 0.f);
-  compareVectors(v, Vec3f());
+  v = Vec3D(0.f, 0.f, 0.f);
+  compareVectors(v, Vec3D());
 }
 
 TEST_F(Vector3Test, AssertsOutOfBounds) {
-  v = Vec3f(1.f, 2.f, 0.5f);
+  v = Vec3D(1.f, 2.f, 0.5f);
   ASSERT_DEATH(v[3], "");
   ASSERT_DEATH(v[-1], "");
 }
@@ -167,124 +167,124 @@ TEST_F(Vector3Test, SetsCoords) {
   v.setX(5.);
   v[1] = 4.;
   v[2] = 0.2;
-  compareVectors(v, Vec3f(5.f, 4.f, 0.2f));
+  compareVectors(v, Vec3D(5.f, 4.f, 0.2f));
 }
 
 TEST_F(Vector3Test, SetXYZ) {
   v.set(-1.24f, -5.54f, 45.6f);
-  compareVectors(v, Vec3f(-1.24f, -5.54f, 45.6f));
+  compareVectors(v, Vec3D(-1.24f, -5.54f, 45.6f));
 
   v.set(6.68f);
-  compareVectors(v, Vec3f(6.68f, 6.68f, 6.68f));
+  compareVectors(v, Vec3D(6.68f, 6.68f, 6.68f));
 }
 
 TEST_F(Vector3Test, ChangesSign) {
   v.set(-1.55);
   v = -v;
-  compareVectors(v, Vec3f(1.55f, 1.55f, 1.55f));
+  compareVectors(v, Vec3D(1.55f, 1.55f, 1.55f));
 }
 
 TEST_F(Vector3Test, AddsVectorOrNumber) {
-  v = Vec3f(0.f, 0.f, 5.f);
+  v = Vec3D(0.f, 0.f, 5.f);
   v = v + 4.46f;
-  compareVectors(v, Vec3f(4.46f, 4.46f, 9.46f));
+  compareVectors(v, Vec3D(4.46f, 4.46f, 9.46f));
 
-  v = v + Vec3f(4.f, 6.f, 0.f);
-  compareVectors(v, Vec3f(8.46f, 10.46f, 9.46f));
+  v = v + Vec3D(4.f, 6.f, 0.f);
+  compareVectors(v, Vec3D(8.46f, 10.46f, 9.46f));
 }
 
 TEST_F(Vector3Test, SubtractsVectorOrNumber) {
-  v = Vec3f(0.f, 0.f, 3.f);
+  v = Vec3D(0.f, 0.f, 3.f);
   v = v - 4.46f;
-  compareVectors(v, Vec3f(-4.46f, -4.46f, -1.46f));
+  compareVectors(v, Vec3D(-4.46f, -4.46f, -1.46f));
 
-  v = v - Vec3f(4.f, 6.f, 0.f);
-  compareVectors(v, Vec3f(-8.46f, -10.46f, -1.46f));
+  v = v - Vec3D(4.f, 6.f, 0.f);
+  compareVectors(v, Vec3D(-8.46f, -10.46f, -1.46f));
 }
 
 TEST_F(Vector3Test, GetsLenghtOfVector) {
-  v = Vec3f(0.f, 0.f, 0.f);
+  v = Vec3D(0.f, 0.f, 0.f);
   ASSERT_FLOAT_EQ(v.length(), 0.f);
-  v = Vec3f(1.f, 1.f, 1.f);
+  v = Vec3D(1.f, 1.f, 1.f);
   ASSERT_FLOAT_EQ(v.length(), sqrt(3.f));
-  v = Vec3f(3.f, 3.f, 3.f);
+  v = Vec3D(3.f, 3.f, 3.f);
   ASSERT_FLOAT_EQ(v.length(), sqrt(27.f));
-  v = Vec3f(-5.f, -5.f, 5.f);
+  v = Vec3D(-5.f, -5.f, 5.f);
   ASSERT_FLOAT_EQ(v.length(), sqrt(75.f));
 }
 
 TEST_F(Vector3Test, MultipliesVectorWithNumber) {
-  v = Vec3f(1.f, 0.f, 5.f) * 5.f;
-  compareVectors(v, Vec3f(5.f, 0.f, 25.f));
+  v = Vec3D(1.f, 0.f, 5.f) * 5.f;
+  compareVectors(v, Vec3D(5.f, 0.f, 25.f));
 }
 
 TEST_F(Vector3Test, NormalizesVector) {
-  v = Vec3f(4.53f, 93.5f, -56.3f);
+  v = Vec3D(4.53f, 93.5f, -56.3f);
   v.normalize();
   ASSERT_DOUBLE_EQ(v.length(), 1.f);
 }
 
 TEST_F(Vector3Test, DotProduct) {
-  v = Vec3f(3.f, 3.f, 4.f);
-  ASSERT_DOUBLE_EQ(dot(v, Vec3f(3.f, 3.f, 9.f)), 54.f);
-  v = Vec3f(-1.f, 5.f, 9.f);
-  ASSERT_FLOAT_EQ(dot(v, Vec3f(-3.f, 3.f, 6.f)), 72.f);
+  v = Vec3D(3.f, 3.f, 4.f);
+  ASSERT_DOUBLE_EQ(dot(v, Vec3D(3.f, 3.f, 9.f)), 54.f);
+  v = Vec3D(-1.f, 5.f, 9.f);
+  ASSERT_FLOAT_EQ(dot(v, Vec3D(-3.f, 3.f, 6.f)), 72.f);
 }
 
 TEST_F(Vector3Test, GetUnitVectorOf) {
-  v = Vec3f(4.36f, 7.62f, 0.466f);
+  v = Vec3D(4.36f, 7.62f, 0.466f);
   v = getUnitVectorOf(v);
   ASSERT_FLOAT_EQ(v.length(), 1.f);
 }
 
 TEST_F(Vector3Test, AddsTwoVectors) {
-  v = Vec3f(4.532f, 45.67f, 0.83f);
-  v = v + Vec3f(0.3456f, 124.67f, 1.f);
-  compareVectors(v, Vec3f(4.8776f, 170.34f, 1.83f));
+  v = Vec3D(4.532f, 45.67f, 0.83f);
+  v = v + Vec3D(0.3456f, 124.67f, 1.f);
+  compareVectors(v, Vec3D(4.8776f, 170.34f, 1.83f));
 }
 
 TEST_F(Vector3Test, SubtractsTwoVectors) {
-  v = Vec3f(40.54f, 2.4f, 0.62f);
-  v = v - Vec3f(4.20f, -1.7f, -1.f);
-  compareVectors(v, Vec3f(36.34f, 4.1f, 1.62f));
+  v = Vec3D(40.54f, 2.4f, 0.62f);
+  v = v - Vec3D(4.20f, -1.7f, -1.f);
+  compareVectors(v, Vec3D(36.34f, 4.1f, 1.62f));
 }
 
 TEST_F(Vector3Test, DevidesVectorByNumber) {
-  v = Vec3f(36.6f, -30.6f, 120.2586f);
+  v = Vec3D(36.6f, -30.6f, 120.2586f);
   v = v / 3.f;
-  compareVectors(v, Vec3f(36.6f / 3.f, -30.6f / 3.f, 120.2586f / 3.f));
+  compareVectors(v, Vec3D(36.6f / 3.f, -30.6f / 3.f, 120.2586f / 3.f));
 }
 
 TEST_F(Vector3Test, DevidesVectorByVector) {
-  v = Vec3f(434.5f, 93.5f, 3858.53f);
-  v = v / Vec3f(32.5f, -16.2f, 0.567f);
-  compareVectors(v, Vec3f(434.5f / 32.5f, -93.5f / 16.2f, 3858.53f / 0.567f));
+  v = Vec3D(434.5f, 93.5f, 3858.53f);
+  v = v / Vec3D(32.5f, -16.2f, 0.567f);
+  compareVectors(v, Vec3D(434.5f / 32.5f, -93.5f / 16.2f, 3858.53f / 0.567f));
 }
 
 TEST_F(Vector3Test, TestsEquality) {
-  v = Vec3f(4.2f, -6.54f, 34855.38596f);
-  ASSERT_TRUE(v == Vec3f(4.2f, -6.54f, 34855.38596f));
+  v = Vec3D(4.2f, -6.54f, 34855.38596f);
+  ASSERT_TRUE(v == Vec3D(4.2f, -6.54f, 34855.38596f));
 }
 
 TEST_F(Vector3Test, TestsInequality) {
-  v = Vec3f(4.2f, -6.54f, 0.f);
-  ASSERT_TRUE(v != Vec3f(4.2f, -4.36f, 0.f));
+  v = Vec3D(4.2f, -6.54f, 0.f);
+  ASSERT_TRUE(v != Vec3D(4.2f, -4.36f, 0.f));
 }
 
 TEST_F(Vector3Test, reflectsVector1) {
-  v = Vec3f(1.f, -1.f, 0.f);
-  Vec3f n(0.f, 1.f, 0.f);
-  Vec3f r = reflect(v, n);
-  ASSERT_TRUE(r == Vec3f(1.f, 1.f, 0.f));
+  v = Vec3D(1.f, -1.f, 0.f);
+  Vec3D n(0.f, 1.f, 0.f);
+  Vec3D r = reflect(v, n);
+  ASSERT_TRUE(r == Vec3D(1.f, 1.f, 0.f));
 }
 
 TEST_F(Vector3Test, reflectsVector2) {
-  v = Vec3f(0.f, -1.f, 0.f);
-  Vec3f n(sqrt(2.f) / 2.f, sqrt(2.f) / 2.f, 0.f);
-  Vec3f r = reflect(v, n);
+  v = Vec3D(0.f, -1.f, 0.f);
+  Vec3D n(sqrt(2.f) / 2.f, sqrt(2.f) / 2.f, 0.f);
+  Vec3D r = reflect(v, n);
 
   double eps = 10.E-8f;
-  compareVectorsApprox(r, Vec3f(1.f, 0.f, 0.f), eps);
+  compareVectorsApprox(r, Vec3D(1.f, 0.f, 0.f), eps);
 }
 
 //--------------------------------------------
@@ -1070,28 +1070,28 @@ TEST_F(Matrix4Test, GetInverseOfMatrix) {
 
 class Point3Test : public testing::RTest {
  public:
-  Point3i p;
+  Point3<int> p;
 };
 
 TEST_F(Point3Test, createsPoint) {
-  p = Point3i();
+  p = Point3<int>();
   ASSERT_EQ(p.x(), 0);
   ASSERT_EQ(p.y(), 0);
   ASSERT_EQ(p.z(), 0);
-  p = Point3i(1, -8, 0);
+  p = Point3<int>(1, -8, 0);
   ASSERT_EQ(p.x(), 1);
   ASSERT_EQ(p.y(), -8);
   ASSERT_EQ(p.z(), 0);
-  p = Point3i(9, 0, 0);
+  p = Point3<int>(9, 0, 0);
   ASSERT_EQ(p.x(), 9);
   ASSERT_EQ(p.y(), 0);
   ASSERT_EQ(p.z(), 0);
 }
 
 TEST_F(Point3Test, subtractsPointFromPoint) {
-  Point3f pf = Point3f(1, 0, 4);
-  Point3f p1 = Point3f(0, 2, 4);
-  Vec3f v = p1 - pf;
+  Point3D pf = Point3D(1, 0, 4);
+  Point3D p1 = Point3D(0, 2, 4);
+  Vec3D v = p1 - pf;
   ASSERT_EQ(v.x(), -1);
   ASSERT_EQ(v.y(), 2);
   ASSERT_EQ(v.z(), 0);
@@ -1099,8 +1099,8 @@ TEST_F(Point3Test, subtractsPointFromPoint) {
 }
 
 TEST_F(Point3Test, subtractsVectorFromPoint) {
-  p = Point3i(3, 4, 5);
-  Vec3i v = Vec3i(3, 4, 5);
+  p = Point3<int>(3, 4, 5);
+  auto v = Vec3<int>(3, 4, 5);
   p = p - v;
   ASSERT_EQ(p.x(), 0);
   ASSERT_EQ(p.y(), 0);
@@ -1108,8 +1108,8 @@ TEST_F(Point3Test, subtractsVectorFromPoint) {
 }
 
 TEST_F(Point3Test, addsVectorToPoint) {
-  p = Point3i(0, -1, -8);
-  Vec3i v = Vec3i(-4, 5, 9);
+  p = Point3<int>(0, -1, -8);
+  auto v = Vec3<int>(-4, 5, 9);
   p = p + v;
   ASSERT_EQ(p.x(), -4);
   ASSERT_EQ(p.y(), 4);

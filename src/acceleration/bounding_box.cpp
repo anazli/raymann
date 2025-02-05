@@ -1,17 +1,17 @@
 #include "acceleration/bounding_box.h"
 
-BoundingBox::BoundingBox(const Point3f& pmin, const Point3f& pmax)
+BoundingBox::BoundingBox(const Point3D& pmin, const Point3D& pmax)
     : m_minPoint(pmin), m_maxPoint(pmax) {}
 
-Point3f& BoundingBox::minPoint() { return m_minPoint; }
+Point3D& BoundingBox::minPoint() { return m_minPoint; }
 
-Point3f& BoundingBox::maxPoint() { return m_maxPoint; }
+Point3D& BoundingBox::maxPoint() { return m_maxPoint; }
 
-const Point3f& BoundingBox::minPoint() const { return m_minPoint; }
+const Point3D& BoundingBox::minPoint() const { return m_minPoint; }
 
-const Point3f& BoundingBox::maxPoint() const { return m_maxPoint; }
+const Point3D& BoundingBox::maxPoint() const { return m_maxPoint; }
 
-void BoundingBox::addPoint(const Point3f& point) {
+void BoundingBox::addPoint(const Point3D& point) {
   if (point.x() < m_minPoint.x()) m_minPoint.setX(point.x());
   if (point.y() < m_minPoint.y()) m_minPoint.setY(point.y());
   if (point.z() < m_minPoint.z()) m_minPoint.setZ(point.z());
@@ -26,7 +26,7 @@ void BoundingBox::addBox(const BoundingBox& box) {
   addPoint(box.maxPoint());
 }
 
-bool BoundingBox::containsPoint(const Point3f& point) const {
+bool BoundingBox::containsPoint(const Point3D& point) const {
   // three-way comparison doesn't work
   return point.x() >= m_minPoint.x() && point.x() <= m_maxPoint.x() &&
          point.y() >= m_minPoint.y() && point.y() <= m_maxPoint.y() &&

@@ -11,11 +11,11 @@ class Cylinder : public SceneElement {
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
     m_elementType = SceneElementType::CYLINDER;
     if (!closed) {
-      m_bBox.minPoint() = Point3f(-1.f, -limit::infinity(), -1.f);
-      m_bBox.maxPoint() = Point3f(1.f, limit::infinity(), 1.f);
+      m_bBox.minPoint() = Point3D(-1.f, -limit::infinity(), -1.f);
+      m_bBox.maxPoint() = Point3D(1.f, limit::infinity(), 1.f);
     } else {
-      m_bBox.minPoint() = Point3f(-1.f, m_minimumY, -1.f);
-      m_bBox.maxPoint() = Point3f(1.f, m_maximumY, 1.f);
+      m_bBox.minPoint() = Point3D(-1.f, m_minimumY, -1.f);
+      m_bBox.maxPoint() = Point3D(1.f, m_maximumY, 1.f);
     }
   }
   ~Cylinder() override = default;
@@ -59,14 +59,14 @@ class Cylinder : public SceneElement {
     if (intersectCaps(r, record)) hitAnything = true;
     return hitAnything;
   }
-  Vec3f normal(const Point3f &p) const override {
+  Vec3D normal(const Point3D &p) const override {
     auto distance = p.x() * p.x() + p.z() * p.z();
     if (distance < 1.f && p.y() >= m_maximumY - EPS) {
-      return Vec3f(0.f, 1.f, 0.f);
+      return Vec3D(0.f, 1.f, 0.f);
     } else if (distance < 1.f && p.y() <= m_minimumY + EPS) {
-      return Vec3f(0.f, -1.f, 0.f);
+      return Vec3D(0.f, -1.f, 0.f);
     }
-    return Vec3f(p.x(), 0.f, p.z());
+    return Vec3D(p.x(), 0.f, p.z());
   }
 
   bool isClosed() const { return m_closed; }

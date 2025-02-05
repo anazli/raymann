@@ -4,11 +4,11 @@
 
 class SceneElementDecorator : public SceneElement {
  public:
-  SceneElementDecorator(SceneElementRawPtr tr, const Mat4f &m = Mat4f());
+  SceneElementDecorator(SceneElementRawPtr tr, const Mat4D &m = Mat4D());
   ~SceneElementDecorator() override;
   SceneElementType elementType() const override;
   bool intersect(const Ray &r, IntersectionRecord &record) override;
-  Vec3f normal(const Point3f &p) const override;
+  Vec3D normal(const Point3D &p) const override;
   void add(SceneElementPtr item) override;
   SceneElementContainer::iterator remove(SceneElementRawPtr item,
                                          SceneElementPtr removedElem) override;
@@ -21,13 +21,13 @@ class SceneElementDecorator : public SceneElement {
   void setBoundingBox(const BoundingBox &box) override;
   BoundingBox &boundingBox() override;
   const BoundingBox &boundingBox() const override;
-  float pdf(const Point3f &origin, const Vec3f &direction) override;
-  Vec3f random(const Point3f &origin) override;
+  float pdf(const Point3D &origin, const Vec3D &direction) override;
+  Vec3D random(const Point3D &origin) override;
 
-  Point3f pointFromWorldToObjectSpace(const Point3f &point) const override;
-  Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const override;
+  Point3D pointFromWorldToObjectSpace(const Point3D &point) const override;
+  Vec3D vectorFromObjectToWorldSpace(const Vec3D vec) const override;
 
  protected:
   SceneElementRawPtr m_element;
-  Mat4f m_transformMatrix;
+  Mat4D m_transformMatrix;
 };

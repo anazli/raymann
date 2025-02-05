@@ -16,7 +16,7 @@ void PhongModel::visitSceneElementComposite(
   }
 }
 
-Vec3f PhongModel::computeColor(const SceneElementRawPtr world, const Ray& ray,
+Vec3D PhongModel::computeColor(const SceneElementRawPtr world, const Ray& ray,
                                int rec) {
   m_closestHit = IntersectionRecord{};
   if (world->intersect(ray, m_closestHit)) {
@@ -30,7 +30,7 @@ Vec3f PhongModel::computeColor(const SceneElementRawPtr world, const Ray& ray,
   return m_background_color;
 }
 
-Vec3f PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
+Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
   auto normal = m_closestHit.object->normal(m_closestHit.point(ray));
   auto point = m_closestHit.point(ray);
   auto over_point = point + (m_closestHit.inside ? normal : normal) * 0.02f;
@@ -41,15 +41,15 @@ Vec3f PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
 
   auto effective_color =
       m_closestHit.object->getMaterial()->getTexture()->value(
-          0, 0, Vec3f(over_point)) *
+          0, 0, Vec3D(over_point)) *
       world->getLight().intensity();
 
   auto ret_ambient =
       effective_color *
       m_closestHit.object->getMaterial()->getProperties().getPropertyAsFloat(
           Props::AMBIENT);
-  auto ret_diffuse = Vec3f{};
-  auto ret_specular = Vec3f{};
+  auto ret_diffuse = Vec3D{};
+  auto ret_specular = Vec3D{};
 
   if (isShadowed(world, over_point)) return ret_ambient;
 
@@ -78,10 +78,10 @@ Vec3f PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
   return ret_ambient + ret_diffuse + ret_specular;
 }
 
-Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
+Vec3D PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
                                  int rec) {
   auto closestReflectedHit = IntersectionRecord{};
-  auto black = Vec3f(0.f, 0.f, 0.f);
+  auto black = Vec3D(0.f, 0.f, 0.f);
   if (world->intersect(ray, closestReflectedHit)) {
     if (closestReflectedHit.object) {
       if (rec <= 0) {
@@ -117,10 +117,10 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
   return black;
 }
 
-/*Vec3f PhongModel::refractedColor(const SceneElementPtr& world, const Ray& ray,
+/*Vec3D PhongModel::refractedColor(const SceneElementPtr& world, const Ray& ray,
                                  int rec) {
   auto closest_refract = findClosestHit(world, ray);
-  auto black = Vec3f(0.f, 0.f, 0.f);
+  auto black = Vec3D(0.f, 0.f, 0.f);
   if (closest_refract.object->getMaterial()->getProperties().getPropertyAsFloat(
           Props::TRANSPARENCY) <= 0.f ||
       rec == 0) {
@@ -148,7 +148,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
          closest_refract.object->getMaterial()
              ->getProperties()
              .getPropertyAsFloat(Props::TRANSPARENCY);
-  return Vec3f(0.f, 0.f, 0.f);
+  return Vec3D(0.f, 0.f, 0.f);
 }*/
 
 /*void PhongModel::determineRefractionIndices(const SceneElementPtr& world,
@@ -196,7 +196,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
 
 void PhongModel::checkInside(const Ray& r) {}
 
-bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3f& p) {
+bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3D& p) {
   if (m_closestHit.object) {
     auto light = world->getLight();
     auto v = p - light.position();

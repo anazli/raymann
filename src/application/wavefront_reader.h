@@ -19,25 +19,25 @@ class WavefrontReader {
   void addLightForModel(const PointLight& light);
   void addMaterial(BaseMaterialPtr mat);
 
-  std::vector<Vec3f> vertexCollection() const;
-  std::vector<Vec3f> vertexNormalCollection() const;
+  std::vector<Vec3D> vertexCollection() const;
+  std::vector<Vec3D> vertexNormalCollection() const;
   std::vector<Triangle> triangleCollection() const;
   SceneElementPtr getStructure() const;
   SceneElementPtr getStructureBVHierarchy() const;
 
  private:
   void openFile();
-  void parseVertexEntry(std::string_view line, std::vector<Vec3f>& vec);
+  void parseVertexEntry(std::string_view line, std::vector<Vec3D>& vec);
   void parseVertexNormalEntry(std::string_view line);
   void parseTriangleEntry(std::string_view line);
   void parsePolygonEntry(std::string_view line);
   void parseGroupEntry(std::string_view line);
-  void triangulatePolygon(std::vector<Vec3f> vertices);
+  void triangulatePolygon(std::vector<Vec3D> vertices);
 
   std::ifstream m_inputStream;
-  std::vector<Vec3f> m_vertices;
-  std::vector<Vec3f> m_verticesNormalized;
-  std::vector<Vec3f> m_verticesNormals;
+  std::vector<Vec3D> m_vertices;
+  std::vector<Vec3D> m_verticesNormalized;
+  std::vector<Vec3D> m_verticesNormals;
   std::vector<Triangle> m_triangles;
   SceneElementPtr m_finalProduct;
   SceneElementPtr m_currentGroup;
