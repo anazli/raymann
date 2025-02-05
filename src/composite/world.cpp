@@ -3,13 +3,17 @@
 #include <algorithm>
 
 #include "composite/iterator.h"
+#include "geometry/primitive.h"
 #include "renderers/renderer.h"
 #include "stochastic/random.h"
+#include "world.h"
 
 using std::list;
 using std::shared_ptr;
 using std::sort;
 using std::vector;
+
+World::World(const PointLight& light) { m_light = light; }
 
 bool World::intersect(const Ray& r, IntersectionRecord& record) {
   if (!m_bBox.intersectsRay(r)) {
@@ -38,19 +42,21 @@ bool World::intersect(const Ray& r, IntersectionRecord& record) {
   return record.hitFound;
 }
 
-void World::add(SceneElementPtr item) {
-  item->setParent(this);
-  m_bBox.addBox(item->boundingBox());
-  m_sceneElementContainer.push_back(item);
+void World::add(SceneElementPtr element) {
+  element->setParent(this);
+  if (auto primitive = dynamic_cast<Primitive*>(element.get())) {
+    m_bBox.addBox(primitive->boundingBox());
+  }
+  m_sceneElementContainer.push_back(element);
 }
 
 SceneElementContainer::iterator World::remove(SceneElementRawPtr item,
-                                              SceneElementPtr removedElem) {
+                                              SceneElementPtr elementToRemove) {
   auto it = std::find_if(
       m_sceneElementContainer.begin(), m_sceneElementContainer.end(),
       [&item](const SceneElementPtr& elem) { return item == elem.get(); });
   if (it != m_sceneElementContainer.end()) {
-    removedElem = *it;
+    elementToRemove = *it;
     auto itret = m_sceneElementContainer.erase(it);
     return itret;
   }
@@ -69,24 +75,6 @@ SceneElementContainer World::getChildren() const {
   return m_sceneElementContainer;
 }
 
-SceneElementContainer& World::getChildren() { return m_sceneElementContainer; }
-
 void World::setLight(const PointLight& light) { m_light = light; }
 
 PointLight World::getLight() const { return m_light; }
-
-float World::pdf(const Point3D& origin, const Vec3D& direction) {
-  auto weight = 1.f / m_sceneElementContainer.size();
-  auto sum = 0.f;
-
-  for (const auto& object : m_sceneElementContainer)
-    sum += weight * object->pdf(origin, direction);
-
-  return sum;
-}
-
-Vec3D World::random(const Point3D& origin) {
-  auto int_size = static_cast<int>(m_sceneElementContainer.size());
-  return m_sceneElementContainer[Random::randomInteger(0, int_size - 1)]
-      ->random(origin);
-}

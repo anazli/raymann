@@ -2,14 +2,13 @@
 
 #include <limits>
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 
-class Cone : public SceneElement {
+class Cone : public Primitive {
  public:
   Cone(float minY = -std::numeric_limits<float>::max(),
        float maxY = std::numeric_limits<float>::max(), bool closed = false)
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
-    m_elementType = SceneElementType::CONE;
     if (!closed) {
       m_bBox.minPoint() =
           Point3D(-limit::infinity(), -limit::infinity(), -limit::infinity());

@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "composite/scene_element.h"
+#include "geometry/primitive.h"
 #include "textures/texture.h"
 
 class Builder {
@@ -12,7 +13,7 @@ class Builder {
   virtual void addWorld() = 0;
   virtual void addElement() = 0;
   virtual void addLight(const PointLight &light) = 0;
-  virtual void processSceneElement(SceneElementRawPtr element) = 0;
+  virtual void processSceneElement(PrimitiveRawPtr element) = 0;
   virtual void applyTransformation(const Mat4D &trans) = 0;
   virtual void applyWorldTransformation(const Mat4D &trans) = 0;
   virtual void applyMaterial(TexturePtr tex,
@@ -44,7 +45,7 @@ class WorldBuilder : public Builder {
   void addWorld() override;
   void addElement() override;
   void addLight(const PointLight &light) override;
-  void processSceneElement(SceneElementRawPtr element) override;
+  void processSceneElement(PrimitiveRawPtr element) override;
   void applyTransformation(const Mat4D &trans) override;
   void applyWorldTransformation(const Mat4D &trans) override;
   void applyMaterial(TexturePtr tex, const MaterialProperties &prop) override;

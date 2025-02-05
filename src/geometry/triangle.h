@@ -1,9 +1,9 @@
 #pragma once
 
 #include "application/error.h"
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 
-class Triangle : public SceneElement {
+class Triangle : public Primitive {
  public:
   Triangle(const std::initializer_list<Point3D> &points) : m_points(points) {
     m_edgeVec.push_back(m_points[1] - m_points[0]);
@@ -57,7 +57,7 @@ class Triangle : public SceneElement {
 //-----------------------------------------
 // TODO: Refactor and remove duplicate code
 //-----------------------------------------
-class SmoothTriangle : public SceneElement {
+class SmoothTriangle : public Primitive {
  public:
   SmoothTriangle(const Point3D &p1, const Point3D &p2, const Point3D &p3,
                  const Vec3D &v1, const Vec3D &v2, const Vec3D &v3) {

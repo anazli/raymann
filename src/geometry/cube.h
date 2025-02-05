@@ -2,13 +2,12 @@
 
 #include <limits>
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 #include "stochastic/random.h"
 
-class Cube : public SceneElement {
+class Cube : public Primitive {
  public:
   Cube() {
-    m_elementType = SceneElementType::CUBE;
     m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f);
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f);
   }

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 
-class Plane : public SceneElement {
+class Plane : public Primitive {
  public:
   Plane() {
-    m_elementType = SceneElementType::PLANE;
     m_bBox.minPoint() = Point3D(-limit::infinity(), 0.f, -limit::infinity());
     m_bBox.maxPoint() = Point3D(limit::infinity(), 0.f, limit::infinity());
   }

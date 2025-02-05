@@ -24,40 +24,20 @@ enum class SceneElementType {
 class SceneElement {
  public:
   virtual ~SceneElement() = default;
-  virtual SceneElementType elementType() const;
-  virtual bool intersect(const Ray &r, IntersectionRecord &record);
-  virtual void add(std::shared_ptr<SceneElement> item);
+  virtual bool intersect(const Ray &r, IntersectionRecord &record) = 0;
+  virtual Vec3D normal(const Point3D &p) const = 0;
+  virtual void add(std::shared_ptr<SceneElement> element);
   virtual std::vector<std::shared_ptr<SceneElement>>::iterator remove(
-      SceneElement *item, std::shared_ptr<SceneElement> removedElem);
+      SceneElement *item, std::shared_ptr<SceneElement> elementToRemove);
   virtual bool isWorld() const;
-  virtual Vec3D normal(const Point3D &p) const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);
   virtual std::vector<std::shared_ptr<SceneElement>> getChildren() const;
-  virtual std::vector<std::shared_ptr<SceneElement>> &getChildren();
   virtual void setParent(SceneElement *parent);
   virtual SceneElement *getParent() const;
-  virtual void setLight(const PointLight &light);
-  virtual PointLight getLight() const;
-  virtual void setBoundingBox(const BoundingBox &box);
-  virtual BoundingBox &boundingBox();
-  virtual const BoundingBox &boundingBox() const;
-  virtual float pdf(const Point3D &origin, const Vec3D &direction);
-  virtual Vec3D random(const Point3D &origin);
-  void setMaterial(BaseMaterialPtr mat);
-  BaseMaterialPtr getMaterial() const;
-  // size_t getId() const;
-  virtual Point3D pointFromWorldToObjectSpace(const Point3D &point) const;
-  virtual Vec3D vectorFromObjectToWorldSpace(const Vec3D vec) const;
 
  protected:
   SceneElement() = default;
-  SceneElement(const BoundingBox &props);
   SceneElement *m_parent = nullptr;
-  BaseMaterialPtr m_material;
-  BoundingBox m_bBox;
-  SceneElementType m_elementType;
-  // size_t m_id;
-  // static size_t m_next_id;
 };
 
 using SceneElementPtr = std::shared_ptr<SceneElement>;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 #include "stochastic/random.h"
 
-class Quad : public SceneElement {
+class Quad : public Primitive {
  public:
   Quad(const Point3D& origin, const Vec3D& uAxis, const Vec3D& vAxis)
       : m_origin(origin), m_uAxis(uAxis), m_vAxis(vAxis) {

@@ -1,14 +1,13 @@
 #pragma once
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 #include "stochastic/random.h"
 
-class Sphere : public SceneElement {
+class Sphere : public Primitive {
  public:
   ~Sphere() override = default;
   Sphere(const Point3D &c = Point3D(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
       : m_center(c), m_radius(r) {
-    m_elementType = SceneElementType::SPHERE;
     m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f) + c;
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f) + c;
   }
