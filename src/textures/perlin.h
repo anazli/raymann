@@ -9,14 +9,14 @@
 //------------------------------------------------------------------------------
 
 float trilinearInterpolation(float c[2][2][2], float u, float v, float w);
-float perlinInterpolation(Vec3f c[2][2][2], float u, float v, float w);
-static Vec3f *perlinGenerate();
+float perlinInterpolation(Vec3D c[2][2][2], float u, float v, float w);
+static Vec3D *perlinGenerate();
 void permute(int *p, int n);
 static int *perlinGeneratePerm();
 
 class Perlin {
  public:
-  float noise(const Vec3f &p) const {
+  float noise(const Vec3D &p) const {
     float u = p.x() - floor(p.x());
     float v = p.y() - floor(p.y());
     float w = p.z() - floor(p.z());
@@ -26,7 +26,7 @@ class Perlin {
     int i = floor(p.x());
     int j = floor(p.y());
     int k = floor(p.z());
-    Vec3f c[2][2][2];
+    Vec3D c[2][2][2];
     for (int di = 0; di < 2; ++di)
       for (int dj = 0; dj < 2; ++dj)
         for (int dk = 0; dk < 2; ++dk)
@@ -35,7 +35,7 @@ class Perlin {
                      perm_z[(k + dk) & 255]];
     return perlinInterpolation(c, u, v, w);
   }
-  float turb(const Vec3f &p, int depth = 7) const {
+  float turb(const Vec3D &p, int depth = 7) const {
     float accum = 0.;
     Vec3 temp_p = p;
     float weight = 1.;
@@ -46,7 +46,7 @@ class Perlin {
     }
     return fabs(accum);
   }
-  static Vec3f *ranvec;
+  static Vec3D *ranvec;
   static int *perm_x;
   static int *perm_y;
   static int *perm_z;

@@ -49,28 +49,28 @@ TEST_F(MaterialPropertiesTest, getsPropertyAsFloat) {
   EXPECT_EQ(p.getPropertyAsFloat(name), any_cast<float>(value));
 }
 
-TEST_F(MaterialPropertiesTest, getsPropertyAsVec3f) {
-  Vec3f new_value(1.f, 1.f, 1.f);
+TEST_F(MaterialPropertiesTest, getsPropertyAsVec3D) {
+  Vec3D new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAsVec3f(static_cast<Props>(1000)), Vec3f());
-  EXPECT_EQ(p.getPropertyAsVec3f(name), new_value);
+  EXPECT_EQ(p.getPropertyAsVec3D(static_cast<Props>(1000)), Vec3D());
+  EXPECT_EQ(p.getPropertyAsVec3D(name), new_value);
 }
 
-TEST_F(MaterialPropertiesTest, getsPropertyAsMat4f) {
-  Mat4f new_value(Vec4<float>(1.36f, 1.28f, 0.85f, -7.f),
+TEST_F(MaterialPropertiesTest, getsPropertyAsMat4D) {
+  Mat4D new_value(Vec4<float>(1.36f, 1.28f, 0.85f, -7.f),
                   Vec4<float>(1.5f, 0.f, -6.58f, 1.f),
                   Vec4<float>(4.5f, 0.f, -3.f, 10.f),
                   Vec4<float>(0.f, 1.f, 6.68f, -9.f));
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAsMat4f(static_cast<Props>(1000)), Mat4f());
-  EXPECT_EQ(p.getPropertyAsMat4f(name), new_value);
+  EXPECT_EQ(p.getPropertyAsMat4D(static_cast<Props>(1000)), Mat4D());
+  EXPECT_EQ(p.getPropertyAsMat4D(name), new_value);
 }
 
-TEST_F(MaterialPropertiesTest, getsPropertyAsPoint3f) {
-  Point3f new_value(1.f, 1.f, 1.f);
+TEST_F(MaterialPropertiesTest, getsPropertyAsPoint3D) {
+  Point3D new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAsPoint3f(static_cast<Props>(1000)), Point3f());
-  EXPECT_EQ(p.getPropertyAsPoint3f(name), new_value);
+  EXPECT_EQ(p.getPropertyAsPoint3D(static_cast<Props>(1000)), Point3D());
+  EXPECT_EQ(p.getPropertyAsPoint3D(name), new_value);
 }
 
 TEST_F(MaterialPropertiesTest, removesProperty) {

@@ -7,22 +7,22 @@ using limit = std::numeric_limits<float>;
 class BoundingBox {
  public:
   BoundingBox() = default;
-  BoundingBox(const Point3f &pmin, const Point3f &pmax);
-  Point3f &minPoint();
-  Point3f &maxPoint();
-  const Point3f &minPoint() const;
-  const Point3f &maxPoint() const;
-  void addPoint(const Point3f &point);
+  BoundingBox(const Point3D &pmin, const Point3D &pmax);
+  Point3D &minPoint();
+  Point3D &maxPoint();
+  const Point3D &minPoint() const;
+  const Point3D &maxPoint() const;
+  void addPoint(const Point3D &point);
   void addBox(const BoundingBox &box);
-  bool containsPoint(const Point3f &point) const;
+  bool containsPoint(const Point3D &point) const;
   bool containsBoundingBox(const BoundingBox &box) const;
   bool intersectsRay(const Ray &r) const;
 
  private:
   std::pair<float, float> hitAxis(float origin, float direction, float min,
                                   float max) const;
-  Point3f m_minPoint =
-      Point3f(limit::infinity(), limit::infinity(), limit::infinity());
-  Point3f m_maxPoint =
-      Point3f(-limit::infinity(), -limit::infinity(), -limit::infinity());
+  Point3D m_minPoint =
+      Point3D(limit::infinity(), limit::infinity(), limit::infinity());
+  Point3D m_maxPoint =
+      Point3D(-limit::infinity(), -limit::infinity(), -limit::infinity());
 };

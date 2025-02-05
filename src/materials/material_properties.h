@@ -6,7 +6,7 @@
 #include "tools/tools.h"
 
 enum class Props {
-  COLOR,            // Vec3f
+  COLOR,            // Vec3D
   AMBIENT,          // float [0,1]
   DIFFUSE,          // float [0,1]
   SPECULAR,         // float [0,1]
@@ -26,9 +26,9 @@ class MaterialProperties {
   std::any getPropertyAsAny(const Props &name) const;
   int getPropertyAsInt(const Props &name) const;
   float getPropertyAsFloat(const Props &name) const;
-  Vec3f getPropertyAsVec3f(const Props &name) const;
-  Mat4f getPropertyAsMat4f(const Props &name) const;
-  Point3f getPropertyAsPoint3f(const Props &name) const;
+  Vec3D getPropertyAsVec3D(const Props &name) const;
+  Mat4D getPropertyAsMat4D(const Props &name) const;
+  Point3D getPropertyAsPoint3D(const Props &name) const;
 
  private:
   std::map<Props, std::any> m_prop;

@@ -77,9 +77,7 @@ class Vec3 {
   T m_z = T{};
 };
 
-typedef Vec3<double> Vec3d;
-typedef Vec3<float> Vec3f;
-typedef Vec3<int> Vec3i;
+using Vec3D = Vec3<float>;
 
 //--------------------------------------------
 // Overloaded Member operators (input, output)

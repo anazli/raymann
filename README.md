@@ -22,7 +22,6 @@ Running
 -------
 To run the program, from the main directory
 ```bash
-$ cd ..
 $ bin/raymann
 ```
 Docker

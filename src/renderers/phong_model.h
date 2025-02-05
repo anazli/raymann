@@ -9,16 +9,16 @@ class PhongModel : public BaseRenderer {
                          const Ray &ray) override;
   void visitSceneElementComposite(const SceneElementRawPtr elementComp,
                                   const Ray &ray) override;
-  Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
+  Vec3D computeColor(const SceneElementRawPtr world, const Ray &ray,
                      int rec = 5) override;
 
  private:
-  Vec3f reflectedColor(const SceneElementRawPtr world, const Ray &ray,
+  Vec3D reflectedColor(const SceneElementRawPtr world, const Ray &ray,
                        int rec = 5);
-  Vec3f lighting(const SceneElementRawPtr world, const Ray &ray);
+  Vec3D lighting(const SceneElementRawPtr world, const Ray &ray);
   void checkInside(const Ray &r);
-  bool isShadowed(const SceneElementRawPtr world, const Point3f &p);
-  // Vec3f refractedColor(const SceneElementPtr &world, const Ray &ray,
+  bool isShadowed(const SceneElementRawPtr world, const Point3D &p);
+  // Vec3D refractedColor(const SceneElementPtr &world, const Ray &ray,
   //                      int rec = 5);
   //  void determineRefractionIndices(const SceneElementPtr &world, const Ray
   //  &r); std::map<size_t, std::pair<size_t, float>> intersectionsSorted(

@@ -13,8 +13,8 @@ class Builder {
   virtual void addElement() = 0;
   virtual void addLight(const PointLight &light) = 0;
   virtual void processSceneElement(SceneElementRawPtr element) = 0;
-  virtual void applyTransformation(const Mat4f &trans) = 0;
-  virtual void applyWorldTransformation(const Mat4f &trans) = 0;
+  virtual void applyTransformation(const Mat4D &trans) = 0;
+  virtual void applyWorldTransformation(const Mat4D &trans) = 0;
   virtual void applyMaterial(TexturePtr tex,
                              const MaterialProperties &prop) = 0;
   virtual void applyLambertianMaterial(
@@ -45,8 +45,8 @@ class WorldBuilder : public Builder {
   void addElement() override;
   void addLight(const PointLight &light) override;
   void processSceneElement(SceneElementRawPtr element) override;
-  void applyTransformation(const Mat4f &trans) override;
-  void applyWorldTransformation(const Mat4f &trans) override;
+  void applyTransformation(const Mat4D &trans) override;
+  void applyWorldTransformation(const Mat4D &trans) override;
   void applyMaterial(TexturePtr tex, const MaterialProperties &prop) override;
   void applyLambertianMaterial(
       TexturePtr tex,

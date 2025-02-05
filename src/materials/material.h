@@ -23,8 +23,8 @@ class BaseMaterial {
   virtual void setProperties(const MaterialProperties& prop);
   virtual MaterialProperties getProperties() const;
   virtual bool scatter(const Ray& r_in, const IntersectionRecord& rec,
-                       Vec3f& attenuation, Ray& scattered) const = 0;
-  virtual Vec3f emmit(float u = 0.f, float v = 0.f, const Vec3f& p = Vec3f());
+                       Vec3D& attenuation, Ray& scattered) const = 0;
+  virtual Vec3D emmit(float u = 0.f, float v = 0.f, const Vec3D& p = Vec3D());
   virtual bool isEmissive() const;
   virtual float scatteringPDF(const Ray& r, const IntersectionRecord& record,
                               const Ray& scatteredRay) const;
@@ -53,7 +53,7 @@ class Material : public BaseMaterial {
   void setProperties(const MaterialProperties& prop) override;
   MaterialProperties getProperties() const override;
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
-               Vec3f& attenuation, Ray& scattered) const override;
+               Vec3D& attenuation, Ray& scattered) const override;
 };
 
 class Lambertian : public BaseMaterial {
@@ -62,7 +62,7 @@ class Lambertian : public BaseMaterial {
              const MaterialProperties& prop = MaterialProperties());
   ~Lambertian() override = default;
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
-               Vec3f& attenuation, Ray& scattered) const override;
+               Vec3D& attenuation, Ray& scattered) const override;
   float scatteringPDF(const Ray& r, const IntersectionRecord& record,
                       const Ray& scatteredRay) const override;
 };
@@ -73,7 +73,7 @@ class Isotropic : public BaseMaterial {
             const MaterialProperties& prop = MaterialProperties());
   ~Isotropic() override = default;
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
-               Vec3f& attenuation, Ray& scattered) const override;
+               Vec3D& attenuation, Ray& scattered) const override;
   float scatteringPDF(const Ray& r, const IntersectionRecord& record,
                       const Ray& scatteredRay) const override;
 };
@@ -84,7 +84,7 @@ class Metal : public BaseMaterial {
         const MaterialProperties& prop = MaterialProperties());
   ~Metal() override = default;
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
-               Vec3f& attenuation, Ray& scattered) const override;
+               Vec3D& attenuation, Ray& scattered) const override;
 
  private:
   float m_fuzz;
@@ -96,7 +96,7 @@ class Dielectric : public BaseMaterial {
              const MaterialProperties& prop = MaterialProperties());
   ~Dielectric() override = default;
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
-               Vec3f& attenuation, Ray& scattered) const override;
+               Vec3D& attenuation, Ray& scattered) const override;
 
  private:
   float ref_idx;
@@ -108,7 +108,7 @@ class EmissiveMaterial : public BaseMaterial {
                    const MaterialProperties& prop = MaterialProperties());
   ~EmissiveMaterial() override = default;
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
-               Vec3f& attenuation, Ray& scattered) const override;
-  Vec3f emmit(float u = 0.f, float v = 0.f, const Vec3f& p = Vec3f()) override;
+               Vec3D& attenuation, Ray& scattered) const override;
+  Vec3D emmit(float u = 0.f, float v = 0.f, const Vec3D& p = Vec3D()) override;
   bool isEmissive() const override;
 };

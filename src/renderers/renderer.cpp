@@ -5,7 +5,7 @@
 void BaseRenderer::attachStochasticMethod(
     std::unique_ptr<StochasticSampler> stMethod) {}
 
-Vec3f BaseRenderer::getColor() const { return m_out_color; }
+Vec3D BaseRenderer::getColor() const { return m_out_color; }
 
 void BaseRenderer::setPixelInfo(const int &x, const int y) {
   m_x = static_cast<float>(x);
@@ -16,11 +16,11 @@ float BaseRenderer::getPixelInfoX() const { return m_x; }
 
 float BaseRenderer::getPixelInfoY() const { return m_y; }
 
-void BaseRenderer::setBackgroundColor(const Vec3f &color) {
+void BaseRenderer::setBackgroundColor(const Vec3D &color) {
   m_background_color = color;
 }
 
-Vec3f BaseRenderer::backgroundColor() const { return m_background_color; }
+Vec3D BaseRenderer::backgroundColor() const { return m_background_color; }
 
 void BaseRenderer::addDiffuseLight(SceneElementRawPtr light) {
   m_diffuseLight = light;

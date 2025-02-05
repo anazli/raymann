@@ -16,7 +16,7 @@ TEST_F(CameraTest, createsCamera) {
   ASSERT_EQ(c.hSize(), 160);
   ASSERT_EQ(c.vSize(), 120);
   ASSERT_EQ(c.fieldOfView(), PI / 2.0f);
-  ASSERT_TRUE(c.transform() == Mat4f());
+  ASSERT_TRUE(c.transform() == Mat4D());
 }
 
 TEST_F(CameraTest, pixelSizeForHorCanvas) {
@@ -36,8 +36,8 @@ TEST_F(CameraTest, rayThroughTheCenterOfCanvas) {
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
   float eps = 1.E-6;
-  comparePointsApprox(r.origin(), Point3f(), eps);
-  compareVectorsApprox(r.direction(), Vec3f(0.f, 0.f, -1.f), eps);
+  comparePointsApprox(r.origin(), Point3D(), eps);
+  compareVectorsApprox(r.direction(), Vec3D(0.f, 0.f, -1.f), eps);
 }
 
 TEST_F(CameraTest, rayThroughCornerOfCanvas) {
@@ -45,8 +45,8 @@ TEST_F(CameraTest, rayThroughCornerOfCanvas) {
   c.computePixelSize();
   Ray r = c.getRay(0, 0);
   float eps = 1.E-5;
-  comparePointsApprox(r.origin(), Point3f(), eps);
-  compareVectorsApprox(r.direction(), Vec3f(0.66519f, 0.33259f, -0.66851f),
+  comparePointsApprox(r.origin(), Point3D(), eps);
+  compareVectorsApprox(r.direction(), Vec3D(0.66519f, 0.33259f, -0.66851f),
                        eps);
 }
 
@@ -56,6 +56,6 @@ TEST_F(CameraTest, rayWhenCameraIsTransformed) {
   c.computePixelSize();
   Ray r = c.getRay(100, 50);
   float eps = 1.E-5;
-  comparePointsApprox(r.origin(), Point3f(0.f, 2.f, -5.f), eps);
-  compareVectorsApprox(r.direction(), Vec3f(0.7071f, 0.f, -0.7071f), eps);
+  comparePointsApprox(r.origin(), Point3D(0.f, 2.f, -5.f), eps);
+  compareVectorsApprox(r.direction(), Vec3D(0.7071f, 0.f, -0.7071f), eps);
 }

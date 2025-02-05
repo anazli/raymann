@@ -30,7 +30,7 @@ class SceneElement {
   virtual std::vector<std::shared_ptr<SceneElement>>::iterator remove(
       SceneElement *item, std::shared_ptr<SceneElement> removedElem);
   virtual bool isWorld() const;
-  virtual Vec3f normal(const Point3f &p) const;
+  virtual Vec3D normal(const Point3D &p) const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);
   virtual std::vector<std::shared_ptr<SceneElement>> getChildren() const;
   virtual std::vector<std::shared_ptr<SceneElement>> &getChildren();
@@ -41,13 +41,13 @@ class SceneElement {
   virtual void setBoundingBox(const BoundingBox &box);
   virtual BoundingBox &boundingBox();
   virtual const BoundingBox &boundingBox() const;
-  virtual float pdf(const Point3f &origin, const Vec3f &direction);
-  virtual Vec3f random(const Point3f &origin);
+  virtual float pdf(const Point3D &origin, const Vec3D &direction);
+  virtual Vec3D random(const Point3D &origin);
   void setMaterial(BaseMaterialPtr mat);
   BaseMaterialPtr getMaterial() const;
   // size_t getId() const;
-  virtual Point3f pointFromWorldToObjectSpace(const Point3f &point) const;
-  virtual Vec3f vectorFromObjectToWorldSpace(const Vec3f vec) const;
+  virtual Point3D pointFromWorldToObjectSpace(const Point3D &point) const;
+  virtual Vec3D vectorFromObjectToWorldSpace(const Vec3D vec) const;
 
  protected:
   SceneElement() = default;
@@ -80,13 +80,13 @@ class IntersectionRecord {
     }
     return -1.0f;  // TODO: to be fixed for negative intersections
   }
-  Point3f point(const Ray &r) const { return r.position(t_min()); }
-  Point3f saved_point;
-  Vec3f eye(const Ray &r) const { return -r.direction(); }
+  Point3D point(const Ray &r) const { return r.position(t_min()); }
+  Point3D saved_point;
+  Vec3D eye(const Ray &r) const { return -r.direction(); }
   bool inside = false;
-  Point3f over_point_from_refl_surf;
-  Point3f under_point_from_refrac_surf;
-  Vec3f normal;
+  Point3D over_point_from_refl_surf;
+  Point3D under_point_from_refrac_surf;
+  Vec3D normal;
   float n1, n2;
   SceneElementRawPtr object = nullptr;
   float minHitParam = limit::max();

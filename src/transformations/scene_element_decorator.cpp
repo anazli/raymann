@@ -1,7 +1,7 @@
 #include "transformations/scene_element_decorator.h"
 
 SceneElementDecorator::SceneElementDecorator(SceneElementRawPtr tr,
-                                             const Mat4f& m)
+                                             const Mat4D& m)
     : m_element(tr), m_transformMatrix(m) {}
 
 SceneElementDecorator::~SceneElementDecorator() { delete m_element; }
@@ -15,7 +15,7 @@ bool SceneElementDecorator::intersect(const Ray& r,
   return m_element->intersect(r, record);
 }
 
-Vec3f SceneElementDecorator::normal(const Point3f& p) const {
+Vec3D SceneElementDecorator::normal(const Point3D& p) const {
   return m_element->normal(p);
 }
 
@@ -60,21 +60,21 @@ const BoundingBox& SceneElementDecorator::boundingBox() const {
   return m_element->boundingBox();
 }
 
-float SceneElementDecorator::pdf(const Point3f& origin,
-                                 const Vec3f& direction) {
+float SceneElementDecorator::pdf(const Point3D& origin,
+                                 const Vec3D& direction) {
   return m_element->pdf(origin, direction);
 }
 
-Vec3f SceneElementDecorator::random(const Point3f& origin) {
+Vec3D SceneElementDecorator::random(const Point3D& origin) {
   return m_element->random(origin);
 }
 
-Point3f SceneElementDecorator::pointFromWorldToObjectSpace(
-    const Point3f& point) const {
+Point3D SceneElementDecorator::pointFromWorldToObjectSpace(
+    const Point3D& point) const {
   return m_element->pointFromWorldToObjectSpace(point);
 }
 
-Vec3f SceneElementDecorator::vectorFromObjectToWorldSpace(
-    const Vec3f vec) const {
+Vec3D SceneElementDecorator::vectorFromObjectToWorldSpace(
+    const Vec3D vec) const {
   return m_element->vectorFromObjectToWorldSpace(vec);
 }

@@ -69,35 +69,35 @@ float MaterialProperties::getPropertyAsFloat(const Props& name) const {
   return 0.f;
 }
 
-Vec3f MaterialProperties::getPropertyAsVec3f(const Props& name) const {
+Vec3D MaterialProperties::getPropertyAsVec3D(const Props& name) const {
   if (hasProperty(name)) {
     try {
-      return std::any_cast<Vec3f>(m_prop.at(name));
+      return std::any_cast<Vec3D>(m_prop.at(name));
     } catch (const std::bad_any_cast& e) {
       std::cout << e.what() << std::endl;
     }
   }
-  return Vec3f();
+  return Vec3D();
 }
 
-Mat4f MaterialProperties::getPropertyAsMat4f(const Props& name) const {
+Mat4D MaterialProperties::getPropertyAsMat4D(const Props& name) const {
   if (hasProperty(name)) {
     try {
-      return std::any_cast<Mat4f>(m_prop.at(name));
+      return std::any_cast<Mat4D>(m_prop.at(name));
     } catch (const std::bad_any_cast& e) {
       std::cout << e.what() << std::endl;
     }
   }
-  return Mat4f();
+  return Mat4D();
 }
 
-Point3f MaterialProperties::getPropertyAsPoint3f(const Props& name) const {
+Point3D MaterialProperties::getPropertyAsPoint3D(const Props& name) const {
   if (hasProperty(name)) {
-    return std::any_cast<Point3f>(m_prop.at(name));
+    return std::any_cast<Point3D>(m_prop.at(name));
     try {
     } catch (const std::bad_any_cast& e) {
       std::cout << e.what() << std::endl;
     }
   }
-  return Point3f();
+  return Point3D();
 }

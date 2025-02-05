@@ -8,16 +8,16 @@ StochasticSampler::StochasticSampler(const BaseCameraPtr &cam, int pixelSamples,
       m_samplesPerPixel(pixelSamples),
       m_materialDepth(materialDepth) {}
 
-Vec3f StochasticSampler::colorCorrection(Vec3f &color) {
+Vec3D StochasticSampler::colorCorrection(Vec3D &color) {
   color = color / static_cast<float>(m_samplesPerPixel);
-  return Vec3f(static_cast<float>(sqrt(color.x())),
+  return Vec3D(static_cast<float>(sqrt(color.x())),
                static_cast<float>(sqrt(color.y())),
                static_cast<float>(sqrt(color.z())));
 }
 
-void StochasticSampler::addRandomSample(Vec3f &outputColor,
-                                        const Vec3f &randomSampleColor) {
-  Vec3f tempColor(randomSampleColor);
+void StochasticSampler::addRandomSample(Vec3D &outputColor,
+                                        const Vec3D &randomSampleColor) {
+  Vec3D tempColor(randomSampleColor);
   if (tempColor.x() != tempColor.x()) tempColor.setX(0.f);
   if (tempColor.y() != tempColor.y()) tempColor.setY(0.f);
   if (tempColor.z() != tempColor.z()) tempColor.setZ(0.f);
@@ -28,10 +28,10 @@ BruteForceSampler::BruteForceSampler(const BaseCameraPtr &cam, int pixelSamples,
                                      int materialDepth)
     : StochasticSampler(cam, pixelSamples, materialDepth) {}
 
-Vec3f BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
+Vec3D BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
                                       const SceneElementRawPtr world) {
   if (world->isWorld() && renderer) {
-    auto col = Vec3f();
+    auto col = Vec3D();
     auto x = renderer->getPixelInfoX();
     auto y = renderer->getPixelInfoY();
     auto interval = m_camera->pixelSize() / 2.f;
@@ -45,22 +45,22 @@ Vec3f BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
       auto v = ay + Random::randomNumber() * (by - ay);
 
       auto newRay = m_camera->getRay(u, v);
-      Vec3f sColor = renderer->computeColor(world, newRay, m_materialDepth);
+      Vec3D sColor = renderer->computeColor(world, newRay, m_materialDepth);
       addRandomSample(col, sColor);
     }
     return colorCorrection(col);
   }
-  return Vec3f();
+  return Vec3D();
 }
 
 StratifiedSampler::StratifiedSampler(const BaseCameraPtr &cam, int pixelSamples,
                                      int materialDepth)
     : StochasticSampler(cam, pixelSamples, materialDepth) {}
 
-Vec3f StratifiedSampler::computeColor(BaseRendererRawPtr renderer,
+Vec3D StratifiedSampler::computeColor(BaseRendererRawPtr renderer,
                                       const SceneElementRawPtr world) {
   if (world->isWorld() && renderer) {
-    auto col = Vec3f();
+    auto col = Vec3D();
     auto x = renderer->getPixelInfoX();
     auto y = renderer->getPixelInfoY();
     auto sqrtN = floor(sqrt(m_samplesPerPixel));
@@ -77,11 +77,11 @@ Vec3f StratifiedSampler::computeColor(BaseRendererRawPtr renderer,
         auto v = ay + Random::randomNumber() * (by - ay);
 
         auto newRay = m_camera->getRay(u, v);
-        Vec3f sColor = renderer->computeColor(world, newRay, m_materialDepth);
+        Vec3D sColor = renderer->computeColor(world, newRay, m_materialDepth);
         addRandomSample(col, sColor);
       }
     }
     return colorCorrection(col);
   }
-  return Vec3f();
+  return Vec3D();
 }

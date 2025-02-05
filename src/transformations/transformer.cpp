@@ -2,7 +2,7 @@
 
 #include "composite/iterator.h"
 
-Transformer::Transformer(SceneElementRawPtr tr, const Mat4f& m)
+Transformer::Transformer(SceneElementRawPtr tr, const Mat4D& m)
     : SceneElementDecorator(tr, m) {
   m_inverseTransf = m_transformMatrix.inverse();
   m_inverseTransfTransp = m_inverseTransf.transpose();
@@ -29,19 +29,19 @@ bool Transformer::intersect(const Ray& r, IntersectionRecord& record) {
   return SceneElementDecorator::intersect(r_transformed, record);
 }
 
-Vec3f Transformer::normal(const Point3f& p) const {
+Vec3D Transformer::normal(const Point3D& p) const {
   // This is meant for normal calculation when world is transformed.
   //  The vectorFromObjectToWorldSpace from SceneElement is called here
   //  which does inversion and leads to big performance overhead. TODO:
   //  Refactor. Disabled for the moment.
-  //  Point3f world_point(p);
-  //  Point3f local_point = pointFromWorldToObjectSpace(world_point);
-  //  Vec3f local_normal = SceneElementDecorator::normal(local_point);
+  //  Point3D world_point(p);
+  //  Point3D local_point = pointFromWorldToObjectSpace(world_point);
+  //  Vec3D local_normal = SceneElementDecorator::normal(local_point);
   //  return vectorFromObjectToWorldSpace(local_normal);
-  Vec4f v4 = p;
-  Point3f object_point = m_inverseTransf * v4;
-  Vec3f object_normal = SceneElementDecorator::normal(object_point);
-  Vec3f world_normal = m_inverseTransfTransp * Vec4f(object_normal);
+  Vec4D v4 = p;
+  Point3D object_point = m_inverseTransf * v4;
+  Vec3D object_normal = SceneElementDecorator::normal(object_point);
+  Vec3D world_normal = m_inverseTransfTransp * Vec4D(object_normal);
   return getUnitVectorOf(world_normal);
 }
 
@@ -95,25 +95,25 @@ const BoundingBox& Transformer::boundingBox() const {
   return SceneElementDecorator::boundingBox();
 }
 
-float Transformer::pdf(const Point3f& origin, const Vec3f& direction) {
+float Transformer::pdf(const Point3D& origin, const Vec3D& direction) {
   return SceneElementDecorator::pdf(origin, direction);
 }
 
-Vec3f Transformer::random(const Point3f& origin) {
+Vec3D Transformer::random(const Point3D& origin) {
   return SceneElementDecorator::random(origin);
 }
 
-Point3f Transformer::pointFromWorldToObjectSpace(const Point3f& point) const {
-  Point3f p(point);
+Point3D Transformer::pointFromWorldToObjectSpace(const Point3D& point) const {
+  Point3D p(point);
   if (getParent()) {
     p = getParent()->pointFromWorldToObjectSpace(p);
   }
-  return m_inverseTransf * Vec4f(p);
+  return m_inverseTransf * Vec4D(p);
 }
 
-Vec3f Transformer::vectorFromObjectToWorldSpace(const Vec3f vec) const {
-  Vec3f v(vec);
-  v = m_inverseTransfTransp * Vec4f(v);
+Vec3D Transformer::vectorFromObjectToWorldSpace(const Vec3D vec) const {
+  Vec3D v(vec);
+  v = m_inverseTransfTransp * Vec4D(v);
   v.normalize();
   if (getParent()) {
     v = getParent()->vectorFromObjectToWorldSpace(v);
@@ -123,17 +123,17 @@ Vec3f Transformer::vectorFromObjectToWorldSpace(const Vec3f vec) const {
 
 void Transformer::transformBox() {
   BoundingBox b = boundingBox();
-  Point3f p1 = b.minPoint();
-  Point3f p2 = Point3f(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3f p3 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
-  Point3f p4 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.maxPoint().z());
-  Point3f p5 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.minPoint().z());
-  Point3f p6 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3f p7 = Point3f(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
-  Point3f p8 = b.maxPoint();
+  Point3D p1 = b.minPoint();
+  Point3D p2 = Point3D(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
+  Point3D p3 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
+  Point3D p4 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.maxPoint().z());
+  Point3D p5 = Point3D(b.maxPoint().x(), b.minPoint().y(), b.minPoint().z());
+  Point3D p6 = Point3D(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
+  Point3D p7 = Point3D(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
+  Point3D p8 = b.maxPoint();
   setBoundingBox(BoundingBox{});
-  std::vector<Point3f> v{p1, p2, p3, p4, p5, p6, p7, p8};
-  for (Point3f& elem : v) {
-    boundingBox().addPoint(m_transformMatrix * Vec4f(elem));
+  std::vector<Point3D> v{p1, p2, p3, p4, p5, p6, p7, p8};
+  for (Point3D& elem : v) {
+    boundingBox().addPoint(m_transformMatrix * Vec4D(elem));
   }
 }

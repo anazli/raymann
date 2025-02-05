@@ -1,6 +1,6 @@
 #include "textures/perlin.h"
 
-Vec3f *Perlin::ranvec = perlinGenerate();
+Vec3D *Perlin::ranvec = perlinGenerate();
 int *Perlin::perm_x = perlinGeneratePerm();
 int *Perlin::perm_y = perlinGeneratePerm();
 int *Perlin::perm_z = perlinGeneratePerm();
@@ -16,7 +16,7 @@ float trilinearInterpolation(float c[2][2][2], float u, float v, float w) {
   return accum;
 }
 
-float perlinInterpolation(Vec3f c[2][2][2], float u, float v, float w) {
+float perlinInterpolation(Vec3D c[2][2][2], float u, float v, float w) {
   float uu = u * u * (3 - 2 * u);
   float vv = v * v * (3 - 2 * v);
   float ww = w * w * (3 - 2 * w);
@@ -24,18 +24,18 @@ float perlinInterpolation(Vec3f c[2][2][2], float u, float v, float w) {
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j)
       for (int k = 0; k < 2; ++k) {
-        Vec3f weight_v(u - i, v - j, w - k);
+        Vec3D weight_v(u - i, v - j, w - k);
         accum += (i * uu + (1 - i) * (1 - uu)) * (j * vv + (1 - j) * (1 - vv)) *
                  (k * ww + (1 - k) * (1 - ww)) * dot(c[i][j][k], weight_v);
       }
   return accum;
 }
 
-Vec3f *perlinGenerate() {
-  Vec3f *p = new Vec3f[256];
+Vec3D *perlinGenerate() {
+  Vec3D *p = new Vec3D[256];
   for (int i = 0; i < 256; ++i)
     p[i] = getUnitVectorOf(
-        Vec3f(-1 + 2 * drand48(), -1 + 2 * drand48(), -1 + 2 * drand48()));
+        Vec3D(-1 + 2 * drand48(), -1 + 2 * drand48(), -1 + 2 * drand48()));
 
   return p;
 }

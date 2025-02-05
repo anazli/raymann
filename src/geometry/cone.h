@@ -12,15 +12,15 @@ class Cone : public SceneElement {
     m_elementType = SceneElementType::CONE;
     if (!closed) {
       m_bBox.minPoint() =
-          Point3f(-limit::infinity(), -limit::infinity(), -limit::infinity());
+          Point3D(-limit::infinity(), -limit::infinity(), -limit::infinity());
       m_bBox.maxPoint() =
-          Point3f(limit::infinity(), limit::infinity(), limit::infinity());
+          Point3D(limit::infinity(), limit::infinity(), limit::infinity());
     } else {
       float a = fabs(m_minimumY);
       float b = fabs(m_maximumY);
       float lim = std::max(a, b);
-      m_bBox.minPoint() = Point3f(-lim, m_minimumY, -lim);
-      m_bBox.maxPoint() = Point3f(lim, m_maximumY, lim);
+      m_bBox.minPoint() = Point3D(-lim, m_minimumY, -lim);
+      m_bBox.maxPoint() = Point3D(lim, m_maximumY, lim);
     }
   }
   ~Cone() override = default;
@@ -69,14 +69,14 @@ class Cone : public SceneElement {
     if (intersectCaps(r, record)) hitAnything = true;
     return hitAnything;
   }
-  Vec3f normal(const Point3f &p) const override {
+  Vec3D normal(const Point3D &p) const override {
     auto distance = p.x() * p.x() + p.z() * p.z();
     if (distance < 1.f && p.y() >= m_maximumY - EPS) {
-      return Vec3f(0.f, 1.f, 0.f);
+      return Vec3D(0.f, 1.f, 0.f);
     } else if (distance < 1.f && p.y() <= m_minimumY + EPS) {
-      return Vec3f(0.f, -1.f, 0.f);
+      return Vec3D(0.f, -1.f, 0.f);
     }
-    return Vec3f(p.x(), 0.f, p.z());
+    return Vec3D(p.x(), 0.f, p.z());
   }
 
   bool isClosed() const { return m_closed; }

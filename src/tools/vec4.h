@@ -103,9 +103,7 @@ class Vec4 {
   T m_w = T{};
 };
 
-typedef Vec4<double> Vec4d;
-typedef Vec4<float> Vec4f;
-typedef Vec4<int> Vec4i;
+using Vec4D = Vec4<float>;
 
 //--------------------------------------------
 // Overloaded Member operators

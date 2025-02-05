@@ -84,9 +84,7 @@ class Mat4 {
   Vec4<T> m_vec[4];
 };
 
-typedef Mat4<double> Mat4d;
-typedef Mat4<float> Mat4f;
-typedef Mat4<int> Mat4i;
+using Mat4D = Mat4<float>;
 
 template <typename T>
 T Mat4<T>::trace() const {
@@ -329,16 +327,16 @@ Mat4<T> rotationOverZ(T rad) {
 template <typename T>
 Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
                        const Vec3<T>& up) {
-  Vec3f forward = getUnitVectorOf(to - from);
-  Vec3f up_norm = getUnitVectorOf(up);
-  Vec3f left = cross(forward, up_norm);
-  Vec3f up_res = cross(left, forward);
+  Vec3D forward = getUnitVectorOf(to - from);
+  Vec3D up_norm = getUnitVectorOf(up);
+  Vec3D left = cross(forward, up_norm);
+  Vec3D up_res = cross(left, forward);
 
-  Mat4f orientation =
-      Mat4f(Vec4f(left.x(), left.y(), left.z(), 0.0f),
-            Vec4f(up_res.x(), up_res.y(), up_res.z(), 0.0f),
-            Vec4f(-forward.x(), -forward.y(), -forward.z(), 0.0f),
-            Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+  Mat4D orientation =
+      Mat4D(Vec4D(left.x(), left.y(), left.z(), 0.0f),
+            Vec4D(up_res.x(), up_res.y(), up_res.z(), 0.0f),
+            Vec4D(-forward.x(), -forward.y(), -forward.z(), 0.0f),
+            Vec4D(0.0f, 0.0f, 0.0f, 1.0f));
 
   return orientation * translation(-from.x(), -from.y(), -from.z());
 }

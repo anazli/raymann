@@ -16,16 +16,16 @@ void PathTracer::visitSceneElementComposite(
   m_out_color = m_stochasticSampler->computeColor(this, elementComp);
 }
 
-Vec3f PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
+Vec3D PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
                                int rec) {
-  if (rec < 0) return Vec3f();
+  if (rec < 0) return Vec3D();
   IntersectionRecord record;
   if (!world->intersect(ray, record)) return m_background_color;
 
-  Vec3f emittedColor = record.object->getMaterial()->emmit();
+  Vec3D emittedColor = record.object->getMaterial()->emmit();
 
   Ray scattered;
-  Vec3f attenuation;
+  Vec3D attenuation;
   if (!record.object->getMaterial()->scatter(ray, record, attenuation,
                                              scattered)) {
     return emittedColor;

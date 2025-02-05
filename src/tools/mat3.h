@@ -69,9 +69,7 @@ class Mat3 {
   Vec3<T> m_vec[3];
 };
 
-typedef Mat3<double> Mat3d;
-typedef Mat3<float> Mat3f;
-typedef Mat3<int> Mat3i;
+using Mat3D = Mat3<float>;
 
 template <typename T>
 T Mat3<T>::trace() const {

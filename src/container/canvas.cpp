@@ -10,7 +10,7 @@ using std::ofstream;
 using std::execution::par;
 
 Canvas::Canvas(int w, int h) : m_width(w), m_height(h) {
-  m_pixels = std::vector(w, std::vector<Vec3f>(h));
+  m_pixels = std::vector(w, std::vector<Vec3D>(h));
 }
 
 int Canvas::width() const { return m_pixels.size(); }
@@ -25,7 +25,7 @@ void Canvas::render(const SceneElementPtr &world, const BaseCameraPtr &camera,
                     BaseRendererPtr renderer) {
   for (int j = 0; j < camera->vSize(); ++j) {
     for (int i = 0; i < camera->hSize(); ++i) {
-      auto color = Vec3f{};
+      auto color = Vec3D{};
       renderer->setPixelInfo(i, j);
       world->accept(*renderer, camera->getRay(i, j));
       color = renderer->getColor();
@@ -40,7 +40,7 @@ void Canvas::renderParallel(const SceneElementPtr &world,
   fillImageResolutionIterators(camera->hSize(), camera->vSize());
   std::for_each(par, m_vContainer.begin(), m_vContainer.end(), [&](int j) {
     std::for_each(par, m_hContainer.begin(), m_hContainer.end(), [&](int i) {
-      auto color = Vec3f{};
+      auto color = Vec3D{};
       renderer->setPixelInfo(i, j);
       world->accept(*renderer, camera->getRay(i, j));
       color = renderer->getColor();
@@ -49,11 +49,11 @@ void Canvas::renderParallel(const SceneElementPtr &world,
   });
 }
 
-void Canvas::writePixel(int x, int y, const Vec3f &color) {
+void Canvas::writePixel(int x, int y, const Vec3D &color) {
   m_pixels[x][y] = color;
 }
 
-Vec3f Canvas::pixel(int x, int y) const { return m_pixels[x][y]; }
+Vec3D Canvas::pixel(int x, int y) const { return m_pixels[x][y]; }
 
 void Canvas::save() {
   APP_ASSERT(!fileName().empty(), "Cannot save scene, filename is empty!");

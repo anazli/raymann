@@ -12,7 +12,7 @@ float Random::randomInteger(int a, int b) {
   return rnd(m_gen);
 }
 
-Vec3f Random::randomVectorOnUnitSphere() {
+Vec3D Random::randomVectorOnUnitSphere() {
   float xi1{0.f}, xi2{0.f}, dsq{2.f};
   while (dsq >= 1.f) {
     xi1 = 1.f - 2.f * randomNumber();
@@ -25,15 +25,15 @@ Vec3f Random::randomVectorOnUnitSphere() {
   auto dmy = xi2 * ranh;
   auto dmz = 1.f - 2.f * dsq;
 
-  return Vec3f(dmx, dmy, dmz);
+  return Vec3D(dmx, dmy, dmz);
 }
 
-Vec3f Random::randomCosineDirection() {
+Vec3D Random::randomCosineDirection() {
   auto r1 = randomNumber();
   auto r2 = randomNumber();
   auto phi = 2.f * PI * r1;
   auto x = cos(phi) * sqrt(r2);
   auto y = sin(phi) * sqrt(r2);
   auto z = sqrt(1.f - r2);
-  return Vec3f(x, y, z);
+  return Vec3D(x, y, z);
 }

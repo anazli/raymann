@@ -6,12 +6,12 @@ class RGBSpectrum : public Spectrum {
  public:
   RGBSpectrum(float value = 0.f);
 
-  Vec3f toRGB() const;
-  Vec3f toXYZ() const;
+  Vec3D toRGB() const;
+  Vec3D toXYZ() const;
   float y() const;
 };
 
-RGBSpectrum fromRGB(const Vec3f &v);
-RGBSpectrum fromXYZ(const Vec3f &xyz);
-Vec3f RGBToXYZ(const Vec3f &rgb);
-Vec3f XYZToRGB(const Vec3f xyz);
+RGBSpectrum fromRGB(const Vec3D &v);
+RGBSpectrum fromXYZ(const Vec3D &xyz);
+Vec3D RGBToXYZ(const Vec3D &rgb);
+Vec3D XYZToRGB(const Vec3D xyz);

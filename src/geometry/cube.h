@@ -9,8 +9,8 @@ class Cube : public SceneElement {
  public:
   Cube() {
     m_elementType = SceneElementType::CUBE;
-    m_bBox.minPoint() = Point3f(-1.f, -1.f, -1.f);
-    m_bBox.maxPoint() = Point3f(1.f, 1.f, 1.f);
+    m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f);
+    m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f);
   }
   ~Cube() override = default;
 
@@ -34,13 +34,13 @@ class Cube : public SceneElement {
     return true;
   }
 
-  Vec3f normal(const Point3f &p) const override {
+  Vec3D normal(const Point3D &p) const override {
     auto max_coord = std::max(std::max(fabs(p.x()), fabs(p.y())), fabs(p.z()));
     if (max_coord == fabs(p.x()))
-      return Vec3f(p.x(), 0.f, 0.f);
+      return Vec3D(p.x(), 0.f, 0.f);
     else if (max_coord == fabs(p.y()))
-      return Vec3f(0.f, p.y(), 0.f);
-    return Vec3f(0.f, 0.f, p.z());
+      return Vec3D(0.f, p.y(), 0.f);
+    return Vec3D(0.f, 0.f, p.z());
   }
 
  private:

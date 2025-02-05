@@ -19,14 +19,14 @@
 using namespace std;
 
 int main() {
-  auto light = PointLight(Point3f(0.f, 0.f, 2.f), Vec3f(1.0f, 1.0f, 1.0f));
+  auto light = PointLight(Point3D(0.f, 0.f, 2.f), Vec3D(1.0f, 1.0f, 1.0f));
   auto builder = make_unique<WorldBuilder>();
   builder->createWorld();
   auto eps = 0.05f;
-  auto white = Vec3f(0.73f, 0.73f, 0.73f);
-  auto green = Vec3f(0.12f, 0.45f, 0.15f);
-  auto red = Vec3f(0.65f, 0.05f, 0.05f);
-  auto diffuseLight = Vec3f(15.f, 15.f, 15.f);
+  auto white = Vec3D(0.73f, 0.73f, 0.73f);
+  auto green = Vec3D(0.12f, 0.45f, 0.15f);
+  auto red = Vec3D(0.65f, 0.05f, 0.05f);
+  auto diffuseLight = Vec3D(15.f, 15.f, 15.f);
 
   /*---------------------------------------------------------------------------
    *				Floor
@@ -75,9 +75,9 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Light Wall
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Quad(Point3f(213.f, 554.f, -485.f),
-                                        Vec3f(130.f, 0.f, 0.f),
-                                        Vec3f(0.f, 0.f, 105.f)));
+  builder->processSceneElement(new Quad(Point3D(213.f, 554.f, -485.f),
+                                        Vec3D(130.f, 0.f, 0.f),
+                                        Vec3D(0.f, 0.f, 105.f)));
   // builder->applyTransformation(translation(277.f, 554.5f, -455.f) *
   //                              scale(80.f, eps, 30.f));
   builder->applyEmissiveMaterial(make_unique<ConstantTexture>(diffuseLight));
@@ -126,9 +126,9 @@ int main() {
   auto canvas = Canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
   auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.34f);
-  auto from = Point3f(278.f, 260.f, -860.f);
-  auto to = Point3f(278.f, 278.f, 0.f);
-  auto up = Vec3f(0.0f, 1.0f, 0.0f);
+  auto from = Point3D(278.f, 260.f, -860.f);
+  auto to = Point3D(278.f, 278.f, 0.f);
+  auto up = Vec3D(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
   int samplesPerPixel = 500;
@@ -136,7 +136,7 @@ int main() {
   BaseRendererPtr renderer =
       make_unique<PathTracer>(std::make_unique<StratifiedSampler>(
           camera, samplesPerPixel, materialDepth));
-  renderer->setBackgroundColor(Vec3f(0.3f, 0.3f, 0.3f));
+  renderer->setBackgroundColor(Vec3D(0.3f, 0.3f, 0.3f));
   renderer->addDiffuseLight(diffuseLightElem);
   chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
   canvas.renderParallel(world, camera, std::move(renderer));

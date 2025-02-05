@@ -10,18 +10,18 @@ class BaseCamera {
   virtual ~BaseCamera() = default;
   virtual Ray getRay(int pixel_x, int pixel_y) const = 0;
   void computePixelSize();
-  void setParamVectors(const Point3f &from, const Point3f &to, const Vec3f &up);
+  void setParamVectors(const Point3D &from, const Point3D &to, const Vec3D &up);
   void setHSize(int hs);
   void setVSize(int vs);
   void setFieldOfView(float fv);
   float fieldOfView() const;
   int hSize() const;
   int vSize() const;
-  Point3f getFromPoint() const;
-  Point3f getToPoint() const;
-  Vec3f getUpVector() const;
-  void setTransform(const Mat4f &m);
-  Mat4f transform() const;
+  Point3D getFromPoint() const;
+  Point3D getToPoint() const;
+  Vec3D getUpVector() const;
+  void setTransform(const Mat4D &m);
+  Mat4D transform() const;
   float pixelSize() const;
 
  protected:
@@ -31,11 +31,11 @@ class BaseCamera {
   int m_hsize;
   int m_vsize;
   float m_field_of_view;
-  Point3f m_from;
-  Point3f m_to;
-  Vec3f m_up;
-  Mat4f m_transform;
-  Mat4f m_transformInv;
+  Point3D m_from;
+  Point3D m_to;
+  Vec3D m_up;
+  Mat4D m_transform;
+  Mat4D m_transformInv;
   float m_pixel_size;
   float m_half_width;
   float m_half_height;
