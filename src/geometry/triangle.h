@@ -27,23 +27,26 @@ class Triangle : public SceneElement {
   }
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {
-    auto cde = cross(r.direction(), m_edgeVec[1]);
+    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+    auto origin = transformed_ray.origin();
+    auto direction = transformed_ray.direction();
+    auto cde = cross(direction, m_edgeVec[1]);
     auto det = dot(m_edgeVec[0], cde);
     if (det > -EPS && det < EPS) return false;
 
     auto inv_det = 1.f / det;
 
-    auto s = r.origin() - m_points[0];
+    auto s = origin - m_points[0];
     auto u = inv_det * dot(s, cde);
     if (u < 0.f || u > 1.f) return false;
 
     auto cross_s_edge1 = cross(s, m_edgeVec[0]);
-    auto v = inv_det * dot(r.direction(), cross_s_edge1);
+    auto v = inv_det * dot(direction, cross_s_edge1);
     if (v < 0.f || (u + v) > 1.f) return false;
 
     record.t1 = inv_det * dot(m_edgeVec[1], cross_s_edge1);
     record.count++;
-    record.saved_point = record.point(r);
+    record.saved_point = record.point(transformed_ray);
     return true;
   }
   Vec3D normal(const Point3D &p) const override { return m_normalVec; }
@@ -90,18 +93,21 @@ class SmoothTriangle : public SceneElement {
   }
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {
-    auto cde = cross(r.direction(), m_edgeVec[1]);
+    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+    auto origin = transformed_ray.origin();
+    auto direction = transformed_ray.direction();
+    auto cde = cross(direction, m_edgeVec[1]);
     auto det = dot(m_edgeVec[0], cde);
     if (det > -EPS && det < EPS) return false;
 
     auto inv_det = 1.f / det;
 
-    auto s = r.origin() - m_points[0];
+    auto s = origin - m_points[0];
     m_uPar = inv_det * dot(s, cde);
     if (m_uPar < 0.f || m_uPar > 1.f) return false;
 
     auto cross_s_edge1 = cross(s, m_edgeVec[0]);
-    m_vPar = inv_det * dot(r.direction(), cross_s_edge1);
+    m_vPar = inv_det * dot(direction, cross_s_edge1);
     if (m_vPar < 0.f || (m_uPar + m_vPar) > 1.f) return false;
 
     record.t1 = inv_det * dot(m_edgeVec[1], cross_s_edge1);

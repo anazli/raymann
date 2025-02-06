@@ -1,9 +1,9 @@
 #include "composite/scene_element.h"
 
+#include "iterator.h"
 #include "renderers/renderer.h"
+#include "scene_element.h"
 #include "world.h"
-
-// size_t SceneElement::m_next_id = 0;
 
 SceneElementType SceneElement::elementType() const { return m_elementType; }
 
@@ -56,8 +56,6 @@ Vec3D SceneElement::random(const Point3D& origin) {
   return Vec3D(1.f, 0.f, 0.f);
 }
 
-// size_t SceneElement::getId() const { return 0; /*m_id*/ }
-
 Point3D SceneElement::pointFromWorldToObjectSpace(const Point3D& point) const {
   return Mat4D().inverse() * Vec4D(point);
 }
@@ -69,9 +67,31 @@ Vec3D SceneElement::vectorFromObjectToWorldSpace(const Vec3D vec) const {
   return v;
 }
 
-SceneElement::SceneElement(const BoundingBox& props) : m_bBox(props) {}
-
-/*SceneElement::SceneElement() {
-  m_id = m_next_id;
-  m_next_id++;
-}*/
+void SceneElement::setTransformation(const Transformation& transformation) {
+  m_transformation = transformation;
+  m_transformation.transformBoundingBox(m_bBox);
+}
+SceneElement::SceneElement() {
+  m_transformation = Transformation();
+  if (isWorld()) {
+    WorldIterator it(getChildren());
+    if (it.first()) {
+      while (it.notDone()) {
+        it.currentElement()->setParent(this);
+        it.advance();
+      }
+    }
+  }
+}
+SceneElement::SceneElement(const BoundingBox& props) : m_bBox(props) {
+  m_transformation = Transformation();
+  if (isWorld()) {
+    WorldIterator it(getChildren());
+    if (it.first()) {
+      while (it.notDone()) {
+        it.currentElement()->setParent(this);
+        it.advance();
+      }
+    }
+  }
+}

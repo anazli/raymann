@@ -6,6 +6,7 @@
 
 #include "acceleration/bounding_box.h"
 #include "materials/material.h"
+#include "transformations/transformation.h"
 
 class BaseRenderer;
 class Material;
@@ -45,19 +46,18 @@ class SceneElement {
   virtual Vec3D random(const Point3D &origin);
   void setMaterial(BaseMaterialPtr mat);
   BaseMaterialPtr getMaterial() const;
-  // size_t getId() const;
   virtual Point3D pointFromWorldToObjectSpace(const Point3D &point) const;
   virtual Vec3D vectorFromObjectToWorldSpace(const Vec3D vec) const;
+  void setTransformation(const Transformation &transformation);
 
  protected:
-  SceneElement() = default;
+  SceneElement();
   SceneElement(const BoundingBox &props);
   SceneElement *m_parent = nullptr;
   BaseMaterialPtr m_material;
   BoundingBox m_bBox;
   SceneElementType m_elementType;
-  // size_t m_id;
-  // static size_t m_next_id;
+  Transformation m_transformation;
 };
 
 using SceneElementPtr = std::shared_ptr<SceneElement>;

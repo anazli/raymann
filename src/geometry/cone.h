@@ -16,9 +16,9 @@ class Cone : public SceneElement {
       m_bBox.maxPoint() =
           Point3D(limit::infinity(), limit::infinity(), limit::infinity());
     } else {
-      float a = fabs(m_minimumY);
-      float b = fabs(m_maximumY);
-      float lim = std::max(a, b);
+      auto a = fabs(m_minimumY);
+      auto b = fabs(m_maximumY);
+      auto lim = std::max(a, b);
       m_bBox.minPoint() = Point3D(-lim, m_minimumY, -lim);
       m_bBox.maxPoint() = Point3D(lim, m_maximumY, lim);
     }
@@ -29,12 +29,15 @@ class Cone : public SceneElement {
   float maximumY() const { return m_maximumY; }
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {
-    auto rdx = r.direction().x();
-    auto rox = r.origin().x();
-    auto rdy = r.direction().y();
-    auto roy = r.origin().y();
-    auto rdz = r.direction().z();
-    auto roz = r.origin().z();
+    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+    auto origin = transformed_ray.origin();
+    auto direction = transformed_ray.direction();
+    auto rdx = direction.x();
+    auto rox = origin.x();
+    auto rdy = direction.y();
+    auto roy = origin.y();
+    auto rdz = direction.z();
+    auto roz = origin.z();
 
     auto a = rdx * rdx - rdy * rdy + rdz * rdz;
     auto b = 2.0f * (rox * rdx - roy * rdy + roz * rdz);
@@ -46,7 +49,7 @@ class Cone : public SceneElement {
     }
 
     auto discr = b * b - 4.0f * a * c;
-    bool hitAnything = false;
+    auto hitAnything = false;
     if (discr >= 0.0f) {
       auto t1 = (-b - sqrt(discr)) / (2.0f * a);
       auto t2 = (-b + sqrt(discr)) / (2.0f * a);
@@ -70,13 +73,18 @@ class Cone : public SceneElement {
     return hitAnything;
   }
   Vec3D normal(const Point3D &p) const override {
-    auto distance = p.x() * p.x() + p.z() * p.z();
-    if (distance < 1.f && p.y() >= m_maximumY - EPS) {
+    Vec4D v4 = p;
+    auto object_point = m_transformation.getInverseMatrix() * v4;
+    auto distance = object_point.x() * object_point.x() +
+                    object_point.z() * object_point.z();
+    if (distance < 1.f && object_point.y() >= m_maximumY - EPS) {
       return Vec3D(0.f, 1.f, 0.f);
-    } else if (distance < 1.f && p.y() <= m_minimumY + EPS) {
+    } else if (distance < 1.f && object_point.y() <= m_minimumY + EPS) {
       return Vec3D(0.f, -1.f, 0.f);
     }
-    return Vec3D(p.x(), 0.f, p.z());
+    auto object_normal = Vec3D(object_point.x(), 0.f, object_point.z());
+    return getUnitVectorOf(m_transformation.getInverseMatrix() *
+                           Vec4D(object_normal));
   }
 
   bool isClosed() const { return m_closed; }
@@ -96,7 +104,7 @@ class Cone : public SceneElement {
     if (!m_closed || (r.direction().y() <= EPS && r.direction().y() >= -EPS))
       return false;
 
-    bool intersectsCap = false;
+    auto intersectsCap = false;
     auto t = (m_minimumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t, m_minimumY)) {
       record.t1 = t;

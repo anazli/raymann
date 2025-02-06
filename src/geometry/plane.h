@@ -11,12 +11,15 @@ class Plane : public SceneElement {
   }
   ~Plane() override = default;
   bool intersect(const Ray &r, IntersectionRecord &record) override {
-    if (fabs(r.direction().y()) < EPS) {
+    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+    auto origin = transformed_ray.origin();
+    auto direction = transformed_ray.direction();
+    if (fabs(direction.y()) < EPS) {
       return false;
     }
-    record.t1 = -r.origin().y() / r.direction().y();
+    record.t1 = -origin.y() / direction.y();
     record.count = 1;
-    record.saved_point = record.point(r);
+    record.saved_point = record.point(transformed_ray);
     return true;
   }
   Vec3D normal(const Point3D &p) const override {

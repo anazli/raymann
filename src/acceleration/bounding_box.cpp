@@ -38,12 +38,14 @@ bool BoundingBox::containsBoundingBox(const BoundingBox& box) const {
 }
 
 bool BoundingBox::intersectsRay(const Ray& r) const {
-  std::pair<float, float> xMinMax = hitAxis(r.origin().x(), r.direction().x(),
-                                            m_minPoint.x(), m_maxPoint.x());
-  std::pair<float, float> yMinMax = hitAxis(r.origin().y(), r.direction().y(),
-                                            m_minPoint.y(), m_maxPoint.y());
-  std::pair<float, float> zMinMax = hitAxis(r.origin().z(), r.direction().z(),
-                                            m_minPoint.z(), m_maxPoint.z());
+  auto origin = r.origin();
+  auto direction = r.direction();
+  auto xMinMax =
+      hitAxis(origin.x(), direction.x(), m_minPoint.x(), m_maxPoint.x());
+  auto yMinMax =
+      hitAxis(origin.y(), direction.y(), m_minPoint.y(), m_maxPoint.y());
+  auto zMinMax =
+      hitAxis(origin.z(), direction.z(), m_minPoint.z(), m_maxPoint.z());
   auto tmin = std::max(std::max(xMinMax.first, yMinMax.first), zMinMax.first);
   auto tmax =
       std::min(std::min(xMinMax.second, yMinMax.second), zMinMax.second);

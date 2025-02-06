@@ -15,12 +15,12 @@ class Cube : public SceneElement {
   ~Cube() override = default;
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {
-    std::pair<float, float> xMinMax =
-        hitAxis(r.origin().x(), r.direction().x());
-    std::pair<float, float> yMinMax =
-        hitAxis(r.origin().y(), r.direction().y());
-    std::pair<float, float> zMinMax =
-        hitAxis(r.origin().z(), r.direction().z());
+    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+    auto origin = transformed_ray.origin();
+    auto direction = transformed_ray.direction();
+    auto xMinMax = hitAxis(origin.x(), direction.x());
+    auto yMinMax = hitAxis(origin.y(), direction.y());
+    auto zMinMax = hitAxis(origin.z(), direction.z());
     auto tmin = std::max(std::max(xMinMax.first, yMinMax.first), zMinMax.first);
     auto tmax =
         std::min(std::min(xMinMax.second, yMinMax.second), zMinMax.second);
@@ -35,12 +35,21 @@ class Cube : public SceneElement {
   }
 
   Vec3D normal(const Point3D &p) const override {
-    auto max_coord = std::max(std::max(fabs(p.x()), fabs(p.y())), fabs(p.z()));
-    if (max_coord == fabs(p.x()))
-      return Vec3D(p.x(), 0.f, 0.f);
-    else if (max_coord == fabs(p.y()))
-      return Vec3D(0.f, p.y(), 0.f);
-    return Vec3D(0.f, 0.f, p.z());
+    Vec4D v4 = p;
+    auto object_point = m_transformation.getInverseMatrix() * v4;
+    auto max_coord =
+        std::max(std::max(fabs(object_point.x()), fabs(object_point.y())),
+                 fabs(object_point.z()));
+    Vec3D object_normal;
+    if (max_coord == fabs(object_point.x()))
+      object_normal = Vec3D(object_point.x(), 0.f, 0.f);
+    else if (max_coord == fabs(object_point.y()))
+      object_normal = Vec3D(0.f, object_point.y(), 0.f);
+    else
+      object_normal = Vec3D(0.f, 0.f, object_point.z());
+    auto world_normal =
+        m_transformation.getInverseMatrix() * Vec4D(object_normal);
+    return getUnitVectorOf(world_normal);
   }
 
  private:
