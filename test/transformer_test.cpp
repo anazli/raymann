@@ -1,7 +1,6 @@
-#include "transformations/transformer.h"
-
 #include "geometry/sphere.h"
 #include "gtesting.h"
+#include "transformations/transformation.h"
 
 class TransformerTest : public testing::RTest {
  public:
@@ -188,30 +187,26 @@ TEST_F(TransformerTest, appliesTransformationChaining) {
 
 TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
   SceneElement *s = new Sphere();
-  SceneElement *t = new Transformer(s, translation(0.0f, 1.0f, 0.0f));
-  Vec3D norm = t->normal(Point3D(0.0f, 1.70711f, -0.70711));
+  auto t = Transformation(translation(0.0f, 1.0f, 0.0f));
+  s->setTransformation(t);
+  Vec3D norm = s->normal(Point3D(0.0f, 1.70711f, -0.70711));
 
   Vec3D tn(0.0f, 0.70711f, -0.70711f);
 
   float eps = 1.E-5;
   compareVectorsApprox(norm, tn, eps);
-
-  delete t;  // Note: when a Test doesn't pass, mem is not dealocated. Flow
-             // stops above.
 }
 
 TEST_F(TransformerTest, computesNormalOfRotatedSphere) {
   SceneElement *s = new Sphere();
-  SceneElement *t = new Transformer(
-      new Transformer(s, rotationOverZ(PI / 5.0f)), scale(1.0f, 0.5f, 1.0f));
+  auto t = Transformation(rotationOverZ(PI / 5.0f) * scale(1.0f, 0.5f, 1.0f));
+  s->setTransformation(t);
 
-  Vec3D norm = t->normal(Point3D(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
+  Vec3D norm = s->normal(Point3D(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
   Vec3D tn(0.0f, 0.97014f, -0.24254f);
 
   float eps = 1.E-5;
   compareVectorsApprox(norm, tn, eps);
-
-  delete t;
 }
 
 TEST_F(TransformerTest, transformationMatrixForDefaultOrientation) {

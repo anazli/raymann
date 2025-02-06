@@ -103,7 +103,7 @@ if(BUILD_TESTING)
   )
 
   target_include_directories(${PROJECT_NAME_TEST} PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/test)
-  target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest ${PROJECT_NAME}-lib)
+  target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest ${LIBRARY_NAME})
   target_compile_options(${PROJECT_NAME_TEST} PRIVATE "-g")
   target_link_options(${PROJECT_NAME_TEST} PRIVATE "-lstdc++" PRIVATE "-lm")
   gtest_discover_tests(${PROJECT_NAME_TEST} WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME_TEST}>)

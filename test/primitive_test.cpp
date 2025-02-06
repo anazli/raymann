@@ -5,7 +5,7 @@
 #include "geometry/sphere.h"
 #include "geometry/triangle.h"
 #include "gtesting.h"
-#include "transformations/transformer.h"
+#include "transformations/transformation.h"
 
 class TCone : public testing::RTest {
  public:
@@ -478,8 +478,9 @@ TEST_F(SphereTest, testingTheNextTest) {
 
 TEST_F(SphereTest, transformsSphere) {
   r = Ray(Point3D(0.0f, 0.0f, -5.0f), Vec3D(0.0f, 0.0f, 1.0f));
-  SceneElement* t = new Transformer(new Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f),
-                                    scale(2.0f, 2.0f, 2.0f));
+  SceneElement* t = new Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f);
+  auto transformation = Transformation(scale(2.0f, 2.0f, 2.0f));
+  t->setTransformation(transformation);
   ASSERT_TRUE(t->intersect(r, rec));
   ASSERT_EQ(rec.count, 2);
   ASSERT_EQ(rec.t1, 3.0f);
@@ -489,8 +490,9 @@ TEST_F(SphereTest, transformsSphere) {
 
 TEST_F(SphereTest, translatesSphere) {
   r = Ray(Point3D(0.0f, 0.0f, -5.0f), Vec3D(0.0f, 0.0f, 1.0f));
-  SceneElement* t = new Transformer(new Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f),
-                                    translation(5.0f, 0.0f, 0.0f));
+  SceneElement* t = new Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f);
+  auto transformation = Transformation(translation(5.0f, 0.0f, 0.0f));
+  t->setTransformation(transformation);
   ASSERT_FALSE(t->intersect(r, rec));
   ASSERT_TRUE(rec.count == 0);
   delete t;
