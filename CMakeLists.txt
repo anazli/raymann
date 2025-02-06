@@ -5,8 +5,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(raymann CXX)
 set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
+set(LIBRARY_NAME l${PROJECT_NAME})
 
-add_library(${PROJECT_NAME}-lib 
+add_library(${LIBRARY_NAME} 
             src/acceleration/bounding_box.cpp
             src/acceleration/bounding_box.h
             src/acceleration/bvh.cpp
@@ -58,19 +59,17 @@ add_library(${PROJECT_NAME}-lib
             src/textures/perlin.cpp
             src/textures/perlin.h
             src/textures/texture.h
-            src/transformations/scene_element_decorator.cpp
-            src/transformations/scene_element_decorator.h
-            src/transformations/transformer.cpp
-            src/transformations/transformer.h
+            src/transformations/transformation.cpp
+            src/transformations/transformation.h
 )
 
-target_include_directories(${PROJECT_NAME}-lib PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 add_executable(${PROJECT_NAME} src/main/raymann.cpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
 target_compile_options(${PROJECT_NAME} PRIVATE "-g")
 target_link_options(${PROJECT_NAME} PRIVATE "-lstdc++" PRIVATE "-lm")
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARY_NAME})
 
 if(BUILD_TESTING)
   include(FetchContent)
@@ -104,7 +103,7 @@ if(BUILD_TESTING)
   )
 
   target_include_directories(${PROJECT_NAME_TEST} PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/test)
-  target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest ${PROJECT_NAME}-lib)
+  target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest ${LIBRARY_NAME})
   target_compile_options(${PROJECT_NAME_TEST} PRIVATE "-g")
   target_link_options(${PROJECT_NAME_TEST} PRIVATE "-lstdc++" PRIVATE "-lm")
   gtest_discover_tests(${PROJECT_NAME_TEST} WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME_TEST}>)

@@ -201,5 +201,5 @@ double dot(const Vec4<T>& v1, const Vec4<T>& v2) {
 
 template <typename T>
 Vec4<T> getUnitVectorOf(const Vec4<T>& v) {
-  return v / (v.length() + 1.E-30);
+  return v / (v.length() + static_cast<T>(1.E-30));
 }

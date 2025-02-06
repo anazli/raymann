@@ -81,7 +81,7 @@ int main() {
   // builder->applyTransformation(translation(277.f, 554.5f, -455.f) *
   //                              scale(80.f, eps, 30.f));
   builder->applyEmissiveMaterial(make_unique<ConstantTexture>(diffuseLight));
-  SceneElementRawPtr diffuseLightElem = builder->getCurrentElement();
+  auto diffuseLightElem = builder->getCurrentElement();
   builder->addElement();
 
   /*---------------------------------------------------------------------------
@@ -121,7 +121,7 @@ int main() {
   builder->addElement();
 
   //----------------------------------------------------------------------------
-  SceneElementPtr world = builder->getProductBVHierarchy();
+  auto world = builder->getProductBVHierarchy();
 
   auto canvas = Canvas(600, 600);
   canvas.setFileName("scenes/scene.ppm");
@@ -131,19 +131,19 @@ int main() {
   auto up = Vec3D(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
-  int samplesPerPixel = 500;
-  int materialDepth = 50;
+  auto samplesPerPixel = 50;
+  auto materialDepth = 10;
   BaseRendererPtr renderer =
-      make_unique<PathTracer>(std::make_unique<StratifiedSampler>(
+      make_unique<PathTracer>(std::make_unique<BruteForceSampler>(
           camera, samplesPerPixel, materialDepth));
   renderer->setBackgroundColor(Vec3D(0.3f, 0.3f, 0.3f));
   renderer->addDiffuseLight(diffuseLightElem);
-  chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
+  auto start = chrono::steady_clock::now();
   canvas.renderParallel(world, camera, std::move(renderer));
   canvas.save();
 
-  chrono::time_point<chrono::steady_clock> end = chrono::steady_clock::now();
-  chrono::duration<double> elapsed = (end - start) / (60.);
+  auto end = chrono::steady_clock::now();
+  auto elapsed = (end - start) / (60.);
   cout << "...................." << endl;
   cout << "Elapsed time:" << elapsed.count() << " min." << endl;
   cout << "...................." << endl;

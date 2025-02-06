@@ -24,15 +24,15 @@ bool isVertexNormalEntry(string_view line) {
 
 bool isTriangleEntry(string_view line) {
   std::istringstream iss{line.data()};
-  int n = std::distance(std::istream_iterator<std::string>{iss},
-                        std::istream_iterator<std::string>{});
+  auto n = std::distance(std::istream_iterator<std::string>{iss},
+                         std::istream_iterator<std::string>{});
   return !line.empty() && line[0] == 'f' && n == 4;
 }
 
 bool isPolygonEntry(string_view line) {
   std::istringstream iss{line.data()};
-  int n = std::distance(std::istream_iterator<std::string>{iss},
-                        std::istream_iterator<std::string>{});
+  auto n = std::distance(std::istream_iterator<std::string>{iss},
+                         std::istream_iterator<std::string>{});
   return !line.empty() && line[0] == 'f' && n == 6;
 }
 
@@ -41,8 +41,8 @@ bool isGroupEntry(string_view line) {
 }
 
 void handleStringsWithSlash(string &str) {
-  size_t first(0);
-  size_t last(0);
+  size_t first{};
+  size_t last{};
   while (first != std::string::npos && last != std::string::npos) {
     first = str.find('/');
     if (first != std::string::npos) {
@@ -93,12 +93,12 @@ void WavefrontReader::normalizeVertices() {
   }
   m_inputStream.close();
 
-  float minX = limit::max();
-  float maxX = -limit::max();
-  float minY = limit::max();
-  float maxY = -limit::max();
-  float minZ = limit::max();
-  float maxZ = -limit::max();
+  auto minX = limit::max();
+  auto maxX = -limit::max();
+  auto minY = limit::max();
+  auto maxY = -limit::max();
+  auto minZ = limit::max();
+  auto maxZ = -limit::max();
   for (const Vec3D &elem : m_verticesNormalized) {
     minX = std::min(minX, elem.x());
     maxX = std::max(maxX, elem.x());
@@ -107,9 +107,9 @@ void WavefrontReader::normalizeVertices() {
     minZ = std::min(minZ, elem.z());
     maxZ = std::max(maxZ, elem.z());
   }
-  float xrange = maxX - minX;
-  float yrange = maxY - minY;
-  float zrange = maxZ - minZ;
+  auto xrange = maxX - minX;
+  auto yrange = maxY - minY;
+  auto zrange = maxZ - minZ;
   for (Vec3D &elem : m_verticesNormalized) {
     elem.setX((elem.x() - minX) / xrange * 2.f - 1.f);
     elem.setY((elem.y() - minY) / yrange * 2.f - 1.f);

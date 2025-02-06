@@ -14,23 +14,31 @@ class Sphere : public SceneElement {
   }
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {
-    auto co = r.origin() - m_center;
-    auto a = dot(r.direction(), r.direction());
-    auto b = 2.0f * dot(r.direction(), co);
+    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+    auto origin = transformed_ray.origin();
+    auto direction = transformed_ray.direction();
+    auto co = origin - m_center;
+    auto a = dot(direction, direction);
+    auto b = 2.0f * dot(direction, co);
     auto c = dot(co, co) - m_radius * m_radius;
     auto discr = b * b - 4.0f * a * c;
     if (discr >= 0.0f) {
       record.t1 = (-b - sqrt(discr)) / (2. * a);
       record.t2 = (-b + sqrt(discr)) / (2. * a);
       record.count = 2;
-      record.saved_point = record.point(r);
+      record.saved_point = record.point(transformed_ray);
       return true;
     }
     return false;
   }
 
   Vec3D normal(const Point3D &p) const override {
-    return getUnitVectorOf(p - m_center);
+    Vec4D v4 = p;
+    Point3D object_point = m_transformation.getInverseMatrix() * v4;
+    auto object_normal = getUnitVectorOf(object_point - m_center);
+    auto world_normal =
+        m_transformation.getInverseMatrix() * Vec4D(object_normal);
+    return getUnitVectorOf(world_normal);
   }
 
   float pdf(const Point3D &origin, const Vec3D &direction) override {

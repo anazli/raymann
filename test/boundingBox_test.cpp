@@ -4,7 +4,7 @@
 #include "geometry/cylinder.h"
 #include "geometry/sphere.h"
 #include "gtesting.h"
-#include "transformations/transformer.h"
+#include "transformations/transformation.h"
 
 using std::make_shared;
 using std::make_unique;

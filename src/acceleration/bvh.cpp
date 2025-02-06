@@ -40,13 +40,13 @@ BoundingBoxPair BVHierarchy::splitBoundsOf(const BoundingBox &box) const {
 
 WorldPair BVHierarchy::splitElementsOf(SceneElementContainer &worldList,
                                        const BoundingBox &worldBox) const {
-  BoundingBoxPair boxPair = splitBoundsOf(worldBox);
+  auto boxPair = splitBoundsOf(worldBox);
 
-  SceneElementPtr leftWorld = std::make_shared<World>();
-  SceneElementPtr rightWorld = std::make_shared<World>();
+  auto leftWorld = std::make_shared<World>();
+  auto rightWorld = std::make_shared<World>();
 
   WorldPair worldPair(leftWorld, rightWorld);
-  SceneElementContainer::iterator it = worldList.begin();
+  auto it = worldList.begin();
   while (it != worldList.end()) {
     if (*it != nullptr) {
       if (boxPair.first.containsBoundingBox((*it)->boundingBox())) {
