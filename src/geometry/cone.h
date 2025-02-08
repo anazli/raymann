@@ -9,7 +9,7 @@ class Cone : public SceneElement {
   Cone(float minY = -std::numeric_limits<float>::max(),
        float maxY = std::numeric_limits<float>::max(), bool closed = false)
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
-    m_elementType = SceneElementType::CONE;
+    m_elementType = PrimitiveType::CONE;
     if (!closed) {
       m_bBox.minPoint() =
           Point3D(-limit::infinity(), -limit::infinity(), -limit::infinity());
@@ -88,6 +88,12 @@ class Cone : public SceneElement {
   }
 
   bool isClosed() const { return m_closed; }
+
+  static SceneElementPtr create(float minY = -std::numeric_limits<float>::max(),
+                                float maxY = std::numeric_limits<float>::max(),
+                                bool closed = false) {
+    return std::make_shared<Cone>(minY, maxY, closed);
+  }
 
  private:
   float m_minimumY;

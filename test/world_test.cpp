@@ -21,11 +21,11 @@ TEST_F(WorldTest, createsWorldOfShere) {
   builder = make_unique<WorldBuilder>();
   builder->addLight(light);
   builder->createWorld();
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(new Sphere);
   builder->applyTransformation(Mat4D());
-  SceneElementRawPtr sphere = builder->getCurrentElement();
+  SceneElementPtr sphere = builder->getCurrentElement();
   EXPECT_TRUE(sphere->getParent() == nullptr);
-  builder->addElement();
+  builder->addElementToProduct();
   world = builder->getProduct();
   EXPECT_TRUE(sphere->getParent() == world.get());
   Ray r = Ray(Point3D(0.0f, 0.0f, -5.0f), Vec3D(0.0f, 0.0f, 1.0f));
@@ -41,12 +41,12 @@ TEST_F(WorldTest, createsWorldOfTwoSpheres) {
   builder = make_unique<WorldBuilder>();
   builder->addLight(light);
   builder->createWorld();
-  builder->processSceneElement(new Sphere(Point3D(0.0f, 0.0f, 5.0f)));
-  SceneElementRawPtr s = builder->getCurrentElement();
-  builder->addElement();
-  builder->processSceneElement(new Sphere);
-  SceneElementRawPtr s1 = builder->getCurrentElement();
-  builder->addElement();
+  builder->createPrimitive(new Sphere(Point3D(0.0f, 0.0f, 5.0f)));
+  SceneElementPtr s = builder->getCurrentElement();
+  builder->addElementToProduct();
+  builder->createPrimitive(new Sphere);
+  SceneElementPtr s1 = builder->getCurrentElement();
+  builder->addElementToProduct();
   world = builder->getProduct();
 
   EXPECT_TRUE(s->getParent() == world.get());
@@ -64,11 +64,11 @@ TEST_F(WorldTest, whenWorldIsTranformed_parentOfChildIsCorrect) {
   builder->addLight(light);
   builder->createWorld();
   builder->applyWorldTransformation(Mat4D());
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(new Sphere);
   builder->applyTransformation(Mat4D());
-  SceneElementRawPtr sphere = builder->getCurrentElement();
+  SceneElementPtr sphere = builder->getCurrentElement();
   EXPECT_TRUE(sphere->getParent() == nullptr);
-  builder->addElement();
+  builder->addElementToProduct();
   world = builder->getProduct();
   EXPECT_TRUE(sphere->getParent() == world.get());
 }
@@ -79,9 +79,9 @@ TEST_F(WorldTest, intersectingTransformedWorld) {
   builder->addLight(light);
   builder->createWorld();
 
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(new Sphere);
   builder->applyTransformation(scale(2.f, 2.f, 2.f));
-  builder->addElement();
+  builder->addElementToProduct();
   builder->applyWorldTransformation(translation(5.f, 0.f, 0.f));
 
   SceneElementPtr world = builder->getProduct();
@@ -105,12 +105,12 @@ TEST_F(WorldTest, convertingPointFromWorldToObjectSpace) {
 
   builder->createWorld();
   builder->applyWorldTransformation(scale(2.f, 2.f, 2.f));
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(new Sphere);
   builder->applyTransformation(translation(5.f, 0.f, 0.f));
-  builder->addElement();
+  builder->addElementToProduct();
   SceneElementPtr innerWorld = builder->getProduct();
 
-  SceneElementRawPtr sphere = builder->getCurrentElement();
+  SceneElementPtr sphere = builder->getCurrentElement();
   outerWorld->add(innerWorld);
 
   EXPECT_EQ(sphere->getParent(), innerWorld.get());
@@ -132,12 +132,12 @@ TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
 
   builder->createWorld();
   builder->applyWorldTransformation(scale(1.f, 2.f, 3.f));
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(new Sphere);
   builder->applyTransformation(translation(5.f, 0.f, 0.f));
-  builder->addElement();
+  builder->addElementToProduct();
   SceneElementPtr innerWorld = builder->getProduct();
 
-  SceneElementRawPtr sphere = builder->getCurrentElement();
+  SceneElementPtr sphere = builder->getCurrentElement();
   outerWorld->add(innerWorld);
 
   EXPECT_EQ(sphere->getParent(), innerWorld.get());

@@ -115,8 +115,8 @@ TEST_F(MaterialTest, lightingWithSurfaceInShadow) {
 TEST_F(MaterialTest, precomputingTheReflectionVector) {
   MaterialProperties prop;
   BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->processSceneElement(new Plane);
-  SceneElementRawPtr plane = builder->getCurrentElement();
+  builder->createPrimitive(new Plane);
+  SceneElementPtr plane = builder->getCurrentElement();
   Ray r(Point3D(0.f, 1.f, -1.f), Vec3D(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r, rec);
   Vec3D reflection_vector = reflect(r.direction(), plane->normal(rec.point(r)));
@@ -131,17 +131,17 @@ TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->addLight(light);
   builder->createWorld();
-  builder->processSceneElement(new Sphere);
-  prop.setProperty(Props::COLOR, Vec3D(0.8f, 1.f, 0.6f))
-      .setProperty(Props::DIFFUSE, 0.7f)
-      .setProperty(Props::SPECULAR, 0.2f);
+  builder->createPrimitive(new Sphere);
+  prop.setProperty(MaterialProperties::COLOR, Vec3D(0.8f, 1.f, 0.6f))
+      .setProperty(MaterialProperties::DIFFUSE, 0.7f)
+      .setProperty(MaterialProperties::SPECULAR, 0.2f);
   builder->applyMaterial(
       std::make_unique<ConstantTexture>(Vec3D(0.8f, 1.f, 0.6f)), prop);
-  builder->addElement();
-  prop.setProperty(Props::AMBIENT, 1.f);
-  builder->processSceneElement(new Sphere);
+  builder->addElementToProduct();
+  prop.setProperty(MaterialProperties::AMBIENT, 1.f);
+  builder->createPrimitive(new Sphere);
   builder->applyMaterial(std::make_unique<ConstantTexture>(), prop);
-  builder->addElement();
+  builder->addElementToProduct();
   Ray r(Point3D(0.f, 0.f, 0.f), Vec3D(0.f, 0.f, 1.f));
   BaseRendererPtr pm = std::make_unique<PhongModel>();
   SceneElementPtr w = builder->getProduct();

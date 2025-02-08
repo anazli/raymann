@@ -9,7 +9,7 @@ class Cylinder : public SceneElement {
   Cylinder(float minY = -std::numeric_limits<float>::max(),
            float maxY = std::numeric_limits<float>::max(), bool closed = false)
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
-    m_elementType = SceneElementType::CYLINDER;
+    m_elementType = PrimitiveType::CYLINDER;
     if (!closed) {
       m_bBox.minPoint() = Point3D(-1.f, -limit::infinity(), -1.f);
       m_bBox.maxPoint() = Point3D(1.f, limit::infinity(), 1.f);
@@ -80,6 +80,12 @@ class Cylinder : public SceneElement {
   }
 
   bool isClosed() const { return m_closed; }
+
+  static SceneElementPtr create(float minY = -std::numeric_limits<float>::max(),
+                                float maxY = std::numeric_limits<float>::max(),
+                                bool closed = false) {
+    return std::make_shared<Cylinder>(minY, maxY, closed);
+  }
 
  private:
   float m_minimumY;

@@ -6,11 +6,7 @@
 #include "camera/camera.h"
 #include "composite/builder.h"
 #include "container/canvas.h"
-#include "geometry/cube.h"
-#include "geometry/cylinder.h"
-#include "geometry/plane.h"
 #include "geometry/quad.h"
-#include "geometry/sphere.h"
 #include "renderers/path_tracer.h"
 #include "renderers/phong_model.h"
 #include "stochastic/stochastic_method.h"
@@ -31,94 +27,97 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Floor
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Cube);
+  builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(278.f, 0.f, -245.f) *
                                scale(279.f, eps, 556.f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
-  builder->addElement();
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
+  builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Ceil
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Cube);
+  builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(278.f, 555.f, -245.f) *
                                scale(279.f, eps, 556.f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
-  builder->addElement();
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
+  builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Left Wall
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Cube);
+  builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(0.f, 278.f, -245.f) *
                                scale(eps, 279.f, 556.f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(green));
-  builder->addElement();
+  builder->applyLambertianMaterial(ConstantTexture::create(green));
+  builder->addElementToProduct();
   /*---------------------------------------------------------------------------
    *				Right Wall
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Cube);
+  builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(555.f, 278.f, -245.f) *
                                scale(eps, 279.f, 556.f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(red));
-  builder->addElement();
+  builder->applyLambertianMaterial(ConstantTexture::create(red));
+  builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Center Wall
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Cube);
+  builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(0.f, 278.f, -245.f) *
                                scale(556.f, 279.f, eps));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
-  builder->addElement();
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
+  builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Light Wall
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Quad(Point3D(213.f, 554.f, -485.f),
-                                        Vec3D(130.f, 0.f, 0.f),
-                                        Vec3D(0.f, 0.f, 105.f)));
+  builder->createPrimitive(new Quad(Point3D(213.f, 554.f, -485.f),
+                                    Vec3D(130.f, 0.f, 0.f),
+                                    Vec3D(0.f, 0.f, 105.f)));
   // builder->applyTransformation(translation(277.f, 554.5f, -455.f) *
   //                              scale(80.f, eps, 30.f));
-  builder->applyEmissiveMaterial(make_unique<ConstantTexture>(diffuseLight));
+  builder->applyEmissiveMaterial(ConstantTexture::create(diffuseLight));
   auto diffuseLightElem = builder->getCurrentElement();
-  builder->addElement();
+  builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Left Box
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Cube);
+  builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(195.f, 1.f, -390.f) *
                                scale(70.f, 290.f, 60.f) * rotationOverY(-0.4f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
-  builder->addElement();
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
+  builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Right Box
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Cube);
+  builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(367.f, 1.f, -440.f) *
                                scale(60.f, 110.f, 60.f) * rotationOverY(0.4f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
-  builder->addElement();
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
+  builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Left Sphere
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(PrimitiveType::SPHERE);
   builder->applyTransformation(translation(200.f, 320.f, -395.f) *
                                scale(30.f, 30.f, 30.f));
-  builder->applyDielectricMaterial(1.8f, make_unique<ConstantTexture>(white));
-  builder->addElement();
+  MaterialProperties prop;
+  prop.setProperty(MaterialProperties::FUZZ, 1.8f);
+  builder->applyDielectricMaterial(ConstantTexture::create(white), prop);
+  builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Right Sphere
    * -------------------------------------------------------------------------*/
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(PrimitiveType::SPHERE);
   builder->applyTransformation(translation(367.f, 158.f, -440.f) *
                                scale(60.f, 60.f, 60.f));
-  builder->applyDielectricMaterial(1.5f, make_unique<ConstantTexture>(white));
-  builder->addElement();
+  prop.setProperty(MaterialProperties::REFRACTIVE_INDEX, 1.5f);
+  builder->applyDielectricMaterial(ConstantTexture::create(white), prop);
+  builder->addElementToProduct();
 
   //----------------------------------------------------------------------------
   auto world = builder->getProductBVHierarchy();
@@ -137,7 +136,7 @@ int main() {
       make_unique<PathTracer>(std::make_unique<BruteForceSampler>(
           camera, samplesPerPixel, materialDepth));
   renderer->setBackgroundColor(Vec3D(0.3f, 0.3f, 0.3f));
-  renderer->addDiffuseLight(diffuseLightElem);
+  renderer->addDiffuseLight(diffuseLightElem.get());
   auto start = chrono::steady_clock::now();
   canvas.renderParallel(world, camera, std::move(renderer));
   canvas.save();

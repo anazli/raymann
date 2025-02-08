@@ -1,10 +1,13 @@
 #include "materials/material.h"
 
 #include "composite/scene_element.h"
+#include "material.h"
 #include "stochastic/pdf.h"
 #include "stochastic/random.h"
 #include "stochastic/stochastic_method.h"
 #include "tools/orthonormal.h"
+
+namespace {
 
 float schlick(float cosine, float ref_idx) {
   auto r0 = (1.f - ref_idx) / (1.f + ref_idx);
@@ -28,49 +31,60 @@ bool refract(const Vec3D& v, const Vec3D& n, float ni_over_nt,
   } else
     return false;
 }
+}  // namespace
 
-void BaseMaterial::setTexture(TexturePtr tex) {}
+Material::Material(TexturePtr tex, const MaterialProperties& prop)
+    : m_tex(std::move(tex)), m_prop(prop) {}
 
-TextureRawPtr BaseMaterial::getTexture() const { return nullptr; }
+void Material::setTexture(TexturePtr tex) {}
 
-void BaseMaterial::setProperties(const MaterialProperties& prop) {}
+TextureRawPtr Material::getTexture() const { return nullptr; }
 
-MaterialProperties BaseMaterial::getProperties() const {
+void Material::setProperties(const MaterialProperties& prop) {}
+
+MaterialProperties Material::getProperties() const {
   return MaterialProperties();
 }
 
-Vec3D BaseMaterial::emmit(float u, float v, const Vec3D& p) { return Vec3D(); }
+Vec3D Material::emmit(float u, float v, const Vec3D& p) { return Vec3D(); }
 
-bool BaseMaterial::isEmissive() const { return false; }
+bool Material::isEmissive() const { return false; }
 
-float BaseMaterial::scatteringPDF(const Ray& r,
-                                  const IntersectionRecord& record,
-                                  const Ray& scatteredRay) const {
+float Material::scatteringPDF(const Ray& r, const IntersectionRecord& record,
+                              const Ray& scatteredRay) const {
   return 1.f;
 }
 
-std::shared_ptr<StochasticPdf> BaseMaterial::pdf() const { return m_pdf; }
+std::shared_ptr<StochasticPdf> Material::pdf() const { return m_pdf; }
 
-MaterialType BaseMaterial::getType() const { return m_type; }
+MaterialType Material::getType() const { return m_type; }
 
-Material::Material(TexturePtr tex, const MaterialProperties& prop)
-    : BaseMaterial(std::move(tex), prop) {}
+StandardMaterial::StandardMaterial(TexturePtr tex,
+                                   const MaterialProperties& prop)
+    : Material(std::move(tex), prop) {}
 
-void Material::setTexture(TexturePtr tex) { m_tex = std::move(tex); }
+void StandardMaterial::setTexture(TexturePtr tex) { m_tex = std::move(tex); }
 
-TextureRawPtr Material::getTexture() const { return m_tex.get(); }
+TextureRawPtr StandardMaterial::getTexture() const { return m_tex.get(); }
 
-void Material::setProperties(const MaterialProperties& prop) { m_prop = prop; }
+void StandardMaterial::setProperties(const MaterialProperties& prop) {
+  m_prop = prop;
+}
 
-MaterialProperties Material::getProperties() const { return m_prop; }
+MaterialProperties StandardMaterial::getProperties() const { return m_prop; }
 
-bool Material::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                       Vec3D& attenuation, Ray& scattered) const {
+bool StandardMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
+                               Vec3D& attenuation, Ray& scattered) const {
   return false;
 }
 
+MaterialPtr StandardMaterial::create(TexturePtr tex,
+                                     const MaterialProperties& prop) {
+  return std::make_shared<StandardMaterial>(std::move(tex), prop);
+}
+
 Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
-    : BaseMaterial(std::move(tex), prop) {
+    : Material(std::move(tex), prop) {
   m_pdf = std::make_shared<CosPdf>();
   m_type = MaterialType::LAMBERTIAN;
 }
@@ -98,8 +112,12 @@ float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
   return cTheta < 0 ? 0 : cTheta / PI;
 }
 
+MaterialPtr Lambertian::create(TexturePtr tex, const MaterialProperties& prop) {
+  return std::make_shared<Lambertian>(std::move(tex), prop);
+}
+
 Isotropic::Isotropic(TexturePtr tex, const MaterialProperties& prop)
-    : BaseMaterial(std::move(tex), prop) {
+    : Material(std::move(tex), prop) {
   m_pdf = std::make_shared<SpherePdf>();
   m_type = MaterialType::ISOTROPIC;
 }
@@ -117,8 +135,13 @@ float Isotropic::scatteringPDF(const Ray& r, const IntersectionRecord& record,
   return 1.f / (4.f * PI);
 }
 
-Metal::Metal(float f, TexturePtr tex, const MaterialProperties& prop)
-    : m_fuzz(f), BaseMaterial(std::move(tex), prop) {
+MaterialPtr Isotropic::create(TexturePtr tex, const MaterialProperties& prop) {
+  return std::make_shared<Isotropic>(std::move(tex), prop);
+}
+
+Metal::Metal(TexturePtr tex, const MaterialProperties& prop)
+    : Material(std::move(tex), prop) {
+  auto f = prop.getPropertyAs<float>(MaterialProperties::FUZZ).value_or(0.);
   if (f < 1.f)
     m_fuzz = f;
   else
@@ -137,8 +160,14 @@ bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
   return (dot(scattered.direction(), normal) > 0);
 }
 
-Dielectric::Dielectric(float ri, TexturePtr tex, const MaterialProperties& prop)
-    : ref_idx(ri), BaseMaterial(std::move(tex), prop) {
+MaterialPtr Metal::create(TexturePtr tex, const MaterialProperties& prop) {
+  return std::make_shared<Metal>(std::move(tex), prop);
+}
+
+Dielectric::Dielectric(TexturePtr tex, const MaterialProperties& prop)
+    : Material(std::move(tex), prop) {
+  ref_idx = prop.getPropertyAs<float>(MaterialProperties::REFRACTIVE_INDEX)
+                .value_or(1.);
   m_type = MaterialType::DIELECTRIC;
 }
 
@@ -177,9 +206,13 @@ bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
   return true;
 }
 
+MaterialPtr Dielectric::create(TexturePtr tex, const MaterialProperties& prop) {
+  return std::make_shared<Dielectric>(std::move(tex), prop);
+}
+
 EmissiveMaterial::EmissiveMaterial(TexturePtr tex,
                                    const MaterialProperties& prop)
-    : BaseMaterial(std::move(tex), prop) {
+    : Material(std::move(tex), prop) {
   m_type = MaterialType::DIFFUSE_LIGHT;
 }
 
@@ -193,3 +226,8 @@ Vec3D EmissiveMaterial::emmit(float u, float v, const Vec3D& p) {
 }
 
 bool EmissiveMaterial::isEmissive() const { return true; }
+
+MaterialPtr EmissiveMaterial::create(TexturePtr tex,
+                                     const MaterialProperties& prop) {
+  return std::make_shared<EmissiveMaterial>(std::move(tex), prop);
+}

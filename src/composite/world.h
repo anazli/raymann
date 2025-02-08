@@ -25,6 +25,8 @@ class World : public SceneElement {
   float pdf(const Point3D &origin, const Vec3D &direction) override;
   Vec3D random(const Point3D &origin) override;
 
+  static SceneElementPtr create();
+
  private:
   SceneElementContainer m_sceneElementContainer;
   std::vector<SceneElementPtr> m_vector;

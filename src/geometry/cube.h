@@ -8,7 +8,7 @@
 class Cube : public SceneElement {
  public:
   Cube() {
-    m_elementType = SceneElementType::CUBE;
+    m_elementType = PrimitiveType::CUBE;
     m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f);
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f);
   }
@@ -51,6 +51,8 @@ class Cube : public SceneElement {
         m_transformation.getInverseMatrix() * Vec4D(object_normal);
     return getUnitVectorOf(world_normal);
   }
+
+  static SceneElementPtr create() { return std::make_shared<Cube>(); }
 
  private:
   std::pair<float, float> hitAxis(float origin, float direction) {
