@@ -53,19 +53,22 @@ std::shared_ptr<StochasticPdf> BaseMaterial::pdf() const { return m_pdf; }
 
 MaterialType BaseMaterial::getType() const { return m_type; }
 
-Material::Material(TexturePtr tex, const MaterialProperties& prop)
+StandardMaterial::StandardMaterial(TexturePtr tex,
+                                   const MaterialProperties& prop)
     : BaseMaterial(std::move(tex), prop) {}
 
-void Material::setTexture(TexturePtr tex) { m_tex = std::move(tex); }
+void StandardMaterial::setTexture(TexturePtr tex) { m_tex = std::move(tex); }
 
-TextureRawPtr Material::getTexture() const { return m_tex.get(); }
+TextureRawPtr StandardMaterial::getTexture() const { return m_tex.get(); }
 
-void Material::setProperties(const MaterialProperties& prop) { m_prop = prop; }
+void StandardMaterial::setProperties(const MaterialProperties& prop) {
+  m_prop = prop;
+}
 
-MaterialProperties Material::getProperties() const { return m_prop; }
+MaterialProperties StandardMaterial::getProperties() const { return m_prop; }
 
-bool Material::scatter(const Ray& r_in, const IntersectionRecord& rec,
-                       Vec3D& attenuation, Ray& scattered) const {
+bool StandardMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
+                               Vec3D& attenuation, Ray& scattered) const {
   return false;
 }
 

@@ -5,14 +5,21 @@
 #include "composite/scene_element.h"
 #include "textures/texture.h"
 
+class PrimitiveBuilder {
+ public:
+  virtual void createPrimitive(const PrimitiveType &type) = 0;
+  virtual void createPrimitive(SceneElementRawPtr primitive) = 0;
+};
+
 class Builder {
  public:
   virtual ~Builder() = default;
   virtual void createWorld() = 0;
-  virtual void addWorld() = 0;
-  virtual void addElement() = 0;
+  virtual void addWorldToProduct() = 0;
+  virtual void addElementToProduct() = 0;
   virtual void addLight(const PointLight &light) = 0;
-  virtual void processSceneElement(SceneElementRawPtr element) = 0;
+  virtual void createPrimitive(const PrimitiveType &type) = 0;
+  virtual void createPrimitive(SceneElementRawPtr primitive) = 0;
   virtual void applyTransformation(const Mat4D &trans) = 0;
   virtual void applyWorldTransformation(const Mat4D &trans) = 0;
   virtual void applyMaterial(TexturePtr tex,
@@ -32,7 +39,7 @@ class Builder {
   virtual void createBBoxForElement(const BoundingBox &box) = 0;
   virtual SceneElementPtr getProduct() = 0;
   virtual SceneElementPtr getProductBVHierarchy() = 0;
-  virtual SceneElementRawPtr getCurrentElement() const = 0;
+  const virtual SceneElementPtr getCurrentElement() const = 0;
 };
 
 using BuilderPtr = std::unique_ptr<Builder>;
@@ -41,10 +48,11 @@ class WorldBuilder : public Builder {
  public:
   ~WorldBuilder() override = default;
   void createWorld() override;
-  void addWorld() override;
-  void addElement() override;
+  void addWorldToProduct() override;
+  void addElementToProduct() override;
   void addLight(const PointLight &light) override;
-  void processSceneElement(SceneElementRawPtr element) override;
+  void createPrimitive(const PrimitiveType &type) override;
+  void createPrimitive(SceneElementRawPtr primitive) override;
   void applyTransformation(const Mat4D &trans) override;
   void applyWorldTransformation(const Mat4D &trans) override;
   void applyMaterial(TexturePtr tex, const MaterialProperties &prop) override;
@@ -62,10 +70,10 @@ class WorldBuilder : public Builder {
   virtual void createBBoxForElement(const BoundingBox &box) override;
   SceneElementPtr getProduct() override;
   SceneElementPtr getProductBVHierarchy() override;
-  SceneElementRawPtr getCurrentElement() const override;
+  const SceneElementPtr getCurrentElement() const override;
 
  private:
-  SceneElementRawPtr m_currentElement;
-  SceneElementRawPtr m_product;
+  SceneElementPtr m_currentElement;
+  SceneElementPtr m_product;
   PointLight m_light;
 };

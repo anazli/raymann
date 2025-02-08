@@ -8,6 +8,7 @@ class StochasticSampler;
 class StochasticPdf;
 
 enum class MaterialType {
+  STANDARD,
   LAMBERTIAN,
   ISOTROPIC,
   DIFFUSE_LIGHT,
@@ -43,11 +44,11 @@ class BaseMaterial {
 
 using BaseMaterialPtr = std::shared_ptr<BaseMaterial>;
 
-class Material : public BaseMaterial {
+class StandardMaterial : public BaseMaterial {
  public:
-  Material(TexturePtr tex,
-           const MaterialProperties& prop = MaterialProperties());
-  ~Material() override = default;
+  StandardMaterial(TexturePtr tex,
+                   const MaterialProperties& prop = MaterialProperties());
+  ~StandardMaterial() override = default;
   void setTexture(TexturePtr tex) override;
   TextureRawPtr getTexture() const override;
   void setProperties(const MaterialProperties& prop) override;

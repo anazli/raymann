@@ -62,7 +62,7 @@ TEST_F(BoundingBoxTest, checkIfBoxContainsAnotherBox) {
 
 TEST_F(BoundingBoxTest, transformsBoundingBox) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(new Sphere);
   builder->createBBoxForElement(
       BoundingBox(Point3D(-1.f, -1.f, -1.f), Point3D(1.f, 1.f, 1.f)));
   builder->applyTransformation(rotationOverX(PI / 4.f) *
@@ -76,7 +76,7 @@ TEST_F(BoundingBoxTest, transformsBoundingBox) {
 
 TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(new Sphere);
   builder->applyTransformation(translation(Vec3D(1.f, -3.f, 5.f)) *
                                scale(Vec3D(0.5f, 2.f, 4.f)));
   BoundingBox p = builder->getCurrentElement()->boundingBox();
@@ -89,14 +89,14 @@ TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
 TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->createWorld();
-  builder->processSceneElement(new Sphere);
+  builder->createPrimitive(new Sphere);
   builder->applyTransformation(translation(Vec3D(2.f, 5.f, -3.f)) *
                                scale(Vec3D(2.f, 2.f, 2.f)));
-  builder->addElement();
-  builder->processSceneElement(new Cylinder(-2.f, 2.f, true));
+  builder->addElementToProduct();
+  builder->createPrimitive(new Cylinder(-2.f, 2.f, true));
   builder->applyTransformation(translation(Vec3D(-4.f, -1.f, 4.f)) *
                                scale(Vec3D(0.5f, 1.f, 0.5f)));
-  builder->addElement();
+  builder->addElementToProduct();
   BoundingBox p = builder->getProduct()->boundingBox();
 
   float eps = 1E-4f;
@@ -196,19 +196,19 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
   WorldBuilder builder;
   builder.createWorld();
 
-  builder.processSceneElement(new Sphere);
+  builder.createPrimitive(new Sphere);
   builder.applyTransformation(translation(-2.f, 0.f, 0.f));
   SceneElementRawPtr sphere1 = builder.getCurrentElement();
-  builder.addElement();
+  builder.addElementToProduct();
 
-  builder.processSceneElement(new Sphere);
+  builder.createPrimitive(new Sphere);
   builder.applyTransformation(translation(2.f, 0.f, 0.f));
   SceneElementRawPtr sphere2 = builder.getCurrentElement();
-  builder.addElement();
+  builder.addElementToProduct();
 
-  builder.processSceneElement(new Sphere);
+  builder.createPrimitive(new Sphere);
   SceneElementRawPtr sphere3 = builder.getCurrentElement();
-  builder.addElement();
+  builder.addElementToProduct();
 
   SceneElementPtr world = builder.getProduct();
   WorldPair wp =
@@ -228,20 +228,20 @@ TEST_F(BoundingBoxTest, divideWorld) {
   WorldBuilder builder;
   builder.createWorld();
 
-  builder.processSceneElement(new Sphere);
+  builder.createPrimitive(new Sphere);
   builder.applyTransformation(translation(-2.f, -2.f, 0.f));
   SceneElementRawPtr sphere1 = builder.getCurrentElement();
-  builder.addElement();
+  builder.addElementToProduct();
 
-  builder.processSceneElement(new Sphere);
+  builder.createPrimitive(new Sphere);
   builder.applyTransformation(translation(-2.f, 2.f, 0.f));
   SceneElementRawPtr sphere2 = builder.getCurrentElement();
-  builder.addElement();
+  builder.addElementToProduct();
 
-  builder.processSceneElement(new Sphere);
+  builder.createPrimitive(new Sphere);
   builder.applyTransformation(scale(4.f, 4.f, 4.f));
   SceneElementRawPtr sphere3 = builder.getCurrentElement();
-  builder.addElement();
+  builder.addElementToProduct();
 
   SceneElementPtr world = builder.getProduct();
   bvh.divideWorld(world, 1);

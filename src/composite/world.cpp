@@ -5,6 +5,7 @@
 #include "composite/iterator.h"
 #include "renderers/renderer.h"
 #include "stochastic/random.h"
+#include "world.h"
 
 using std::list;
 using std::shared_ptr;
@@ -90,3 +91,5 @@ Vec3D World::random(const Point3D& origin) {
   return m_sceneElementContainer[Random::randomInteger(0, int_size - 1)]
       ->random(origin);
 }
+
+SceneElementPtr World::create() { return std::make_shared<World>(); }

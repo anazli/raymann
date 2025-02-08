@@ -62,6 +62,11 @@ class Quad : public SceneElement {
            (Random::randomNumber() * m_vAxis) - origin;
   }
 
+  static SceneElementPtr create(const Point3D& origin, const Vec3D& uAxis,
+                                const Vec3D& vAxis) {
+    return std::make_shared<Quad>(origin, uAxis, vAxis);
+  }
+
  private:
   bool isWithin(float a, float b, IntersectionRecord& record) const {
     if ((a < 0.f) || (a > 1.f) || (b < 0.f) || (b > 1.f)) return false;

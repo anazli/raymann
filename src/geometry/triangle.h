@@ -6,6 +6,8 @@
 class Triangle : public SceneElement {
  public:
   Triangle(const std::initializer_list<Point3D> &points) : m_points(points) {
+    APP_ASSERT((points.size() == 3),
+               "Wrong number of points for triangle creation!");
     m_edgeVec.push_back(m_points[1] - m_points[0]);
     m_edgeVec.push_back(m_points[2] - m_points[0]);
     m_normalVec = getUnitVectorOf(cross(m_edgeVec[0], m_edgeVec[1]));
@@ -15,11 +17,7 @@ class Triangle : public SceneElement {
     m_bBox.addPoint(m_points[2]);
   }
   ~Triangle() override = default;
-  Point3D point(int idx) const {
-    APP_ASSERT((idx < 3 && idx >= 0),
-               "Out of bounds index error in triangle (Points)");
-    return m_points[idx];
-  }
+  Point3D point(int idx) const { return m_points[idx]; }
   Vec3D edgeVector(int idx) const {
     APP_ASSERT((idx < 2 && idx >= 0),
                "Out of bounds index error in triangle (Edge Vector)");
@@ -50,6 +48,10 @@ class Triangle : public SceneElement {
     return true;
   }
   Vec3D normal(const Point3D &p) const override { return m_normalVec; }
+
+  static SceneElementPtr create(const std::initializer_list<Point3D> &points) {
+    return std::make_shared<Triangle>(points);
+  }
 
  private:
   std::vector<Point3D> m_points;
@@ -118,6 +120,12 @@ class SmoothTriangle : public SceneElement {
   Vec3D normal(const Point3D &p) const override {
     return m_normals[1] * m_uPar + m_normals[2] * m_vPar +
            m_normals[0] * (1.f - m_uPar - m_vPar);
+  }
+
+  static SceneElementPtr create(const Point3D &p1, const Point3D &p2,
+                                const Point3D &p3, const Vec3D &v1,
+                                const Vec3D &v2, const Vec3D &v3) {
+    return std::make_shared<SmoothTriangle>(p1, p2, p3, v1, v2, v3);
   }
 
  private:

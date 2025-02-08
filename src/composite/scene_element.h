@@ -9,9 +9,9 @@
 #include "transformations/transformation.h"
 
 class BaseRenderer;
-class Material;
+class StandardMaterial;
 
-enum class SceneElementType {
+enum class PrimitiveType {
   CONE,
   CUBE,
   CYLINDER,
@@ -25,7 +25,7 @@ enum class SceneElementType {
 class SceneElement {
  public:
   virtual ~SceneElement() = default;
-  virtual SceneElementType elementType() const;
+  virtual PrimitiveType elementType() const;
   virtual bool intersect(const Ray &r, IntersectionRecord &record);
   virtual void add(std::shared_ptr<SceneElement> item);
   virtual std::vector<std::shared_ptr<SceneElement>>::iterator remove(
@@ -56,7 +56,7 @@ class SceneElement {
   SceneElement *m_parent = nullptr;
   BaseMaterialPtr m_material;
   BoundingBox m_bBox;
-  SceneElementType m_elementType;
+  PrimitiveType m_elementType;
   Transformation m_transformation;
 };
 

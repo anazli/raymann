@@ -5,7 +5,7 @@
 #include "scene_element.h"
 #include "world.h"
 
-SceneElementType SceneElement::elementType() const { return m_elementType; }
+PrimitiveType SceneElement::elementType() const { return m_elementType; }
 
 bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
   return false;

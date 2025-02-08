@@ -8,7 +8,7 @@ class Sphere : public SceneElement {
   ~Sphere() override = default;
   Sphere(const Point3D &c = Point3D(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
       : m_center(c), m_radius(r) {
-    m_elementType = SceneElementType::SPHERE;
+    m_elementType = PrimitiveType::SPHERE;
     m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f) + c;
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f) + c;
   }
@@ -66,6 +66,11 @@ class Sphere : public SceneElement {
   void setRadius(const float &r) { m_radius = r; }
   Point3D center() const { return m_center; }
   float radius() const { return m_radius; }
+
+  static SceneElementPtr create(const Point3D &c = Point3D(0.0f, 0.0f, 0.0f),
+                                const float &r = 1.0f) {
+    return std::make_shared<Sphere>(c, r);
+  }
 
  private:
   Vec3D randomToSphere(float radius, float distSquared) {

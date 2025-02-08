@@ -5,7 +5,7 @@
 class Plane : public SceneElement {
  public:
   Plane() {
-    m_elementType = SceneElementType::PLANE;
+    m_elementType = PrimitiveType::PLANE;
     m_bBox.minPoint() = Point3D(-limit::infinity(), 0.f, -limit::infinity());
     m_bBox.maxPoint() = Point3D(limit::infinity(), 0.f, limit::infinity());
   }
@@ -25,4 +25,6 @@ class Plane : public SceneElement {
   Vec3D normal(const Point3D &p) const override {
     return Vec3D(0.0f, 1.0f, 0.0f);
   }
+
+  static SceneElementPtr create() { return std::make_shared<Plane>(); }
 };
