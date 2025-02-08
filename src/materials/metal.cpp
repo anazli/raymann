@@ -5,11 +5,9 @@
 #include "stochastic/random.h"
 #include "stochastic/stochastic_method.h"
 
-Metal::Metal(TexturePtr tex, const DataContainer& prop)
-    : Material(std::move(tex), prop) {
-  auto f = prop.getPropertyAs<float>(AppParameters::FUZZ).value_or(0.);
-  if (f < 1.f)
-    m_fuzz = f;
+Metal::Metal(TexturePtr tex, float fuzz) : Material(std::move(tex)) {
+  if (fuzz < 1.f)
+    m_fuzz = fuzz;
   else
     m_fuzz = 1.f;
   m_type = AppParameters::METAL;
@@ -26,6 +24,6 @@ bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
   return (dot(scattered.direction(), normal) > 0);
 }
 
-MaterialPtr Metal::create(TexturePtr tex, const DataContainer& prop) {
-  return std::make_shared<Metal>(std::move(tex), prop);
+MaterialPtr Metal::create(TexturePtr tex, float fuzz) {
+  return std::make_shared<Metal>(std::move(tex), fuzz);
 }

@@ -54,21 +54,21 @@ class Cone : public SceneElement {
       auto t2 = (-b + sqrt(discr)) / (2.0f * a);
       if (t1 > t2) std::swap(t1, t2);
 
-      auto y1 = r.origin().y() + t1 * r.direction().y();
+      auto y1 = origin.y() + t1 * direction.y();
       if (m_minimumY < y1 && m_maximumY > y1) {
         record.t1 = t1;
         record.count++;
         hitAnything = true;
       }
 
-      auto y2 = r.origin().y() + t2 * r.direction().y();
+      auto y2 = origin.y() + t2 * direction.y();
       if (m_minimumY < y2 && m_maximumY > y2) {
         record.t2 = t2;
         record.count++;
         hitAnything = true;
       }
     }
-    if (intersectCaps(r, record)) hitAnything = true;
+    if (intersectCaps(transformed_ray, record)) hitAnything = true;
     return hitAnything;
   }
   Vec3D normal(const Point3D &p) const override {

@@ -5,8 +5,7 @@
 #include "stochastic/random.h"
 #include "stochastic/stochastic_method.h"
 
-Lambertian::Lambertian(TexturePtr tex, const DataContainer& prop)
-    : Material(std::move(tex), prop) {
+Lambertian::Lambertian(TexturePtr tex) : Material(std::move(tex)) {
   m_pdf = std::make_shared<CosPdf>();
   m_type = AppParameters::LAMBERTIAN;
 }
@@ -34,6 +33,6 @@ float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
   return cTheta < 0 ? 0 : cTheta / PI;
 }
 
-MaterialPtr Lambertian::create(TexturePtr tex, const DataContainer& prop) {
-  return std::make_shared<Lambertian>(std::move(tex), prop);
+MaterialPtr Lambertian::create(TexturePtr tex) {
+  return std::make_shared<Lambertian>(std::move(tex));
 }

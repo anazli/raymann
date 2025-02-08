@@ -32,7 +32,7 @@ class Cylinder : public SceneElement {
     auto roz = origin.z();
 
     auto a = rdx * rdx + rdz * rdz;
-    if (a <= EPS && a >= -EPS) return intersectCaps(r, record);
+    if (a <= EPS && a >= -EPS) return intersectCaps(transformed_ray, record);
     auto b = 2.0f * (rox * rdx + roz * rdz);
     auto c = rox * rox + roz * roz - 1.0f;
 

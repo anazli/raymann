@@ -29,7 +29,7 @@ class Cube : public SceneElement {
     record.t1 = tmin;
     record.t2 = tmax;
     record.count = 2;
-    record.saved_point = record.point(r);
+    record.saved_point = record.point(transformed_ray);
     return true;
   }
 

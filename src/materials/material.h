@@ -24,14 +24,13 @@ class Material {
   AppParameters getType() const;
 
  protected:
-  Material(TexturePtr tex, const DataContainer& prop);
+  Material(TexturePtr tex);
   float schlick(float cosine, float ref_idx) const;
   Vec3D reflect(const Vec3D& v, const Vec3D& n) const;
   bool refract(const Vec3D& v, const Vec3D& n, float ni_over_nt,
                Vec3D& refracted) const;
 
   TexturePtr m_tex;
-  DataContainer m_prop;
   std::shared_ptr<StochasticPdf> m_pdf;
   AppParameters m_type;
 };

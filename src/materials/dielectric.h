@@ -4,13 +4,12 @@
 
 class Dielectric : public Material {
  public:
-  Dielectric(TexturePtr tex, const DataContainer& prop = DataContainer());
+  Dielectric(TexturePtr tex, float refractive_index);
   ~Dielectric() override = default;
   bool scatter(const Ray& r_in, const IntersectionRecord& rec,
                Vec3D& attenuation, Ray& scattered) const override;
-  static MaterialPtr create(TexturePtr tex,
-                            const DataContainer& prop = DataContainer());
+  static MaterialPtr create(TexturePtr tex, float refractive_index);
 
  private:
-  float ref_idx;
+  float m_refractive_index;
 };

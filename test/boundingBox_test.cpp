@@ -1,4 +1,5 @@
 #include "acceleration/bvh.h"
+#include "application/parameters.h"
 #include "composite/builder.h"
 #include "composite/iterator.h"
 #include "geometry/cylinder.h"
@@ -61,8 +62,8 @@ TEST_F(BoundingBoxTest, checkIfBoxContainsAnotherBox) {
 }
 
 TEST_F(BoundingBoxTest, transformsBoundingBox) {
-  BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->createPrimitive(new Sphere);
+  PrimitiveBuilder builder;
+  builder.buildPrimitive();
   builder->createBBoxForElement(
       BoundingBox(Point3D(-1.f, -1.f, -1.f), Point3D(1.f, 1.f, 1.f)));
   builder->applyTransformation(rotationOverX(PI / 4.f) *

@@ -7,8 +7,7 @@
 #include "stochastic/stochastic_method.h"
 #include "tools/orthonormal.h"
 
-Material::Material(TexturePtr tex, const DataContainer& prop)
-    : m_tex(std::move(tex)), m_prop(prop) {}
+Material::Material(TexturePtr tex) : m_tex(std::move(tex)) {}
 
 void Material::setTexture(TexturePtr tex) {}
 

@@ -2,8 +2,7 @@
 
 #include "composite/scene_element.h"
 
-EmissiveMaterial::EmissiveMaterial(TexturePtr tex, const DataContainer& prop)
-    : Material(std::move(tex), prop) {
+EmissiveMaterial::EmissiveMaterial(TexturePtr tex) : Material(std::move(tex)) {
   m_type = AppParameters::DIFFUSE_LIGHT;
 }
 
@@ -18,7 +17,6 @@ Vec3D EmissiveMaterial::emmit(float u, float v, const Vec3D& p) {
 
 bool EmissiveMaterial::isEmissive() const { return true; }
 
-MaterialPtr EmissiveMaterial::create(TexturePtr tex,
-                                     const DataContainer& prop) {
-  return std::make_shared<EmissiveMaterial>(std::move(tex), prop);
+MaterialPtr EmissiveMaterial::create(TexturePtr tex) {
+  return std::make_shared<EmissiveMaterial>(std::move(tex));
 }

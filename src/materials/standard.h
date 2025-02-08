@@ -2,6 +2,7 @@
 
 #include "materials/material.h"
 
+// Standard material. Is meant to be used with phong model renderer.
 class StandardMaterial : public Material {
  public:
   StandardMaterial(TexturePtr tex, const DataContainer& prop = DataContainer());
@@ -15,4 +16,6 @@ class StandardMaterial : public Material {
 
   static MaterialPtr create(TexturePtr tex,
                             const DataContainer& prop = DataContainer());
+
+  DataContainer m_prop;
 };

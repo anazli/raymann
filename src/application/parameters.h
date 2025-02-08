@@ -2,12 +2,14 @@
 
 enum class AppParameters {
   // Primitive types
+  PRIMITIVE_TYPE,
   CONE,
   CUBE,
   CYLINDER,
   PLANE,
   SPHERE,
   TRIANGLE,
+  QUAD,
   WORLD,
 
   // Primitive parameters
@@ -24,6 +26,7 @@ enum class AppParameters {
   TRANSFORMATION_MATRIX,
 
   // Material types
+  MATERIAL_TYPE,
   STANDARD,
   LAMBERTIAN,
   ISOTROPIC,
@@ -40,5 +43,12 @@ enum class AppParameters {
   REFLECTION,        // float [0,1]
   TRANSPARENCY,      // float [0,1]
   REFRACTIVE_INDEX,  // float [0,..]
-  FUZZ               // float [0,1]
+  FUZZ,              // float [0,1]
+
+  // Texture types
+  TEXTURE_TYPE,
+  CONSTANT_TEXTURE,
+  CHECKER_TEXTURE,
+  PERLIN_TEXTURE,
+  PERLIN_SCALE,
 };

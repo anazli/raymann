@@ -9,7 +9,7 @@
 
 class DataContainer {
  public:
-  DataContainer();
+  DataContainer() = default;
   DataContainer &setProperty(const AppParameters &name, const std::any &value);
   bool addProperty(const AppParameters &name, const std::any &value);
   bool removeProperty(const AppParameters &name);

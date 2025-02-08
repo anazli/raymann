@@ -5,8 +5,7 @@
 #include "stochastic/random.h"
 #include "stochastic/stochastic_method.h"
 
-Isotropic::Isotropic(TexturePtr tex, const DataContainer& prop)
-    : Material(std::move(tex), prop) {
+Isotropic::Isotropic(TexturePtr tex) : Material(std::move(tex)) {
   m_pdf = std::make_shared<SpherePdf>();
   m_type = AppParameters::ISOTROPIC;
 }
@@ -24,6 +23,6 @@ float Isotropic::scatteringPDF(const Ray& r, const IntersectionRecord& record,
   return 1.f / (4.f * PI);
 }
 
-MaterialPtr Isotropic::create(TexturePtr tex, const DataContainer& prop) {
-  return std::make_shared<Isotropic>(std::move(tex), prop);
+MaterialPtr Isotropic::create(TexturePtr tex) {
+  return std::make_shared<Isotropic>(std::move(tex));
 }

@@ -1,15 +1,5 @@
 #include "application/data_container.h"
 
-DataContainer::DataContainer() {
-  setProperty(AppParameters::AMBIENT, 0.1f)
-      .setProperty(AppParameters::DIFFUSE, 0.9f)
-      .setProperty(AppParameters::SPECULAR, 0.9f)
-      .setProperty(AppParameters::SHININESS, 200.f)
-      .setProperty(AppParameters::REFLECTION, 0.f)
-      .setProperty(AppParameters::TRANSPARENCY, 0.f)
-      .setProperty(AppParameters::REFRACTIVE_INDEX, 1.f);
-}
-
 DataContainer& DataContainer::setProperty(const AppParameters& name,
                                           const std::any& value) {
   if (!addProperty(name, value)) {

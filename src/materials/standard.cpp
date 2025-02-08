@@ -3,7 +3,23 @@
 #include "composite/scene_element.h"
 
 StandardMaterial::StandardMaterial(TexturePtr tex, const DataContainer& prop)
-    : Material(std::move(tex), prop) {}
+    : Material(std::move(tex)), m_prop(prop) {
+  // Default properties of standard material
+  if (!m_prop.hasProperty(AppParameters::AMBIENT))
+    m_prop.setProperty(AppParameters::AMBIENT, 0.1f);
+  if (!m_prop.hasProperty(AppParameters::DIFFUSE))
+    m_prop.setProperty(AppParameters::DIFFUSE, 0.9f);
+  if (!m_prop.hasProperty(AppParameters::SPECULAR))
+    m_prop.setProperty(AppParameters::SPECULAR, 0.9f);
+  if (!m_prop.hasProperty(AppParameters::SHININESS))
+    m_prop.setProperty(AppParameters::SHININESS, 200.f);
+  if (!m_prop.hasProperty(AppParameters::REFLECTION))
+    m_prop.setProperty(AppParameters::REFLECTION, 0.f);
+  if (!m_prop.hasProperty(AppParameters::TRANSPARENCY))
+    m_prop.setProperty(AppParameters::TRANSPARENCY, 0.f);
+  if (!m_prop.hasProperty(AppParameters::REFRACTIVE_INDEX))
+    m_prop.setProperty(AppParameters::REFRACTIVE_INDEX, 1.f);
+}
 
 void StandardMaterial::setTexture(TexturePtr tex) { m_tex = std::move(tex); }
 
