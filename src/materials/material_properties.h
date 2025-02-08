@@ -6,20 +6,19 @@
 
 #include "tools/tools.h"
 
-enum class Properties {
-  COLOR,             // Vec3D
-  AMBIENT,           // float [0,1]
-  DIFFUSE,           // float [0,1]
-  SPECULAR,          // float [0,1]
-  SHININESS,         // float [0,..]
-  REFLECTION,        // float [0,1]
-  TRANSPARENCY,      // float [0,1]
-  REFRACTIVE_INDEX,  // float [0,..]
-  FUZZ               // float [0,1]
-};
-
 class MaterialProperties {
  public:
+  enum Properties {
+    COLOR,             // Vec3D
+    AMBIENT,           // float [0,1]
+    DIFFUSE,           // float [0,1]
+    SPECULAR,          // float [0,1]
+    SHININESS,         // float [0,..]
+    REFLECTION,        // float [0,1]
+    TRANSPARENCY,      // float [0,1]
+    REFRACTIVE_INDEX,  // float [0,..]
+    FUZZ               // float [0,1]
+  };
   MaterialProperties();
   MaterialProperties &setProperty(const Properties &name,
                                   const std::any &value);

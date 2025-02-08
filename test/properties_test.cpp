@@ -8,11 +8,11 @@ using namespace std;
 class MaterialPropertiesTest : public Test {
  public:
   MaterialProperties p;
-  Properties name =
-      Properties::COLOR;  // For some weird reason, with other values
-                          // like AMBIENT, DIFFUSE etc.. the tests
-                          // [addsProperty, entityHasProperty] fail.
-                          // Either GoogleTests's or STL's problem
+  MaterialProperties::Properties name =
+      MaterialProperties::COLOR;  // For some weird reason, with other values
+                                  // like AMBIENT, DIFFUSE etc.. the tests
+                                  // [addsProperty, entityHasProperty] fail.
+                                  // Either GoogleTests's or STL's problem
   std::any value = 5.6f;
 };
 
@@ -34,7 +34,8 @@ TEST_F(MaterialPropertiesTest, entityHasProperty) {
   EXPECT_FALSE(p.hasProperty(name));
   p.setProperty(name, value);
   EXPECT_TRUE(p.hasProperty(name));
-  EXPECT_FALSE(p.hasProperty(static_cast<Properties>(1000)));
+  EXPECT_FALSE(
+      p.hasProperty(static_cast<MaterialProperties::Properties>(1000)));
 }
 
 TEST_F(MaterialPropertiesTest, getsPropertyAsInt) {
@@ -76,6 +77,9 @@ TEST_F(MaterialPropertiesTest, removesProperty) {
 }
 
 TEST_F(MaterialPropertiesTest, defaultTransparencyAndRefractiveIndexTest) {
-  EXPECT_EQ(p.getPropertyAs<float>(Properties::TRANSPARENCY).value(), 0.f);
-  EXPECT_EQ(p.getPropertyAs<float>(Properties::REFRACTIVE_INDEX).value(), 1.f);
+  EXPECT_EQ(p.getPropertyAs<float>(MaterialProperties::TRANSPARENCY).value(),
+            0.f);
+  EXPECT_EQ(
+      p.getPropertyAs<float>(MaterialProperties::REFRACTIVE_INDEX).value(),
+      1.f);
 }

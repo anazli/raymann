@@ -141,7 +141,7 @@ MaterialPtr Isotropic::create(TexturePtr tex, const MaterialProperties& prop) {
 
 Metal::Metal(TexturePtr tex, const MaterialProperties& prop)
     : Material(std::move(tex), prop) {
-  auto f = prop.getPropertyAs<float>(Properties::FUZZ).value_or(0.);
+  auto f = prop.getPropertyAs<float>(MaterialProperties::FUZZ).value_or(0.);
   if (f < 1.f)
     m_fuzz = f;
   else
@@ -166,8 +166,8 @@ MaterialPtr Metal::create(TexturePtr tex, const MaterialProperties& prop) {
 
 Dielectric::Dielectric(TexturePtr tex, const MaterialProperties& prop)
     : Material(std::move(tex), prop) {
-  ref_idx =
-      prop.getPropertyAs<float>(Properties::REFRACTIVE_INDEX).value_or(1.);
+  ref_idx = prop.getPropertyAs<float>(MaterialProperties::REFRACTIVE_INDEX)
+                .value_or(1.);
   m_type = MaterialType::DIELECTRIC;
 }
 
