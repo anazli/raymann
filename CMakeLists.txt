@@ -42,6 +42,18 @@ add_library(${LIBRARY_NAME}
             src/geometry/triangle.h
             src/materials/material.cpp
             src/materials/material.h
+            src/materials/dielectric.cpp
+            src/materials/dielectric.h
+            src/materials/emissive.cpp
+            src/materials/emissive.h
+            src/materials/isotropic.cpp
+            src/materials/isotropic.h
+            src/materials/lambertian.cpp
+            src/materials/lambertian.h
+            src/materials/metal.cpp
+            src/materials/metal.h
+            src/materials/standard.cpp
+            src/materials/standard.h
             src/materials/material_properties.cpp
             src/materials/material_properties.h
             src/renderers/renderer.cpp

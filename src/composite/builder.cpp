@@ -11,6 +11,12 @@
 #include "geometry/quad.h"
 #include "geometry/sphere.h"
 #include "geometry/triangle.h"
+#include "materials/dielectric.h"
+#include "materials/emissive.h"
+#include "materials/isotropic.h"
+#include "materials/lambertian.h"
+#include "materials/metal.h"
+#include "materials/standard.h"
 #include "transformations/transformation.h"
 
 void WorldBuilder::createWorld() {
