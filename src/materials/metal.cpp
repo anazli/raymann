@@ -7,12 +7,12 @@
 
 Metal::Metal(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
-  auto f = prop.getPropertyAs<float>(DataContainer::FUZZ).value_or(0.);
+  auto f = prop.getPropertyAs<float>(AppParameters::FUZZ).value_or(0.);
   if (f < 1.f)
     m_fuzz = f;
   else
     m_fuzz = 1.f;
-  m_type = MaterialType::METAL;
+  m_type = AppParameters::METAL;
 }
 
 bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,

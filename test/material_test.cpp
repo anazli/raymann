@@ -132,13 +132,13 @@ TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   builder->addLight(light);
   builder->createWorld();
   builder->createPrimitive(new Sphere);
-  prop.setProperty(DataContainer::COLOR, Vec3D(0.8f, 1.f, 0.6f))
-      .setProperty(DataContainer::DIFFUSE, 0.7f)
-      .setProperty(DataContainer::SPECULAR, 0.2f);
+  prop.setProperty(AppParameters::COLOR, Vec3D(0.8f, 1.f, 0.6f))
+      .setProperty(AppParameters::DIFFUSE, 0.7f)
+      .setProperty(AppParameters::SPECULAR, 0.2f);
   builder->applyMaterial(
       std::make_unique<ConstantTexture>(Vec3D(0.8f, 1.f, 0.6f)), prop);
   builder->addElementToProduct();
-  prop.setProperty(DataContainer::AMBIENT, 1.f);
+  prop.setProperty(AppParameters::AMBIENT, 1.f);
   builder->createPrimitive(new Sphere);
   builder->applyMaterial(std::make_unique<ConstantTexture>(), prop);
   builder->addElementToProduct();

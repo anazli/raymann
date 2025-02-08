@@ -8,7 +8,7 @@
 Lambertian::Lambertian(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
   m_pdf = std::make_shared<CosPdf>();
-  m_type = MaterialType::LAMBERTIAN;
+  m_type = AppParameters::LAMBERTIAN;
 }
 
 bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,

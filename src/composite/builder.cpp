@@ -38,21 +38,21 @@ void WorldBuilder::addElementToProduct() {
 
 void WorldBuilder::addLight(const PointLight& light) { m_light = light; }
 
-void WorldBuilder::createPrimitive(const PrimitiveType& type) {
+void WorldBuilder::createPrimitive(const AppParameters& type) {
   switch (type) {
-    case PrimitiveType::CONE:
+    case AppParameters::CONE:
       m_currentElement = Cone::create();
       break;
-    case PrimitiveType::CUBE:
+    case AppParameters::CUBE:
       m_currentElement = Cube::create();
       break;
-    case PrimitiveType::CYLINDER:
+    case AppParameters::CYLINDER:
       m_currentElement = Cylinder::create();
       break;
-    case PrimitiveType::PLANE:
+    case AppParameters::PLANE:
       m_currentElement = Plane::create();
       break;
-    case PrimitiveType::SPHERE:
+    case AppParameters::SPHERE:
       m_currentElement = Sphere::create();
       break;
     default:

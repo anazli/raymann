@@ -1,5 +1,5 @@
+#include "application/data_container.h"
 #include "gtest/gtest.h"
-#include "materials/material_properties.h"
 #include "tools/tools.h"
 
 using namespace testing;
@@ -8,8 +8,8 @@ using namespace std;
 class MaterialPropertiesTest : public Test {
  public:
   DataContainer p;
-  DataContainer::Properties name =
-      DataContainer::COLOR;  // For some weird reason, with other values
+  AppParameters name =
+      AppParameters::COLOR;  // For some weird reason, with other values
                              // like AMBIENT, DIFFUSE etc.. the tests
                              // [addsProperty, entityHasProperty] fail.
                              // Either GoogleTests's or STL's problem
@@ -34,7 +34,7 @@ TEST_F(MaterialPropertiesTest, entityHasProperty) {
   EXPECT_FALSE(p.hasProperty(name));
   p.setProperty(name, value);
   EXPECT_TRUE(p.hasProperty(name));
-  EXPECT_FALSE(p.hasProperty(static_cast<DataContainer::Properties>(1000)));
+  EXPECT_FALSE(p.hasProperty(static_cast<AppParameters>(1000)));
 }
 
 TEST_F(MaterialPropertiesTest, getsPropertyAsInt) {
@@ -76,7 +76,7 @@ TEST_F(MaterialPropertiesTest, removesProperty) {
 }
 
 TEST_F(MaterialPropertiesTest, defaultTransparencyAndRefractiveIndexTest) {
-  EXPECT_EQ(p.getPropertyAs<float>(DataContainer::TRANSPARENCY).value(), 0.f);
-  EXPECT_EQ(p.getPropertyAs<float>(DataContainer::REFRACTIVE_INDEX).value(),
+  EXPECT_EQ(p.getPropertyAs<float>(AppParameters::TRANSPARENCY).value(), 0.f);
+  EXPECT_EQ(p.getPropertyAs<float>(AppParameters::REFRACTIVE_INDEX).value(),
             1.f);
 }

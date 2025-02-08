@@ -8,7 +8,6 @@
 class Cube : public SceneElement {
  public:
   Cube() {
-    m_elementType = PrimitiveType::CUBE;
     m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f);
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f);
   }

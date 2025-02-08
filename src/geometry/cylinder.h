@@ -9,7 +9,6 @@ class Cylinder : public SceneElement {
   Cylinder(float minY = -std::numeric_limits<float>::max(),
            float maxY = std::numeric_limits<float>::max(), bool closed = false)
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
-    m_elementType = PrimitiveType::CYLINDER;
     if (!closed) {
       m_bBox.minPoint() = Point3D(-1.f, -limit::infinity(), -1.f);
       m_bBox.maxPoint() = Point3D(1.f, limit::infinity(), 1.f);

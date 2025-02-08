@@ -31,8 +31,8 @@ Vec3D PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
     return emittedColor;
   }
 
-  if (record.object->getMaterial()->getType() == MaterialType::DIELECTRIC ||
-      record.object->getMaterial()->getType() == MaterialType::METAL) {
+  if (record.object->getMaterial()->getType() == AppParameters::DIELECTRIC ||
+      record.object->getMaterial()->getType() == AppParameters::METAL) {
     return attenuation * computeColor(world, scattered, rec - 1);
   }
 

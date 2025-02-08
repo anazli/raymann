@@ -5,8 +5,8 @@
 Dielectric::Dielectric(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
   ref_idx =
-      prop.getPropertyAs<float>(DataContainer::REFRACTIVE_INDEX).value_or(1.);
-  m_type = MaterialType::DIELECTRIC;
+      prop.getPropertyAs<float>(AppParameters::REFRACTIVE_INDEX).value_or(1.);
+  m_type = AppParameters::DIELECTRIC;
 }
 
 bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,

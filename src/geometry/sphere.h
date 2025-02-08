@@ -8,7 +8,6 @@ class Sphere : public SceneElement {
   ~Sphere() override = default;
   Sphere(const Point3D &c = Point3D(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
       : m_center(c), m_radius(r) {
-    m_elementType = PrimitiveType::SPHERE;
     m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f) + c;
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f) + c;
   }

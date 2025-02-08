@@ -1,20 +1,11 @@
 #pragma once
 
-#include "materials/material_properties.h"
+#include "application/data_container.h"
 #include "textures/texture.h"
 
 class IntersectionRecord;
 class StochasticSampler;
 class StochasticPdf;
-
-enum class MaterialType {
-  STANDARD,
-  LAMBERTIAN,
-  ISOTROPIC,
-  DIFFUSE_LIGHT,
-  METAL,
-  DIELECTRIC
-};
 
 class Material {
  public:
@@ -30,7 +21,7 @@ class Material {
   virtual float scatteringPDF(const Ray& r, const IntersectionRecord& record,
                               const Ray& scatteredRay) const;
   std::shared_ptr<StochasticPdf> pdf() const;
-  MaterialType getType() const;
+  AppParameters getType() const;
 
  protected:
   Material(TexturePtr tex, const DataContainer& prop);
@@ -42,7 +33,7 @@ class Material {
   TexturePtr m_tex;
   DataContainer m_prop;
   std::shared_ptr<StochasticPdf> m_pdf;
-  MaterialType m_type;
+  AppParameters m_type;
 };
 
 using MaterialPtr = std::shared_ptr<Material>;

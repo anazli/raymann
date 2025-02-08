@@ -8,7 +8,7 @@
 Isotropic::Isotropic(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
   m_pdf = std::make_shared<SpherePdf>();
-  m_type = MaterialType::ISOTROPIC;
+  m_type = AppParameters::ISOTROPIC;
 }
 
 bool Isotropic::scatter(const Ray& r_in, const IntersectionRecord& rec,

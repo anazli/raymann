@@ -29,7 +29,7 @@ float Material::scatteringPDF(const Ray& r, const IntersectionRecord& record,
 
 std::shared_ptr<StochasticPdf> Material::pdf() const { return m_pdf; }
 
-MaterialType Material::getType() const { return m_type; }
+AppParameters Material::getType() const { return m_type; }
 
 float Material::schlick(float cosine, float ref_idx) const {
   auto r0 = (1.f - ref_idx) / (1.f + ref_idx);

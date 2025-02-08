@@ -47,7 +47,7 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
   auto ret_ambient =
       effective_color * m_closestHit.object->getMaterial()
                             ->getProperties()
-                            .getPropertyAs<float>(DataContainer::AMBIENT)
+                            .getPropertyAs<float>(AppParameters::AMBIENT)
                             .value();
   auto ret_diffuse = Vec3D{};
   auto ret_specular = Vec3D{};
@@ -59,7 +59,7 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
     ret_diffuse = effective_color *
                   m_closestHit.object->getMaterial()
                       ->getProperties()
-                      .getPropertyAs<float>(DataContainer::DIFFUSE)
+                      .getPropertyAs<float>(AppParameters::DIFFUSE)
                       .value() *
                   light_normal;
     auto reflectv = reflect(-lightv, normal_vec);
@@ -68,12 +68,12 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
       float factor = pow(reflect_dot_eye,
                          m_closestHit.object->getMaterial()
                              ->getProperties()
-                             .getPropertyAs<float>(DataContainer::SHININESS)
+                             .getPropertyAs<float>(AppParameters::SHININESS)
                              .value());
       ret_specular = world->getLight().intensity() *
                      m_closestHit.object->getMaterial()
                          ->getProperties()
-                         .getPropertyAs<float>(DataContainer::SPECULAR)
+                         .getPropertyAs<float>(AppParameters::SPECULAR)
                          .value() *
                      factor;
     }
@@ -93,7 +93,7 @@ Vec3D PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
       }
       if (closestReflectedHit.object->getMaterial()
               ->getProperties()
-              .getPropertyAs<float>(DataContainer::REFLECTION)
+              .getPropertyAs<float>(AppParameters::REFLECTION)
               .value() <= 0.f) {
         return black;
       }
@@ -116,7 +116,7 @@ Vec3D PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
       auto color = computeColor(world, reflect_ray, rec - 1);
       return color * closestReflectedHit.object->getMaterial()
                          ->getProperties()
-                         .getPropertyAs<float>(DataContainer::REFLECTION)
+                         .getPropertyAs<float>(AppParameters::REFLECTION)
                          .value();
     }
   }

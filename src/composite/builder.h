@@ -5,7 +5,7 @@
 #include "composite/scene_element.h"
 #include "textures/texture.h"
 
-struct BuilderData {
+/*struct BuilderData {
   PrimitiveType primitive_type;
   MaterialType material_type;
   DataContainer material_properties;
@@ -15,7 +15,7 @@ class PrimitiveBuilder {
  public:
   virtual void createPrimitive(const PrimitiveType &type) = 0;
   virtual void createPrimitive(SceneElementRawPtr primitive) = 0;
-};
+};*/
 
 class Builder {
  public:
@@ -24,7 +24,7 @@ class Builder {
   virtual void addWorldToProduct() = 0;
   virtual void addElementToProduct() = 0;
   virtual void addLight(const PointLight &light) = 0;
-  virtual void createPrimitive(const PrimitiveType &type) = 0;
+  virtual void createPrimitive(const AppParameters &type) = 0;
   virtual void createPrimitive(SceneElementRawPtr primitive) = 0;
   virtual void applyTransformation(const Mat4D &trans) = 0;
   virtual void applyWorldTransformation(const Mat4D &trans) = 0;
@@ -52,7 +52,7 @@ class WorldBuilder : public Builder {
   void addWorldToProduct() override;
   void addElementToProduct() override;
   void addLight(const PointLight &light) override;
-  void createPrimitive(const PrimitiveType &type) override;
+  void createPrimitive(const AppParameters &type) override;
   void createPrimitive(SceneElementRawPtr primitive) override;
   void applyTransformation(const Mat4D &trans) override;
   void applyWorldTransformation(const Mat4D &trans) override;

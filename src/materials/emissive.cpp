@@ -4,7 +4,7 @@
 
 EmissiveMaterial::EmissiveMaterial(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
-  m_type = MaterialType::DIFFUSE_LIGHT;
+  m_type = AppParameters::DIFFUSE_LIGHT;
 }
 
 bool EmissiveMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,

@@ -27,7 +27,7 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Floor
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::CUBE);
+  builder->createPrimitive(AppParameters::CUBE);
   builder->applyTransformation(translation(278.f, 0.f, -245.f) *
                                scale(279.f, eps, 556.f));
   builder->applyLambertianMaterial(ConstantTexture::create(white));
@@ -36,7 +36,7 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Ceil
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::CUBE);
+  builder->createPrimitive(AppParameters::CUBE);
   builder->applyTransformation(translation(278.f, 555.f, -245.f) *
                                scale(279.f, eps, 556.f));
   builder->applyLambertianMaterial(ConstantTexture::create(white));
@@ -45,7 +45,7 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Left Wall
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::CUBE);
+  builder->createPrimitive(AppParameters::CUBE);
   builder->applyTransformation(translation(0.f, 278.f, -245.f) *
                                scale(eps, 279.f, 556.f));
   builder->applyLambertianMaterial(ConstantTexture::create(green));
@@ -53,7 +53,7 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Right Wall
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::CUBE);
+  builder->createPrimitive(AppParameters::CUBE);
   builder->applyTransformation(translation(555.f, 278.f, -245.f) *
                                scale(eps, 279.f, 556.f));
   builder->applyLambertianMaterial(ConstantTexture::create(red));
@@ -62,7 +62,7 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Center Wall
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::CUBE);
+  builder->createPrimitive(AppParameters::CUBE);
   builder->applyTransformation(translation(0.f, 278.f, -245.f) *
                                scale(556.f, 279.f, eps));
   builder->applyLambertianMaterial(ConstantTexture::create(white));
@@ -83,7 +83,7 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Left Box
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::CUBE);
+  builder->createPrimitive(AppParameters::CUBE);
   builder->applyTransformation(translation(195.f, 1.f, -390.f) *
                                scale(70.f, 290.f, 60.f) * rotationOverY(-0.4f));
   builder->applyLambertianMaterial(ConstantTexture::create(white));
@@ -92,7 +92,7 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Right Box
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::CUBE);
+  builder->createPrimitive(AppParameters::CUBE);
   builder->applyTransformation(translation(367.f, 1.f, -440.f) *
                                scale(60.f, 110.f, 60.f) * rotationOverY(0.4f));
   builder->applyLambertianMaterial(ConstantTexture::create(white));
@@ -101,21 +101,21 @@ int main() {
   /*---------------------------------------------------------------------------
    *				Left Sphere
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::SPHERE);
+  builder->createPrimitive(AppParameters::SPHERE);
   builder->applyTransformation(translation(200.f, 320.f, -395.f) *
                                scale(30.f, 30.f, 30.f));
   DataContainer prop;
-  prop.setProperty(DataContainer::FUZZ, 1.8f);
+  prop.setProperty(AppParameters::FUZZ, 1.8f);
   builder->applyDielectricMaterial(ConstantTexture::create(white), prop);
   builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
    *				Right Sphere
    * -------------------------------------------------------------------------*/
-  builder->createPrimitive(PrimitiveType::SPHERE);
+  builder->createPrimitive(AppParameters::SPHERE);
   builder->applyTransformation(translation(367.f, 158.f, -440.f) *
                                scale(60.f, 60.f, 60.f));
-  prop.setProperty(DataContainer::REFRACTIVE_INDEX, 1.5f);
+  prop.setProperty(AppParameters::REFRACTIVE_INDEX, 1.5f);
   builder->applyDielectricMaterial(ConstantTexture::create(white), prop);
   builder->addElementToProduct();
 

@@ -11,21 +11,9 @@
 class BaseRenderer;
 class StandardMaterial;
 
-enum class PrimitiveType {
-  CONE,
-  CUBE,
-  CYLINDER,
-  PLANE,
-  SPHERE,
-  TRIANGLE,
-  WORLD,
-  BBOX
-};
-
 class SceneElement {
  public:
   virtual ~SceneElement() = default;
-  virtual PrimitiveType elementType() const;
   virtual bool intersect(const Ray &r, IntersectionRecord &record);
   virtual void add(std::shared_ptr<SceneElement> item);
   virtual std::vector<std::shared_ptr<SceneElement>>::iterator remove(
@@ -56,7 +44,6 @@ class SceneElement {
   SceneElement *m_parent = nullptr;
   MaterialPtr m_material;
   BoundingBox m_bBox;
-  PrimitiveType m_elementType;
   Transformation m_transformation;
 };
 

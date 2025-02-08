@@ -13,6 +13,9 @@ add_library(${LIBRARY_NAME}
             src/acceleration/bvh.cpp
             src/acceleration/bvh.h
             src/application/error.h
+            src/application/parameters.h
+            src/application/data_container.cpp
+            src/application/data_container.h
             src/application/wavefront_reader.cpp
             src/application/wavefront_reader.h
             src/camera/camera.cpp
@@ -54,8 +57,6 @@ add_library(${LIBRARY_NAME}
             src/materials/metal.h
             src/materials/standard.cpp
             src/materials/standard.h
-            src/materials/material_properties.cpp
-            src/materials/material_properties.h
             src/renderers/renderer.cpp
             src/renderers/renderer.h
             src/renderers/path_tracer.cpp
