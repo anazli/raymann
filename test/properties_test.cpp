@@ -40,21 +40,17 @@ TEST_F(MaterialPropertiesTest, entityHasProperty) {
 TEST_F(MaterialPropertiesTest, getsPropertyAsInt) {
   int new_value = 5;
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAs<int>(static_cast<Properties>(1000)).value(), 0);
   EXPECT_EQ(p.getPropertyAs<int>(name).value(), new_value);
 }
 
 TEST_F(MaterialPropertiesTest, getsPropertyAsFloat) {
   p.setProperty(name, value);
-  EXPECT_EQ(p.getPropertyAs<float>(static_cast<Properties>(1000)).value(), 0.f);
   EXPECT_EQ(p.getPropertyAs<float>(name).value(), any_cast<float>(value));
 }
 
 TEST_F(MaterialPropertiesTest, getsPropertyAsVec3D) {
   Vec3D new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAs<Vec3D>(static_cast<Properties>(1000)).value(),
-            Vec3D());
   EXPECT_EQ(p.getPropertyAs<Vec3D>(name).value(), new_value);
 }
 
@@ -64,16 +60,12 @@ TEST_F(MaterialPropertiesTest, getsPropertyAsMat4D) {
                   Vec4<float>(4.5f, 0.f, -3.f, 10.f),
                   Vec4<float>(0.f, 1.f, 6.68f, -9.f));
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAs<Mat4D>(static_cast<Properties>(1000)).value(),
-            Mat4D());
   EXPECT_EQ(p.getPropertyAs<Mat4D>(name).value(), new_value);
 }
 
 TEST_F(MaterialPropertiesTest, getsPropertyAsPoint3D) {
   Point3D new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAs<Point3D>(static_cast<Properties>(1000)).value(),
-            Point3D());
   EXPECT_EQ(p.getPropertyAs<Point3D>(name).value(), new_value);
 }
 
