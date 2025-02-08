@@ -31,10 +31,10 @@ class Builder {
       TexturePtr tex,
       const MaterialProperties &prop = MaterialProperties{}) = 0;
   virtual void applyMetalMaterial(
-      const float &f, TexturePtr tex,
+      TexturePtr tex,
       const MaterialProperties &prop = MaterialProperties{}) = 0;
   virtual void applyDielectricMaterial(
-      const float &ri, TexturePtr tex,
+      TexturePtr tex,
       const MaterialProperties &prop = MaterialProperties{}) = 0;
   virtual void createBBoxForElement(const BoundingBox &box) = 0;
   virtual SceneElementPtr getProduct() = 0;
@@ -61,11 +61,10 @@ class WorldBuilder : public Builder {
       const MaterialProperties &prop = MaterialProperties{}) override;
   void applyEmissiveMaterial(TexturePtr tex, const MaterialProperties &prop =
                                                  MaterialProperties{}) override;
-  void applyMetalMaterial(
-      const float &f, TexturePtr tex,
-      const MaterialProperties &prop = MaterialProperties{}) override;
+  void applyMetalMaterial(TexturePtr tex, const MaterialProperties &prop =
+                                              MaterialProperties{}) override;
   void applyDielectricMaterial(
-      const float &ri, TexturePtr tex,
+      TexturePtr tex,
       const MaterialProperties &prop = MaterialProperties{}) override;
   virtual void createBBoxForElement(const BoundingBox &box) override;
   SceneElementPtr getProduct() override;

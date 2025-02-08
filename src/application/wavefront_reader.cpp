@@ -122,7 +122,7 @@ void WavefrontReader::addLightForModel(const PointLight &light) {
   m_finalProduct->setLight(light);
 }
 
-void WavefrontReader::addMaterial(BaseMaterialPtr mat) { m_material = mat; }
+void WavefrontReader::addMaterial(MaterialPtr mat) { m_material = mat; }
 
 vector<Vec3D> WavefrontReader::vertexCollection() const { return m_vertices; }
 

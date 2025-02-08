@@ -71,34 +71,33 @@ void WorldBuilder::applyWorldTransformation(const Mat4D& trans) {
 void WorldBuilder::applyMaterial(TexturePtr tex,
                                  const MaterialProperties& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
-  BaseMaterialPtr matptr =
-      std::make_shared<StandardMaterial>(std::move(tex), prop);
+  MaterialPtr matptr = StandardMaterial::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyLambertianMaterial(TexturePtr tex,
                                            const MaterialProperties& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
-  BaseMaterialPtr matptr = std::make_shared<Lambertian>(std::move(tex), prop);
+  MaterialPtr matptr = Lambertian::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 
 void WorldBuilder::applyEmissiveMaterial(TexturePtr tex,
                                          const MaterialProperties& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
-  auto matptr = std::make_shared<EmissiveMaterial>(std::move(tex), prop);
+  auto matptr = EmissiveMaterial::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 
-void WorldBuilder::applyMetalMaterial(const float& f, TexturePtr tex,
+void WorldBuilder::applyMetalMaterial(TexturePtr tex,
                                       const MaterialProperties& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
-  auto matptr = std::make_shared<Metal>(f, std::move(tex), prop);
+  auto matptr = Metal::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
-void WorldBuilder::applyDielectricMaterial(const float& ri, TexturePtr tex,
+void WorldBuilder::applyDielectricMaterial(TexturePtr tex,
                                            const MaterialProperties& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
-  auto matptr = std::make_shared<Dielectric>(ri, std::move(tex), prop);
+  auto matptr = Dielectric::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 

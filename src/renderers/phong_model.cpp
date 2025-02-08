@@ -45,9 +45,10 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
       world->getLight().intensity();
 
   auto ret_ambient =
-      effective_color *
-      m_closestHit.object->getMaterial()->getProperties().getPropertyAsFloat(
-          Props::AMBIENT);
+      effective_color * m_closestHit.object->getMaterial()
+                            ->getProperties()
+                            .getPropertyAs<float>(Properties::AMBIENT)
+                            .value();
   auto ret_diffuse = Vec3D{};
   auto ret_specular = Vec3D{};
 
@@ -55,22 +56,25 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
 
   auto light_normal = dot(lightv, normal_vec);
   if (light_normal > 0.0f) {
-    ret_diffuse =
-        effective_color *
-        m_closestHit.object->getMaterial()->getProperties().getPropertyAsFloat(
-            Props::DIFFUSE) *
-        light_normal;
+    ret_diffuse = effective_color *
+                  m_closestHit.object->getMaterial()
+                      ->getProperties()
+                      .getPropertyAs<float>(Properties::DIFFUSE)
+                      .value() *
+                  light_normal;
     auto reflectv = reflect(-lightv, normal_vec);
     auto reflect_dot_eye = dot(reflectv, m_closestHit.eye(ray));
     if (reflect_dot_eye > 0.0f) {
       float factor =
           pow(reflect_dot_eye, m_closestHit.object->getMaterial()
                                    ->getProperties()
-                                   .getPropertyAsFloat(Props::SHININESS));
+                                   .getPropertyAs<float>(Properties::SHININESS)
+                                   .value());
       ret_specular = world->getLight().intensity() *
                      m_closestHit.object->getMaterial()
                          ->getProperties()
-                         .getPropertyAsFloat(Props::SPECULAR) *
+                         .getPropertyAs<float>(Properties::SPECULAR)
+                         .value() *
                      factor;
     }
   }
@@ -89,7 +93,8 @@ Vec3D PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
       }
       if (closestReflectedHit.object->getMaterial()
               ->getProperties()
-              .getPropertyAsFloat(Props::REFLECTION) <= 0.f) {
+              .getPropertyAs<float>(Properties::REFLECTION)
+              .value() <= 0.f) {
         return black;
       }
       auto reflectv =
@@ -111,7 +116,8 @@ Vec3D PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
       auto color = computeColor(world, reflect_ray, rec - 1);
       return color * closestReflectedHit.object->getMaterial()
                          ->getProperties()
-                         .getPropertyAsFloat(Props::REFLECTION);
+                         .getPropertyAs<float>(Properties::REFLECTION)
+                         .value();
     }
   }
   return black;

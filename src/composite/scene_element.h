@@ -44,8 +44,8 @@ class SceneElement {
   virtual const BoundingBox &boundingBox() const;
   virtual float pdf(const Point3D &origin, const Vec3D &direction);
   virtual Vec3D random(const Point3D &origin);
-  void setMaterial(BaseMaterialPtr mat);
-  BaseMaterialPtr getMaterial() const;
+  void setMaterial(MaterialPtr mat);
+  MaterialPtr getMaterial() const;
   virtual Point3D pointFromWorldToObjectSpace(const Point3D &point) const;
   virtual Vec3D vectorFromObjectToWorldSpace(const Vec3D vec) const;
   void setTransformation(const Transformation &transformation);
@@ -54,7 +54,7 @@ class SceneElement {
   SceneElement();
   SceneElement(const BoundingBox &props);
   SceneElement *m_parent = nullptr;
-  BaseMaterialPtr m_material;
+  MaterialPtr m_material;
   BoundingBox m_bBox;
   PrimitiveType m_elementType;
   Transformation m_transformation;

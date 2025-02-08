@@ -25,6 +25,8 @@ class ConstantTexture : public Texture {
   };
   void setColor(const Vec3D &col) override { m_color = col; }
 
+  static TexturePtr create(const Vec3D &color);
+
  private:
   Vec3D m_color;
 };
@@ -41,6 +43,7 @@ class CheckerTexture : public Texture {
     return m_even->value(u, v, p);
   }
   void setColor(const Vec3D &col) override {}
+  static TexturePtr create(TexturePtr t1, TexturePtr t2);
 
  private:
   TexturePtr m_odd;
@@ -59,6 +62,9 @@ class PerlinTexture : public Texture {
                1.f + sin(m_scale * p.x() + 5.f * m_noise.turb(m_scale * p)));
   }
   void setColor(const Vec3D &col) override {}
+
+  static TexturePtr create(float scale,
+                           const Vec3D &color = Vec3D(1.f, 1.f, 1.f));
 
  private:
   Perlin m_noise;

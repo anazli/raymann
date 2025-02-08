@@ -30,9 +30,9 @@ SceneElementContainer SceneElement::getChildren() const {
 
 std::vector<std::shared_ptr<SceneElement> >& SceneElement::getChildren() {}
 
-void SceneElement::setMaterial(BaseMaterialPtr mat) { m_material = mat; }
+void SceneElement::setMaterial(MaterialPtr mat) { m_material = mat; }
 
-BaseMaterialPtr SceneElement::getMaterial() const { return m_material; }
+MaterialPtr SceneElement::getMaterial() const { return m_material; }
 
 void SceneElement::setParent(SceneElementRawPtr parent) { m_parent = parent; }
 

@@ -2,34 +2,42 @@
 
 #include <any>
 #include <map>
+#include <optional>
 
 #include "tools/tools.h"
 
-enum class Props {
-  COLOR,            // Vec3D
-  AMBIENT,          // float [0,1]
-  DIFFUSE,          // float [0,1]
-  SPECULAR,         // float [0,1]
-  SHININESS,        // float [0,..]
-  REFLECTION,       // float [0,1]
-  TRANSPARENCY,     // float [0,1]
-  REFRACTIVE_INDEX  // float [0,..]
+enum class Properties {
+  COLOR,             // Vec3D
+  AMBIENT,           // float [0,1]
+  DIFFUSE,           // float [0,1]
+  SPECULAR,          // float [0,1]
+  SHININESS,         // float [0,..]
+  REFLECTION,        // float [0,1]
+  TRANSPARENCY,      // float [0,1]
+  REFRACTIVE_INDEX,  // float [0,..]
+  FUZZ               // float [0,1]
 };
 
 class MaterialProperties {
  public:
   MaterialProperties();
-  MaterialProperties &setProperty(const Props &name, const std::any &value);
-  bool addProperty(const Props &name, const std::any &value);
-  bool removeProperty(const Props &name);
-  bool hasProperty(const Props &name) const;
-  std::any getPropertyAsAny(const Props &name) const;
-  int getPropertyAsInt(const Props &name) const;
-  float getPropertyAsFloat(const Props &name) const;
-  Vec3D getPropertyAsVec3D(const Props &name) const;
-  Mat4D getPropertyAsMat4D(const Props &name) const;
-  Point3D getPropertyAsPoint3D(const Props &name) const;
+  MaterialProperties &setProperty(const Properties &name,
+                                  const std::any &value);
+  bool addProperty(const Properties &name, const std::any &value);
+  bool removeProperty(const Properties &name);
+  bool hasProperty(const Properties &name) const;
+  template <typename T>
+  std::optional<T> getPropertyAs(const Properties &name) const {
+    if (hasProperty(name)) {
+      try {
+        return std::any_cast<T>(m_prop.at(name));
+      } catch (const std::bad_any_cast &e) {
+        std::cout << e.what() << std::endl;
+      }
+    }
+    return std::nullopt;
+  }
 
  private:
-  std::map<Props, std::any> m_prop;
+  std::map<Properties, std::any> m_prop;
 };

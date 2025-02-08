@@ -30,7 +30,7 @@ int main() {
   builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(278.f, 0.f, -245.f) *
                                scale(279.f, eps, 556.f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
   builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
@@ -39,7 +39,7 @@ int main() {
   builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(278.f, 555.f, -245.f) *
                                scale(279.f, eps, 556.f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
   builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
@@ -48,7 +48,7 @@ int main() {
   builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(0.f, 278.f, -245.f) *
                                scale(eps, 279.f, 556.f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(green));
+  builder->applyLambertianMaterial(ConstantTexture::create(green));
   builder->addElementToProduct();
   /*---------------------------------------------------------------------------
    *				Right Wall
@@ -56,7 +56,7 @@ int main() {
   builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(555.f, 278.f, -245.f) *
                                scale(eps, 279.f, 556.f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(red));
+  builder->applyLambertianMaterial(ConstantTexture::create(red));
   builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
@@ -65,7 +65,7 @@ int main() {
   builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(0.f, 278.f, -245.f) *
                                scale(556.f, 279.f, eps));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
   builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
@@ -76,7 +76,7 @@ int main() {
                                     Vec3D(0.f, 0.f, 105.f)));
   // builder->applyTransformation(translation(277.f, 554.5f, -455.f) *
   //                              scale(80.f, eps, 30.f));
-  builder->applyEmissiveMaterial(make_unique<ConstantTexture>(diffuseLight));
+  builder->applyEmissiveMaterial(ConstantTexture::create(diffuseLight));
   auto diffuseLightElem = builder->getCurrentElement();
   builder->addElementToProduct();
 
@@ -86,7 +86,7 @@ int main() {
   builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(195.f, 1.f, -390.f) *
                                scale(70.f, 290.f, 60.f) * rotationOverY(-0.4f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
   builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
@@ -95,7 +95,7 @@ int main() {
   builder->createPrimitive(PrimitiveType::CUBE);
   builder->applyTransformation(translation(367.f, 1.f, -440.f) *
                                scale(60.f, 110.f, 60.f) * rotationOverY(0.4f));
-  builder->applyLambertianMaterial(make_unique<ConstantTexture>(white));
+  builder->applyLambertianMaterial(ConstantTexture::create(white));
   builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
@@ -104,7 +104,9 @@ int main() {
   builder->createPrimitive(PrimitiveType::SPHERE);
   builder->applyTransformation(translation(200.f, 320.f, -395.f) *
                                scale(30.f, 30.f, 30.f));
-  builder->applyDielectricMaterial(1.8f, make_unique<ConstantTexture>(white));
+  MaterialProperties prop;
+  prop.setProperty(Properties::FUZZ, 1.8f);
+  builder->applyDielectricMaterial(ConstantTexture::create(white), prop);
   builder->addElementToProduct();
 
   /*---------------------------------------------------------------------------
@@ -113,7 +115,8 @@ int main() {
   builder->createPrimitive(PrimitiveType::SPHERE);
   builder->applyTransformation(translation(367.f, 158.f, -440.f) *
                                scale(60.f, 60.f, 60.f));
-  builder->applyDielectricMaterial(1.5f, make_unique<ConstantTexture>(white));
+  prop.setProperty(Properties::REFRACTIVE_INDEX, 1.5f);
+  builder->applyDielectricMaterial(ConstantTexture::create(white), prop);
   builder->addElementToProduct();
 
   //----------------------------------------------------------------------------
