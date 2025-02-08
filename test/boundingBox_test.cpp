@@ -198,16 +198,16 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
 
   builder.createPrimitive(new Sphere);
   builder.applyTransformation(translation(-2.f, 0.f, 0.f));
-  SceneElementRawPtr sphere1 = builder.getCurrentElement();
+  SceneElementPtr sphere1 = builder.getCurrentElement();
   builder.addElementToProduct();
 
   builder.createPrimitive(new Sphere);
   builder.applyTransformation(translation(2.f, 0.f, 0.f));
-  SceneElementRawPtr sphere2 = builder.getCurrentElement();
+  SceneElementPtr sphere2 = builder.getCurrentElement();
   builder.addElementToProduct();
 
   builder.createPrimitive(new Sphere);
-  SceneElementRawPtr sphere3 = builder.getCurrentElement();
+  SceneElementPtr sphere3 = builder.getCurrentElement();
   builder.addElementToProduct();
 
   SceneElementPtr world = builder.getProduct();
@@ -215,13 +215,13 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
       bvh.splitElementsOf(world->getChildren(), world->boundingBox());
 
   ASSERT_TRUE(world->getChildren().size() == 1);
-  ASSERT_TRUE((*world->getChildren().begin()).get() == sphere3);
+  ASSERT_TRUE((*world->getChildren().begin()).get() == sphere3.get());
 
   ASSERT_TRUE(wp.first->getChildren().size() == 1);
-  ASSERT_TRUE((*wp.first->getChildren().begin()).get() == sphere1);
+  ASSERT_TRUE((*wp.first->getChildren().begin()).get() == sphere1.get());
 
   ASSERT_TRUE(wp.second->getChildren().size() == 1);
-  ASSERT_TRUE((*wp.second->getChildren().begin()).get() == sphere2);
+  ASSERT_TRUE((*wp.second->getChildren().begin()).get() == sphere2.get());
 }
 
 TEST_F(BoundingBoxTest, divideWorld) {
@@ -230,24 +230,24 @@ TEST_F(BoundingBoxTest, divideWorld) {
 
   builder.createPrimitive(new Sphere);
   builder.applyTransformation(translation(-2.f, -2.f, 0.f));
-  SceneElementRawPtr sphere1 = builder.getCurrentElement();
+  SceneElementPtr sphere1 = builder.getCurrentElement();
   builder.addElementToProduct();
 
   builder.createPrimitive(new Sphere);
   builder.applyTransformation(translation(-2.f, 2.f, 0.f));
-  SceneElementRawPtr sphere2 = builder.getCurrentElement();
+  SceneElementPtr sphere2 = builder.getCurrentElement();
   builder.addElementToProduct();
 
   builder.createPrimitive(new Sphere);
   builder.applyTransformation(scale(4.f, 4.f, 4.f));
-  SceneElementRawPtr sphere3 = builder.getCurrentElement();
+  SceneElementPtr sphere3 = builder.getCurrentElement();
   builder.addElementToProduct();
 
   SceneElementPtr world = builder.getProduct();
   bvh.divideWorld(world, 1);
   WorldIterator it(world->getChildren());
   if (it.first()) {
-    ASSERT_TRUE(it.currentElement() == sphere3);
+    ASSERT_TRUE(it.currentElement() == sphere3.get());
     ASSERT_FALSE(it.currentElement()->isWorld());
     it.advance();
     ASSERT_TRUE(it.currentElement()->isWorld());
@@ -257,12 +257,12 @@ TEST_F(BoundingBoxTest, divideWorld) {
       ASSERT_TRUE(it1.currentElement()->isWorld());
       ASSERT_TRUE(it1.currentElement()->getChildren().size() == 1);
       ASSERT_TRUE((*it1.currentElement()->getChildren().begin()).get() ==
-                  sphere1);
+                  sphere1.get());
       it1.advance();
       ASSERT_TRUE(it1.currentElement()->isWorld());
       ASSERT_TRUE(it1.currentElement()->getChildren().size() == 1);
       ASSERT_TRUE((*it1.currentElement()->getChildren().begin()).get() ==
-                  sphere2);
+                  sphere2.get());
     }
   }
 }

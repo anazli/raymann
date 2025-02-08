@@ -116,7 +116,7 @@ TEST_F(MaterialTest, precomputingTheReflectionVector) {
   MaterialProperties prop;
   BuilderPtr builder = std::make_unique<WorldBuilder>();
   builder->createPrimitive(new Plane);
-  SceneElementRawPtr plane = builder->getCurrentElement();
+  SceneElementPtr plane = builder->getCurrentElement();
   Ray r(Point3D(0.f, 1.f, -1.f), Vec3D(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r, rec);
   Vec3D reflection_vector = reflect(r.direction(), plane->normal(rec.point(r)));
@@ -132,13 +132,13 @@ TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   builder->addLight(light);
   builder->createWorld();
   builder->createPrimitive(new Sphere);
-  prop.setProperty(MaterialProperties::COLOR, Vec3D(0.8f, 1.f, 0.6f))
-      .setProperty(MaterialProperties::DIFFUSE, 0.7f)
-      .setProperty(MaterialProperties::SPECULAR, 0.2f);
+  prop.setProperty(Properties::COLOR, Vec3D(0.8f, 1.f, 0.6f))
+      .setProperty(Properties::DIFFUSE, 0.7f)
+      .setProperty(Properties::SPECULAR, 0.2f);
   builder->applyMaterial(
       std::make_unique<ConstantTexture>(Vec3D(0.8f, 1.f, 0.6f)), prop);
   builder->addElementToProduct();
-  prop.setProperty(MaterialProperties::AMBIENT, 1.f);
+  prop.setProperty(Properties::AMBIENT, 1.f);
   builder->createPrimitive(new Sphere);
   builder->applyMaterial(std::make_unique<ConstantTexture>(), prop);
   builder->addElementToProduct();

@@ -23,7 +23,7 @@ TEST_F(WorldTest, createsWorldOfShere) {
   builder->createWorld();
   builder->createPrimitive(new Sphere);
   builder->applyTransformation(Mat4D());
-  SceneElementRawPtr sphere = builder->getCurrentElement();
+  SceneElementPtr sphere = builder->getCurrentElement();
   EXPECT_TRUE(sphere->getParent() == nullptr);
   builder->addElementToProduct();
   world = builder->getProduct();
@@ -42,10 +42,10 @@ TEST_F(WorldTest, createsWorldOfTwoSpheres) {
   builder->addLight(light);
   builder->createWorld();
   builder->createPrimitive(new Sphere(Point3D(0.0f, 0.0f, 5.0f)));
-  SceneElementRawPtr s = builder->getCurrentElement();
+  SceneElementPtr s = builder->getCurrentElement();
   builder->addElementToProduct();
   builder->createPrimitive(new Sphere);
-  SceneElementRawPtr s1 = builder->getCurrentElement();
+  SceneElementPtr s1 = builder->getCurrentElement();
   builder->addElementToProduct();
   world = builder->getProduct();
 
@@ -66,7 +66,7 @@ TEST_F(WorldTest, whenWorldIsTranformed_parentOfChildIsCorrect) {
   builder->applyWorldTransformation(Mat4D());
   builder->createPrimitive(new Sphere);
   builder->applyTransformation(Mat4D());
-  SceneElementRawPtr sphere = builder->getCurrentElement();
+  SceneElementPtr sphere = builder->getCurrentElement();
   EXPECT_TRUE(sphere->getParent() == nullptr);
   builder->addElementToProduct();
   world = builder->getProduct();
@@ -110,7 +110,7 @@ TEST_F(WorldTest, convertingPointFromWorldToObjectSpace) {
   builder->addElementToProduct();
   SceneElementPtr innerWorld = builder->getProduct();
 
-  SceneElementRawPtr sphere = builder->getCurrentElement();
+  SceneElementPtr sphere = builder->getCurrentElement();
   outerWorld->add(innerWorld);
 
   EXPECT_EQ(sphere->getParent(), innerWorld.get());
@@ -137,7 +137,7 @@ TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
   builder->addElementToProduct();
   SceneElementPtr innerWorld = builder->getProduct();
 
-  SceneElementRawPtr sphere = builder->getCurrentElement();
+  SceneElementPtr sphere = builder->getCurrentElement();
   outerWorld->add(innerWorld);
 
   EXPECT_EQ(sphere->getParent(), innerWorld.get());
