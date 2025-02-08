@@ -104,8 +104,8 @@ int main() {
   builder->createPrimitive(PrimitiveType::SPHERE);
   builder->applyTransformation(translation(200.f, 320.f, -395.f) *
                                scale(30.f, 30.f, 30.f));
-  MaterialProperties prop;
-  prop.setProperty(MaterialProperties::FUZZ, 1.8f);
+  DataContainer prop;
+  prop.setProperty(DataContainer::FUZZ, 1.8f);
   builder->applyDielectricMaterial(ConstantTexture::create(white), prop);
   builder->addElementToProduct();
 
@@ -115,7 +115,7 @@ int main() {
   builder->createPrimitive(PrimitiveType::SPHERE);
   builder->applyTransformation(translation(367.f, 158.f, -440.f) *
                                scale(60.f, 60.f, 60.f));
-  prop.setProperty(MaterialProperties::REFRACTIVE_INDEX, 1.5f);
+  prop.setProperty(DataContainer::REFRACTIVE_INDEX, 1.5f);
   builder->applyDielectricMaterial(ConstantTexture::create(white), prop);
   builder->addElementToProduct();
 

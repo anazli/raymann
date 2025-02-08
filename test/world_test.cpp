@@ -13,7 +13,7 @@ class WorldTest : public testing::RTest {
   BuilderPtr builder;
   PointLight light;
   SceneElementPtr world;
-  MaterialProperties prop;
+  DataContainer prop;
   IntersectionRecord rec;
 };
 

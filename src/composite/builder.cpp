@@ -68,34 +68,33 @@ void WorldBuilder::applyWorldTransformation(const Mat4D& trans) {
   m_product->setTransformation(trans);
 }
 
-void WorldBuilder::applyMaterial(TexturePtr tex,
-                                 const MaterialProperties& prop) {
+void WorldBuilder::applyMaterial(TexturePtr tex, const DataContainer& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   MaterialPtr matptr = StandardMaterial::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyLambertianMaterial(TexturePtr tex,
-                                           const MaterialProperties& prop) {
+                                           const DataContainer& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   MaterialPtr matptr = Lambertian::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 
 void WorldBuilder::applyEmissiveMaterial(TexturePtr tex,
-                                         const MaterialProperties& prop) {
+                                         const DataContainer& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   auto matptr = EmissiveMaterial::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 
 void WorldBuilder::applyMetalMaterial(TexturePtr tex,
-                                      const MaterialProperties& prop) {
+                                      const DataContainer& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   auto matptr = Metal::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);
 }
 void WorldBuilder::applyDielectricMaterial(TexturePtr tex,
-                                           const MaterialProperties& prop) {
+                                           const DataContainer& prop) {
   APP_ASSERT(m_currentElement, "SceneElement not created yet!");
   auto matptr = Dielectric::create(std::move(tex), prop);
   m_currentElement->setMaterial(matptr);

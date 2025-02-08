@@ -15,7 +15,7 @@ class BoundingBoxTest : public testing::RTest {
  public:
   BoundingBox box1;
   BoundingBox box2;
-  MaterialProperties prop;
+  DataContainer prop;
   IntersectionRecord rec;
   BVHierarchy bvh;
 };

@@ -5,6 +5,12 @@
 #include "composite/scene_element.h"
 #include "textures/texture.h"
 
+struct BuilderData {
+  PrimitiveType primitive_type;
+  MaterialType material_type;
+  DataContainer material_properties;
+};
+
 class PrimitiveBuilder {
  public:
   virtual void createPrimitive(const PrimitiveType &type) = 0;
@@ -22,20 +28,15 @@ class Builder {
   virtual void createPrimitive(SceneElementRawPtr primitive) = 0;
   virtual void applyTransformation(const Mat4D &trans) = 0;
   virtual void applyWorldTransformation(const Mat4D &trans) = 0;
-  virtual void applyMaterial(TexturePtr tex,
-                             const MaterialProperties &prop) = 0;
+  virtual void applyMaterial(TexturePtr tex, const DataContainer &prop) = 0;
   virtual void applyLambertianMaterial(
-      TexturePtr tex,
-      const MaterialProperties &prop = MaterialProperties{}) = 0;
+      TexturePtr tex, const DataContainer &prop = DataContainer{}) = 0;
   virtual void applyEmissiveMaterial(
-      TexturePtr tex,
-      const MaterialProperties &prop = MaterialProperties{}) = 0;
+      TexturePtr tex, const DataContainer &prop = DataContainer{}) = 0;
   virtual void applyMetalMaterial(
-      TexturePtr tex,
-      const MaterialProperties &prop = MaterialProperties{}) = 0;
+      TexturePtr tex, const DataContainer &prop = DataContainer{}) = 0;
   virtual void applyDielectricMaterial(
-      TexturePtr tex,
-      const MaterialProperties &prop = MaterialProperties{}) = 0;
+      TexturePtr tex, const DataContainer &prop = DataContainer{}) = 0;
   virtual void createBBoxForElement(const BoundingBox &box) = 0;
   virtual SceneElementPtr getProduct() = 0;
   virtual SceneElementPtr getProductBVHierarchy() = 0;
@@ -55,17 +56,15 @@ class WorldBuilder : public Builder {
   void createPrimitive(SceneElementRawPtr primitive) override;
   void applyTransformation(const Mat4D &trans) override;
   void applyWorldTransformation(const Mat4D &trans) override;
-  void applyMaterial(TexturePtr tex, const MaterialProperties &prop) override;
+  void applyMaterial(TexturePtr tex, const DataContainer &prop) override;
   void applyLambertianMaterial(
-      TexturePtr tex,
-      const MaterialProperties &prop = MaterialProperties{}) override;
-  void applyEmissiveMaterial(TexturePtr tex, const MaterialProperties &prop =
-                                                 MaterialProperties{}) override;
-  void applyMetalMaterial(TexturePtr tex, const MaterialProperties &prop =
-                                              MaterialProperties{}) override;
+      TexturePtr tex, const DataContainer &prop = DataContainer{}) override;
+  void applyEmissiveMaterial(
+      TexturePtr tex, const DataContainer &prop = DataContainer{}) override;
+  void applyMetalMaterial(TexturePtr tex,
+                          const DataContainer &prop = DataContainer{}) override;
   void applyDielectricMaterial(
-      TexturePtr tex,
-      const MaterialProperties &prop = MaterialProperties{}) override;
+      TexturePtr tex, const DataContainer &prop = DataContainer{}) override;
   virtual void createBBoxForElement(const BoundingBox &box) override;
   SceneElementPtr getProduct() override;
   SceneElementPtr getProductBVHierarchy() override;

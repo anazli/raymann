@@ -6,7 +6,7 @@
 
 #include "tools/tools.h"
 
-class MaterialProperties {
+class DataContainer {
  public:
   enum Properties {
     COLOR,             // Vec3D
@@ -19,9 +19,8 @@ class MaterialProperties {
     REFRACTIVE_INDEX,  // float [0,..]
     FUZZ               // float [0,1]
   };
-  MaterialProperties();
-  MaterialProperties &setProperty(const Properties &name,
-                                  const std::any &value);
+  DataContainer();
+  DataContainer &setProperty(const Properties &name, const std::any &value);
   bool addProperty(const Properties &name, const std::any &value);
   bool removeProperty(const Properties &name);
   bool hasProperty(const Properties &name) const;

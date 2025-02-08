@@ -33,18 +33,16 @@ bool refract(const Vec3D& v, const Vec3D& n, float ni_over_nt,
 }
 }  // namespace
 
-Material::Material(TexturePtr tex, const MaterialProperties& prop)
+Material::Material(TexturePtr tex, const DataContainer& prop)
     : m_tex(std::move(tex)), m_prop(prop) {}
 
 void Material::setTexture(TexturePtr tex) {}
 
 TextureRawPtr Material::getTexture() const { return nullptr; }
 
-void Material::setProperties(const MaterialProperties& prop) {}
+void Material::setProperties(const DataContainer& prop) {}
 
-MaterialProperties Material::getProperties() const {
-  return MaterialProperties();
-}
+DataContainer Material::getProperties() const { return DataContainer(); }
 
 Vec3D Material::emmit(float u, float v, const Vec3D& p) { return Vec3D(); }
 
@@ -59,19 +57,18 @@ std::shared_ptr<StochasticPdf> Material::pdf() const { return m_pdf; }
 
 MaterialType Material::getType() const { return m_type; }
 
-StandardMaterial::StandardMaterial(TexturePtr tex,
-                                   const MaterialProperties& prop)
+StandardMaterial::StandardMaterial(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {}
 
 void StandardMaterial::setTexture(TexturePtr tex) { m_tex = std::move(tex); }
 
 TextureRawPtr StandardMaterial::getTexture() const { return m_tex.get(); }
 
-void StandardMaterial::setProperties(const MaterialProperties& prop) {
+void StandardMaterial::setProperties(const DataContainer& prop) {
   m_prop = prop;
 }
 
-MaterialProperties StandardMaterial::getProperties() const { return m_prop; }
+DataContainer StandardMaterial::getProperties() const { return m_prop; }
 
 bool StandardMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
                                Vec3D& attenuation, Ray& scattered) const {
@@ -79,11 +76,11 @@ bool StandardMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
 }
 
 MaterialPtr StandardMaterial::create(TexturePtr tex,
-                                     const MaterialProperties& prop) {
+                                     const DataContainer& prop) {
   return std::make_shared<StandardMaterial>(std::move(tex), prop);
 }
 
-Lambertian::Lambertian(TexturePtr tex, const MaterialProperties& prop)
+Lambertian::Lambertian(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
   m_pdf = std::make_shared<CosPdf>();
   m_type = MaterialType::LAMBERTIAN;
@@ -112,11 +109,11 @@ float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
   return cTheta < 0 ? 0 : cTheta / PI;
 }
 
-MaterialPtr Lambertian::create(TexturePtr tex, const MaterialProperties& prop) {
+MaterialPtr Lambertian::create(TexturePtr tex, const DataContainer& prop) {
   return std::make_shared<Lambertian>(std::move(tex), prop);
 }
 
-Isotropic::Isotropic(TexturePtr tex, const MaterialProperties& prop)
+Isotropic::Isotropic(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
   m_pdf = std::make_shared<SpherePdf>();
   m_type = MaterialType::ISOTROPIC;
@@ -135,13 +132,13 @@ float Isotropic::scatteringPDF(const Ray& r, const IntersectionRecord& record,
   return 1.f / (4.f * PI);
 }
 
-MaterialPtr Isotropic::create(TexturePtr tex, const MaterialProperties& prop) {
+MaterialPtr Isotropic::create(TexturePtr tex, const DataContainer& prop) {
   return std::make_shared<Isotropic>(std::move(tex), prop);
 }
 
-Metal::Metal(TexturePtr tex, const MaterialProperties& prop)
+Metal::Metal(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
-  auto f = prop.getPropertyAs<float>(MaterialProperties::FUZZ).value_or(0.);
+  auto f = prop.getPropertyAs<float>(DataContainer::FUZZ).value_or(0.);
   if (f < 1.f)
     m_fuzz = f;
   else
@@ -160,14 +157,14 @@ bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
   return (dot(scattered.direction(), normal) > 0);
 }
 
-MaterialPtr Metal::create(TexturePtr tex, const MaterialProperties& prop) {
+MaterialPtr Metal::create(TexturePtr tex, const DataContainer& prop) {
   return std::make_shared<Metal>(std::move(tex), prop);
 }
 
-Dielectric::Dielectric(TexturePtr tex, const MaterialProperties& prop)
+Dielectric::Dielectric(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
-  ref_idx = prop.getPropertyAs<float>(MaterialProperties::REFRACTIVE_INDEX)
-                .value_or(1.);
+  ref_idx =
+      prop.getPropertyAs<float>(DataContainer::REFRACTIVE_INDEX).value_or(1.);
   m_type = MaterialType::DIELECTRIC;
 }
 
@@ -206,12 +203,11 @@ bool Dielectric::scatter(const Ray& r_in, const IntersectionRecord& rec,
   return true;
 }
 
-MaterialPtr Dielectric::create(TexturePtr tex, const MaterialProperties& prop) {
+MaterialPtr Dielectric::create(TexturePtr tex, const DataContainer& prop) {
   return std::make_shared<Dielectric>(std::move(tex), prop);
 }
 
-EmissiveMaterial::EmissiveMaterial(TexturePtr tex,
-                                   const MaterialProperties& prop)
+EmissiveMaterial::EmissiveMaterial(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex), prop) {
   m_type = MaterialType::DIFFUSE_LIGHT;
 }
@@ -228,6 +224,6 @@ Vec3D EmissiveMaterial::emmit(float u, float v, const Vec3D& p) {
 bool EmissiveMaterial::isEmissive() const { return true; }
 
 MaterialPtr EmissiveMaterial::create(TexturePtr tex,
-                                     const MaterialProperties& prop) {
+                                     const DataContainer& prop) {
   return std::make_shared<EmissiveMaterial>(std::move(tex), prop);
 }
