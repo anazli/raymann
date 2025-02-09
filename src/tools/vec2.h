@@ -10,7 +10,6 @@ class Vec2 {
  public:
   Vec2() = default;
   Vec2(T p1, T p2) : m_x{p1}, m_y{p2} {}
-  Vec2(const Vec2<T>& other) : m_x{other.m_x}, m_y{other.m_y} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
@@ -33,12 +32,6 @@ class Vec2 {
     assert(i >= 0 && i <= 1);
     if (i == 0) return m_x;
     return m_y;
-  }
-
-  Vec2& operator=(const Vec2& other) {
-    m_x = other.m_x;
-    m_y = other.m_y;
-    return *this;
   }
 
   auto operator<=>(const Vec2<T>&) const = default;

@@ -22,13 +22,6 @@ class Mat3 {
     m_vec[2] = row3;
   }
 
-  Mat3<T>& operator=(const Mat3<T>& c) {
-    m_vec[0] = c[0];
-    m_vec[1] = c[1];
-    m_vec[2] = c[2];
-    return *this;
-  }
-
   Vec3<T> operator[](int i) const {
     assert(i >= 0 && i <= 2);
     if (i == 0) return m_vec[0];

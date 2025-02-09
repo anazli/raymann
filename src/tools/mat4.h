@@ -27,14 +27,6 @@ class Mat4 {
     m_vec[3] = row4;
   }
 
-  Mat4<T>& operator=(const Mat4<T>& c) {
-    m_vec[0] = c[0];
-    m_vec[1] = c[1];
-    m_vec[2] = c[2];
-    m_vec[3] = c[3];
-    return *this;
-  }
-
   auto operator<=>(const Mat4<T>&) const = default;
 
   Vec4<T> operator[](int i) const {
