@@ -8,15 +8,14 @@ class Sphere : public SceneElement {
   ~Sphere() override = default;
   Sphere(const Point3D &c = Point3D(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
       : m_center(c), m_radius(r) {
-    m_elementType = PrimitiveType::SPHERE;
     m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f) + c;
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f) + c;
   }
 
   bool intersect(const Ray &r, IntersectionRecord &record) override {
     auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    Point3D origin = transformed_ray.origin();
+    Vec3D direction = transformed_ray.direction();
     auto co = origin - m_center;
     auto a = dot(direction, direction);
     auto b = 2.0f * dot(direction, co);
@@ -35,9 +34,9 @@ class Sphere : public SceneElement {
   Vec3D normal(const Point3D &p) const override {
     Vec4D v4 = p;
     Point3D object_point = m_transformation.getInverseMatrix() * v4;
-    auto object_normal = getUnitVectorOf(object_point - m_center);
-    auto world_normal =
-        m_transformation.getInverseMatrix() * Vec4D(object_normal);
+    Vec3D object_normal = getUnitVectorOf(object_point - m_center);
+    Vec3D world_normal =
+        m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
     return getUnitVectorOf(world_normal);
   }
 

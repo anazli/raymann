@@ -8,7 +8,6 @@
 class Cube : public SceneElement {
  public:
   Cube() {
-    m_elementType = PrimitiveType::CUBE;
     m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f);
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f);
   }
@@ -30,7 +29,7 @@ class Cube : public SceneElement {
     record.t1 = tmin;
     record.t2 = tmax;
     record.count = 2;
-    record.saved_point = record.point(r);
+    record.saved_point = record.point(transformed_ray);
     return true;
   }
 
@@ -48,7 +47,7 @@ class Cube : public SceneElement {
     else
       object_normal = Vec3D(0.f, 0.f, object_point.z());
     auto world_normal =
-        m_transformation.getInverseMatrix() * Vec4D(object_normal);
+        m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
     return getUnitVectorOf(world_normal);
   }
 

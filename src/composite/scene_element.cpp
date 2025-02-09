@@ -5,8 +5,6 @@
 #include "scene_element.h"
 #include "world.h"
 
-PrimitiveType SceneElement::elementType() const { return m_elementType; }
-
 bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
   return false;
 }
@@ -71,6 +69,7 @@ void SceneElement::setTransformation(const Transformation& transformation) {
   m_transformation = transformation;
   m_transformation.transformBoundingBox(m_bBox);
 }
+
 SceneElement::SceneElement() {
   m_transformation = Transformation();
   if (isWorld()) {

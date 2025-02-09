@@ -198,7 +198,7 @@ TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
 }
 
 TEST_F(TransformerTest, computesNormalOfRotatedSphere) {
-  SceneElement *s = new Sphere();
+  SceneElementPtr s = Sphere::create();
   auto t = Transformation(rotationOverZ(PI / 5.0f) * scale(1.0f, 0.5f, 1.0f));
   s->setTransformation(t);
 

@@ -9,7 +9,6 @@ class Cylinder : public SceneElement {
   Cylinder(float minY = -std::numeric_limits<float>::max(),
            float maxY = std::numeric_limits<float>::max(), bool closed = false)
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
-    m_elementType = PrimitiveType::CYLINDER;
     if (!closed) {
       m_bBox.minPoint() = Point3D(-1.f, -limit::infinity(), -1.f);
       m_bBox.maxPoint() = Point3D(1.f, limit::infinity(), 1.f);
@@ -33,7 +32,7 @@ class Cylinder : public SceneElement {
     auto roz = origin.z();
 
     auto a = rdx * rdx + rdz * rdz;
-    if (a <= EPS && a >= -EPS) return intersectCaps(r, record);
+    if (a <= EPS && a >= -EPS) return intersectCaps(transformed_ray, record);
     auto b = 2.0f * (rox * rdx + roz * rdz);
     auto c = rox * rox + roz * roz - 1.0f;
 
@@ -75,7 +74,7 @@ class Cylinder : public SceneElement {
     } else
       object_normal = Vec3D(object_point.x(), 0.f, object_point.z());
     auto world_normal =
-        m_transformation.getInverseMatrix() * Vec4D(object_normal);
+        m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
     return getUnitVectorOf(world_normal);
   }
 

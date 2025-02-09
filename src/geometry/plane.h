@@ -5,7 +5,6 @@
 class Plane : public SceneElement {
  public:
   Plane() {
-    m_elementType = PrimitiveType::PLANE;
     m_bBox.minPoint() = Point3D(-limit::infinity(), 0.f, -limit::infinity());
     m_bBox.maxPoint() = Point3D(limit::infinity(), 0.f, limit::infinity());
   }

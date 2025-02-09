@@ -13,6 +13,9 @@ add_library(${LIBRARY_NAME}
             src/acceleration/bvh.cpp
             src/acceleration/bvh.h
             src/application/error.h
+            src/application/parameters.h
+            src/application/data_container.cpp
+            src/application/data_container.h
             src/application/wavefront_reader.cpp
             src/application/wavefront_reader.h
             src/camera/camera.cpp
@@ -42,8 +45,18 @@ add_library(${LIBRARY_NAME}
             src/geometry/triangle.h
             src/materials/material.cpp
             src/materials/material.h
-            src/materials/material_properties.cpp
-            src/materials/material_properties.h
+            src/materials/dielectric.cpp
+            src/materials/dielectric.h
+            src/materials/emissive.cpp
+            src/materials/emissive.h
+            src/materials/isotropic.cpp
+            src/materials/isotropic.h
+            src/materials/lambertian.cpp
+            src/materials/lambertian.h
+            src/materials/metal.cpp
+            src/materials/metal.h
+            src/materials/standard.cpp
+            src/materials/standard.h
             src/renderers/renderer.cpp
             src/renderers/renderer.h
             src/renderers/path_tracer.cpp

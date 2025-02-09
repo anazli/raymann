@@ -9,7 +9,6 @@ class Cone : public SceneElement {
   Cone(float minY = -std::numeric_limits<float>::max(),
        float maxY = std::numeric_limits<float>::max(), bool closed = false)
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
-    m_elementType = PrimitiveType::CONE;
     if (!closed) {
       m_bBox.minPoint() =
           Point3D(-limit::infinity(), -limit::infinity(), -limit::infinity());
@@ -55,21 +54,21 @@ class Cone : public SceneElement {
       auto t2 = (-b + sqrt(discr)) / (2.0f * a);
       if (t1 > t2) std::swap(t1, t2);
 
-      auto y1 = r.origin().y() + t1 * r.direction().y();
+      auto y1 = origin.y() + t1 * direction.y();
       if (m_minimumY < y1 && m_maximumY > y1) {
         record.t1 = t1;
         record.count++;
         hitAnything = true;
       }
 
-      auto y2 = r.origin().y() + t2 * r.direction().y();
+      auto y2 = origin.y() + t2 * direction.y();
       if (m_minimumY < y2 && m_maximumY > y2) {
         record.t2 = t2;
         record.count++;
         hitAnything = true;
       }
     }
-    if (intersectCaps(r, record)) hitAnything = true;
+    if (intersectCaps(transformed_ray, record)) hitAnything = true;
     return hitAnything;
   }
   Vec3D normal(const Point3D &p) const override {
@@ -83,7 +82,7 @@ class Cone : public SceneElement {
       return Vec3D(0.f, -1.f, 0.f);
     }
     auto object_normal = Vec3D(object_point.x(), 0.f, object_point.z());
-    return getUnitVectorOf(m_transformation.getInverseMatrix() *
+    return getUnitVectorOf(m_transformation.getInverseTransposeMatrix() *
                            Vec4D(object_normal));
   }
 

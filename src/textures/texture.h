@@ -47,13 +47,11 @@ class CheckerTexture : public Texture {
 class PerlinTexture : public Texture {
  public:
   ~PerlinTexture() override = default;
-  PerlinTexture() = default;
-  PerlinTexture(float scale, const Vec3D &color = Vec3D(1.f, 1.f, 1.f));
+  PerlinTexture(float scale, const Vec3D &color);
   Vec3D value(float u, float v, const Vec3D &p) const override;
   void setColor(const Vec3D &col) override;
 
-  static TexturePtr create(float scale,
-                           const Vec3D &color = Vec3D(1.f, 1.f, 1.f));
+  static TexturePtr create(float scale, const Vec3D &color);
 
  private:
   Perlin m_noise;
