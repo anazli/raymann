@@ -28,14 +28,11 @@ class SceneElement {
   virtual void setLight(const PointLight &light);
   virtual PointLight getLight() const;
   virtual void setBoundingBox(const BoundingBox &box);
-  virtual BoundingBox &boundingBox();
-  virtual const BoundingBox &boundingBox() const;
+  virtual BoundingBox getBoundingBox() const;
   virtual float pdf(const Point3D &origin, const Vec3D &direction);
   virtual Vec3D random(const Point3D &origin);
   void setMaterial(MaterialPtr mat);
-  MaterialPtr getMaterial() const;
-  virtual Point3D pointFromWorldToObjectSpace(const Point3D &point) const;
-  virtual Vec3D vectorFromObjectToWorldSpace(const Vec3D vec) const;
+  const MaterialRawPtr getMaterial() const;
   void setTransformation(const Transformation &transformation);
 
  protected:
