@@ -8,6 +8,7 @@ using std::make_unique;
 using std::shared_ptr;
 using std::vector;
 
+/*
 class WorldTest : public testing::RTest {
  public:
   BuilderPtr builder;

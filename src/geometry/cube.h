@@ -47,7 +47,7 @@ class Cube : public SceneElement {
     else
       object_normal = Vec3D(0.f, 0.f, object_point.z());
     auto world_normal =
-        m_transformation.getInverseMatrix() * Vec4D(object_normal);
+        m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
     return getUnitVectorOf(world_normal);
   }
 

@@ -82,7 +82,7 @@ class Cone : public SceneElement {
       return Vec3D(0.f, -1.f, 0.f);
     }
     auto object_normal = Vec3D(object_point.x(), 0.f, object_point.z());
-    return getUnitVectorOf(m_transformation.getInverseMatrix() *
+    return getUnitVectorOf(m_transformation.getInverseTransposeMatrix() *
                            Vec4D(object_normal));
   }
 

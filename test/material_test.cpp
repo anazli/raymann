@@ -5,11 +5,12 @@
 #include "gtesting.h"
 #include "renderers/phong_model.h"
 
+using app = AppParameters;
+
 class MaterialTest : public testing::RTest {
  public:
   Sphere *s;
   PointLight light;
-  BuilderPtr builder;
   IntersectionRecord rec;
 };
 
@@ -113,10 +114,12 @@ TEST_F(MaterialTest, lightingWithSurfaceInShadow) {
 }
 
 TEST_F(MaterialTest, precomputingTheReflectionVector) {
-  DataContainer prop;
-  BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->createPrimitive(new Plane);
-  SceneElementPtr plane = builder->getCurrentElement();
+  DataContainer data;
+  PrimitiveBuilder builder;
+  data.setProperty(app::PRIMITIVE_TYPE, app::PLANE);
+  builder.setData(data);
+  builder.buildPrimitive();
+  auto plane = builder.getProduct();
   Ray r(Point3D(0.f, 1.f, -1.f), Vec3D(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r, rec);
   Vec3D reflection_vector = reflect(r.direction(), plane->normal(rec.point(r)));
@@ -128,23 +131,39 @@ TEST_F(MaterialTest, precomputingTheReflectionVector) {
 TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   PointLight light(Point3D(-10.f, 10.f, -10.f), Vec3D(1.f, 1.f, 1.f));
   DataContainer prop;
-  BuilderPtr builder = std::make_unique<WorldBuilder>();
-  builder->addLight(light);
-  builder->createWorld();
-  builder->createPrimitive(new Sphere);
-  prop.setProperty(AppParameters::COLOR, Vec3D(0.8f, 1.f, 0.6f))
-      .setProperty(AppParameters::DIFFUSE, 0.7f)
-      .setProperty(AppParameters::SPECULAR, 0.2f);
-  builder->applyMaterial(
-      std::make_unique<ConstantTexture>(Vec3D(0.8f, 1.f, 0.6f)), prop);
-  builder->addElementToProduct();
-  prop.setProperty(AppParameters::AMBIENT, 1.f);
-  builder->createPrimitive(new Sphere);
-  builder->applyMaterial(std::make_unique<ConstantTexture>(), prop);
-  builder->addElementToProduct();
+  PrimitiveBuilder primitive_builder;
+  WorldBuilder world_builder;
+  world_builder.createWorld();
+  world_builder.addLight(light);
+
+  DataContainer data;
+  data.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::COLOR, Vec3D(0.8f, 1.f, 0.6f))
+      .setProperty(app::DIFFUSE, 0.7f)
+      .setProperty(app::SPECULAR, 0.2f)
+      .setProperty(app::MATERIAL_TYPE, app::STANDARD)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE);
+  primitive_builder.setData(data);
+  primitive_builder.buildPrimitive();
+  primitive_builder.buildTexture();
+  primitive_builder.buildMaterial();
+  world_builder.addElement(primitive_builder.getProduct());
+  primitive_builder.reset();
+
+  DataContainer new_data;
+  new_data.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::COLOR, Vec3D(0.8f, 1.f, 0.6f))
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::STANDARD)
+      .setProperty(app::AMBIENT, 1.f);
+  primitive_builder.setData(data);
+  primitive_builder.buildPrimitive();
+  primitive_builder.buildTexture();
+  primitive_builder.buildMaterial();
+  world_builder.addElement(primitive_builder.getProduct());
   Ray r(Point3D(0.f, 0.f, 0.f), Vec3D(0.f, 0.f, 1.f));
-  BaseRendererPtr pm = std::make_unique<PhongModel>();
-  SceneElementPtr w = builder->getProduct();
+  auto pm = std::make_unique<PhongModel>();
+  auto w = world_builder.getProduct();
   w->accept(*pm, r);
   Vec3D color = pm->getColor();
   float e = 0.1f;

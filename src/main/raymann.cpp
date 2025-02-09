@@ -92,9 +92,11 @@ int main() {
    *				Light Wall
    * -------------------------------------------------------------------------*/
   DataContainer light_wall;
-  light_wall.setProperty(app::PRIMITIVE_TYPE, app::QUAD)
-      .setProperty(app::TRANSFORMATION_MATRIX,
-                   translation(277.f, 554.5f, -455.f) * scale(139.f, eps, 50.f))
+  light_wall
+      .setProperty(app::PRIMITIVE_TYPE, app::QUAD)
+      //.setProperty(app::TRANSFORMATION_MATRIX,
+      //             translation(277.f, 554.5f, -455.f) * scale(139.f,
+      //             eps, 50.f))
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, diffuse_light)
       .setProperty(app::MATERIAL_TYPE, app::DIFFUSE_LIGHT)
@@ -109,8 +111,8 @@ int main() {
    * -------------------------------------------------------------------------*/
   DataContainer left_box;
   left_box.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
-      .setProperty(app::TRANSFORMATION_MATRIX, translation(195.f, 1.f, -380.f) *
-                                                   scale(60.f, 240.f, 60.f) *
+      .setProperty(app::TRANSFORMATION_MATRIX, translation(195.f, 1.f, -390.f) *
+                                                   scale(70.f, 290.f, 60.f) *
                                                    rotationOverY(-0.4f))
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, white)
@@ -123,8 +125,8 @@ int main() {
   DataContainer right_box;
   right_box.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(367.f, 1.f, -440.f) *
-                                                   scale(60.f, 90.f, 60.f) *
-                                                   rotationOverY(0.3f))
+                                                   scale(60.f, 110.f, 60.f) *
+                                                   rotationOverY(0.4f))
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, white)
       .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
@@ -162,13 +164,13 @@ int main() {
 
   auto canvas = Canvas(300, 300);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 2.f);
-  auto from = Point3D(278.f, 276.f, -800.f);
+  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.54f);
+  auto from = Point3D(278.f, 260.f, -830.f);
   auto to = Point3D(278.f, 278.f, 0.f);
   auto up = Vec3D(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
-  auto samples_per_pixel = 20;
+  auto samples_per_pixel = 50;
   auto material_depth = 10;
   BaseRendererPtr renderer =
       make_unique<PathTracer>(std::make_unique<BruteForceSampler>(

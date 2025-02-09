@@ -42,9 +42,19 @@ void PrimitiveBuilder::buildPrimitive() {
     case AppParameters::CUBE:
       m_current_element = Cube::create();
       break;
-    case AppParameters::CYLINDER:
-      m_current_element = Cylinder::create();
+    case AppParameters::CYLINDER: {
+      auto ymin =
+          m_input_data.getPropertyAs<float>(AppParameters::CYLINDER_Y_MIN)
+              .value();
+      auto ymax =
+          m_input_data.getPropertyAs<float>(AppParameters::CYLINDER_Y_MAX)
+              .value();
+      auto closed =
+          m_input_data.getPropertyAs<bool>(AppParameters::CYLINDER_CLOSED)
+              .value();
+      m_current_element = Cylinder::create(ymin, ymax, closed);
       break;
+    }
     case AppParameters::PLANE:
       m_current_element = Plane::create();
       break;
@@ -132,6 +142,7 @@ void PrimitiveBuilder::buildMaterial() {
     default:
       APP_ASSERT(false, "Cannot create the specified material type!");
   }
+  m_current_element->setMaterial(m_current_material);
 }
 
 void PrimitiveBuilder::buildTransformation() {
@@ -142,11 +153,10 @@ void PrimitiveBuilder::buildTransformation() {
         m_input_data.getPropertyAs<Mat4D>(AppParameters::TRANSFORMATION_MATRIX)
             .value();
   }
+  m_current_element->setTransformation(m_transformation);
 }
 
 SceneElementPtr PrimitiveBuilder::getProduct() const {
-  m_current_element->setMaterial(m_current_material);
-  m_current_element->setTransformation(m_transformation);
   return m_current_element;
 }
 
