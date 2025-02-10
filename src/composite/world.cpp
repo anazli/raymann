@@ -12,7 +12,7 @@ using std::shared_ptr;
 using std::sort;
 using std::vector;
 
-bool World::intersect(const Ray& r, IntersectionRecord& record) {
+bool World::intersect(const Ray& r, Intersection& record) {
   if (!m_bBox.intersectsRay(r)) {
     return false;
   }
@@ -23,7 +23,7 @@ bool World::intersect(const Ray& r, IntersectionRecord& record) {
       if (it.currentElement()->isWorld()) {
         it.currentElement()->intersect(r, record);
       } else {
-        auto rec = IntersectionRecord{};
+        auto rec = Intersection{};
         if (it.currentElement()->intersect(r, rec)) {
           rec.hitFound = true;
           if (rec.t_min() > 0.0f && rec.t_min() < record.minHitParam) {

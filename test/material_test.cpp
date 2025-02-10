@@ -11,7 +11,7 @@ class MaterialTest : public testing::RTest {
  public:
   Sphere *s;
   PointLight light;
-  IntersectionRecord rec;
+  Intersection rec;
 };
 
 TEST_F(MaterialTest, createsDefaultLight) {

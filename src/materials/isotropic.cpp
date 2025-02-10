@@ -10,7 +10,7 @@ Isotropic::Isotropic(TexturePtr tex) : Material(std::move(tex)) {
   m_type = AppParameters::ISOTROPIC;
 }
 
-bool Isotropic::scatter(const Ray& r_in, const IntersectionRecord& rec,
+bool Isotropic::scatter(const Ray& r_in, const Intersection& rec,
                         Vec3D& attenuation, Ray& scattered) const {
   scattered =
       Ray(rec.point(r_in), getUnitVectorOf(Random::randomVectorOnUnitSphere()));
@@ -18,7 +18,7 @@ bool Isotropic::scatter(const Ray& r_in, const IntersectionRecord& rec,
   return true;
 }
 
-float Isotropic::scatteringPDF(const Ray& r, const IntersectionRecord& record,
+float Isotropic::scatteringPDF(const Ray& r, const Intersection& record,
                                const Ray& scatteredRay) const {
   return 1.f / (4.f * PI);
 }

@@ -5,7 +5,7 @@
 #include "scene_element.h"
 #include "world.h"
 
-bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
+bool SceneElement::intersect(const Ray& r, Intersection& record) {
   return false;
 }
 

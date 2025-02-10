@@ -18,7 +18,7 @@ void PhongModel::visitSceneElementComposite(
 
 Vec3D PhongModel::computeColor(const SceneElementRawPtr world, const Ray& ray,
                                int rec) {
-  m_closestHit = IntersectionRecord{};
+  m_closestHit = Intersection{};
   if (world->intersect(ray, m_closestHit)) {
     if (m_closestHit.object) {
       auto surf_col = lighting(world, ray);
@@ -84,7 +84,7 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
 
 Vec3D PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
                                  int rec) {
-  auto closestReflectedHit = IntersectionRecord{};
+  auto closestReflectedHit = Intersection{};
   auto black = Vec3D(0.f, 0.f, 0.f);
   if (world->intersect(ray, closestReflectedHit)) {
     if (closestReflectedHit.object) {
@@ -208,7 +208,7 @@ bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3D& p) {
     auto v = p - light.position();
     auto distance = v.length();
     auto r = Ray(light.position(), getUnitVectorOf(v));
-    auto closestShadowedHit = IntersectionRecord{};
+    auto closestShadowedHit = Intersection{};
     if (world->intersect(r, closestShadowedHit)) {
       if (closestShadowedHit.object) {
         if (closestShadowedHit.t_min() > 0.0f &&

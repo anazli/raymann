@@ -12,7 +12,7 @@ class Sphere : public SceneElement {
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f) + Vec3D(c);
   }
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
+  bool intersect(const Ray &r, Intersection &record) override {
     auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
     Point3D origin = transformed_ray.origin();
     Vec3D direction = transformed_ray.direction();
@@ -41,7 +41,7 @@ class Sphere : public SceneElement {
   }
 
   float pdf(const Point3D &origin, const Vec3D &direction) override {
-    IntersectionRecord rec;
+    Intersection rec;
     if (!intersect(Ray(origin, direction), rec)) return 0;
     float radius = 30.f;
     Point3D center(277.f, 540.f, -455.f);

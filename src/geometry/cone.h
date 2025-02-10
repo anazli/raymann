@@ -27,7 +27,7 @@ class Cone : public SceneElement {
   float minimumY() const { return m_minimumY; }
   float maximumY() const { return m_maximumY; }
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
+  bool intersect(const Ray &r, Intersection &record) override {
     auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();
@@ -105,7 +105,7 @@ class Cone : public SceneElement {
     return x * x + z * z <= fabs(y);
   }
 
-  bool intersectCaps(const Ray &r, IntersectionRecord &record) {
+  bool intersectCaps(const Ray &r, Intersection &record) {
     if (!m_closed || (r.direction().y() <= EPS && r.direction().y() >= -EPS))
       return false;
 

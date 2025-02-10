@@ -11,7 +11,7 @@ class TCone : public testing::RTest {
  public:
   Cone cone;
   Ray r;
-  IntersectionRecord rec;
+  Intersection rec;
 };
 
 class CubeTest : public testing::RTest {
@@ -24,21 +24,21 @@ class CylinderTest : public testing::RTest {
  public:
   Cylinder cyl;
   Ray r;
-  IntersectionRecord rec;
+  Intersection rec;
 };
 
 class PlaneTest : public testing::RTest {
  public:
   Plane p;
   Ray r;
-  IntersectionRecord rec;
+  Intersection rec;
 };
 
 class SphereTest : public testing::RTest {
  public:
   Sphere s;
   Ray r;
-  IntersectionRecord rec;
+  Intersection rec;
 };
 
 class TriangleTest : public testing::RTest {
@@ -48,7 +48,7 @@ class TriangleTest : public testing::RTest {
   Point3D p2 = Point3D(-1.f, 0.f, 0.f);
   Point3D p3 = Point3D(1.f, 0.f, 0.f);
   Triangle t = Triangle({p1, p2, p3});
-  IntersectionRecord rec;
+  Intersection rec;
 };
 
 class SmoothTriangleTest : public testing::RTest {
@@ -129,42 +129,42 @@ TEST_F(CubeTest, rayIntersectsCube) {
   box = std::make_shared<Cube>();
 
   ray = Ray(Point3D(5.f, 0.5f, 0.f), Vec3D(-1.f, 0.f, 0.f));
-  auto rec = IntersectionRecord{};
+  auto rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_EQ(rec.t1, 4.f);
   EXPECT_EQ(rec.t2, 6.f);
 
   ray = Ray(Point3D(-5.f, 0.5f, 0.f), Vec3D(1.f, 0.f, 0.f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_EQ(rec.t1, 4.f);
   EXPECT_EQ(rec.t2, 6.f);
 
   ray = Ray(Point3D(0.5f, 5.f, 0.f), Vec3D(0.f, -1.f, 0.f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_EQ(rec.t1, 4.f);
   EXPECT_EQ(rec.t2, 6.f);
 
   ray = Ray(Point3D(0.5f, -5.f, 0.f), Vec3D(0.f, 1.f, 0.f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_EQ(rec.t1, 4.f);
   EXPECT_EQ(rec.t2, 6.f);
 
   ray = Ray(Point3D(0.5f, 0.f, 5.f), Vec3D(0.f, 0.f, -1.f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_EQ(rec.t1, 4.f);
   EXPECT_EQ(rec.t2, 6.f);
 
   ray = Ray(Point3D(0.5f, 0.f, -5.f), Vec3D(0.f, 0.f, 1.f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_EQ(rec.t1, 4.f);
@@ -175,32 +175,32 @@ TEST_F(CubeTest, rayMissesCube) {
   box = std::make_shared<Cube>();
 
   ray = Ray(Point3D(-2.f, 0.f, 0.f), Vec3D(0.2673f, 0.5345f, 0.8018f));
-  auto rec = IntersectionRecord{};
+  auto rec = Intersection{};
   EXPECT_FALSE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 0);
 
   ray = Ray(Point3D(0.f, -2.f, 0.f), Vec3D(0.8018f, 0.2673f, 0.5345f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_FALSE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 0);
 
   ray = Ray(Point3D(0.f, 0.f, -2.f), Vec3D(0.5345f, 0.8018f, 0.2673f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_FALSE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 0);
 
   ray = Ray(Point3D(2.f, 0.f, 2.f), Vec3D(0.f, 0.f, -1.f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_FALSE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 0);
 
   ray = Ray(Point3D(0.f, 2.f, 2.f), Vec3D(0.f, -1.f, 0.f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_FALSE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 0);
 
   ray = Ray(Point3D(2.f, 2.f, 0.f), Vec3D(-1.f, 0.f, 0.f));
-  rec = IntersectionRecord{};
+  rec = Intersection{};
   EXPECT_FALSE(box->intersect(ray, rec));
   EXPECT_TRUE(rec.count == 0);
 }
@@ -232,15 +232,15 @@ TEST_F(CubeTest, normalOnSurfaceOfCube) {
 TEST_F(CylinderTest, rayMissesTheCylinder) {
   cyl = Cylinder();
   r = Ray(Point3D(1.f, 0.f, 0.f), getUnitVectorOf(Vec3D(0.f, 1.f, 0.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   EXPECT_FALSE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 0);
   r = Ray(Point3D(0.f, 0.f, 0.f), getUnitVectorOf(Vec3D(0.f, 1.f, 0.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   EXPECT_FALSE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 0);
   r = Ray(Point3D(0.f, 0.f, -5.f), getUnitVectorOf(Vec3D(1.f, 1.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   EXPECT_FALSE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 0);
 }
@@ -248,19 +248,19 @@ TEST_F(CylinderTest, rayMissesTheCylinder) {
 TEST_F(CylinderTest, rayHitsTheCylinder) {
   cyl = Cylinder();
   r = Ray(Point3D(1.f, 0.f, -5.f), getUnitVectorOf(Vec3D(0.f, 0.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_FLOAT_EQ(rec.t1, 5.f);
   EXPECT_FLOAT_EQ(rec.t2, 5.f);
   r = Ray(Point3D(0.f, 0.f, -5.f), getUnitVectorOf(Vec3D(0.f, 0.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 2);
   EXPECT_FLOAT_EQ(rec.t1, 4.f);
   EXPECT_FLOAT_EQ(rec.t2, 6.f);
   r = Ray(Point3D(0.5f, 0.f, -5.f), getUnitVectorOf(Vec3D(0.1f, 1.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
   EXPECT_TRUE(rec.count == 2);
   float eps = 10E-5f;
@@ -291,27 +291,27 @@ TEST_F(CylinderTest, normalVectorOnCylinder) {
 TEST_F(CylinderTest, intersectConstrainedCylinder) {
   cyl = Cylinder(1, 2);
   r = Ray(Point3D(0.f, 1.5f, 0.f), getUnitVectorOf(Vec3D(0.1f, 1.f, 0.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
   r = Ray(Point3D(0.f, 3.f, -5.f), getUnitVectorOf(Vec3D(0.f, 0.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
   r = Ray(Point3D(0.f, 0.f, -5.f), getUnitVectorOf(Vec3D(0.f, 0.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
   r = Ray(Point3D(0.f, 2.f, -5.f), getUnitVectorOf(Vec3D(0.f, 0.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
   r = Ray(Point3D(0.f, 1.f, -5.f), getUnitVectorOf(Vec3D(0.f, 0.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 0);
   r = Ray(Point3D(0.f, 1.5f, -2.f), getUnitVectorOf(Vec3D(0.f, 0.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_TRUE(rec.count == 2);
 }
@@ -319,23 +319,23 @@ TEST_F(CylinderTest, intersectConstrainedCylinder) {
 TEST_F(CylinderTest, intersectClosedCylinder) {
   cyl = Cylinder(1, 2, true);
   r = Ray(Point3D(0.f, 3.f, 0.f), getUnitVectorOf(Vec3D(0.1f, -1.f, 0.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 2);
   r = Ray(Point3D(0.f, 3.f, -2.f), getUnitVectorOf(Vec3D(0.f, -1.f, 2.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 2);
   r = Ray(Point3D(0.f, 4.f, -2.f), getUnitVectorOf(Vec3D(0.f, -1.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 1);
   r = Ray(Point3D(0.f, 0.f, -2.f), getUnitVectorOf(Vec3D(0.f, 1.f, 2.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 2);
   r = Ray(Point3D(0.f, -1.f, -2.f), getUnitVectorOf(Vec3D(0.f, 1.f, 1.f)));
-  rec = IntersectionRecord();
+  rec = Intersection();
   cyl.intersect(r, rec);
   EXPECT_EQ(rec.count, 1);
 }
@@ -590,7 +590,7 @@ TEST_F(SmoothTriangleTest, propertiesAreCorrect) {
 
 TEST_F(SmoothTriangleTest, normalInterpolation) {
   auto r = Ray(Point3D(-0.2f, 0.3f, -2.f), Vec3D(0.f, 0.f, 1.f));
-  IntersectionRecord rec;
+  Intersection rec;
   t.intersect(r, rec);
   auto v = t.normal(Point3D());
   compareVectorsApprox(v, Vec3D(-0.2f, 0.3f, 0.f), EPS);

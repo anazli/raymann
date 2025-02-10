@@ -30,7 +30,7 @@ class BaseRenderer {
   SceneElementRawPtr getDiffuseLight() const;
 
  protected:
-  IntersectionRecord m_closestHit;
+  Intersection m_closestHit;
   SceneElementRawPtr m_diffuseLight;
   Vec3D m_out_color;
   Vec3D m_background_color;

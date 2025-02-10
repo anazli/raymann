@@ -10,7 +10,7 @@ Lambertian::Lambertian(TexturePtr tex) : Material(std::move(tex)) {
   m_type = AppParameters::LAMBERTIAN;
 }
 
-bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
+bool Lambertian::scatter(const Ray& r_in, const Intersection& rec,
                          Vec3D& attenuation, Ray& scattered) const {
   // auto point = rec.point(r_in);
   // OrthoNormalBasis orthnb;
@@ -26,7 +26,7 @@ bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
   return true;
 }
 
-float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
+float Lambertian::scatteringPDF(const Ray& r, const Intersection& record,
                                 const Ray& scatteredRay) const {
   auto cTheta = dot(record.object->normal(record.point(scatteredRay)),
                     getUnitVectorOf(scatteredRay.direction()));

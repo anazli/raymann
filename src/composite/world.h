@@ -11,7 +11,7 @@ class World : public SceneElement {
 
  public:
   ~World() override = default;
-  bool intersect(const Ray &r, IntersectionRecord &record) override;
+  bool intersect(const Ray &r, Intersection &record) override;
   void add(SceneElementPtr item) override;
   SceneElementContainer::iterator remove(SceneElementRawPtr item,
                                          SceneElementPtr removedElem) override;

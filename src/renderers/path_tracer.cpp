@@ -19,7 +19,7 @@ void PathTracer::visitSceneElementComposite(
 Vec3D PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
                                int rec) {
   if (rec < 0) return Vec3D();
-  IntersectionRecord record;
+  Intersection record;
   if (!world->intersect(ray, record)) return m_background_color;
 
   Vec3D emittedColor = record.object->getMaterial()->emmit();

@@ -14,7 +14,7 @@ class StandardMaterial;
 class SceneElement {
  public:
   virtual ~SceneElement() = default;
-  virtual bool intersect(const Ray &r, IntersectionRecord &record);
+  virtual bool intersect(const Ray &r, Intersection &record);
   virtual void add(std::shared_ptr<SceneElement> item);
   virtual std::vector<std::shared_ptr<SceneElement>>::iterator remove(
       SceneElement *item, std::shared_ptr<SceneElement> removedElem);
@@ -47,7 +47,7 @@ class SceneElement {
 using SceneElementPtr = std::shared_ptr<SceneElement>;
 using SceneElementRawPtr = SceneElement *;
 
-class IntersectionRecord {
+class Intersection {
  public:
   int count = 0;
   float t1 = -limit::max();

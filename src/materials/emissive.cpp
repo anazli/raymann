@@ -6,7 +6,7 @@ EmissiveMaterial::EmissiveMaterial(TexturePtr tex) : Material(std::move(tex)) {
   m_type = AppParameters::DIFFUSE_LIGHT;
 }
 
-bool EmissiveMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
+bool EmissiveMaterial::scatter(const Ray& r_in, const Intersection& rec,
                                Vec3D& attenuation, Ray& scattered) const {
   return false;
 }

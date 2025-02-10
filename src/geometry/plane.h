@@ -9,7 +9,7 @@ class Plane : public SceneElement {
     m_bBox.maxPoint() = Point3D(limit::infinity(), 0.f, limit::infinity());
   }
   ~Plane() override = default;
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
+  bool intersect(const Ray &r, Intersection &record) override {
     auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();

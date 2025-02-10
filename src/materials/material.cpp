@@ -21,7 +21,7 @@ Vec3D Material::emmit(float u, float v, const Vec3D& p) { return Vec3D(); }
 
 bool Material::isEmissive() const { return false; }
 
-float Material::scatteringPDF(const Ray& r, const IntersectionRecord& record,
+float Material::scatteringPDF(const Ray& r, const Intersection& record,
                               const Ray& scatteredRay) const {
   return 1.f;
 }

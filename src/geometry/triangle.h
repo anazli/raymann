@@ -24,7 +24,7 @@ class Triangle : public SceneElement {
     return m_edgeVec[idx];
   }
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
+  bool intersect(const Ray &r, Intersection &record) override {
     auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();
@@ -94,7 +94,7 @@ class SmoothTriangle : public SceneElement {
     return m_normals[idx];
   }
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
+  bool intersect(const Ray &r, Intersection &record) override {
     auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();

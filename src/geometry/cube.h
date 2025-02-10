@@ -13,7 +13,7 @@ class Cube : public SceneElement {
   }
   ~Cube() override = default;
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
+  bool intersect(const Ray &r, Intersection &record) override {
     auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();

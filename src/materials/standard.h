@@ -11,8 +11,8 @@ class StandardMaterial : public Material {
   TextureRawPtr getTexture() const override;
   void setProperties(const DataContainer& prop) override;
   DataContainer getProperties() const override;
-  bool scatter(const Ray& r_in, const IntersectionRecord& rec,
-               Vec3D& attenuation, Ray& scattered) const override;
+  bool scatter(const Ray& r_in, const Intersection& rec, Vec3D& attenuation,
+               Ray& scattered) const override;
 
   static MaterialPtr create(TexturePtr tex,
                             const DataContainer& prop = DataContainer());
