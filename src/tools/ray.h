@@ -20,13 +20,11 @@ class Ray {
 
     Vec4D vector4d(origin());
     vector4d = matrix * vector4d;
-    Point3D new_origin = vector4d;
-    transformed_ray.setOrigin(new_origin);
+    transformed_ray.setOrigin(Point3D(vector4d));
 
     vector4d = direction();
     vector4d = matrix * vector4d;
-    Vec4D new_direction = vector4d;
-    transformed_ray.setDirection(new_direction);
+    transformed_ray.setDirection(Vec3D(vector4d));
     return transformed_ray;
   }
 

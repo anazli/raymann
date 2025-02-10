@@ -15,12 +15,6 @@ class Mat2 {
     m_vec[1] = row2;
   }
 
-  Mat2<T>& operator=(const Mat2<T>& c) {
-    m_vec[0] = c[0];
-    m_vec[1] = c[1];
-    return *this;
-  }
-
   Vec2<T> operator[](int i) const {
     assert(i >= 0 && i <= 1);
     if (i == 0) return m_vec[0];

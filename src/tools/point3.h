@@ -17,8 +17,8 @@ class Point3 {
  public:
   Point3() = default;
   Point3(T x, T y, T z) : m_x(x), m_y(y), m_z(z) {}
-  Point3(const Point3<T> &p) : m_x(p.x()), m_y(p.y()), m_z(p.z()) {}
-  Point3(const Vec4<T> &v) : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
+  explicit Point3(const Vec4<T> &v) : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
+  explicit Point3(const Vec3<T> &v) : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
@@ -43,13 +43,6 @@ class Point3 {
     return m_z;
   }
 
-  Point3<T> &operator=(const Point3<T> &rhs) {
-    m_x = rhs.m_x;
-    m_y = rhs.m_y;
-    m_z = rhs.m_z;
-    return *this;
-  }
-
   Point3<T> &operator=(const Vec4<T> &vec4) {
     m_x = vec4.x();
     m_y = vec4.y();
@@ -63,16 +56,16 @@ class Point3 {
     return Point3<T>(m_x + vec3.x(), m_y + vec3.y(), m_z + vec3.z());
   }
 
-  Vec3<T> operator-(const Point3<T> &rhs) const {  // Point - Point = Vector
-    return Vec3<T>(m_x - rhs.m_x, m_y - rhs.m_y, m_z - rhs.m_z);
-  }
-
   Vec3<T> operator+(const Point3<T> &rhs) const {
     return Vec3<T>(m_x + rhs.m_x, m_y + rhs.m_y, m_z + rhs.m_z);
   }
 
   Point3<T> operator-(const Vec3<T> &v) const {  // Point - Vector = Point
     return Point3<T>(m_x - v.x(), m_y - v.y(), m_z - v.z());
+  }
+
+  Vec3<T> operator-(const Point3<T> &rhs) const {  // Point - Point = Vector
+    return Vec3<T>(m_x - rhs.m_x, m_y - rhs.m_y, m_z - rhs.m_z);
   }
 
  private:

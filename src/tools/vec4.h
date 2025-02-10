@@ -18,9 +18,10 @@ class Vec4 {
  public:
   Vec4() = default;
   Vec4(T p1, T p2, T p3, T p4) : m_x{p1}, m_y{p2}, m_z{p3}, m_w{p4} {}
-  Vec4(const Vec4<T>& v) : m_x{v.m_x}, m_y{v.m_y}, m_z{v.m_z}, m_w{v.m_w} {}
-  Vec4(const Vec3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
-  Vec4(const Point3<T>& p) : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
+  explicit Vec4(const Vec3<T>& v)
+      : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
+  explicit Vec4(const Point3<T>& p)
+      : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }
@@ -53,14 +54,6 @@ class Vec4 {
     if (i == 1) return m_y;
     if (i == 2) return m_z;
     return m_w;
-  }
-
-  Vec4<T>& operator=(const Vec4<T>& v) {
-    m_x = v.m_x;
-    m_y = v.m_y;
-    m_z = v.m_z;
-    m_w = v.m_w;
-    return *this;
   }
 
   Vec4<T>& operator=(const Vec3<T>& v) {

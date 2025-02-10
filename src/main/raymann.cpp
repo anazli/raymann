@@ -162,7 +162,7 @@ int main() {
   scene_director.createWorld(world_builder, light);
   auto world = scene_director.getSceneProduct();
 
-  auto canvas = Canvas(300, 300);
+  auto canvas = Canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.54f);
   auto from = Point3D(278.f, 260.f, -830.f);
@@ -170,7 +170,7 @@ int main() {
   auto up = Vec3D(0.0f, 1.0f, 0.0f);
   camera->setTransform(view_transform(from, to, up));
 
-  auto samples_per_pixel = 50;
+  auto samples_per_pixel = 100;
   auto material_depth = 10;
   BaseRendererPtr renderer =
       make_unique<PathTracer>(std::make_unique<BruteForceSampler>(

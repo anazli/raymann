@@ -36,3 +36,4 @@ class Material {
 };
 
 using MaterialPtr = std::shared_ptr<Material>;
+using MaterialRawPtr = Material*;

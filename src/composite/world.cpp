@@ -41,7 +41,7 @@ bool World::intersect(const Ray& r, IntersectionRecord& record) {
 
 void World::add(SceneElementPtr item) {
   item->setParent(this);
-  m_bBox.addBox(item->boundingBox());
+  m_bBox.addBox(item->getBoundingBox());
   m_sceneElementContainer.push_back(item);
 }
 

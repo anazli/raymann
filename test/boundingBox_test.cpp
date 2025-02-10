@@ -86,7 +86,7 @@ TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   builder.setData(data);
   builder.buildPrimitive();
   builder.buildTransformation();
-  auto p = builder.getProduct()->boundingBox();
+  auto p = builder.getProduct()->getBoundingBox();
 
   auto eps = 1E-4f;
   comparePointsApprox(p.minPoint(), Point3D(0.5f, -5.f, 1.f), eps);
@@ -120,7 +120,7 @@ TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   primitive_builder.buildPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
-  BoundingBox p = world_builder.getProduct()->boundingBox();
+  BoundingBox p = world_builder.getProduct()->getBoundingBox();
 
   float eps = 1E-4f;
   comparePointsApprox(p.minPoint(), Point3D(-4.5f, -3.f, -5.f), eps);
@@ -252,7 +252,7 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
 
   auto world = world_builder.getProduct();
   WorldPair wp =
-      bvh.splitElementsOf(world->getChildren(), world->boundingBox());
+      bvh.splitElementsOf(world->getChildren(), world->getBoundingBox());
 
   ASSERT_EQ(world->getChildren().size(), 1);
   ASSERT_TRUE((*world->getChildren().begin()).get() == sphere3.get());
