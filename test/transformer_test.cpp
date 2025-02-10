@@ -54,7 +54,7 @@ TEST_F(TransformerTest, appliesTranslationToVector) {
   Vec4D v4(v);
 
   v4 = m * v4;
-  Vec3D v3 = v4;
+  auto v3 = Vec3(v4);
 
   ASSERT_TRUE(v == v3);  // translation does not affect vectors
 }

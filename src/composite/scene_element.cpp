@@ -47,7 +47,7 @@ void SceneElement::setBoundingBox(const BoundingBox& box) { m_bBox = box; }
 BoundingBox SceneElement::getBoundingBox() const { return m_bBox; }
 
 float SceneElement::pdf(const Point3D& origin, const Vec3D& direction) {
-  return 1.f;
+  return 1.f / (2.f * PI);
 }
 
 Vec3D SceneElement::random(const Point3D& origin) {

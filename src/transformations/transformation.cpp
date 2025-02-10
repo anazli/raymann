@@ -23,6 +23,6 @@ void Transformation::transformBoundingBox(BoundingBox& b) const {
   b = BoundingBox{};
   std::vector<Point3D> v{p1, p2, p3, p4, p5, p6, p7, p8};
   for (Point3D& elem : v) {
-    b.addPoint(m_matrix * Vec4D(elem));
+    b.addPoint(Point3D(m_matrix * Vec4D(elem)));
   }
 }

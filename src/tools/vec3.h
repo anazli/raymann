@@ -13,6 +13,7 @@ class Vec3 {
   Vec3() = default;
   Vec3(T p1, T p2, T p3) : m_x{p1}, m_y{p2}, m_z{p3} {}
   explicit Vec3(const Vec4<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
+  explicit Vec3(const Point3<T>& v) : m_x{v.x()}, m_y{v.y()}, m_z{v.z()} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }

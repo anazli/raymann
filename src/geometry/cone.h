@@ -72,7 +72,7 @@ class Cone : public SceneElement {
     return hitAnything;
   }
   Vec3D normal(const Point3D &p) const override {
-    Vec4D v4 = p;
+    auto v4 = Vec4D(p);
     auto object_point = m_transformation.getInverseMatrix() * v4;
     auto distance = object_point.x() * object_point.x() +
                     object_point.z() * object_point.z();
@@ -82,8 +82,8 @@ class Cone : public SceneElement {
       return Vec3D(0.f, -1.f, 0.f);
     }
     auto object_normal = Vec3D(object_point.x(), 0.f, object_point.z());
-    return getUnitVectorOf(m_transformation.getInverseTransposeMatrix() *
-                           Vec4D(object_normal));
+    return Vec3D(getUnitVectorOf(m_transformation.getInverseTransposeMatrix() *
+                                 Vec4D(object_normal)));
   }
 
   bool isClosed() const { return m_closed; }
