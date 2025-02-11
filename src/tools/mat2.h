@@ -72,3 +72,9 @@ Mat2<T> operator*(const Mat2<T>& m1, const Mat2<T>& m2) {
 
   return ret;
 }
+
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const Mat2<T>& m) {
+  out << "{" << m[0] << "," << m[1] << "}";
+  return out;
+}

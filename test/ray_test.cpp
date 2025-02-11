@@ -1,4 +1,5 @@
 #include "gtesting.h"
+#include "transformations/transformation.h"
 
 class RayTest : public testing::RTest {
  public:
@@ -30,17 +31,20 @@ TEST_F(RayTest, computesPositionAtT) {
 TEST_F(RayTest, translatesRay) {
   r = Ray(Point3D(1, 2, 3), Vec3D(0, 1, 0));
   Mat4D m = translation(3.0f, 4.0f, 5.0f);
-  Ray tr = r.transform(m);
+  std::cout << m << std::endl;
+  Transformation trans(m.inverse());
+  Ray tr = trans.worldToObjectSpace(r);
 
-  ASSERT_TRUE(tr.origin() == Point3D(4.0f, 6.0f, 8.0f));
-  ASSERT_TRUE(tr.direction() == Vec3D(0.0f, 1.0f, 0.0f));
+  ASSERT_EQ(tr.origin(), Point3D(4.0f, 6.0f, 8.0f));
+  ASSERT_EQ(tr.direction(), Vec3D(0.0f, 1.0f, 0.0f));
 }
 
 TEST_F(RayTest, scalesRay) {
   r = Ray(Point3D(1, 2, 3), Vec3D(0, 1, 0));
   Mat4D m = scale(2.0f, 3.0f, 4.0f);
-  Ray tr = r.transform(m);
+  Transformation trans(m.inverse());
+  Ray tr = trans.worldToObjectSpace(r);
 
-  ASSERT_TRUE(tr.origin() == Point3D(2.0f, 6.0f, 12.0f));
-  ASSERT_TRUE(tr.direction() == Vec3D(0.0f, 3.0f, 0.0f));
+  ASSERT_EQ(tr.origin(), Point3D(2.0f, 6.0f, 12.0f));
+  ASSERT_EQ(tr.direction(), Vec3D(0.0f, 3.0f, 0.0f));
 }

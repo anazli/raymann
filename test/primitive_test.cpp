@@ -469,7 +469,8 @@ TEST_F(SphereTest, SphereIsBehindOrigin) {
 TEST_F(SphereTest, testingTheNextTest) {
   s = Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f);
   r = Ray(Point3D(0.0f, 0.0f, -5.0f), Vec3D(0.0f, 0.0f, 1.0f));
-  Ray r1 = r.transform(scale(2.0f, 2.0f, 2.0f).inverse());
+  Transformation trans(scale(2.0f, 2.0f, 2.0f));
+  Ray r1 = trans.worldToObjectSpace(r);
   ASSERT_TRUE(s.intersect(r1, rec));
   ASSERT_EQ(rec.count, 2);
   ASSERT_EQ(rec.t1, 3.0f);

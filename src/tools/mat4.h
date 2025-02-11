@@ -334,3 +334,9 @@ Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
 }
 
 // TODO: Shearing
+
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const Mat4<T>& m) {
+  out << "{" << m[0] << "," << m[1] << "," << m[2] << "," << m[3] << "}";
+  return out;
+}

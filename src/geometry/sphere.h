@@ -13,7 +13,7 @@ class Sphere : public SceneElement {
   }
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+    auto transformed_ray = m_transformation.worldToObjectSpace(r);
     Point3D origin = transformed_ray.origin();
     Vec3D direction = transformed_ray.direction();
     auto co = origin - m_center;

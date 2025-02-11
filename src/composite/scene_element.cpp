@@ -56,7 +56,7 @@ Vec3D SceneElement::random(const Point3D& origin) {
 
 void SceneElement::setTransformation(const Transformation& transformation) {
   m_transformation = transformation;
-  m_transformation.transformBoundingBox(m_bBox);
+  m_transformation.worldToObjectSpace(m_bBox);
 }
 
 SceneElement::SceneElement() {

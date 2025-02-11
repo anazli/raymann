@@ -11,7 +11,13 @@ Mat4D Transformation::getInverseTransposeMatrix() const {
   return m_inverse_transpose_matrix;
 }
 
-void Transformation::transformBoundingBox(BoundingBox& b) const {
+Ray Transformation::worldToObjectSpace(const Ray& ray) {
+  auto object_space_origin = m_inverse_matrix * Vec4D(ray.origin());
+  auto object_space_direction = m_inverse_matrix * Vec4D(ray.direction());
+  return Ray(Point3D(object_space_origin), Vec3D(object_space_direction));
+}
+
+void Transformation::worldToObjectSpace(BoundingBox& b) const {
   Point3D p1 = b.minPoint();
   Point3D p2 = Point3D(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
   Point3D p3 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());

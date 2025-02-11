@@ -10,7 +10,8 @@ class Transformation {
   Mat4D getMatrix() const;
   Mat4D getInverseMatrix() const;
   Mat4D getInverseTransposeMatrix() const;
-  void transformBoundingBox(BoundingBox& b) const;
+  Ray worldToObjectSpace(const Ray& ray);
+  void worldToObjectSpace(BoundingBox& b) const;
 
  protected:
   Mat4D m_matrix;
