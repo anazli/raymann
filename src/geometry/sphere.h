@@ -24,7 +24,6 @@ class Sphere : public SceneElement {
     if (discr >= 0.0f) {
       record.t1 = (-b - sqrt(discr)) / (2. * a);
       record.t2 = (-b + sqrt(discr)) / (2. * a);
-      record.count = 2;
       record.saved_point = record.point(transformed_ray);
       return true;
     }

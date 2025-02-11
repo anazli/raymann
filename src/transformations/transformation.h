@@ -11,7 +11,9 @@ class Transformation {
   Mat4D getInverseMatrix() const;
   Mat4D getInverseTransposeMatrix() const;
   Ray worldToObjectSpace(const Ray& ray);
+  Ray objectToWorldSpace(const Ray& ray);
   void worldToObjectSpace(BoundingBox& b) const;
+  void objectToWorldSpace(BoundingBox& b) const;
 
  protected:
   Mat4D m_matrix;

@@ -22,5 +22,5 @@ class Ray {
  private:
   Point3D m_origin;
   Vec3D m_direction;
-  mutable float m_max_parameter;
+  mutable float m_max_parameter = std::numeric_limits<float>::infinity();
 };

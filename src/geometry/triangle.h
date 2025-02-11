@@ -43,7 +43,6 @@ class Triangle : public SceneElement {
     if (v < 0.f || (u + v) > 1.f) return false;
 
     record.t1 = inv_det * dot(m_edgeVec[1], cross_s_edge1);
-    record.count++;
     record.saved_point = record.point(transformed_ray);
     return true;
   }
@@ -113,7 +112,6 @@ class SmoothTriangle : public SceneElement {
     if (m_vPar < 0.f || (m_uPar + m_vPar) > 1.f) return false;
 
     record.t1 = inv_det * dot(m_edgeVec[1], cross_s_edge1);
-    record.count++;
     return true;
   }
 

@@ -46,14 +46,12 @@ class Cylinder : public SceneElement {
       auto y1 = origin.y() + t1 * direction.y();
       if (m_minimumY < y1 && m_maximumY > y1) {
         record.t1 = t1;
-        record.count++;
         hitAnything = true;
       }
 
       auto y2 = origin.y() + t2 * direction.y();
       if (m_minimumY < y2 && m_maximumY > y2) {
         record.t2 = t2;
-        record.count++;
         hitAnything = true;
       }
     }
@@ -105,13 +103,11 @@ class Cylinder : public SceneElement {
     auto t = (m_minimumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t)) {
       record.t1 = t;
-      record.count++;
       intersectsCap = true;
     }
     t = (m_maximumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t)) {
       record.t2 = t;
-      record.count++;
       intersectsCap = true;
     }
     return intersectsCap;

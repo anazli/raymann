@@ -18,9 +18,9 @@ bool Lambertian::scatter(const Ray& r_in, const Intersection& rec,
   // auto scatterDir = orthnb.local(Random::randomCosineDirection());
   auto point = rec.point(r_in);
   auto target =
-      point + Random::randomVectorOnUnitSphere() + rec.object->normal(point);
+      point + Random::randomVectorOnUnitSphere() + rec.primitive->normal(point);
   scattered = Ray(point, target - point);
-  m_pdf->setFromW(rec.object->normal(point));
+  m_pdf->setFromW(rec.primitive->normal(point));
   attenuation = m_tex->value(0, 0, Vec3D());
   // m_pdf->setFromW(rec.object->normal(point));
   return true;
@@ -28,7 +28,7 @@ bool Lambertian::scatter(const Ray& r_in, const Intersection& rec,
 
 float Lambertian::scatteringPDF(const Ray& r, const Intersection& record,
                                 const Ray& scatteredRay) const {
-  auto cTheta = dot(record.object->normal(record.point(scatteredRay)),
+  auto cTheta = dot(record.primitive->normal(record.point(scatteredRay)),
                     getUnitVectorOf(scatteredRay.direction()));
   return cTheta < 0 ? 0 : cTheta / PI;
 }

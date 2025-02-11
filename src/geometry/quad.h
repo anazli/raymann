@@ -52,7 +52,7 @@ class Quad : public SceneElement {
 
     auto distSquared =
         rec.t_min() * rec.t_min() * direction.length() * direction.length();
-    auto cosine = fabs(dot(direction, rec.normal) / direction.length());
+    auto cosine = fabs(dot(direction, rec.surface_normal) / direction.length());
 
     return distSquared / (cosine * m_area);
   }

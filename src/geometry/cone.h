@@ -43,7 +43,6 @@ class Cone : public SceneElement {
     auto c = rox * rox - roy * roy + roz * roz;
     if ((a <= EPS && a >= -EPS) && (b >= EPS || b <= -EPS)) {
       record.t1 = -c / (2.f * b);
-      record.count++;
       return true;
     }
 
@@ -57,14 +56,12 @@ class Cone : public SceneElement {
       auto y1 = origin.y() + t1 * direction.y();
       if (m_minimumY < y1 && m_maximumY > y1) {
         record.t1 = t1;
-        record.count++;
         hitAnything = true;
       }
 
       auto y2 = origin.y() + t2 * direction.y();
       if (m_minimumY < y2 && m_maximumY > y2) {
         record.t2 = t2;
-        record.count++;
         hitAnything = true;
       }
     }
@@ -113,13 +110,11 @@ class Cone : public SceneElement {
     auto t = (m_minimumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t, m_minimumY)) {
       record.t1 = t;
-      record.count++;
       intersectsCap = true;
     }
     t = (m_maximumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t, m_maximumY)) {
       record.t2 = t;
-      record.count++;
       intersectsCap = true;
     }
     return intersectsCap;

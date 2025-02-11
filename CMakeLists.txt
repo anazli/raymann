@@ -28,6 +28,7 @@ add_library(${LIBRARY_NAME}
             src/color/rgb_spectrum.h
             src/composite/builder.cpp
             src/composite/builder.h
+            src/composite/intersection.h
             src/composite/iterator.cpp
             src/composite/iterator.h
             src/composite/scene_element.cpp

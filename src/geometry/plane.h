@@ -17,7 +17,6 @@ class Plane : public SceneElement {
       return false;
     }
     record.t1 = -origin.y() / direction.y();
-    record.count = 1;
     record.saved_point = record.point(transformed_ray);
     return true;
   }
