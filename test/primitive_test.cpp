@@ -56,9 +56,9 @@ class SmoothTriangleTest : public testing::RTest {
   Point3D p1 = Point3D(0.f, 1.f, 0.f);
   Point3D p2 = Point3D(-1.f, 0.f, 0.f);
   Point3D p3 = Point3D(1.f, 0.f, 0.f);
-  Vec3D v1 = Vec3D(0.f, 1.f, 0.f);
-  Vec3D v2 = Vec3D(-1.f, 0.f, 0.f);
-  Vec3D v3 = Vec3D(1.f, 0.f, 0.f);
+  Normal3D v1 = Normal3D(0.f, 1.f, 0.f);
+  Normal3D v2 = Normal3D(-1.f, 0.f, 0.f);
+  Normal3D v3 = Normal3D(1.f, 0.f, 0.f);
   SmoothTriangle t = SmoothTriangle(p1, p2, p3, v1, v2, v3);
 };
 

@@ -32,12 +32,9 @@ class Sphere : public SceneElement {
   }
 
   Normal3D normal(const Point3D &p) const override {
-    auto v4 = Vec4D(p);
-    auto object_point = Point3D(m_transformation.getInverseMatrix() * v4);
-    auto object_normal = getUnitVectorOf(object_point - m_center);
-    auto world_normal = Vec3D(m_transformation.getInverseTransposeMatrix() *
-                              Vec4D(object_normal));
-    return Normal3D(getUnitVectorOf(world_normal));
+    auto object_point = m_transformation.worldToObjectSpace(p);
+    auto object_normal = Normal3D(getUnitVectorOf(object_point - m_center));
+    return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 
   float pdf(const Point3D &origin, const Vec3D &direction) override {

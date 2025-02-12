@@ -64,7 +64,7 @@ class Triangle : public SceneElement {
 class SmoothTriangle : public SceneElement {
  public:
   SmoothTriangle(const Point3D &p1, const Point3D &p2, const Point3D &p3,
-                 const Vec3D &v1, const Vec3D &v2, const Vec3D &v3) {
+                 const Normal3D &v1, const Normal3D &v2, const Normal3D &v3) {
     m_points.push_back(p1);
     m_points.push_back(p2);
     m_points.push_back(p3);
@@ -87,7 +87,7 @@ class SmoothTriangle : public SceneElement {
     return m_points[idx];
   }
 
-  Vec3D normals(int idx) const {
+  Normal3D normals(int idx) const {
     APP_ASSERT((idx < 3 && idx >= 0),
                "Out of bounds index error in smooth triangle (Points)");
     return m_normals[idx];
@@ -116,19 +116,19 @@ class SmoothTriangle : public SceneElement {
   }
 
   Normal3D normal(const Point3D &p) const override {
-    return Normal3D(m_normals[1] * m_uPar + m_normals[2] * m_vPar +
-                    m_normals[0] * (1.f - m_uPar - m_vPar));
+    return m_normals[1] * m_uPar + m_normals[2] * m_vPar +
+           m_normals[0] * (1.f - m_uPar - m_vPar);
   }
 
   static SceneElementPtr create(const Point3D &p1, const Point3D &p2,
-                                const Point3D &p3, const Vec3D &v1,
-                                const Vec3D &v2, const Vec3D &v3) {
+                                const Point3D &p3, const Normal3D &v1,
+                                const Normal3D &v2, const Normal3D &v3) {
     return std::make_shared<SmoothTriangle>(p1, p2, p3, v1, v2, v3);
   }
 
  private:
   std::vector<Point3D> m_points;
-  std::vector<Vec3D> m_normals;
+  std::vector<Normal3D> m_normals;
   std::vector<Vec3D> m_edgeVec;
   float m_uPar;
   float m_vPar;

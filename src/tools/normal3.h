@@ -116,13 +116,13 @@ bool operator==(const Normal3<T>& n, const Vec3<T>& v) {
 }
 
 template <typename T>
-Normal3<T> operator!=(const Normal3<T>& n, const Vec3<T>& v) {
+bool operator!=(const Normal3<T>& n, const Vec3<T>& v) {
   return !(n == v);
 }
 
 template <typename T>
 Normal3<T> operator+(const Normal3<T>& n1, const Normal3<T>& n2) {
-  return Vec3<T>(n1.x() + n2.x(), n1.y() + n2.y(), n1.z() + n2.z());
+  return Normal3<T>(n1.x() + n2.x(), n1.y() + n2.y(), n1.z() + n2.z());
 }
 
 template <typename T>

@@ -27,6 +27,11 @@ class RTest : public Test {
     EXPECT_FLOAT_EQ(n.y(), v.y());
     EXPECT_FLOAT_EQ(n.z(), v.z());
   }
+  void compareVectors(const Normal3D& n, const Normal3D& v) {
+    EXPECT_FLOAT_EQ(n.x(), v.x());
+    EXPECT_FLOAT_EQ(n.y(), v.y());
+    EXPECT_FLOAT_EQ(n.z(), v.z());
+  }
   void compareVectorsApprox(const Vec3D& v1, const Vec3D& v2, float eps) {
     EXPECT_NEAR(v1.x(), v2.x(), eps);
     EXPECT_NEAR(v1.y(), v2.y(), eps);

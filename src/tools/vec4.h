@@ -4,14 +4,14 @@
 #include <iostream>
 #include <random>
 
-#include "point3.h"
-#include "vec3.h"
-
 template <typename T>
 class Vec3;
 
 template <typename T>
 class Point3;
+
+template <typename T>
+class Normal3;
 
 template <class T>
 class Vec4 {
@@ -22,6 +22,8 @@ class Vec4 {
       : m_x{v.x()}, m_y{v.y()}, m_z(v.z()), m_w{0} {}
   explicit Vec4(const Point3<T>& p)
       : m_x{p.x()}, m_y{p.y()}, m_z{p.z()}, m_w{1} {}
+  explicit Vec4(const Normal3<T>& n)
+      : m_x{n.x()}, m_y{n.y()}, m_z{n.z()}, m_w{0} {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }

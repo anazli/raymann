@@ -55,18 +55,26 @@ void Transformation::objectToWorldSpace(BoundingBox& b) const {
   }
 }
 
-Point3D Transformation::worldToObjectSpace(Point3D& p) const {
+Point3D Transformation::worldToObjectSpace(const Point3D& p) const {
   return Point3D(m_inverse_matrix * Vec4D(p));
 }
 
-Point3D Transformation::objectToWorldSpace(Point3D& p) const {
+Point3D Transformation::objectToWorldSpace(const Point3D& p) const {
   return Point3D(m_matrix * Vec4D(p));
 }
 
-Vec3D Transformation::worldToObjectSpace(Vec3D& v) const {
+Vec3D Transformation::worldToObjectSpace(const Vec3D& v) const {
   return Vec3D(m_inverse_matrix * Vec4D(v));
 }
 
-Vec3D Transformation::objectToWorldSpace(Vec3D& v) const {
+Vec3D Transformation::objectToWorldSpace(const Vec3D& v) const {
   return Vec3D(m_matrix * Vec4D(v));
+}
+
+Normal3D Transformation::worldToObjectSpace(const Normal3D& n) const {
+  return Normal3D(m_inverse_matrix * Vec4D(n));
+}
+
+Normal3D Transformation::objectToWorldSpace(const Normal3D& n) const {
+  return Normal3D(m_inverse_transpose_matrix * Vec4D(n));
 }

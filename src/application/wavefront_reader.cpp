@@ -126,7 +126,7 @@ void WavefrontReader::addMaterial(MaterialPtr mat) { m_material = mat; }
 
 vector<Vec3D> WavefrontReader::vertexCollection() const { return m_vertices; }
 
-std::vector<Vec3D> WavefrontReader::vertexNormalCollection() const {
+std::vector<Normal3D> WavefrontReader::vertexNormalCollection() const {
   return m_verticesNormals;
 }
 
@@ -168,7 +168,7 @@ void WavefrontReader::parseVertexNormalEntry(std::string_view line) {
   string v, x, y, z;
   if (ss >> v >> x >> y >> z) {
     try {
-      m_verticesNormals.push_back(Vec3D(stof(x), stof(y), stof(z)));
+      m_verticesNormals.push_back(Normal3D(stof(x), stof(y), stof(z)));
     } catch (...) {
       APP_MSG(line.data());
       APP_ASSERT(false,
@@ -234,19 +234,19 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
           p3 = Point3D(m_vertices[stoi(g) - 1]);
 
         size_t vertNormSize = m_verticesNormals.size();
-        Vec3D n1, n2, n3;
+        Normal3D n1, n2, n3;
         if (stoi(j) < 0)
-          n1 = Vec3D(m_verticesNormals[vertNormSize + stoi(j) - 1]);
+          n1 = Normal3D(m_verticesNormals[vertNormSize + stoi(j) - 1]);
         else
-          n1 = Vec3D(m_verticesNormals[stoi(j) - 1]);
+          n1 = Normal3D(m_verticesNormals[stoi(j) - 1]);
         if (stoi(h) < 0)
-          n2 = Vec3D(m_verticesNormals[vertNormSize + stoi(h) - 1]);
+          n2 = Normal3D(m_verticesNormals[vertNormSize + stoi(h) - 1]);
         else
-          n2 = Vec3D(m_verticesNormals[stoi(h) - 1]);
+          n2 = Normal3D(m_verticesNormals[stoi(h) - 1]);
         if (stoi(o) < 0)
-          n3 = Vec3D(m_verticesNormals[vertNormSize + stoi(o) - 1]);
+          n3 = Normal3D(m_verticesNormals[vertNormSize + stoi(o) - 1]);
         else
-          n3 = Vec3D(m_verticesNormals[stoi(o) - 1]);
+          n3 = Normal3D(m_verticesNormals[stoi(o) - 1]);
 
         SceneElementPtr tr = SmoothTriangle::create(p1, p2, p3, n1, n2, n3);
         tr->setMaterial(m_material);

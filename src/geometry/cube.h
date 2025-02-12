@@ -32,21 +32,19 @@ class Cube : public SceneElement {
   }
 
   Normal3D normal(const Point3D &p) const override {
-    auto v4 = Vec4D(p);
-    auto object_point = m_transformation.getInverseMatrix() * v4;
+    auto object_point = m_transformation.worldToObjectSpace(p);
     auto max_coord =
         std::max(std::max(fabs(object_point.x()), fabs(object_point.y())),
                  fabs(object_point.z()));
-    Vec3D object_normal;
-    if (max_coord == fabs(object_point.x()))
-      object_normal = Vec3D(object_point.x(), 0.f, 0.f);
-    else if (max_coord == fabs(object_point.y()))
-      object_normal = Vec3D(0.f, object_point.y(), 0.f);
-    else
-      object_normal = Vec3D(0.f, 0.f, object_point.z());
-    auto world_normal =
-        m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
-    return Normal3D(getUnitVectorOf(world_normal));
+    Normal3D object_normal;
+    if (max_coord == fabs(object_point.x())) {
+      object_normal = Normal3D(object_point.x(), 0.f, 0.f);
+    } else if (max_coord == fabs(object_point.y())) {
+      object_normal = Normal3D(0.f, object_point.y(), 0.f);
+    } else {
+      object_normal = Normal3D(0.f, 0.f, object_point.z());
+    }
+    return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 
   static SceneElementPtr create() { return std::make_shared<Cube>(); }
