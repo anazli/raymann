@@ -16,7 +16,7 @@ bool Lambertian::scatter(const Ray& r_in, const Intersection& rec,
   // OrthoNormalBasis orthnb;
   // orthnb.buildFromW(rec.object->normal(point));
   // auto scatterDir = orthnb.local(Random::randomCosineDirection());
-  auto point = rec.point(r_in);
+  auto point = rec.getHitPoint(r_in);
   auto target = point + Random::randomVectorOnUnitSphere() +
                 Vec3D(rec.primitive->normal(point));
   scattered = Ray(point, target - point);
@@ -28,7 +28,7 @@ bool Lambertian::scatter(const Ray& r_in, const Intersection& rec,
 
 float Lambertian::scatteringPDF(const Ray& r, const Intersection& record,
                                 const Ray& scatteredRay) const {
-  auto cTheta = dot(record.primitive->normal(record.point(scatteredRay)),
+  auto cTheta = dot(record.primitive->normal(record.getHitPoint(scatteredRay)),
                     getUnitVectorOf(scatteredRay.direction()));
   return cTheta < 0 ? 0 : cTheta / PI;
 }

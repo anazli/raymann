@@ -27,7 +27,7 @@ class Cube : public SceneElement {
       return false;
     }
     record.min_hit = Intersection::getMinimumHitParameter(tmin, tmax);
-    record.saved_point = record.point(transformed_ray);
+    record.hit_point = record.getHitPoint(transformed_ray);
     return true;
   }
 

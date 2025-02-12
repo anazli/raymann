@@ -17,7 +17,7 @@ class Plane : public SceneElement {
       return false;
     }
     record.min_hit = -origin.y() / direction.y();
-    record.saved_point = record.point(transformed_ray);
+    record.hit_point = record.getHitPoint(transformed_ray);
     return true;
   }
   Normal3D normal(const Point3D &p) const override {

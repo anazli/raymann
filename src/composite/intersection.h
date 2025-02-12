@@ -24,15 +24,16 @@ class Intersection {
   }
 
   float min_hit = std::numeric_limits<float>::infinity();
-  Point3D point(const Ray &r) const { return r.position(min_hit); }
-  Point3D saved_point;
+  Point3D getHitPoint(const Ray &r) const { return r.position(min_hit); }
+  // point of intersection test in world space
+  Point3D hit_point;
   // negative ray direction
   Vec3D omega;
   bool inside = false;
   Point3D over_point_from_refl_surf;
   Point3D under_point_from_refrac_surf;
-  // normal of closest hit
-  Vec3D surface_normal;
+  // normal of closest hit in world space
+  Normal3D surface_normal;
   // primitive of closest hit
   SceneElement *primitive = nullptr;
   float minHitParam = limit::max();

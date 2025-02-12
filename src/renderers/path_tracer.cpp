@@ -38,11 +38,11 @@ Vec3D PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
 
   StochasticPdfPtr lightPdf;
   if (m_diffuseLight) {
-    lightPdf =
-        std::make_shared<PrimitivePdf>(m_diffuseLight, record.point(scattered));
+    lightPdf = std::make_shared<PrimitivePdf>(m_diffuseLight,
+                                              record.getHitPoint(scattered));
   }
   CombinedPdf mixPdf(lightPdf, record.primitive->getMaterial()->pdf(), 0.7f);
-  auto rayFromPdf = Ray(record.point(ray), mixPdf.generate());
+  auto rayFromPdf = Ray(record.getHitPoint(ray), mixPdf.generate());
   auto scatPdf = record.primitive->getMaterial()->scatteringPDF(
       scattered, record, rayFromPdf);
   auto pdf = mixPdf.value(rayFromPdf.direction());

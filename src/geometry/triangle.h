@@ -43,7 +43,7 @@ class Triangle : public SceneElement {
     if (v < 0.f || (u + v) > 1.f) return false;
 
     record.min_hit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
-    record.saved_point = record.point(transformed_ray);
+    record.hit_point = record.getHitPoint(transformed_ray);
     return true;
   }
   Normal3D normal(const Point3D &p) const override { return m_normalVec; }
@@ -112,6 +112,7 @@ class SmoothTriangle : public SceneElement {
     if (m_vPar < 0.f || (m_uPar + m_vPar) > 1.f) return false;
 
     record.min_hit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
+    record.hit_point = record.getHitPoint(transformed_ray);
     return true;
   }
 

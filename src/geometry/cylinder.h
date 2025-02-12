@@ -53,10 +53,11 @@ class Cylinder : public SceneElement {
         hitAnything = true;
       }
 
-      if (hitAnything)
+      if (hitAnything) {
         record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
+        record.hit_point = record.getHitPoint(transformed_ray);
+      }
     }
-    record.saved_point = record.point(transformed_ray);
     if (intersectCaps(transformed_ray, record)) hitAnything = true;
     return hitAnything;
   }
@@ -108,7 +109,10 @@ class Cylinder : public SceneElement {
       intersectsCap = true;
     }
 
-    if (intersectsCap) record.min_hit = t;
+    if (intersectsCap) {
+      record.min_hit = t;
+      record.hit_point = record.getHitPoint(r);
+    }
     return intersectsCap;
   }
 };

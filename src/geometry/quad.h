@@ -21,7 +21,7 @@ class Quad : public SceneElement {
     auto transformed_ray = m_transformation.worldToObjectSpace(r);
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();
-    auto normalV = normal(record.point(transformed_ray));
+    auto normalV = normal(record.getHitPoint(transformed_ray));
     auto denom = dot(normalV, direction);
     auto dParam = dot(normalV, Vec3D(m_origin));
 
@@ -36,7 +36,7 @@ class Quad : public SceneElement {
     if (!isWithin(alpha, beta, record)) return false;
 
     record.min_hit = t;
-    record.saved_point = record.point(transformed_ray);
+    record.hit_point = record.getHitPoint(transformed_ray);
     return true;
   }
 

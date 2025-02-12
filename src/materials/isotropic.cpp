@@ -12,8 +12,8 @@ Isotropic::Isotropic(TexturePtr tex) : Material(std::move(tex)) {
 
 bool Isotropic::scatter(const Ray& r_in, const Intersection& rec,
                         Vec3D& attenuation, Ray& scattered) const {
-  scattered =
-      Ray(rec.point(r_in), getUnitVectorOf(Random::randomVectorOnUnitSphere()));
+  scattered = Ray(rec.getHitPoint(r_in),
+                  getUnitVectorOf(Random::randomVectorOnUnitSphere()));
   attenuation = m_tex->value(0.f, 0.f, Vec3D());
   return true;
 }

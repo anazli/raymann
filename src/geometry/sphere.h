@@ -25,7 +25,7 @@ class Sphere : public SceneElement {
       auto t1 = (-b - sqrt(discr)) / (2. * a);
       auto t2 = (-b + sqrt(discr)) / (2. * a);
       record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
-      record.saved_point = record.point(transformed_ray);
+      record.hit_point = record.getHitPoint(transformed_ray);
       return true;
     }
     return false;

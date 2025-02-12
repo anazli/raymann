@@ -64,9 +64,11 @@ class Cone : public SceneElement {
         hitAnything = true;
       }
     }
-    if (intersectCaps(transformed_ray, record)) hitAnything = true;
-    if (hitAnything)
+    if (hitAnything) {
       record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
+      record.hit_point = record.getHitPoint(transformed_ray);
+    }
+    if (intersectCaps(transformed_ray, record)) hitAnything = true;
     return hitAnything;
   }
   Normal3D normal(const Point3D &p) const override {
