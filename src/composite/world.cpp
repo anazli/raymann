@@ -26,9 +26,9 @@ bool World::intersect(const Ray& r, Intersection& record) {
         auto rec = Intersection{};
         if (it.currentElement()->intersect(r, rec)) {
           rec.hitFound = true;
-          if (rec.t_min() > 0.0f && rec.t_min() < record.minHitParam) {
+          if (rec.min_hit > 0.0f && rec.min_hit < record.minHitParam) {
             rec.primitive = it.currentElement();
-            rec.minHitParam = rec.t_min();
+            rec.minHitParam = rec.min_hit;
             record = rec;
           }
         }

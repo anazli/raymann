@@ -26,8 +26,7 @@ class Cube : public SceneElement {
     if (tmin > tmax) {
       return false;
     }
-    record.t1 = tmin;
-    record.t2 = tmax;
+    record.min_hit = Intersection::getMinimumHitParameter(tmin, tmax);
     record.saved_point = record.point(transformed_ray);
     return true;
   }
@@ -56,7 +55,7 @@ class Cube : public SceneElement {
   std::pair<float, float> hitAxis(float origin, float direction) {
     auto tmin_numerator = (-1.f - origin);
     auto tmax_numerator = (1.f - origin);
-    auto tmin{0.f}, tmax{0.f};
+    float tmin{}, tmax{};
     if (fabs(direction) >= EPS) {
       tmin = tmin_numerator / direction;
       tmax = tmax_numerator / direction;

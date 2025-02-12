@@ -2,10 +2,10 @@
 
 void PhongModel::visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
                                        const Ray& ray) {
-  /*if (elementLeaf.intersect(ray) && elementLeaf.getRecord().t_min() > 0. &&
-      elementLeaf.getRecord().t_min() < m_tmin) {
+  /*if (elementLeaf.intersect(ray) && elementLeaf.getRecord().min_hit > 0. &&
+      elementLeaf.getRecord().min_hit < m_tmin) {
     m_closestHit = std::make_shared<SceneElement>(elementLeaf);
-    m_tmin = m_closestHit->getRecord().t_min();
+    m_tmin = m_closestHit->getRecord().min_hit;
   }*/
 }
 
@@ -33,6 +33,7 @@ Vec3D PhongModel::computeColor(const SceneElementRawPtr world, const Ray& ray,
 Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
   auto normal = m_closestHit.primitive->normal(m_closestHit.point(ray));
   auto point = m_closestHit.point(ray);
+  m_closestHit.omega = -ray.direction();
   auto over_point = point + (m_closestHit.inside ? normal : normal) * 0.02f;
   auto normal_vec = m_closestHit.inside
                         ? -m_closestHit.primitive->normal(over_point)
@@ -63,7 +64,7 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
                       .value() *
                   light_normal;
     auto reflectv = reflect(-lightv, normal_vec);
-    auto reflect_dot_eye = dot(reflectv, m_closestHit.eye(ray));
+    auto reflect_dot_eye = dot(reflectv, m_closestHit.omega);
     if (reflect_dot_eye > 0.0f) {
       float factor = pow(reflect_dot_eye,
                          m_closestHit.primitive->getMaterial()
@@ -211,8 +212,8 @@ bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3D& p) {
     auto closestShadowedHit = Intersection{};
     if (world->intersect(r, closestShadowedHit)) {
       if (closestShadowedHit.primitive) {
-        if (closestShadowedHit.t_min() > 0.0f &&
-            closestShadowedHit.t_min() < distance)
+        if (closestShadowedHit.min_hit > 0.0f &&
+            closestShadowedHit.min_hit < distance)
           return true;
       }
     }
@@ -261,7 +262,7 @@ bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3D& p) {
     const SceneElementPtr& world, const Ray& ray) {
   auto intersections = intersectionsSorted(world, ray);
   for (const auto& [key, value] : intersections) {
-    if (m_closestHit.t_min() == value.second) {
+    if (m_closestHit.min_hit == value.second) {
       m_closestHit.n1 = m_refract_index_collection[key].first;
       m_closestHit.n2 = m_refract_index_collection[key].second;
       break;

@@ -16,7 +16,7 @@ class Plane : public SceneElement {
     if (fabs(direction.y()) < EPS) {
       return false;
     }
-    record.t1 = -origin.y() / direction.y();
+    record.min_hit = -origin.y() / direction.y();
     record.saved_point = record.point(transformed_ray);
     return true;
   }

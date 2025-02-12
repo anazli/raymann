@@ -22,8 +22,9 @@ class Sphere : public SceneElement {
     auto c = dot(co, co) - m_radius * m_radius;
     auto discr = b * b - 4.0f * a * c;
     if (discr >= 0.0f) {
-      record.t1 = (-b - sqrt(discr)) / (2. * a);
-      record.t2 = (-b + sqrt(discr)) / (2. * a);
+      auto t1 = (-b - sqrt(discr)) / (2. * a);
+      auto t2 = (-b + sqrt(discr)) / (2. * a);
+      record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
       record.saved_point = record.point(transformed_ray);
       return true;
     }

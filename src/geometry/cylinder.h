@@ -45,15 +45,16 @@ class Cylinder : public SceneElement {
 
       auto y1 = origin.y() + t1 * direction.y();
       if (m_minimumY < y1 && m_maximumY > y1) {
-        record.t1 = t1;
         hitAnything = true;
       }
 
       auto y2 = origin.y() + t2 * direction.y();
       if (m_minimumY < y2 && m_maximumY > y2) {
-        record.t2 = t2;
         hitAnything = true;
       }
+
+      if (hitAnything)
+        record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
     }
     record.saved_point = record.point(transformed_ray);
     if (intersectCaps(transformed_ray, record)) hitAnything = true;
@@ -102,14 +103,14 @@ class Cylinder : public SceneElement {
     auto intersectsCap = false;
     auto t = (m_minimumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t)) {
-      record.t1 = t;
       intersectsCap = true;
     }
     t = (m_maximumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t)) {
-      record.t2 = t;
       intersectsCap = true;
     }
+
+    if (intersectsCap) record.min_hit = t;
     return intersectsCap;
   }
 };

@@ -35,7 +35,7 @@ class Quad : public SceneElement {
     auto beta = dot(m_wParam, cross(m_uAxis, planarHitptVector));
     if (!isWithin(alpha, beta, record)) return false;
 
-    record.t1 = t;
+    record.min_hit = t;
     record.saved_point = record.point(transformed_ray);
     return true;
   }
@@ -51,7 +51,7 @@ class Quad : public SceneElement {
     if (!intersect(Ray(origin, direction), rec)) return 1.f;
 
     auto distSquared =
-        rec.t_min() * rec.t_min() * direction.length() * direction.length();
+        rec.min_hit * rec.min_hit * direction.length() * direction.length();
     auto cosine = fabs(dot(direction, rec.surface_normal) / direction.length());
 
     return distSquared / (cosine * m_area);

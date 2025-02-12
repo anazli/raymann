@@ -205,7 +205,7 @@ TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
   ASSERT_EQ(s1->record().t2, -2.0f);
 
   TraceablePtr closest = world->closestHit(r);
-  ASSERT_EQ(closest->record().t_min(), s->record().t_min());
+  ASSERT_EQ(closest->record().min_hit, s->record().min_hit);
   ASSERT_EQ(closest->record().t1, s->record().t1);
   ASSERT_EQ(closest->record().t2, s->record().t2);
 }
@@ -286,7 +286,7 @@ TEST_F(Tworld, createsWorldOfFourSpheres) {
   ASSERT_EQ(s3->record().t2, 14.0f);
 
   TraceablePtr closest = world->closestHit(r);
-  ASSERT_EQ(closest->record().t_min(), s1->record().t_min());
+  ASSERT_EQ(closest->record().min_hit, s1->record().min_hit);
   ASSERT_EQ(closest->record().t1, s1->record().t1);
   ASSERT_EQ(closest->record().t2, s1->record().t2);
 }
@@ -344,7 +344,7 @@ TEST_F(Tworld, computesQuantitiesOfIntersection) {
   world->intersect(r);
   TraceablePtr t = world->closestHit(r);
 
-  ASSERT_TRUE(t->record().eye(r) == Vec3D(0.0f, 0.0f, -1.0f));
+  ASSERT_TRUE(t->record().omega(r) == Vec3D(0.0f, 0.0f, -1.0f));
   ASSERT_TRUE(t->record().point(r) == Point3D(0.0f, 0.0f, -1.0f));
   ASSERT_TRUE(t->normal(t->record().point(r)) == Vec3D(0.0f, 0.0f, -1.0f));
 }

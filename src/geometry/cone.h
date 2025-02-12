@@ -41,31 +41,32 @@ class Cone : public SceneElement {
     auto a = rdx * rdx - rdy * rdy + rdz * rdz;
     auto b = 2.0f * (rox * rdx - roy * rdy + roz * rdz);
     auto c = rox * rox - roy * roy + roz * roz;
+    float t1{}, t2{};
     if ((a <= EPS && a >= -EPS) && (b >= EPS || b <= -EPS)) {
-      record.t1 = -c / (2.f * b);
+      t1 = -c / (2.f * b);
       return true;
     }
 
     auto discr = b * b - 4.0f * a * c;
     auto hitAnything = false;
     if (discr >= 0.0f) {
-      auto t1 = (-b - sqrt(discr)) / (2.0f * a);
-      auto t2 = (-b + sqrt(discr)) / (2.0f * a);
+      t1 = (-b - sqrt(discr)) / (2.0f * a);
+      t2 = (-b + sqrt(discr)) / (2.0f * a);
       if (t1 > t2) std::swap(t1, t2);
 
       auto y1 = origin.y() + t1 * direction.y();
       if (m_minimumY < y1 && m_maximumY > y1) {
-        record.t1 = t1;
         hitAnything = true;
       }
 
       auto y2 = origin.y() + t2 * direction.y();
       if (m_minimumY < y2 && m_maximumY > y2) {
-        record.t2 = t2;
         hitAnything = true;
       }
     }
     if (intersectCaps(transformed_ray, record)) hitAnything = true;
+    if (hitAnything)
+      record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
     return hitAnything;
   }
   Vec3D normal(const Point3D &p) const override {
@@ -108,15 +109,17 @@ class Cone : public SceneElement {
 
     auto intersectsCap = false;
     auto t = (m_minimumY - r.origin().y()) / r.direction().y();
+    float t1{}, t2{};
     if (checkCap(r, t, m_minimumY)) {
-      record.t1 = t;
+      t1 = t;
       intersectsCap = true;
     }
     t = (m_maximumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t, m_maximumY)) {
-      record.t2 = t;
+      t2 = t;
       intersectsCap = true;
     }
+    record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
     return intersectsCap;
   }
 };
