@@ -20,8 +20,8 @@ class Plane : public SceneElement {
     record.saved_point = record.point(transformed_ray);
     return true;
   }
-  Vec3D normal(const Point3D &p) const override {
-    return Vec3D(0.0f, 1.0f, 0.0f);
+  Normal3D normal(const Point3D &p) const override {
+    return Normal3D(0.0f, 1.0f, 0.0f);
   }
 
   static SceneElementPtr create() { return std::make_shared<Plane>(); }

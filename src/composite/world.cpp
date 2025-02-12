@@ -60,7 +60,7 @@ SceneElementContainer::iterator World::remove(SceneElementRawPtr item,
 
 bool World::isWorld() const { return true; }
 
-Vec3D World::normal(const Point3D& p) const { return Vec3D(); }
+Normal3D World::normal(const Point3D& p) const { return Normal3D(); }
 
 void World::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementComposite(this, ray);

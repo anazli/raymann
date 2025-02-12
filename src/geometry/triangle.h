@@ -10,7 +10,7 @@ class Triangle : public SceneElement {
                "Wrong number of points for triangle creation!");
     m_edgeVec.push_back(m_points[1] - m_points[0]);
     m_edgeVec.push_back(m_points[2] - m_points[0]);
-    m_normalVec = getUnitVectorOf(cross(m_edgeVec[0], m_edgeVec[1]));
+    m_normalVec = Normal3D(getUnitVectorOf(cross(m_edgeVec[0], m_edgeVec[1])));
 
     m_bBox.addPoint(m_points[0]);
     m_bBox.addPoint(m_points[1]);
@@ -46,7 +46,7 @@ class Triangle : public SceneElement {
     record.saved_point = record.point(transformed_ray);
     return true;
   }
-  Vec3D normal(const Point3D &p) const override { return m_normalVec; }
+  Normal3D normal(const Point3D &p) const override { return m_normalVec; }
 
   static SceneElementPtr create(const std::initializer_list<Point3D> &points) {
     return std::make_shared<Triangle>(points);
@@ -55,7 +55,7 @@ class Triangle : public SceneElement {
  private:
   std::vector<Point3D> m_points;
   std::vector<Vec3D> m_edgeVec;
-  Vec3D m_normalVec;
+  Normal3D m_normalVec;
 };
 
 //-----------------------------------------
@@ -115,9 +115,9 @@ class SmoothTriangle : public SceneElement {
     return true;
   }
 
-  Vec3D normal(const Point3D &p) const override {
-    return m_normals[1] * m_uPar + m_normals[2] * m_vPar +
-           m_normals[0] * (1.f - m_uPar - m_vPar);
+  Normal3D normal(const Point3D &p) const override {
+    return Normal3D(m_normals[1] * m_uPar + m_normals[2] * m_vPar +
+                    m_normals[0] * (1.f - m_uPar - m_vPar));
   }
 
   static SceneElementPtr create(const Point3D &p1, const Point3D &p2,

@@ -34,7 +34,8 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
   auto normal = m_closestHit.primitive->normal(m_closestHit.point(ray));
   auto point = m_closestHit.point(ray);
   m_closestHit.omega = -ray.direction();
-  auto over_point = point + (m_closestHit.inside ? normal : normal) * 0.02f;
+  auto over_point =
+      point + (m_closestHit.inside ? Vec3D(normal) : Vec3D(normal)) * 0.02f;
   auto normal_vec = m_closestHit.inside
                         ? -m_closestHit.primitive->normal(over_point)
                         : m_closestHit.primitive->normal(over_point);
@@ -63,7 +64,7 @@ Vec3D PhongModel::lighting(const SceneElementRawPtr world, const Ray& ray) {
                       .getPropertyAs<float>(AppParameters::DIFFUSE)
                       .value() *
                   light_normal;
-    auto reflectv = reflect(-lightv, normal_vec);
+    auto reflectv = reflect(-lightv, Vec3D(normal_vec));
     auto reflect_dot_eye = dot(reflectv, m_closestHit.omega);
     if (reflect_dot_eye > 0.0f) {
       float factor = pow(reflect_dot_eye,
@@ -98,19 +99,19 @@ Vec3D PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
               .value() <= 0.f) {
         return black;
       }
-      auto reflectv =
-          reflect(ray.direction(), (closestReflectedHit.inside
-                                        ? closestReflectedHit.primitive->normal(
-                                              closestReflectedHit.point(ray))
-                                        : closestReflectedHit.primitive->normal(
-                                              closestReflectedHit.point(ray))));
-      auto over_point =
-          closestReflectedHit.point(ray) +
-          (closestReflectedHit.inside ? closestReflectedHit.primitive->normal(
-                                            closestReflectedHit.point(ray))
-                                      : closestReflectedHit.primitive->normal(
-                                            closestReflectedHit.point(ray))) *
-              EPS1;
+      auto reflectv = reflect(
+          ray.direction(), (closestReflectedHit.inside
+                                ? Vec3D(closestReflectedHit.primitive->normal(
+                                      closestReflectedHit.point(ray)))
+                                : Vec3D(closestReflectedHit.primitive->normal(
+                                      closestReflectedHit.point(ray)))));
+      auto over_point = closestReflectedHit.point(ray) +
+                        (closestReflectedHit.inside
+                             ? Vec3D(closestReflectedHit.primitive->normal(
+                                   closestReflectedHit.point(ray)))
+                             : Vec3D(closestReflectedHit.primitive->normal(
+                                   closestReflectedHit.point(ray)))) *
+                            EPS1;
       closestReflectedHit.over_point_from_refl_surf = over_point;
       auto reflect_ray = Ray(over_point, reflectv);
 

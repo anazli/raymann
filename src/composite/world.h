@@ -16,7 +16,7 @@ class World : public SceneElement {
   SceneElementContainer::iterator remove(SceneElementRawPtr item,
                                          SceneElementPtr removedElem) override;
   bool isWorld() const override;
-  Vec3D normal(const Point3D &p) const override;
+  Normal3D normal(const Point3D &p) const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
   SceneElementContainer getChildren() const override;
   SceneElementContainer &getChildren() override;

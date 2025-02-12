@@ -238,7 +238,7 @@ TEST_F(CylinderTest, normalVectorOnCylinder) {
   cyl = Cylinder();
   Point3D point(1.f, 0.f, 0.f);
 
-  Vec3D vec = cyl.normal(point);
+  auto vec = cyl.normal(point);
   compareVectors(vec, Vec3D(1.f, 0.f, 0.f));
 
   point = Point3D(0.f, 5.f, -1.f);
@@ -303,7 +303,7 @@ TEST_F(CylinderTest, normalVectorOnEndCaps) {
   Vec3D vect2(0.f, 1.f, 0.f);
 
   Point3D point(0.f, 1.f, 0.f);
-  Vec3D vec = cyl.normal(point);
+  auto vec = cyl.normal(point);
   compareVectors(vec, vect1);
 
   point = Point3D(0.5f, 1.f, 0.f);
@@ -333,9 +333,9 @@ TEST_F(CylinderTest, normalVectorOnEndCaps) {
 
 TEST_F(PlaneTest, normalOfPlaneIsConstantEverywhere) {
   p = Plane();
-  Vec3D n1 = p.normal(Point3D(0.0f, 0.0f, 0.0f));
-  Vec3D n2 = p.normal(Point3D(10.0f, 0.0f, -10.0f));
-  Vec3D n3 = p.normal(Point3D(-5.0f, 0.0f, 150.0f));
+  auto n1 = p.normal(Point3D(0.0f, 0.0f, 0.0f));
+  auto n2 = p.normal(Point3D(10.0f, 0.0f, -10.0f));
+  auto n3 = p.normal(Point3D(-5.0f, 0.0f, 150.0f));
 
   ASSERT_TRUE(n1 == Vec3D(0.0f, 1.0f, 0.0f));
   ASSERT_TRUE(n2 == Vec3D(0.0f, 1.0f, 0.0f));
@@ -438,25 +438,25 @@ TEST_F(SphereTest, translatesSphere) {
 
 TEST_F(SphereTest, returnsSurfaceNormalOnX) {
   s = Sphere();
-  Vec3D n = s.normal(Point3D(1, 0, 0));
+  auto n = s.normal(Point3D(1, 0, 0));
   ASSERT_TRUE(n == Vec3D(1, 0, 0));
 }
 
 TEST_F(SphereTest, returnsSurfaceNormalOnY) {
   s = Sphere();
-  Vec3D n = s.normal(Point3D(0, 1, 0));
+  auto n = s.normal(Point3D(0, 1, 0));
   ASSERT_TRUE(n == Vec3D(0, 1, 0));
 }
 
 TEST_F(SphereTest, returnsSurfaceNormalOnZ) {
   s = Sphere();
-  Vec3D n = s.normal(Point3D(0, 0, 1));
+  auto n = s.normal(Point3D(0, 0, 1));
   ASSERT_TRUE(n == Vec3D(0, 0, 1));
 }
 
 TEST_F(SphereTest, returnsNonAxialSurfaceNormal) {
   s = Sphere();
-  Vec3D n = s.normal(
+  auto n = s.normal(
       Point3D(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
   Vec3D n1 = Vec3D(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f);
   compareVectors(n, n1);
@@ -464,7 +464,7 @@ TEST_F(SphereTest, returnsNonAxialSurfaceNormal) {
 
 TEST_F(SphereTest, normalIsNormalizedVector) {
   s = Sphere();
-  Vec3D n = s.normal(
+  auto n = s.normal(
       Point3D(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
   EXPECT_NEAR(1.f, getUnitVectorOf(n).length(), 1.E-6);
 }
@@ -483,9 +483,9 @@ TEST_F(TriangleTest, constructingTriangle) {
 }
 
 TEST_F(TriangleTest, normalVectorOfTriangle) {
-  Vec3D v1 = t.normal(Point3D(0.f, 0.5f, 0.f));
-  Vec3D v2 = t.normal(Point3D(1.f, 1.5f, 1.f));
-  Vec3D v3 = t.normal(Point3D(0.453f, 0.5f, 6.f));
+  auto v1 = t.normal(Point3D(0.f, 0.5f, 0.f));
+  auto v2 = t.normal(Point3D(1.f, 1.5f, 1.f));
+  auto v3 = t.normal(Point3D(0.453f, 0.5f, 6.f));
   ASSERT_TRUE(v1 == v2);
   ASSERT_TRUE(v1 == v3);
 }

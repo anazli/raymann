@@ -31,7 +31,7 @@ class Cube : public SceneElement {
     return true;
   }
 
-  Vec3D normal(const Point3D &p) const override {
+  Normal3D normal(const Point3D &p) const override {
     auto v4 = Vec4D(p);
     auto object_point = m_transformation.getInverseMatrix() * v4;
     auto max_coord =
@@ -46,7 +46,7 @@ class Cube : public SceneElement {
       object_normal = Vec3D(0.f, 0.f, object_point.z());
     auto world_normal =
         m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
-    return Vec3D(getUnitVectorOf(world_normal));
+    return Normal3D(getUnitVectorOf(world_normal));
   }
 
   static SceneElementPtr create() { return std::make_shared<Cube>(); }

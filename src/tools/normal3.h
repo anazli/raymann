@@ -110,10 +110,29 @@ inline std::ostream& operator<<(std::ostream& out, const Normal3<T>& n) {
 //--------------------------------------------
 // Overloaded Normal Function operators (input, output)
 //--------------------------------------------
+template <typename T>
+bool operator==(const Normal3<T>& n, const Vec3<T>& v) {
+  return (n.x() == v.x() && n.y() == v.y() && n.z() == v.z());
+}
+
+template <typename T>
+Normal3<T> operator!=(const Normal3<T>& n, const Vec3<T>& v) {
+  return !(n == v);
+}
 
 template <typename T>
 Normal3<T> operator+(const Normal3<T>& n1, const Normal3<T>& n2) {
   return Vec3<T>(n1.x() + n2.x(), n1.y() + n2.y(), n1.z() + n2.z());
+}
+
+template <typename T>
+Normal3<T> operator+(const Normal3<T>& n, const Vec3<T>& v) {
+  return Vec3<T>(n.x() + v.x(), n.y() + v.y(), n.z() + v.z());
+}
+
+template <typename T>
+Normal3<T> operator+(const Vec3<T>& v, const Normal3<T>& n) {
+  return n + v;
 }
 
 template <typename T>
@@ -147,6 +166,16 @@ Normal3<T> operator*(const Normal3<T>& n1, const Normal3<T>& n2) {
 }
 
 template <typename T>
+Normal3<T> operator*(const Normal3<T>& n, const Vec3<T>& v) {
+  return Normal3<T>(n.x() * v.x(), n.y() * v.y(), n.z() * v.z());
+}
+
+template <typename T>
+Normal3<T> operator*(const Vec3<T>& v, const Normal3<T>& n) {
+  return n * v;
+}
+
+template <typename T>
 Normal3<T> operator*(const Normal3<T>& n, T num) {
   return Normal3<T>(n.x() * num, n.y() * num, n.z() * num);
 }
@@ -172,6 +201,17 @@ template <typename T>
 T dot(const Normal3<T>& n1, const Normal3<T>& n2) {
   Normal3<T> n = n1 * n2;
   return n.x() + n.y() + n.z();
+}
+
+template <typename T>
+T dot(const Normal3<T>& n, const Vec3<T>& v) {
+  Normal3<T> u = n * v;
+  return u.x() + u.y() + u.z();
+}
+
+template <typename T>
+T dot(const Vec3<T>& v, const Normal3<T>& n) {
+  return dot(n, v);
 }
 
 template <typename T>

@@ -69,19 +69,19 @@ class Cone : public SceneElement {
       record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
     return hitAnything;
   }
-  Vec3D normal(const Point3D &p) const override {
+  Normal3D normal(const Point3D &p) const override {
     auto v4 = Vec4D(p);
     auto object_point = m_transformation.getInverseMatrix() * v4;
     auto distance = object_point.x() * object_point.x() +
                     object_point.z() * object_point.z();
     if (distance < 1.f && object_point.y() >= m_maximumY - EPS) {
-      return Vec3D(0.f, 1.f, 0.f);
+      return Normal3D(0.f, 1.f, 0.f);
     } else if (distance < 1.f && object_point.y() <= m_minimumY + EPS) {
-      return Vec3D(0.f, -1.f, 0.f);
+      return Normal3D(0.f, -1.f, 0.f);
     }
     auto object_normal = Vec3D(object_point.x(), 0.f, object_point.z());
-    return Vec3D(getUnitVectorOf(m_transformation.getInverseTransposeMatrix() *
-                                 Vec4D(object_normal)));
+    return Normal3D(getUnitVectorOf(
+        m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal)));
   }
 
   bool isClosed() const { return m_closed; }

@@ -40,10 +40,10 @@ class Quad : public SceneElement {
     return true;
   }
 
-  Vec3D normal(const Point3D& p) const override {
+  Normal3D normal(const Point3D& p) const override {
     auto n = cross(m_uAxis, m_vAxis);
     n.normalize();
-    return n;
+    return Normal3D(n);
   }
 
   float pdf(const Point3D& origin, const Vec3D& direction) override {

@@ -60,7 +60,7 @@ class Cylinder : public SceneElement {
     if (intersectCaps(transformed_ray, record)) hitAnything = true;
     return hitAnything;
   }
-  Vec3D normal(const Point3D &p) const override {
+  Normal3D normal(const Point3D &p) const override {
     auto v4 = Vec4D(p);
     auto object_point = m_transformation.getInverseMatrix() * v4;
     auto distance = object_point.x() * object_point.x() +
@@ -74,7 +74,7 @@ class Cylinder : public SceneElement {
       object_normal = Vec3D(object_point.x(), 0.f, object_point.z());
     auto world_normal =
         m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
-    return Vec3D(getUnitVectorOf(world_normal));
+    return Normal3D(getUnitVectorOf(world_normal));
   }
 
   bool isClosed() const { return m_closed; }

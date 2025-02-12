@@ -16,7 +16,7 @@ SceneElementContainer::iterator SceneElement::remove(
 
 bool SceneElement::isWorld() const { return false; }
 
-Vec3D SceneElement::normal(const Point3D& p) const { return Vec3D(); }
+Normal3D SceneElement::normal(const Point3D& p) const { return Normal3D(); }
 
 void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementLeaf(this, ray);

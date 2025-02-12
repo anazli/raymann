@@ -22,10 +22,20 @@ class RTest : public Test {
     EXPECT_FLOAT_EQ(v1.y(), v2.y());
     EXPECT_FLOAT_EQ(v1.z(), v2.z());
   }
+  void compareVectors(const Normal3D& n, const Vec3D& v) {
+    EXPECT_FLOAT_EQ(n.x(), v.x());
+    EXPECT_FLOAT_EQ(n.y(), v.y());
+    EXPECT_FLOAT_EQ(n.z(), v.z());
+  }
   void compareVectorsApprox(const Vec3D& v1, const Vec3D& v2, float eps) {
     EXPECT_NEAR(v1.x(), v2.x(), eps);
     EXPECT_NEAR(v1.y(), v2.y(), eps);
     EXPECT_NEAR(v1.z(), v2.z(), eps);
+  }
+  void compareVectorsApprox(const Normal3D& n, const Vec3D& v, float eps) {
+    EXPECT_NEAR(n.x(), v.x(), eps);
+    EXPECT_NEAR(n.y(), v.y(), eps);
+    EXPECT_NEAR(n.z(), v.z(), eps);
   }
 
  private:

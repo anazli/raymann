@@ -7,6 +7,7 @@
 #include "acceleration/bounding_box.h"
 #include "composite/intersection.h"
 #include "materials/material.h"
+#include "tools/normal3.h"
 #include "transformations/transformation.h"
 
 class BaseRenderer;
@@ -20,7 +21,7 @@ class SceneElement {
   virtual std::vector<std::shared_ptr<SceneElement>>::iterator remove(
       SceneElement *item, std::shared_ptr<SceneElement> removedElem);
   virtual bool isWorld() const;
-  virtual Vec3D normal(const Point3D &p) const;
+  virtual Normal3D normal(const Point3D &p) const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);
   virtual std::vector<std::shared_ptr<SceneElement>> getChildren() const;
   virtual std::vector<std::shared_ptr<SceneElement>> &getChildren();
