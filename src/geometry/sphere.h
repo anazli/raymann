@@ -12,8 +12,8 @@ class Sphere : public SceneElement {
     m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f) + Vec3D(c);
   }
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
-    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+  bool intersect(const Ray &r, Intersection &record) override {
+    auto transformed_ray = m_transformation.worldToObjectSpace(r);
     Point3D origin = transformed_ray.origin();
     Vec3D direction = transformed_ray.direction();
     auto co = origin - m_center;
@@ -22,26 +22,23 @@ class Sphere : public SceneElement {
     auto c = dot(co, co) - m_radius * m_radius;
     auto discr = b * b - 4.0f * a * c;
     if (discr >= 0.0f) {
-      record.t1 = (-b - sqrt(discr)) / (2. * a);
-      record.t2 = (-b + sqrt(discr)) / (2. * a);
-      record.count = 2;
-      record.saved_point = record.point(transformed_ray);
+      auto t1 = (-b - sqrt(discr)) / (2. * a);
+      auto t2 = (-b + sqrt(discr)) / (2. * a);
+      record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
+      record.hit_point = record.getHitPoint(transformed_ray);
       return true;
     }
     return false;
   }
 
-  Vec3D normal(const Point3D &p) const override {
-    auto v4 = Vec4D(p);
-    auto object_point = Point3D(m_transformation.getInverseMatrix() * v4);
-    auto object_normal = getUnitVectorOf(object_point - m_center);
-    auto world_normal = Vec3D(m_transformation.getInverseTransposeMatrix() *
-                              Vec4D(object_normal));
-    return getUnitVectorOf(world_normal);
+  Normal3D normal(const Point3D &p) const override {
+    auto object_point = m_transformation.worldToObjectSpace(p);
+    auto object_normal = Normal3D(getUnitVectorOf(object_point - m_center));
+    return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 
   float pdf(const Point3D &origin, const Vec3D &direction) override {
-    IntersectionRecord rec;
+    Intersection rec;
     if (!intersect(Ray(origin, direction), rec)) return 0;
     float radius = 30.f;
     Point3D center(277.f, 540.f, -455.f);

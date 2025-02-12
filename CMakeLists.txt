@@ -28,6 +28,7 @@ add_library(${LIBRARY_NAME}
             src/color/rgb_spectrum.h
             src/composite/builder.cpp
             src/composite/builder.h
+            src/composite/intersection.h
             src/composite/iterator.cpp
             src/composite/iterator.h
             src/composite/scene_element.cpp
@@ -75,6 +76,18 @@ add_library(${LIBRARY_NAME}
             src/textures/texture.h
             src/transformations/transformation.cpp
             src/transformations/transformation.h
+            src/tools/mat2.h
+            src/tools/mat3.h
+            src/tools/mat4.h
+            src/tools/normal3.h
+            src/tools/light.h
+            src/tools/orthonormal.h
+            src/tools/point3.h
+            src/tools/ray.h
+            src/tools/vec2.h
+            src/tools/vec3.h
+            src/tools/vec4.h
+            src/tools/tools.h
 )
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)

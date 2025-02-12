@@ -1,7 +1,10 @@
 #pragma once
 
-#include "mat2.h"
-#include "vec3.h"
+template <class T>
+class Vec3;
+
+template <class T>
+class Mat2;
 
 template <class T>
 class Mat3 {
@@ -178,9 +181,7 @@ Mat3<T> operator*(const Mat3<T>& m1, T num) {
 }
 
 template <typename T>
-inline std::ostream& operator<<(std::ostream& out, const Mat3<T>& m) {
-  out << m[0];
-  out << m[1];
-  out << m[2];
+std::ostream& operator<<(std::ostream& out, const Mat3<T>& m) {
+  out << "{" << m[0] << "," << m[1] << "," << m[2] << "}";
   return out;
 }

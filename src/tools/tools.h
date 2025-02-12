@@ -7,6 +7,7 @@
 #include "mat2.h"
 #include "mat3.h"
 #include "mat4.h"
+#include "normal3.h"
 #include "orthonormal.h"
 #include "point3.h"
 #include "ray.h"

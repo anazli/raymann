@@ -5,7 +5,7 @@
 #include "scene_element.h"
 #include "world.h"
 
-bool SceneElement::intersect(const Ray& r, IntersectionRecord& record) {
+bool SceneElement::intersect(const Ray& r, Intersection& record) {
   return false;
 }
 
@@ -16,7 +16,7 @@ SceneElementContainer::iterator SceneElement::remove(
 
 bool SceneElement::isWorld() const { return false; }
 
-Vec3D SceneElement::normal(const Point3D& p) const { return Vec3D(); }
+Normal3D SceneElement::normal(const Point3D& p) const { return Normal3D(); }
 
 void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementLeaf(this, ray);
@@ -56,7 +56,7 @@ Vec3D SceneElement::random(const Point3D& origin) {
 
 void SceneElement::setTransformation(const Transformation& transformation) {
   m_transformation = transformation;
-  m_transformation.transformBoundingBox(m_bBox);
+  m_transformation.objectToWorldSpace(m_bBox);
 }
 
 SceneElement::SceneElement() {

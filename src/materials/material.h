@@ -3,7 +3,7 @@
 #include "application/data_container.h"
 #include "textures/texture.h"
 
-class IntersectionRecord;
+class Intersection;
 class StochasticSampler;
 class StochasticPdf;
 
@@ -14,11 +14,11 @@ class Material {
   virtual TextureRawPtr getTexture() const;
   virtual void setProperties(const DataContainer& prop);
   virtual DataContainer getProperties() const;
-  virtual bool scatter(const Ray& r_in, const IntersectionRecord& rec,
+  virtual bool scatter(const Ray& r_in, const Intersection& rec,
                        Vec3D& attenuation, Ray& scattered) const = 0;
   virtual Vec3D emmit(float u = 0.f, float v = 0.f, const Vec3D& p = Vec3D());
   virtual bool isEmissive() const;
-  virtual float scatteringPDF(const Ray& r, const IntersectionRecord& record,
+  virtual float scatteringPDF(const Ray& r, const Intersection& record,
                               const Ray& scatteredRay) const;
   std::shared_ptr<StochasticPdf> pdf() const;
   AppParameters getType() const;

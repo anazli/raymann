@@ -1,6 +1,7 @@
 #pragma once
 
-#include "vec2.h"
+template <class T>
+class Vec2;
 
 template <class T>
 class Mat2 {
@@ -71,4 +72,10 @@ Mat2<T> operator*(const Mat2<T>& m1, const Mat2<T>& m2) {
   ret[1][1] = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1];
 
   return ret;
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const Mat2<T>& m) {
+  out << "{" << m[0] << "," << m[1] << "}";
+  return out;
 }

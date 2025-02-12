@@ -1,8 +1,21 @@
 #pragma once
 
 #include "application/error.h"
-#include "mat3.h"
-#include "vec4.h"
+
+template <class T>
+class Vec4;
+
+template <class T>
+class Vec3;
+
+template <class T>
+class Point3;
+
+template <class T>
+class Mat2;
+
+template <class T>
+class Mat3;
 
 template <class T>
 class Mat4 {
@@ -319,18 +332,24 @@ Mat4<T> rotationOverZ(T rad) {
 template <typename T>
 Mat4<T> view_transform(const Point3<T>& from, const Point3<T>& to,
                        const Vec3<T>& up) {
-  Vec3D forward = getUnitVectorOf(to - from);
-  Vec3D up_norm = getUnitVectorOf(up);
-  Vec3D left = cross(forward, up_norm);
-  Vec3D up_res = cross(left, forward);
+  Vec3<T> forward = getUnitVectorOf(to - from);
+  Vec3<T> up_norm = getUnitVectorOf(up);
+  Vec3<T> left = cross(forward, up_norm);
+  Vec3<T> up_res = cross(left, forward);
 
   Mat4D orientation =
-      Mat4D(Vec4D(left.x(), left.y(), left.z(), 0.0f),
-            Vec4D(up_res.x(), up_res.y(), up_res.z(), 0.0f),
-            Vec4D(-forward.x(), -forward.y(), -forward.z(), 0.0f),
-            Vec4D(0.0f, 0.0f, 0.0f, 1.0f));
+      Mat4D(Vec4<T>(left.x(), left.y(), left.z(), 0.0f),
+            Vec4<T>(up_res.x(), up_res.y(), up_res.z(), 0.0f),
+            Vec4<T>(-forward.x(), -forward.y(), -forward.z(), 0.0f),
+            Vec4<T>(0.0f, 0.0f, 0.0f, 1.0f));
 
   return orientation * translation(-from.x(), -from.y(), -from.z());
 }
 
 // TODO: Shearing
+
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const Mat4<T>& m) {
+  out << "{" << m[0] << "," << m[1] << "," << m[2] << "," << m[3] << "}";
+  return out;
+}

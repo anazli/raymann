@@ -189,7 +189,7 @@ TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
   SceneElement *s = new Sphere();
   auto t = Transformation(translation(0.0f, 1.0f, 0.0f));
   s->setTransformation(t);
-  Vec3D norm = s->normal(Point3D(0.0f, 1.70711f, -0.70711));
+  auto norm = s->normal(Point3D(0.0f, 1.70711f, -0.70711));
 
   Vec3D tn(0.0f, 0.70711f, -0.70711f);
 
@@ -202,7 +202,7 @@ TEST_F(TransformerTest, computesNormalOfRotatedSphere) {
   auto t = Transformation(rotationOverZ(PI / 5.0f) * scale(1.0f, 0.5f, 1.0f));
   s->setTransformation(t);
 
-  Vec3D norm = s->normal(Point3D(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
+  auto norm = s->normal(Point3D(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
   Vec3D tn(0.0f, 0.97014f, -0.24254f);
 
   float eps = 1.E-5;

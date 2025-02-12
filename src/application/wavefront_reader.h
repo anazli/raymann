@@ -20,7 +20,7 @@ class WavefrontReader {
   void addMaterial(MaterialPtr mat);
 
   std::vector<Vec3D> vertexCollection() const;
-  std::vector<Vec3D> vertexNormalCollection() const;
+  std::vector<Normal3D> vertexNormalCollection() const;
   std::vector<Triangle> triangleCollection() const;
   SceneElementPtr getStructure() const;
   SceneElementPtr getStructureBVHierarchy() const;
@@ -37,7 +37,7 @@ class WavefrontReader {
   std::ifstream m_inputStream;
   std::vector<Vec3D> m_vertices;
   std::vector<Vec3D> m_verticesNormalized;
-  std::vector<Vec3D> m_verticesNormals;
+  std::vector<Normal3D> m_verticesNormals;
   std::vector<Triangle> m_triangles;
   SceneElementPtr m_finalProduct;
   SceneElementPtr m_currentGroup;

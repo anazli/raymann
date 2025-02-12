@@ -10,25 +10,25 @@ Lambertian::Lambertian(TexturePtr tex) : Material(std::move(tex)) {
   m_type = AppParameters::LAMBERTIAN;
 }
 
-bool Lambertian::scatter(const Ray& r_in, const IntersectionRecord& rec,
+bool Lambertian::scatter(const Ray& r_in, const Intersection& rec,
                          Vec3D& attenuation, Ray& scattered) const {
   // auto point = rec.point(r_in);
   // OrthoNormalBasis orthnb;
   // orthnb.buildFromW(rec.object->normal(point));
   // auto scatterDir = orthnb.local(Random::randomCosineDirection());
-  auto point = rec.point(r_in);
-  auto target =
-      point + Random::randomVectorOnUnitSphere() + rec.object->normal(point);
+  auto point = rec.getHitPoint(r_in);
+  auto target = point + Random::randomVectorOnUnitSphere() +
+                Vec3D(rec.primitive->normal(point));
   scattered = Ray(point, target - point);
-  m_pdf->setFromW(rec.object->normal(point));
+  m_pdf->setFromW(Vec3D(rec.primitive->normal(point)));
   attenuation = m_tex->value(0, 0, Vec3D());
   // m_pdf->setFromW(rec.object->normal(point));
   return true;
 }
 
-float Lambertian::scatteringPDF(const Ray& r, const IntersectionRecord& record,
+float Lambertian::scatteringPDF(const Ray& r, const Intersection& record,
                                 const Ray& scatteredRay) const {
-  auto cTheta = dot(record.object->normal(record.point(scatteredRay)),
+  auto cTheta = dot(record.primitive->normal(record.getHitPoint(scatteredRay)),
                     getUnitVectorOf(scatteredRay.direction()));
   return cTheta < 0 ? 0 : cTheta / PI;
 }

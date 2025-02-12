@@ -15,20 +15,12 @@ class Ray {
   Point3D position(const float &parameter) const {
     return origin() + parameter * direction();
   }
-  Ray transform(const Mat4D &matrix) const {
-    Ray transformed_ray;
 
-    Vec4D vector4d(origin());
-    vector4d = matrix * vector4d;
-    transformed_ray.setOrigin(Point3D(vector4d));
-
-    vector4d = direction();
-    vector4d = matrix * vector4d;
-    transformed_ray.setDirection(Vec3D(vector4d));
-    return transformed_ray;
-  }
+  void setMaxRange(float t) { m_max_parameter = t; }
+  float getMaxRange(float t) const { return m_max_parameter; }
 
  private:
   Point3D m_origin;
   Vec3D m_direction;
+  mutable float m_max_parameter = std::numeric_limits<float>::infinity();
 };

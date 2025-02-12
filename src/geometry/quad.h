@@ -17,11 +17,11 @@ class Quad : public SceneElement {
     m_bBox.maxPoint() = m_origin + m_uAxis + m_vAxis;
   }
 
-  bool intersect(const Ray& r, IntersectionRecord& record) override {
-    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+  bool intersect(const Ray& r, Intersection& record) override {
+    auto transformed_ray = m_transformation.worldToObjectSpace(r);
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();
-    auto normalV = normal(record.point(transformed_ray));
+    auto normalV = normal(record.getHitPoint(transformed_ray));
     auto denom = dot(normalV, direction);
     auto dParam = dot(normalV, Vec3D(m_origin));
 
@@ -35,24 +35,24 @@ class Quad : public SceneElement {
     auto beta = dot(m_wParam, cross(m_uAxis, planarHitptVector));
     if (!isWithin(alpha, beta, record)) return false;
 
-    record.t1 = t;
-    record.saved_point = record.point(transformed_ray);
+    record.min_hit = t;
+    record.hit_point = record.getHitPoint(transformed_ray);
     return true;
   }
 
-  Vec3D normal(const Point3D& p) const override {
+  Normal3D normal(const Point3D& p) const override {
     auto n = cross(m_uAxis, m_vAxis);
     n.normalize();
-    return n;
+    return Normal3D(n);
   }
 
   float pdf(const Point3D& origin, const Vec3D& direction) override {
-    IntersectionRecord rec;
+    Intersection rec;
     if (!intersect(Ray(origin, direction), rec)) return 1.f;
 
     auto distSquared =
-        rec.t_min() * rec.t_min() * direction.length() * direction.length();
-    auto cosine = fabs(dot(direction, rec.normal) / direction.length());
+        rec.min_hit * rec.min_hit * direction.length() * direction.length();
+    auto cosine = fabs(dot(direction, rec.surface_normal) / direction.length());
 
     return distSquared / (cosine * m_area);
   }
@@ -68,7 +68,7 @@ class Quad : public SceneElement {
   }
 
  private:
-  bool isWithin(float a, float b, IntersectionRecord& record) const {
+  bool isWithin(float a, float b, Intersection& record) const {
     if ((a < 0.f) || (a > 1.f) || (b < 0.f) || (b > 1.f)) return false;
     // record.u = a;
     // record.v = b;

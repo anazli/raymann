@@ -13,11 +13,11 @@ Metal::Metal(TexturePtr tex, float fuzz) : Material(std::move(tex)) {
   m_type = AppParameters::METAL;
 }
 
-bool Metal::scatter(const Ray& r_in, const IntersectionRecord& rec,
+bool Metal::scatter(const Ray& r_in, const Intersection& rec,
                     Vec3D& attenuation, Ray& scattered) const {
-  auto point = rec.point(r_in);
-  auto normal = rec.object->normal(point);
-  Vec3D reflected = reflect(getUnitVectorOf(r_in.direction()), normal);
+  auto point = rec.getHitPoint(r_in);
+  auto normal = rec.primitive->normal(point);
+  Vec3D reflected = reflect(getUnitVectorOf(r_in.direction()), Vec3D(normal));
   scattered =
       Ray(point, reflected + m_fuzz * Random::randomVectorOnUnitSphere());
   attenuation = m_tex->value(0, 0, Vec3D());

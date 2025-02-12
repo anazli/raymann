@@ -13,8 +13,8 @@ class Cube : public SceneElement {
   }
   ~Cube() override = default;
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
-    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+  bool intersect(const Ray &r, Intersection &record) override {
+    auto transformed_ray = m_transformation.worldToObjectSpace(r);
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();
     auto xMinMax = hitAxis(origin.x(), direction.x());
@@ -26,29 +26,25 @@ class Cube : public SceneElement {
     if (tmin > tmax) {
       return false;
     }
-    record.t1 = tmin;
-    record.t2 = tmax;
-    record.count = 2;
-    record.saved_point = record.point(transformed_ray);
+    record.min_hit = Intersection::getMinimumHitParameter(tmin, tmax);
+    record.hit_point = record.getHitPoint(transformed_ray);
     return true;
   }
 
-  Vec3D normal(const Point3D &p) const override {
-    auto v4 = Vec4D(p);
-    auto object_point = m_transformation.getInverseMatrix() * v4;
+  Normal3D normal(const Point3D &p) const override {
+    auto object_point = m_transformation.worldToObjectSpace(p);
     auto max_coord =
         std::max(std::max(fabs(object_point.x()), fabs(object_point.y())),
                  fabs(object_point.z()));
-    Vec3D object_normal;
-    if (max_coord == fabs(object_point.x()))
-      object_normal = Vec3D(object_point.x(), 0.f, 0.f);
-    else if (max_coord == fabs(object_point.y()))
-      object_normal = Vec3D(0.f, object_point.y(), 0.f);
-    else
-      object_normal = Vec3D(0.f, 0.f, object_point.z());
-    auto world_normal =
-        m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
-    return Vec3D(getUnitVectorOf(world_normal));
+    Normal3D object_normal;
+    if (max_coord == fabs(object_point.x())) {
+      object_normal = Normal3D(object_point.x(), 0.f, 0.f);
+    } else if (max_coord == fabs(object_point.y())) {
+      object_normal = Normal3D(0.f, object_point.y(), 0.f);
+    } else {
+      object_normal = Normal3D(0.f, 0.f, object_point.z());
+    }
+    return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 
   static SceneElementPtr create() { return std::make_shared<Cube>(); }
@@ -57,7 +53,7 @@ class Cube : public SceneElement {
   std::pair<float, float> hitAxis(float origin, float direction) {
     auto tmin_numerator = (-1.f - origin);
     auto tmax_numerator = (1.f - origin);
-    auto tmin{0.f}, tmax{0.f};
+    float tmin{}, tmax{};
     if (fabs(direction) >= EPS) {
       tmin = tmin_numerator / direction;
       tmax = tmax_numerator / direction;

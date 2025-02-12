@@ -22,8 +22,8 @@ class Cylinder : public SceneElement {
   float minimumY() const { return m_minimumY; }
   float maximumY() const { return m_maximumY; }
 
-  bool intersect(const Ray &r, IntersectionRecord &record) override {
-    auto transformed_ray = r.transform(m_transformation.getInverseMatrix());
+  bool intersect(const Ray &r, Intersection &record) override {
+    auto transformed_ray = m_transformation.worldToObjectSpace(r);
     auto origin = transformed_ray.origin();
     auto direction = transformed_ray.direction();
     auto rdx = direction.x();
@@ -45,37 +45,35 @@ class Cylinder : public SceneElement {
 
       auto y1 = origin.y() + t1 * direction.y();
       if (m_minimumY < y1 && m_maximumY > y1) {
-        record.t1 = t1;
-        record.count++;
         hitAnything = true;
       }
 
       auto y2 = origin.y() + t2 * direction.y();
       if (m_minimumY < y2 && m_maximumY > y2) {
-        record.t2 = t2;
-        record.count++;
         hitAnything = true;
       }
+
+      if (hitAnything) {
+        record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
+        record.hit_point = record.getHitPoint(transformed_ray);
+      }
     }
-    record.saved_point = record.point(transformed_ray);
     if (intersectCaps(transformed_ray, record)) hitAnything = true;
     return hitAnything;
   }
-  Vec3D normal(const Point3D &p) const override {
-    auto v4 = Vec4D(p);
-    auto object_point = m_transformation.getInverseMatrix() * v4;
+  Normal3D normal(const Point3D &p) const override {
+    auto object_point = m_transformation.worldToObjectSpace(p);
     auto distance = object_point.x() * object_point.x() +
                     object_point.z() * object_point.z();
-    Vec3D object_normal;
+    Normal3D object_normal;
     if (distance < 1.f && object_point.y() >= m_maximumY - EPS) {
-      object_normal = Vec3D(0.f, 1.f, 0.f);
+      object_normal = Normal3D(0.f, 1.f, 0.f);
     } else if (distance < 1.f && object_point.y() <= m_minimumY + EPS) {
-      object_normal = Vec3D(0.f, -1.f, 0.f);
-    } else
-      object_normal = Vec3D(object_point.x(), 0.f, object_point.z());
-    auto world_normal =
-        m_transformation.getInverseTransposeMatrix() * Vec4D(object_normal);
-    return Vec3D(getUnitVectorOf(world_normal));
+      object_normal = Normal3D(0.f, -1.f, 0.f);
+    } else {
+      object_normal = Normal3D(object_point.x(), 0.f, object_point.z());
+    }
+    return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 
   bool isClosed() const { return m_closed; }
@@ -97,22 +95,23 @@ class Cylinder : public SceneElement {
     return x * x + z * z <= 1.f;
   }
 
-  bool intersectCaps(const Ray &r, IntersectionRecord &record) {
+  bool intersectCaps(const Ray &r, Intersection &record) {
     if (!m_closed || (r.direction().y() <= EPS && r.direction().y() >= -EPS))
       return false;
 
     auto intersectsCap = false;
     auto t = (m_minimumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t)) {
-      record.t1 = t;
-      record.count++;
       intersectsCap = true;
     }
     t = (m_maximumY - r.origin().y()) / r.direction().y();
     if (checkCap(r, t)) {
-      record.t2 = t;
-      record.count++;
       intersectsCap = true;
+    }
+
+    if (intersectsCap) {
+      record.min_hit = t;
+      record.hit_point = record.getHitPoint(r);
     }
     return intersectsCap;
   }

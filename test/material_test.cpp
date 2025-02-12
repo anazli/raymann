@@ -11,7 +11,7 @@ class MaterialTest : public testing::RTest {
  public:
   Sphere *s;
   PointLight light;
-  IntersectionRecord rec;
+  Intersection rec;
 };
 
 TEST_F(MaterialTest, createsDefaultLight) {
@@ -122,7 +122,8 @@ TEST_F(MaterialTest, precomputingTheReflectionVector) {
   auto plane = builder.getProduct();
   Ray r(Point3D(0.f, 1.f, -1.f), Vec3D(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r, rec);
-  Vec3D reflection_vector = reflect(r.direction(), plane->normal(rec.point(r)));
+  Vec3D reflection_vector =
+      reflect(r.direction(), Vec3D(plane->normal(rec.getHitPoint(r))));
 
   EXPECT_TRUE(reflection_vector ==
               Vec3D(0.f, sqrt(2.f) / 2.f, sqrt(2.f) / 2.f));

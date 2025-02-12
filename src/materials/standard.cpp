@@ -31,7 +31,7 @@ void StandardMaterial::setProperties(const DataContainer& prop) {
 
 DataContainer StandardMaterial::getProperties() const { return m_prop; }
 
-bool StandardMaterial::scatter(const Ray& r_in, const IntersectionRecord& rec,
+bool StandardMaterial::scatter(const Ray& r_in, const Intersection& rec,
                                Vec3D& attenuation, Ray& scattered) const {
   return false;
 }
