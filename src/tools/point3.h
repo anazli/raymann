@@ -3,14 +3,14 @@
 #include <cassert>
 #include <sstream>
 
-#include "vec3.h"
-#include "vec4.h"
-
 template <class T>
 class Vec4;
 
 template <class T>
 class Vec3;
+
+template <class T>
+class Normal3;
 
 template <class T>
 class Point3 {
@@ -19,6 +19,7 @@ class Point3 {
   Point3(T x, T y, T z) : m_x(x), m_y(y), m_z(z) {}
   explicit Point3(const Vec4<T> &v) : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
   explicit Point3(const Vec3<T> &v) : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
+  explicit Point3(const Normal3<T> &n) : m_x(n.x()), m_y(n.y()), m_z(n.z()) {}
 
   T x() const { return m_x; }
   T y() const { return m_y; }

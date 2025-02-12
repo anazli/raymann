@@ -54,3 +54,19 @@ void Transformation::objectToWorldSpace(BoundingBox& b) const {
     b.addPoint(Point3D(m_matrix * Vec4D(elem)));
   }
 }
+
+Point3D Transformation::worldToObjectSpace(Point3D& p) const {
+  return Point3D(m_inverse_matrix * Vec4D(p));
+}
+
+Point3D Transformation::objectToWorldSpace(Point3D& p) const {
+  return Point3D(m_matrix * Vec4D(p));
+}
+
+Vec3D Transformation::worldToObjectSpace(Vec3D& v) const {
+  return Vec3D(m_inverse_matrix * Vec4D(v));
+}
+
+Vec3D Transformation::objectToWorldSpace(Vec3D& v) const {
+  return Vec3D(m_matrix * Vec4D(v));
+}

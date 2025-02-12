@@ -1,6 +1,7 @@
 #pragma once
 
-#include "vec2.h"
+template <class T>
+class Vec2;
 
 template <class T>
 class Mat2 {
