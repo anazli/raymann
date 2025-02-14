@@ -16,5 +16,6 @@
 #include "vec4.h"
 
 const float PI = acos(-1.);
-constexpr float EPS = std::numeric_limits<float>::epsilon();
-constexpr float EPS1 = 0.000002f;
+const auto InvPI = 1.f / PI;
+constexpr auto EPS = std::numeric_limits<float>::epsilon();
+constexpr auto EPS1 = 0.000002f;

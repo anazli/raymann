@@ -3,17 +3,16 @@
 #include <algorithm>
 #include <cmath>
 
-Spectrum::Spectrum(float value, int samplesSize)
-    : m_samplesSize(samplesSize) {
-  m_samples = std::vector<float>(m_samplesSize, value);
-}
+#include "application/error.h"
+
+Spectrum::Spectrum(float value) { m_samples = std::vector<float>(3, value); }
 
 const std::vector<float> &Spectrum::samples() const { return m_samples; }
 
 std::vector<float> &Spectrum::samples() { return m_samples; }
 
 Spectrum Spectrum::operator-() const {
-  Spectrum ret(0, m_samplesSize);
+  Spectrum ret(0);
   std::transform(m_samples.begin(), m_samples.end(), ret.samples().begin(),
                  [](const float &elem) { return -elem; });
   return ret;
@@ -81,6 +80,53 @@ bool Spectrum::hasNaNs() const {
           }) != m_samples.end());
 }
 
+Vec3D Spectrum::toRGB() const {
+  return Vec3D(m_samples[0], m_samples[1], m_samples[2]);
+}
+
+Vec3D Spectrum::toXYZ() const { return RGBToXYZ(toRGB()); }
+
+float Spectrum::y() const {
+  const Vec3D YWeight(0.212671f, 0.715160f, 0.072169f);
+  return YWeight[0] * m_samples[0] + YWeight[1] * m_samples[1] +
+         YWeight[2] * m_samples[2];
+}
+
+Spectrum fromRGB(const Vec3D &v) {
+  Spectrum s;
+  s.samples()[0] = v.x();
+  s.samples()[1] = v.y();
+  s.samples()[2] = v.z();
+
+  APP_ASSERT(!s.hasNaNs(), "RGB Spectrum has nans!");
+  return s;
+}
+
+Spectrum fromXYZ(const Vec3D &xyz) {
+  Spectrum s;
+  Vec3D v = XYZToRGB(xyz);
+  s.samples()[0] = v.x();
+  s.samples()[1] = v.y();
+  s.samples()[2] = v.z();
+  return s;
+}
+
+Vec3D RGBToXYZ(const Vec3D &rgb) {
+  Vec3D xyz;
+  xyz[0] = 0.412453f * rgb[0] + 0.357580f * rgb[1] + 0.180423f * rgb[2];
+  xyz[1] = 0.212671f * rgb[0] + 0.715160f * rgb[1] + 0.072169f * rgb[2];
+  xyz[2] = 0.019334f * rgb[0] + 0.119193f * rgb[1] + 0.950227f * rgb[2];
+  return xyz;
+}
+
+Vec3D XYZToRGB(const Vec3D xyz) {
+  Vec3D rgb;
+  rgb[0] = 3.240479f * xyz[0] - 1.537150f * xyz[1] - 0.498535f * xyz[2];
+  rgb[1] = -0.969256f * xyz[0] + 1.875991f * xyz[1] + 0.041556f * xyz[2];
+  rgb[2] = 0.055648f * xyz[0] - 0.204043f * xyz[1] + 1.057311f * xyz[2];
+  return rgb;
+}
+
 Spectrum operator+(const Spectrum &l, const Spectrum &r) {
   Spectrum ret(0.f);
   std::transform(
@@ -90,9 +136,7 @@ Spectrum operator+(const Spectrum &l, const Spectrum &r) {
   return ret;
 }
 
-Spectrum operator-(const Spectrum &l, const Spectrum &r) {
-  return l + (-r);
-}
+Spectrum operator-(const Spectrum &l, const Spectrum &r) { return l + (-r); }
 
 Spectrum operator*(const Spectrum &l, const Spectrum &r) {
   Spectrum ret(0.f);

@@ -23,10 +23,6 @@ add_library(${LIBRARY_NAME}
             src/camera/camera.h
             src/color/spectrum.cpp
             src/color/spectrum.h
-            src/color/em_spectrum.cpp
-            src/color/em_spectrum.h
-            src/color/rgb_spectrum.cpp
-            src/color/rgb_spectrum.h
             src/composite/builder.cpp
             src/composite/builder.h
             src/composite/intersection.h
@@ -38,6 +34,10 @@ add_library(${LIBRARY_NAME}
             src/composite/world.h
             src/container/canvas.cpp
             src/container/canvas.h
+            src/distribution/bxdf.cpp
+            src/distribution/bxdf.h
+            src/distribution/lambertian_brdf.cpp
+            src/distribution/lambertian_brdf.h
             src/geometry/cone.h
             src/geometry/cube.h
             src/geometry/cylinder.h
