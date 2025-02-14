@@ -4,26 +4,17 @@
 #include <cmath>
 
 #include "application/error.h"
+#include "spectrum.h"
 
-Spectrum::Spectrum(float value) { m_samples = std::vector<float>(3, value); }
+Spectrum::Spectrum(float value) { m_samples = Vec3D(value, value, value); }
+Spectrum::Spectrum(const Vec3D &v) : m_samples(v) {}
 
-const std::vector<float> &Spectrum::samples() const { return m_samples; }
+Vec3D Spectrum::samples() const { return m_samples; }
 
-std::vector<float> &Spectrum::samples() { return m_samples; }
-
-Spectrum Spectrum::operator-() const {
-  Spectrum ret(0);
-  std::transform(m_samples.begin(), m_samples.end(), ret.samples().begin(),
-                 [](const float &elem) { return -elem; });
-  return ret;
-}
+Spectrum Spectrum::operator-() const { return Spectrum(-m_samples); }
 
 Spectrum &Spectrum::operator+=(const Spectrum &other) {
-  std::transform(m_samples.begin(), m_samples.end(), other.samples().begin(),
-                 m_samples.begin(), [](float &elem1, const float &elem2) {
-                   elem1 += elem2;
-                   return elem1;
-                 });
+  (*this).m_samples = (*this).m_samples + other.m_samples;
   return *this;
 }
 
@@ -33,51 +24,26 @@ Spectrum &Spectrum::operator-=(const Spectrum &other) {
 }
 
 Spectrum &Spectrum::operator*=(const Spectrum &other) {
-  std::transform(m_samples.begin(), m_samples.end(), other.samples().begin(),
-                 m_samples.begin(), [](float &elem1, const float &elem2) {
-                   elem1 *= elem2;
-                   return elem1;
-                 });
+  (*this).m_samples = (*this).m_samples * other.m_samples;
   return *this;
 }
 
 Spectrum &Spectrum::operator/=(const Spectrum &other) {
-  std::transform(m_samples.begin(), m_samples.end(), other.samples().begin(),
-                 m_samples.begin(), [](float &elem1, const float &elem2) {
-                   elem1 /= elem2;
-                   return elem1;
-                 });
+  (*this).m_samples = (*this).m_samples / other.m_samples;
   return *this;
 }
 
 Spectrum Spectrum::clamp(float low, float high) {
-  std::transform(m_samples.begin(), m_samples.end(), m_samples.begin(),
-                 [&low, &high](float &elem) {
-                   elem = std::clamp(elem, low, high);
-                   return elem;
-                 });
-  return *this;
+  return Spectrum(Vec3D(std::clamp(m_samples.x(), low, high),
+                        std::clamp(m_samples.y(), low, high),
+                        std::clamp(m_samples.z(), low, high)));
 }
 
-bool Spectrum::operator==(const Spectrum &other) const {
-  return std::equal(m_samples.begin(), m_samples.end(),
-                    other.samples().begin());
-}
-
-bool Spectrum::operator!=(const Spectrum &other) const {
-  return !(*this == other);
-}
-
-bool Spectrum::isBlack() const {
-  return (std::find_if(m_samples.begin(), m_samples.end(), [](const float &el) {
-            return el != 0.f;
-          }) == m_samples.end());
-}
+bool Spectrum::isBlack() const { return m_samples == Vec3D(); }
 
 bool Spectrum::hasNaNs() const {
-  return (std::find_if(m_samples.begin(), m_samples.end(), [](const float &el) {
-            return std::isnan(el);
-          }) != m_samples.end());
+  return std::isnan(m_samples.x()) && std::isnan(m_samples.y()) &&
+         std::isnan(m_samples.z());
 }
 
 Vec3D Spectrum::toRGB() const {
@@ -128,93 +94,52 @@ Vec3D XYZToRGB(const Vec3D xyz) {
 }
 
 Spectrum operator+(const Spectrum &l, const Spectrum &r) {
-  Spectrum ret(0.f);
-  std::transform(
-      l.samples().begin(), l.samples().end(), r.samples().begin(),
-      ret.samples().begin(),
-      [](const float &elem1, const float &elem2) { return elem1 + elem2; });
-  return ret;
+  return Spectrum(l.samples() + r.samples());
 }
 
 Spectrum operator-(const Spectrum &l, const Spectrum &r) { return l + (-r); }
 
 Spectrum operator*(const Spectrum &l, const Spectrum &r) {
-  Spectrum ret(0.f);
-  std::transform(
-      l.samples().begin(), l.samples().end(), r.samples().begin(),
-      ret.samples().begin(),
-      [](const float &elem1, const float &elem2) { return elem1 * elem2; });
-  return ret;
+  return Spectrum(l.samples() * r.samples());
 }
 
 Spectrum operator/(const Spectrum &l, const Spectrum &r) {
-  Spectrum ret(0.f);
-  std::transform(
-      l.samples().begin(), l.samples().end(), r.samples().begin(),
-      ret.samples().begin(),
-      [](const float &elem1, const float &elem2) { return elem1 / elem2; });
-  return ret;
+  return Spectrum(l.samples() / r.samples());
 }
 
-Spectrum operator+(const Spectrum &l, const float &f) {
-  Spectrum ret(0.f);
-  std::transform(l.samples().begin(), l.samples().end(), ret.samples().begin(),
-                 [&f](const float &elem) { return elem + f; });
-  return ret;
+Spectrum operator+(const Spectrum &l, float f) {
+  return Spectrum(l.samples() + f);
 }
 
-Spectrum operator-(const Spectrum &l, const float &f) {
-  Spectrum ret(0.f);
-  std::transform(l.samples().begin(), l.samples().end(), ret.samples().begin(),
-                 [&f](const float &elem) { return elem - f; });
-  return ret;
+Spectrum operator+(float f, const Spectrum &l) { return l + f; }
+
+Spectrum operator-(const Spectrum &l, float f) { return l + (-f); }
+
+Spectrum operator-(float f, const Spectrum &l) { return l - f; }
+
+Spectrum operator*(const Spectrum &l, float f) {
+  return Spectrum(l.samples() * f);
 }
 
-Spectrum operator*(const Spectrum &l, const float &f) {
-  Spectrum ret(0.f);
-  std::transform(l.samples().begin(), l.samples().end(), ret.samples().begin(),
-                 [&f](const float &elem) { return elem * f; });
-  return ret;
-}
+Spectrum operator*(float f, const Spectrum &l) { return l * f; }
 
-Spectrum operator/(const Spectrum &l, const float &f) {
-  Spectrum ret(0.f);
-  std::transform(l.samples().begin(), l.samples().end(), ret.samples().begin(),
-                 [&f](const float &elem) { return elem / f; });
-  return ret;
+Spectrum operator/(const Spectrum &l, float f) {
+  return Spectrum(l.samples() / f);
 }
 
 Spectrum sqrt(const Spectrum &s) {
-  Spectrum ret(0.f);
-  std::transform(ret.samples().begin(), ret.samples().end(),
-                 s.samples().begin(), ret.samples().begin(),
-                 [](float &elem1, const float &elem2) {
-                   elem1 = static_cast<float>(std::sqrt(elem2));
-                   return elem1;
-                 });
-  return ret;
+  auto v = s.samples();
+  return Spectrum(Vec3D(sqrt(v.x()), sqrt(v.y()), sqrt(v.z())));
 }
 
 Spectrum exp(const Spectrum &s) {
-  Spectrum ret(0.f);
-  std::transform(ret.samples().begin(), ret.samples().end(),
-                 s.samples().begin(), ret.samples().begin(),
-                 [](float &elem1, const float &elem2) {
-                   elem1 = static_cast<float>(std::exp(elem2));
-                   return elem1;
-                 });
-  return ret;
+  auto v = s.samples();
+  return Spectrum(Vec3D(std::exp(v.x()), std::exp(v.y()), std::exp(v.z())));
 }
 
-Spectrum pow(const Spectrum &s, const int &p) {
-  Spectrum ret(0.f);
-  std::transform(ret.samples().begin(), ret.samples().end(),
-                 s.samples().begin(), ret.samples().begin(),
-                 [&p](float &elem1, const float &elem2) {
-                   elem1 = static_cast<float>(std::pow(elem2, p));
-                   return elem1;
-                 });
-  return ret;
+Spectrum pow(const Spectrum &s, int p) {
+  auto v = s.samples();
+  return Spectrum(Vec3D(pow(v.x(), p), pow(v.y(), p), pow(v.z(), p)));
 }
 
 Spectrum lerp(float t, const Spectrum &l, const Spectrum &r) {

@@ -8,10 +8,10 @@
 // RGB spectrum (might change to EM)
 class Spectrum {
  public:
-  Spectrum(float value = 0.f);
+  explicit Spectrum(float value = 0.f);
+  explicit Spectrum(const Vec3D &v);
 
-  const std::vector<float> &samples() const;
-  std::vector<float> &samples();
+  Vec3D samples() const;
 
   Spectrum operator-() const;
   Spectrum &operator+=(const Spectrum &other);
@@ -22,8 +22,7 @@ class Spectrum {
   Spectrum clamp(float low = 0.f,
                  float high = std::numeric_limits<float>::infinity());
 
-  bool operator==(const Spectrum &other) const;
-  bool operator!=(const Spectrum &other) const;
+  auto operator<=>(const Spectrum &) const = default;
 
   bool isBlack() const;
   bool hasNaNs() const;
@@ -32,8 +31,8 @@ class Spectrum {
   Vec3D toXYZ() const;
   float y() const;
 
- protected:
-  std::vector<float> m_samples;
+ private:
+  Vec3D m_samples;
 };
 
 Spectrum fromRGB(const Vec3D &v);
@@ -46,12 +45,15 @@ Spectrum operator-(const Spectrum &l, const Spectrum &r);
 Spectrum operator*(const Spectrum &l, const Spectrum &r);
 Spectrum operator/(const Spectrum &l, const Spectrum &r);
 
-Spectrum operator+(const Spectrum &l, const float &f);
-Spectrum operator-(const Spectrum &l, const float &f);
-Spectrum operator*(const Spectrum &l, const float &f);
-Spectrum operator/(const Spectrum &l, const float &f);
+Spectrum operator+(const Spectrum &l, float f);
+Spectrum operator+(float f, const Spectrum &l);
+Spectrum operator-(const Spectrum &l, float f);
+Spectrum operator-(float f, const Spectrum &l);
+Spectrum operator*(const Spectrum &l, float f);
+Spectrum operator*(float f, const Spectrum &l);
+Spectrum operator/(const Spectrum &l, float f);
 
 Spectrum sqrt(const Spectrum &s);
 Spectrum exp(const Spectrum &s);
-Spectrum pow(const Spectrum &s, const int &p);
+Spectrum pow(const Spectrum &s, int p);
 Spectrum lerp(float t, const Spectrum &l, const Spectrum &r);
