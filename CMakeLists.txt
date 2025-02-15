@@ -38,6 +38,8 @@ add_library(${LIBRARY_NAME}
             src/distribution/bxdf.h
             src/distribution/lambertian_brdf.cpp
             src/distribution/lambertian_brdf.h
+            src/distribution/utilities.cpp
+            src/distribution/utilities.h
             src/geometry/cone.h
             src/geometry/cube.h
             src/geometry/cylinder.h
