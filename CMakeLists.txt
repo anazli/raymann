@@ -25,6 +25,7 @@ add_library(${LIBRARY_NAME}
             src/color/spectrum.h
             src/composite/builder.cpp
             src/composite/builder.h
+            src/composite/intersection.cpp
             src/composite/intersection.h
             src/composite/iterator.cpp
             src/composite/iterator.h
@@ -47,6 +48,8 @@ add_library(${LIBRARY_NAME}
             src/geometry/quad.h
             src/geometry/sphere.h
             src/geometry/triangle.h
+            src/materials/bsdf.cpp
+            src/materials/bsdf.h
             src/materials/material.cpp
             src/materials/material.h
             src/materials/dielectric.cpp

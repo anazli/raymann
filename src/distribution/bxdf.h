@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "color/spectrum.h"
 #include "tools/vec2.h"
 
@@ -23,3 +25,5 @@ class Bxdf {
   explicit Bxdf(const BxdfType& type);
   BxdfType m_bsdf_type;
 };
+
+using BxdfPtr = std::shared_ptr<Bxdf>;
