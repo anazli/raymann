@@ -152,7 +152,7 @@ TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
 }
 
 // RED because the normal function of SceneElements has changed. TODO
-/*TEST_F(WorldTest, findingNormalOfChildObjectOfTransformedWorld) {
+TEST_F(WorldTest, findingNormalOfChildObjectOfTransformedWorld) {
   builder = make_unique<WorldBuilder>();
   builder->addLight(light);
 
@@ -178,9 +178,9 @@ TEST_F(WorldTest, convertingVectorFromObjectToWorldSpace) {
   Vec3D vec = sphere->normal(point);
   float eps{10E-5f};
   compareVectorsApprox(vec, Vec3D(0.2857f, 0.4286f, -0.8571f), eps);
-}*/
+}
 
-/*TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
+TEST_F(Tworld, createsWorldOfOneNegativeIntersection) {
   Ray r = Ray(Point3D(0.0f, 0.0f, -5.0f), Vec3D(0.0f, 0.0f, 1.0f));
   direct = make_shared<StandardSphere>();
   TraceablePtr s = direct->create(builder, prop);
