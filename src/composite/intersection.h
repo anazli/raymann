@@ -1,3 +1,7 @@
+// This code is based on or derived from the pbrt-v3 renderer
+// (https://www.pbrt.org/). pbrt-v3 is distributed under the terms of the BSD
+// 2-Clause License.
+
 #pragma once
 
 #include <limits>
@@ -17,6 +21,7 @@ struct IntersectionParameters {
 
 class Intersection {
  public:
+  Intersection() = default;
   Intersection(const IntersectionParameters &parameters);
   struct {
     Normal3D n;
@@ -38,7 +43,7 @@ class Intersection {
   Normal3D surface_normal;
   // primitive of closest hit
   SceneElement *primitive = nullptr;
-  float minHitParam = limit::max();
+  float minHitParam = std::numeric_limits<float>::max();
   bool hitFound = false;
   float max_ray_range = std::numeric_limits<float>::infinity();
 };

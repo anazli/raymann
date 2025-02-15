@@ -1,3 +1,7 @@
+// This code is based on or derived from the pbrt-v3 renderer
+// (https://www.pbrt.org/).
+// pbrt-v2 is distributed under the terms of the BSD 3-Clause License.
+
 #pragma once
 #include "composite/intersection.h"
 #include "distribution/bxdf.h"

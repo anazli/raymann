@@ -1,3 +1,7 @@
+// This code is based on or derived from the pbrt-v3 renderer
+// (https://www.pbrt.org/). pbrt-v3 is distributed under the terms of the BSD
+// 2-Clause License.
+
 #pragma once
 
 #include "tools/tools.h"

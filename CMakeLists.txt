@@ -76,8 +76,6 @@ add_library(${LIBRARY_NAME}
             src/stochastic/random.h
             src/stochastic/stochastic_method.cpp
             src/stochastic/stochastic_method.h
-            src/textures/perlin.cpp
-            src/textures/perlin.h
             src/textures/texture.cpp
             src/textures/texture.h
             src/transformations/transformation.cpp

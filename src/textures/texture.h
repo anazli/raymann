@@ -2,7 +2,6 @@
 #include <cmath>
 #include <memory>
 
-#include "textures/perlin.h"
 #include "tools/vec3.h"
 
 class Texture {
@@ -42,19 +41,4 @@ class CheckerTexture : public Texture {
  private:
   TexturePtr m_odd;
   TexturePtr m_even;
-};
-
-class PerlinTexture : public Texture {
- public:
-  ~PerlinTexture() override = default;
-  PerlinTexture(float scale, const Vec3D &color);
-  Vec3D value(float u, float v, const Vec3D &p) const override;
-  void setColor(const Vec3D &col) override;
-
-  static TexturePtr create(float scale, const Vec3D &color);
-
- private:
-  Perlin m_noise;
-  float m_scale;
-  Vec3D m_color;
 };
