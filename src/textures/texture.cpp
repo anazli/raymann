@@ -1,10 +1,16 @@
 #include "textures/texture.h"
 
-ConstantTexture::ConstantTexture(const Vec3D &c) : m_color(c) {}
+#include "texture.h"
+
+ConstantTexture::ConstantTexture(const Vec3D &c) : m_color(c), m_value(c) {}
 
 Vec3D ConstantTexture::value(float u, float v, const Vec3D &p) const {
   return m_color;
 };
+
+Spectrum ConstantTexture::value(const Intersection &record) const {
+  return m_value;
+}
 
 void ConstantTexture::setColor(const Vec3D &col) { m_color = col; }
 

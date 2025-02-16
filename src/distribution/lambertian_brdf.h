@@ -15,7 +15,6 @@ class LambertianBrdf : public Bxdf {
   Spectrum rhd(const Vec3D& wo, int num_samples, Vec2D& samples) const override;
   Spectrum rhh(int num_samples, Vec2D& samples1,
                Vec2D& samples2) const override;
-  float pdf(const Vec3D& wi, const Vec3D& wo) const override;
 
  private:
   Spectrum m_spectrum;

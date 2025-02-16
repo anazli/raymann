@@ -39,7 +39,6 @@ add_library(${LIBRARY_NAME}
             src/distribution/bxdf.h
             src/distribution/lambertian_brdf.cpp
             src/distribution/lambertian_brdf.h
-            src/distribution/utilities.cpp
             src/distribution/utilities.h
             src/geometry/cone.h
             src/geometry/cube.h
@@ -60,6 +59,8 @@ add_library(${LIBRARY_NAME}
             src/materials/isotropic.h
             src/materials/lambertian.cpp
             src/materials/lambertian.h
+            src/materials/matte.cpp
+            src/materials/matte.h
             src/materials/metal.cpp
             src/materials/metal.h
             src/materials/standard.cpp

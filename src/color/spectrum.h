@@ -1,3 +1,7 @@
+// This code is based on or derived from the pbrt-v3 renderer
+// (https://www.pbrt.org/). pbrt-v3 is distributed under the terms of the BSD
+// 2-Clause License.
+
 #pragma once
 
 #include <limits>
@@ -12,6 +16,7 @@ class Spectrum {
   explicit Spectrum(const Vec3D &v);
 
   Vec3D samples() const;
+  void setSamples(const Vec3D &s);
 
   Spectrum operator-() const;
   Spectrum &operator+=(const Spectrum &other);

@@ -14,6 +14,17 @@ Intersection::Intersection(const IntersectionParameters& parameters) {
   ShadingGeometry.dndv = parameters.dndv;
 }
 
+void Intersection::computeDifferentials(const Ray& r) {
+  dudx = dvdx = 0.f;
+  dudy = dvdy = 0.f;
+  dpdx = dpdy = Vec3D(0.f, 0.f, 0.f);
+}
+
+void Intersection::evaluateScattering(const Ray& r) {
+  computeDifferentials(r);
+  // primitive->evaluateScattering();
+}
+
 float Intersection::getMinimumHitParameter(float t1, float t2) {
   auto t1_valid = (t1 > 0.001f);
   auto t2_valid = (t2 > 0.001f);

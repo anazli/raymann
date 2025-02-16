@@ -6,6 +6,11 @@
 
 #include "distribution/utilities.h"
 
+Spectrum Bxdf::sampleF(const Vec3D& wo, Vec3D& wi, const Vec2D& p,
+                       float& pdf) const {
+  return Spectrum();
+}
+
 Spectrum Bxdf::rhd(const Vec3D& wo, int num_samples, Vec2D& samples) const {
   Spectrum r(0.f);
   /*for (int i = 0; i < num_samples; ++i) {

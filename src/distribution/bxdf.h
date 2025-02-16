@@ -9,6 +9,8 @@
 #include "color/spectrum.h"
 #include "tools/vec2.h"
 
+// Local coordinate system
+// normal (0,0,1)
 enum BxdfType {
   BSDF_REFLECTION = 1,
   BSDF_DIFFUSE = 2,
@@ -19,6 +21,8 @@ class Bxdf {
   virtual ~Bxdf() = default;
   // value of distribution for pair of directions
   virtual Spectrum f(const Vec3D& wo, const Vec3D& wi) const = 0;
+  virtual Spectrum sampleF(const Vec3D& wo, Vec3D& wi, const Vec2D& p,
+                           float& pdf) const;
   // Hemispherical-directional reflectance
   virtual Spectrum rhd(const Vec3D& wo, int num_samples, Vec2D& samples) const;
   // Hemispherical-hemispherical reflectance

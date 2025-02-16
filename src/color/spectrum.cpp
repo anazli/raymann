@@ -11,6 +11,8 @@ Spectrum::Spectrum(const Vec3D &v) : m_samples(v) {}
 
 Vec3D Spectrum::samples() const { return m_samples; }
 
+void Spectrum::setSamples(const Vec3D &s) { m_samples = s; }
+
 Spectrum Spectrum::operator-() const { return Spectrum(-m_samples); }
 
 Spectrum &Spectrum::operator+=(const Spectrum &other) {
@@ -42,7 +44,7 @@ Spectrum Spectrum::clamp(float low, float high) {
 bool Spectrum::isBlack() const { return m_samples == Vec3D(); }
 
 bool Spectrum::hasNaNs() const {
-  return std::isnan(m_samples.x()) && std::isnan(m_samples.y()) &&
+  return std::isnan(m_samples.x()) || std::isnan(m_samples.y()) ||
          std::isnan(m_samples.z());
 }
 
