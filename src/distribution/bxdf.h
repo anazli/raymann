@@ -22,7 +22,7 @@ class Bxdf {
   // value of distribution for pair of directions
   virtual Spectrum f(const Vec3D& wo, const Vec3D& wi) const = 0;
   virtual Spectrum sampleF(const Vec3D& wo, Vec3D& wi, const Vec2D& p,
-                           float& pdf) const;
+                           float& pdf_val) const;
   // Hemispherical-directional reflectance
   virtual Spectrum rhd(const Vec3D& wo, int num_samples, Vec2D& samples) const;
   // Hemispherical-hemispherical reflectance

@@ -2,13 +2,17 @@
 // (https://www.pbrt.org/). pbrt-v3 is distributed under the terms of the BSD
 // 2-Clause License.
 
-#include "bxdf.h"
+#include "distribution/bxdf.h"
 
 #include "distribution/utilities.h"
+#include "stochastic/samples.h"
 
 Spectrum Bxdf::sampleF(const Vec3D& wo, Vec3D& wi, const Vec2D& p,
-                       float& pdf) const {
-  return Spectrum();
+                       float& pdf_val) const {
+  wi = cosineSampleHemisphere(p);
+  if (wo.z() < 0.f) wi.setZ(wi.z() * (-1));
+  pdf_val = pdf(wo, wi);
+  return f(wo, wi);
 }
 
 Spectrum Bxdf::rhd(const Vec3D& wo, int num_samples, Vec2D& samples) const {
