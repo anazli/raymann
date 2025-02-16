@@ -1,10 +1,16 @@
 #include "textures/texture.h"
 
-ConstantTexture::ConstantTexture(const Vec3D &c) : m_color(c) {}
+#include "texture.h"
+
+ConstantTexture::ConstantTexture(const Vec3D &c) : m_color(c), m_value(c) {}
 
 Vec3D ConstantTexture::value(float u, float v, const Vec3D &p) const {
   return m_color;
 };
+
+Spectrum ConstantTexture::value(const Intersection &record) const {
+  return m_value;
+}
 
 void ConstantTexture::setColor(const Vec3D &col) { m_color = col; }
 
@@ -26,17 +32,3 @@ void CheckerTexture::setColor(const Vec3D &col) {}
 TexturePtr CheckerTexture::create(TexturePtr t1, TexturePtr t2) {
   return std::make_unique<CheckerTexture>(std::move(t1), std::move(t2));
 }
-
-TexturePtr PerlinTexture::create(float scale, const Vec3D &color) {
-  return std::make_unique<PerlinTexture>(scale, color);
-}
-
-PerlinTexture::PerlinTexture(float scale, const Vec3D &color)
-    : m_scale(scale), m_color(color) {}
-
-Vec3D PerlinTexture::value(float u, float v, const Vec3D &p) const {
-  return m_color * 0.5f *
-         static_cast<float>(
-             1.f + sin(m_scale * p.x() + 5.f * m_noise.turb(m_scale * p)));
-}
-void PerlinTexture::setColor(const Vec3D &col) {}

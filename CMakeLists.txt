@@ -25,6 +25,7 @@ add_library(${LIBRARY_NAME}
             src/color/spectrum.h
             src/composite/builder.cpp
             src/composite/builder.h
+            src/composite/intersection.cpp
             src/composite/intersection.h
             src/composite/iterator.cpp
             src/composite/iterator.h
@@ -38,7 +39,6 @@ add_library(${LIBRARY_NAME}
             src/distribution/bxdf.h
             src/distribution/lambertian_brdf.cpp
             src/distribution/lambertian_brdf.h
-            src/distribution/utilities.cpp
             src/distribution/utilities.h
             src/geometry/cone.h
             src/geometry/cube.h
@@ -47,6 +47,8 @@ add_library(${LIBRARY_NAME}
             src/geometry/quad.h
             src/geometry/sphere.h
             src/geometry/triangle.h
+            src/materials/bsdf.cpp
+            src/materials/bsdf.h
             src/materials/material.cpp
             src/materials/material.h
             src/materials/dielectric.cpp
@@ -57,6 +59,8 @@ add_library(${LIBRARY_NAME}
             src/materials/isotropic.h
             src/materials/lambertian.cpp
             src/materials/lambertian.h
+            src/materials/matte.cpp
+            src/materials/matte.h
             src/materials/metal.cpp
             src/materials/metal.h
             src/materials/standard.cpp
@@ -73,8 +77,6 @@ add_library(${LIBRARY_NAME}
             src/stochastic/random.h
             src/stochastic/stochastic_method.cpp
             src/stochastic/stochastic_method.h
-            src/textures/perlin.cpp
-            src/textures/perlin.h
             src/textures/texture.cpp
             src/textures/texture.h
             src/transformations/transformation.cpp

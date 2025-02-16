@@ -17,5 +17,7 @@
 
 const float PI = acos(-1.);
 const auto InvPI = 1.f / PI;
+const auto PIOver2 = PI / 2.f;
+const auto PIOver4 = PI / 4.f;
 constexpr auto EPS = std::numeric_limits<float>::epsilon();
 constexpr auto EPS1 = 0.000002f;

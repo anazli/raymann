@@ -7,6 +7,18 @@ class Intersection;
 class StochasticSampler;
 class StochasticPdf;
 
+class BaseMaterial {
+ public:
+  virtual ~BaseMaterial() = default;
+  // Given input with info of geometry at intersection point, compute refrective
+  // properties at the point.
+  virtual void evaluateScattering(const Intersection& record) = 0;
+
+ protected:
+  BaseMaterial(TexturePtr texture);
+  TexturePtr m_texture;
+};
+
 class Material {
  public:
   virtual ~Material() = default;
