@@ -23,24 +23,24 @@ class Cylinder : public SceneElement {
   float maximumY() const { return m_maximumY; }
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
     auto rdx = direction.x();
     auto rox = origin.x();
     auto rdz = direction.z();
     auto roz = origin.z();
 
     auto a = rdx * rdx + rdz * rdz;
-    if (a <= EPS && a >= -EPS) return intersectCaps(transformed_ray, record);
+    if (a <= EPS && a >= -EPS) return intersectCaps(transf_ray, record);
     auto b = 2.0f * (rox * rdx + roz * rdz);
     auto c = rox * rox + roz * roz - 1.0f;
 
     auto discr = b * b - 4.0f * a * c;
     auto hitAnything = false;
     if (discr >= 0.0f) {
-      auto t1 = (-b - sqrt(discr)) / (2.0f * a);
-      auto t2 = (-b + sqrt(discr)) / (2.0f * a);
+      auto t1 = static_cast<float>(-b - sqrt(discr)) / (2.0f * a);
+      auto t2 = static_cast<float>(-b + sqrt(discr)) / (2.0f * a);
       if (t1 > t2) std::swap(t1, t2);
 
       auto y1 = origin.y() + t1 * direction.y();
@@ -54,11 +54,11 @@ class Cylinder : public SceneElement {
       }
 
       if (hitAnything) {
-        record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
-        record.hit_point = record.getHitPoint(transformed_ray);
+        record.min_hit = Intersection::getMinHitParam(transf_ray, {t1, t2});
+        record.hit_point = record.getHitPoint(transf_ray);
       }
     }
-    if (intersectCaps(transformed_ray, record)) hitAnything = true;
+    if (intersectCaps(transf_ray, record)) hitAnything = true;
     return hitAnything;
   }
   Normal3D normal(const Point3D &p) const override {

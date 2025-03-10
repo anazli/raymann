@@ -14,9 +14,9 @@ class Cube : public SceneElement {
   ~Cube() override = default;
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
     auto xMinMax = hitAxis(origin.x(), direction.x());
     auto yMinMax = hitAxis(origin.y(), direction.y());
     auto zMinMax = hitAxis(origin.z(), direction.z());
@@ -26,8 +26,8 @@ class Cube : public SceneElement {
     if (tmin > tmax) {
       return false;
     }
-    record.min_hit = Intersection::getMinimumHitParameter(tmin, tmax);
-    record.hit_point = record.getHitPoint(transformed_ray);
+    record.min_hit = Intersection::getMinHitParam(transf_ray, {tmin, tmax});
+    record.hit_point = record.getHitPoint(transf_ray);
     return true;
   }
 

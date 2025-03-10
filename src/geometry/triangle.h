@@ -25,9 +25,9 @@ class Triangle : public SceneElement {
   }
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
     auto cde = cross(direction, m_edgeVec[1]);
     auto det = dot(m_edgeVec[0], cde);
     if (det > -EPS && det < EPS) return false;
@@ -43,7 +43,7 @@ class Triangle : public SceneElement {
     if (v < 0.f || (u + v) > 1.f) return false;
 
     record.min_hit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
-    record.hit_point = record.getHitPoint(transformed_ray);
+    record.hit_point = record.getHitPoint(transf_ray);
     return true;
   }
   Normal3D normal(const Point3D &p) const override { return m_normalVec; }
@@ -94,9 +94,9 @@ class SmoothTriangle : public SceneElement {
   }
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
     auto cde = cross(direction, m_edgeVec[1]);
     auto det = dot(m_edgeVec[0], cde);
     if (det > -EPS && det < EPS) return false;
@@ -112,7 +112,7 @@ class SmoothTriangle : public SceneElement {
     if (m_vPar < 0.f || (m_uPar + m_vPar) > 1.f) return false;
 
     record.min_hit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
-    record.hit_point = record.getHitPoint(transformed_ray);
+    record.hit_point = record.getHitPoint(transf_ray);
     return true;
   }
 

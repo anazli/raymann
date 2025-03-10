@@ -16,11 +16,14 @@ class Ray {
     return origin() + parameter * direction();
   }
 
+  void setMinRange(float t) { m_min_parameter = t; }
+  float getMinRange() const { return m_min_parameter; }
   void setMaxRange(float t) { m_max_parameter = t; }
-  float getMaxRange(float t) const { return m_max_parameter; }
+  float getMaxRange() const { return m_max_parameter; }
 
  private:
   Point3D m_origin;
   Vec3D m_direction;
+  mutable float m_min_parameter = 0.001f;
   mutable float m_max_parameter = std::numeric_limits<float>::infinity();
 };

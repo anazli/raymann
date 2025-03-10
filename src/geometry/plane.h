@@ -10,14 +10,14 @@ class Plane : public SceneElement {
   }
   ~Plane() override = default;
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
     if (fabs(direction.y()) < EPS) {
       return false;
     }
     record.min_hit = -origin.y() / direction.y();
-    record.hit_point = record.getHitPoint(transformed_ray);
+    record.hit_point = record.getHitPoint(transf_ray);
     return true;
   }
   Normal3D normal(const Point3D &p) const override {

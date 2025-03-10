@@ -18,17 +18,17 @@ class Quad : public SceneElement {
   }
 
   bool intersect(const Ray& r, Intersection& record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
-    auto normalV = normal(record.getHitPoint(transformed_ray));
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
+    auto normalV = normal(record.getHitPoint(transf_ray));
     auto denom = dot(normalV, direction);
     auto dParam = dot(normalV, Vec3D(m_origin));
 
     if (fabs(denom) < EPS) return false;
 
     auto t = (dParam - dot(normalV, Vec3D(origin))) / denom;
-    auto intersection = transformed_ray.position(t);
+    auto intersection = transf_ray.position(t);
     auto planarHitptVector = intersection - m_origin;
 
     auto alpha = dot(m_wParam, cross(planarHitptVector, m_vAxis));
@@ -36,7 +36,7 @@ class Quad : public SceneElement {
     if (!isWithin(alpha, beta, record)) return false;
 
     record.min_hit = t;
-    record.hit_point = record.getHitPoint(transformed_ray);
+    record.hit_point = record.getHitPoint(transf_ray);
     return true;
   }
 

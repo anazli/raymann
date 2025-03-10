@@ -28,9 +28,9 @@ class Cone : public SceneElement {
   float maximumY() const { return m_maximumY; }
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
     auto rdx = direction.x();
     auto rox = origin.x();
     auto rdy = direction.y();
@@ -65,10 +65,10 @@ class Cone : public SceneElement {
       }
     }
     if (hitAnything) {
-      record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
-      record.hit_point = record.getHitPoint(transformed_ray);
+      record.min_hit = Intersection::getMinHitParam(transf_ray, {t1, t2});
+      record.hit_point = record.getHitPoint(transf_ray);
     }
-    if (intersectCaps(transformed_ray, record)) hitAnything = true;
+    if (intersectCaps(transf_ray, record)) hitAnything = true;
     return hitAnything;
   }
   Normal3D normal(const Point3D &p) const override {
@@ -119,7 +119,7 @@ class Cone : public SceneElement {
       t2 = t;
       intersectsCap = true;
     }
-    record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
+    record.min_hit = Intersection::getMinHitParam(r, {t1, t2});
     return intersectsCap;
   }
 };

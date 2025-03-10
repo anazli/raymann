@@ -13,19 +13,19 @@ class Sphere : public SceneElement {
   }
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    Point3D origin = transformed_ray.origin();
-    Vec3D direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    Point3D origin = transf_ray.origin();
+    Vec3D direction = transf_ray.direction();
     auto co = origin - m_center;
     auto a = dot(direction, direction);
     auto b = 2.0f * dot(direction, co);
     auto c = dot(co, co) - m_radius * m_radius;
     auto discr = b * b - 4.0f * a * c;
     if (discr >= 0.0f) {
-      auto t1 = (-b - sqrt(discr)) / (2. * a);
-      auto t2 = (-b + sqrt(discr)) / (2. * a);
-      record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
-      record.hit_point = record.getHitPoint(transformed_ray);
+      auto t1 = static_cast<float>(-b - sqrt(discr)) / (2.f * a);
+      auto t2 = static_cast<float>(-b + sqrt(discr)) / (2.f * a);
+      record.min_hit = Intersection::getMinHitParam(transf_ray, {t1, t2});
+      record.hit_point = record.getHitPoint(transf_ray);
       return true;
     }
     return false;

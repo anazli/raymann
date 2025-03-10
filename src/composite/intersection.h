@@ -12,9 +12,15 @@ class SceneElement;
 
 struct Intersection {
   // get the minimum positive hit parameter from an intersection
-  static float getMinimumHitParameter(float t1, float t2);
+  static float getMinHitParam(const Ray& r, std::vector<float>&& tparams) {
+    auto thit = r.getMaxRange();
+    for (const auto t : tparams) {
+      if (t >= r.getMinRange() && t < thit) thit = t;
+    }
+    return thit;
+  }
   float min_hit = std::numeric_limits<float>::infinity();
-  Point3D getHitPoint(const Ray &r) const { return r.position(min_hit); }
+  Point3D getHitPoint(const Ray& r) const { return r.position(min_hit); }
   // point of intersection test in world space
   Point3D hit_point;
   // negative ray direction
@@ -22,7 +28,7 @@ struct Intersection {
   // normal of closest hit in world space
   Normal3D surface_normal;
   // primitive of closest hit
-  SceneElement *primitive = nullptr;
+  SceneElement* primitive = nullptr;
   float minHitParam = std::numeric_limits<float>::max();
   float max_ray_range = std::numeric_limits<float>::infinity();
   bool hitFound = false;
