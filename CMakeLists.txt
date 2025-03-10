@@ -65,8 +65,6 @@ add_library(${LIBRARY_NAME}
             src/renderers/renderer.h
             src/renderers/path_tracer.cpp
             src/renderers/path_tracer.h
-            src/renderers/phong_model.cpp
-            src/renderers/phong_model.h
             src/stochastic/pdf.cpp
             src/stochastic/pdf.h
             src/stochastic/random.cpp

@@ -9,34 +9,8 @@
 #include "tools/ray.h"
 
 class SceneElement;
-class Bsdf;
 
-struct IntersectionParameters {
-  Point3D hit_point;
-  Vec2D uv;
-  Vec3D wo;
-  Vec3D dpdu, dpdv;
-  Normal3D dndu, dndv;
-  Normal3D n;
-};
-
-class Intersection {
- public:
-  Intersection() = default;
-  Intersection(const IntersectionParameters &parameters);
-  void computeDifferentials(const Ray &r);
-  struct {
-    Normal3D n;
-    Vec3D dpdu, dpdv;
-    Normal3D dndu, dndv;
-  } ShadingGeometry;
-  Bsdf *bsdf;
-  Vec2D uv;
-  Vec3D dpdu, dpdv;
-  Normal3D dndu, dndv;
-  void evaluateScattering(const Ray &r);
-  mutable Vec3D dpdx, dpdy;
-  mutable float dudx = 0.f, dvdx = 0.f, dudy = 0.f, dvdy = 0.f;
+struct Intersection {
   // get the minimum positive hit parameter from an intersection
   static float getMinimumHitParameter(float t1, float t2);
   float min_hit = std::numeric_limits<float>::infinity();
@@ -45,14 +19,11 @@ class Intersection {
   Point3D hit_point;
   // negative ray direction
   Vec3D omega;
-  bool inside = false;
-  Point3D over_point_from_refl_surf;
-  Point3D under_point_from_refrac_surf;
   // normal of closest hit in world space
   Normal3D surface_normal;
   // primitive of closest hit
   SceneElement *primitive = nullptr;
   float minHitParam = std::numeric_limits<float>::max();
-  bool hitFound = false;
   float max_ray_range = std::numeric_limits<float>::infinity();
+  bool hitFound = false;
 };

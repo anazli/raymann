@@ -8,7 +8,6 @@
 #include "container/canvas.h"
 #include "geometry/quad.h"
 #include "renderers/path_tracer.h"
-#include "renderers/phong_model.h"
 #include "stochastic/stochastic_method.h"
 #include "textures/texture.h"
 
