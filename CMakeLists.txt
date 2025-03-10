@@ -47,8 +47,6 @@ add_library(${LIBRARY_NAME}
             src/geometry/quad.h
             src/geometry/sphere.h
             src/geometry/triangle.h
-            src/materials/bsdf.cpp
-            src/materials/bsdf.h
             src/materials/material.cpp
             src/materials/material.h
             src/materials/dielectric.cpp
@@ -59,8 +57,6 @@ add_library(${LIBRARY_NAME}
             src/materials/isotropic.h
             src/materials/lambertian.cpp
             src/materials/lambertian.h
-            src/materials/matte.cpp
-            src/materials/matte.h
             src/materials/metal.cpp
             src/materials/metal.h
             src/materials/standard.cpp
