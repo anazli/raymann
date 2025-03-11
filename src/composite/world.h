@@ -16,7 +16,6 @@ class World : public SceneElement {
   SceneElementContainer::iterator remove(SceneElementRawPtr item,
                                          SceneElementPtr removedElem) override;
   bool isWorld() const override;
-  Normal3D normal(const Point3D &p) const override;
   void accept(BaseRenderer &renderer, const Ray &ray) override;
   SceneElementContainer getChildren() const override;
   SceneElementContainer &getChildren() override;
@@ -24,6 +23,7 @@ class World : public SceneElement {
   PointLight getLight() const override;
   float pdf(const Point3D &origin, const Vec3D &direction) override;
   Vec3D random(const Point3D &origin) override;
+  BoundingBox getBoundingBox() const override;
 
   static SceneElementPtr create();
 
@@ -31,4 +31,5 @@ class World : public SceneElement {
   SceneElementContainer m_sceneElementContainer;
   std::vector<SceneElementPtr> m_vector;
   PointLight m_light;
+  BoundingBox m_bBox;
 };

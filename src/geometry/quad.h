@@ -1,20 +1,22 @@
 #pragma once
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 #include "stochastic/random.h"
 
-class Quad : public SceneElement {
+class Quad : public Primitive {
  public:
-  Quad(const Point3D& origin, const Vec3D& uAxis, const Vec3D& vAxis)
-      : m_origin(origin), m_uAxis(uAxis), m_vAxis(vAxis) {
+  Quad(const Point3D& origin, const Vec3D& uAxis, const Vec3D& vAxis,
+       const Transformation& tr = Transformation())
+      : m_origin(origin), m_uAxis(uAxis), m_vAxis(vAxis), Primitive(tr) {
     auto n = cross(m_uAxis, m_vAxis);
     auto normalV = getUnitVectorOf(n);
     m_dParam = dot(normalV, Vec3D(m_origin));
     m_wParam = normalV / dot(n, n);
 
     m_area = n.length();
-    m_bBox.minPoint() = m_origin;
-    m_bBox.maxPoint() = m_origin + m_uAxis + m_vAxis;
+    m_object_box.minPoint() = m_origin;
+    m_object_box.maxPoint() = m_origin + m_uAxis + m_vAxis;
+    m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
 
   bool intersect(const Ray& r, Intersection& record) override {
@@ -37,6 +39,7 @@ class Quad : public SceneElement {
 
     record.min_hit = t;
     record.hit_point = record.getHitPoint(transf_ray);
+    record.normal = normal(record.hit_point);
     return true;
   }
 
@@ -46,25 +49,10 @@ class Quad : public SceneElement {
     return Normal3D(n);
   }
 
-  float pdf(const Point3D& origin, const Vec3D& direction) override {
-    Intersection rec;
-    if (!intersect(Ray(origin, direction), rec)) return 1.f;
-
-    auto distSquared =
-        rec.min_hit * rec.min_hit * direction.length() * direction.length();
-    auto cosine = fabs(dot(direction, rec.surface_normal) / direction.length());
-
-    return distSquared / (cosine * m_area);
-  }
-
-  Vec3D random(const Point3D& origin) override {
-    return m_origin + (Random::randomNumber() * m_uAxis) +
-           (Random::randomNumber() * m_vAxis) - origin;
-  }
-
-  static SceneElementPtr create(const Point3D& origin, const Vec3D& uAxis,
-                                const Vec3D& vAxis) {
-    return std::make_shared<Quad>(origin, uAxis, vAxis);
+  static PrimitivePtr create(const Point3D& origin, const Vec3D& uAxis,
+                             const Vec3D& vAxis,
+                             const Transformation& tr = Transformation()) {
+    return std::make_shared<Quad>(origin, uAxis, vAxis, tr);
   }
 
  private:

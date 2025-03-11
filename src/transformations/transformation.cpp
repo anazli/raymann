@@ -23,7 +23,7 @@ Ray Transformation::objectToWorldSpace(const Ray& ray) {
   return Ray(Point3D(world_space_origin), Vec3D(world_space_direction));
 }
 
-void Transformation::worldToObjectSpace(BoundingBox& b) const {
+BoundingBox Transformation::worldToObjectSpace(const BoundingBox& b) const {
   Point3D p1 = b.minPoint();
   Point3D p2 = Point3D(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
   Point3D p3 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
@@ -32,14 +32,15 @@ void Transformation::worldToObjectSpace(BoundingBox& b) const {
   Point3D p6 = Point3D(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
   Point3D p7 = Point3D(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
   Point3D p8 = b.maxPoint();
-  b = BoundingBox{};
+  auto box = BoundingBox{};
   std::vector<Point3D> v{p1, p2, p3, p4, p5, p6, p7, p8};
   for (Point3D& elem : v) {
-    b.addPoint(Point3D(m_matrix.inverse() * Vec4D(elem)));
+    box.addPoint(Point3D(m_matrix.inverse() * Vec4D(elem)));
   }
+  return box;
 }
 
-void Transformation::objectToWorldSpace(BoundingBox& b) const {
+BoundingBox Transformation::objectToWorldSpace(const BoundingBox& b) const {
   Point3D p1 = b.minPoint();
   Point3D p2 = Point3D(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
   Point3D p3 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
@@ -48,11 +49,12 @@ void Transformation::objectToWorldSpace(BoundingBox& b) const {
   Point3D p6 = Point3D(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
   Point3D p7 = Point3D(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
   Point3D p8 = b.maxPoint();
-  b = BoundingBox{};
+  auto box = BoundingBox{};
   std::vector<Point3D> v{p1, p2, p3, p4, p5, p6, p7, p8};
   for (Point3D& elem : v) {
-    b.addPoint(Point3D(m_matrix * Vec4D(elem)));
+    box.addPoint(Point3D(m_matrix * Vec4D(elem)));
   }
+  return box;
 }
 
 Point3D Transformation::worldToObjectSpace(const Point3D& p) const {

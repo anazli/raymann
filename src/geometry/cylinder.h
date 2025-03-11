@@ -2,20 +2,22 @@
 
 #include <limits>
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 
-class Cylinder : public SceneElement {
+class Cylinder : public Primitive {
  public:
   Cylinder(float minY = -std::numeric_limits<float>::max(),
-           float maxY = std::numeric_limits<float>::max(), bool closed = false)
-      : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
+           float maxY = std::numeric_limits<float>::max(), bool closed = false,
+           const Transformation &tr = Transformation())
+      : m_minimumY(minY), m_maximumY(maxY), m_closed(closed), Primitive(tr) {
     if (!closed) {
-      m_bBox.minPoint() = Point3D(-1.f, -limit::infinity(), -1.f);
-      m_bBox.maxPoint() = Point3D(1.f, limit::infinity(), 1.f);
+      m_object_box.minPoint() = Point3D(-1.f, -limit::infinity(), -1.f);
+      m_object_box.maxPoint() = Point3D(1.f, limit::infinity(), 1.f);
     } else {
-      m_bBox.minPoint() = Point3D(-1.f, m_minimumY, -1.f);
-      m_bBox.maxPoint() = Point3D(1.f, m_maximumY, 1.f);
+      m_object_box.minPoint() = Point3D(-1.f, m_minimumY, -1.f);
+      m_object_box.maxPoint() = Point3D(1.f, m_maximumY, 1.f);
     }
+    m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
   ~Cylinder() override = default;
 
@@ -56,6 +58,7 @@ class Cylinder : public SceneElement {
       if (hitAnything) {
         record.min_hit = Intersection::getMinHitParam(transf_ray, {t1, t2});
         record.hit_point = record.getHitPoint(transf_ray);
+        record.normal = normal(record.hit_point);
       }
     }
     if (intersectCaps(transf_ray, record)) hitAnything = true;
@@ -78,10 +81,11 @@ class Cylinder : public SceneElement {
 
   bool isClosed() const { return m_closed; }
 
-  static SceneElementPtr create(float minY = -std::numeric_limits<float>::max(),
-                                float maxY = std::numeric_limits<float>::max(),
-                                bool closed = false) {
-    return std::make_shared<Cylinder>(minY, maxY, closed);
+  static PrimitivePtr create(float minY = -std::numeric_limits<float>::max(),
+                             float maxY = std::numeric_limits<float>::max(),
+                             bool closed = false,
+                             const Transformation &tr = Transformation()) {
+    return std::make_shared<Cylinder>(minY, maxY, closed, tr);
   }
 
  private:
@@ -112,6 +116,7 @@ class Cylinder : public SceneElement {
     if (intersectsCap) {
       record.min_hit = t;
       record.hit_point = record.getHitPoint(r);
+      record.normal = normal(record.hit_point);
     }
     return intersectsCap;
   }

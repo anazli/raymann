@@ -115,10 +115,10 @@ TEST_F(MaterialTest, lightingWithSurfaceInShadow) {
 
 TEST_F(MaterialTest, precomputingTheReflectionVector) {
   DataContainer data;
-  PrimitiveBuilder builder;
+  EntityFactory builder;
   data.setProperty(app::PRIMITIVE_TYPE, app::PLANE);
   builder.setData(data);
-  builder.buildPrimitive();
+  builder.createPrimitive();
   auto plane = builder.getProduct();
   Ray r(Point3D(0.f, 1.f, -1.f), Vec3D(0.f, -sqrt(2.f) / 2.f, sqrt(2.f) / 2.));
   plane->intersect(r, rec);
@@ -132,7 +132,7 @@ TEST_F(MaterialTest, precomputingTheReflectionVector) {
 TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   PointLight light(Point3D(-10.f, 10.f, -10.f), Vec3D(1.f, 1.f, 1.f));
   DataContainer prop;
-  PrimitiveBuilder primitive_builder;
+  EntityFactory primitive_builder;
   WorldBuilder world_builder;
   world_builder.createWorld();
   world_builder.addLight(light);
@@ -145,9 +145,9 @@ TEST_F(MaterialTest, strikeNonReflectiveSurface) {
       .setProperty(app::MATERIAL_TYPE, app::STANDARD)
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE);
   primitive_builder.setData(data);
-  primitive_builder.buildPrimitive();
-  primitive_builder.buildTexture();
-  primitive_builder.buildMaterial();
+  primitive_builder.createPrimitive();
+  primitive_builder.createTexture();
+  primitive_builder.createMaterial();
   world_builder.addElement(primitive_builder.getProduct());
   primitive_builder.reset();
 
@@ -158,9 +158,9 @@ TEST_F(MaterialTest, strikeNonReflectiveSurface) {
       .setProperty(app::MATERIAL_TYPE, app::STANDARD)
       .setProperty(app::AMBIENT, 1.f);
   primitive_builder.setData(data);
-  primitive_builder.buildPrimitive();
-  primitive_builder.buildTexture();
-  primitive_builder.buildMaterial();
+  primitive_builder.createPrimitive();
+  primitive_builder.createTexture();
+  primitive_builder.createMaterial();
   world_builder.addElement(primitive_builder.getProduct());
   Ray r(Point3D(0.f, 0.f, 0.f), Vec3D(0.f, 0.f, 1.f));
   auto pm = std::make_unique<PhongModel>();

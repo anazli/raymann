@@ -1,15 +1,17 @@
 #pragma once
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 #include "stochastic/random.h"
 
-class Sphere : public SceneElement {
+class Sphere : public Primitive {
  public:
   ~Sphere() override = default;
-  Sphere(const Point3D &c = Point3D(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
-      : m_center(c), m_radius(r) {
-    m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f) + Vec3D(c);
-    m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f) + Vec3D(c);
+  Sphere(const Transformation &tr = Transformation(),
+         const Point3D &c = Point3D(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
+      : m_center(c), m_radius(r), Primitive(tr) {
+    m_object_box.minPoint() = Point3D(-1.f, -1.f, -1.f) + Vec3D(c);
+    m_object_box.maxPoint() = Point3D(1.f, 1.f, 1.f) + Vec3D(c);
+    m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
 
   bool intersect(const Ray &r, Intersection &record) override {
@@ -26,6 +28,7 @@ class Sphere : public SceneElement {
       auto t2 = static_cast<float>(-b + sqrt(discr)) / (2.f * a);
       record.min_hit = Intersection::getMinHitParam(transf_ray, {t1, t2});
       record.hit_point = record.getHitPoint(transf_ray);
+      record.normal = normal(record.hit_point);
       return true;
     }
     return false;
@@ -37,35 +40,15 @@ class Sphere : public SceneElement {
     return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 
-  float pdf(const Point3D &origin, const Vec3D &direction) override {
-    Intersection rec;
-    if (!intersect(Ray(origin, direction), rec)) return 0;
-    float radius = 30.f;
-    Point3D center(277.f, 540.f, -455.f);
-
-    auto cosThetaMax = sqrt(
-        1.f - radius * radius /
-                  ((center - origin).length() * (center - origin).length()));
-    auto solidAngle = 2 * PI * (1.f - cosThetaMax);
-
-    return 1.f / solidAngle;
-  }
-  Vec3D random(const Point3D &origin) override {
-    auto direction = Vec3D(277.f, 540.f, -455.f) - origin;
-    auto distSquared = direction.length() * direction.length();
-    OrthoNormalBasis onb;
-    onb.buildFromW(direction);
-    return onb.local(randomToSphere(30.f, distSquared));
-  }
-
   void setCenter(const Point3D &c) { m_center = c; }
   void setRadius(const float &r) { m_radius = r; }
   Point3D center() const { return m_center; }
   float radius() const { return m_radius; }
 
-  static SceneElementPtr create(const Point3D &c = Point3D(0.0f, 0.0f, 0.0f),
-                                const float &r = 1.0f) {
-    return std::make_shared<Sphere>(c, r);
+  static PrimitivePtr create(const Transformation &tr = Transformation(),
+                             const Point3D &c = Point3D(0.0f, 0.0f, 0.0f),
+                             const float &r = 1.0f) {
+    return std::make_shared<Sphere>(tr, c, r);
   }
 
  private:

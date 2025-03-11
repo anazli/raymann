@@ -1,20 +1,23 @@
 #pragma once
 
 #include "application/error.h"
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 
-class Triangle : public SceneElement {
+class Triangle : public Primitive {
  public:
-  Triangle(const std::initializer_list<Point3D> &points) : m_points(points) {
+  Triangle(const std::initializer_list<Point3D> &points,
+           const Transformation &tr = Transformation())
+      : m_points(points), Primitive(tr) {
     APP_ASSERT((points.size() == 3),
                "Wrong number of points for triangle creation!");
     m_edgeVec.push_back(m_points[1] - m_points[0]);
     m_edgeVec.push_back(m_points[2] - m_points[0]);
     m_normalVec = Normal3D(getUnitVectorOf(cross(m_edgeVec[0], m_edgeVec[1])));
 
-    m_bBox.addPoint(m_points[0]);
-    m_bBox.addPoint(m_points[1]);
-    m_bBox.addPoint(m_points[2]);
+    m_object_box.addPoint(m_points[0]);
+    m_object_box.addPoint(m_points[1]);
+    m_object_box.addPoint(m_points[2]);
+    m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
   ~Triangle() override = default;
   Point3D point(int idx) const { return m_points[idx]; }
@@ -44,12 +47,14 @@ class Triangle : public SceneElement {
 
     record.min_hit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
     record.hit_point = record.getHitPoint(transf_ray);
+    record.normal = normal(record.hit_point);
     return true;
   }
   Normal3D normal(const Point3D &p) const override { return m_normalVec; }
 
-  static SceneElementPtr create(const std::initializer_list<Point3D> &points) {
-    return std::make_shared<Triangle>(points);
+  static PrimitivePtr create(const std::initializer_list<Point3D> &points,
+                             const Transformation &tr = Transformation()) {
+    return std::make_shared<Triangle>(points, tr);
   }
 
  private:
@@ -61,10 +66,12 @@ class Triangle : public SceneElement {
 //-----------------------------------------
 // TODO: Refactor and remove duplicate code
 //-----------------------------------------
-class SmoothTriangle : public SceneElement {
+class SmoothTriangle : public Primitive {
  public:
   SmoothTriangle(const Point3D &p1, const Point3D &p2, const Point3D &p3,
-                 const Normal3D &v1, const Normal3D &v2, const Normal3D &v3) {
+                 const Normal3D &v1, const Normal3D &v2, const Normal3D &v3,
+                 const Transformation &tr = Transformation())
+      : Primitive(tr) {
     m_points.push_back(p1);
     m_points.push_back(p2);
     m_points.push_back(p3);
@@ -76,9 +83,10 @@ class SmoothTriangle : public SceneElement {
     m_edgeVec.push_back(m_points[1] - m_points[0]);
     m_edgeVec.push_back(m_points[2] - m_points[0]);
 
-    m_bBox.addPoint(m_points[0]);
-    m_bBox.addPoint(m_points[1]);
-    m_bBox.addPoint(m_points[2]);
+    m_object_box.addPoint(m_points[0]);
+    m_object_box.addPoint(m_points[1]);
+    m_object_box.addPoint(m_points[2]);
+    m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
 
   Point3D points(int idx) const {
@@ -113,6 +121,7 @@ class SmoothTriangle : public SceneElement {
 
     record.min_hit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
     record.hit_point = record.getHitPoint(transf_ray);
+    record.normal = normal(record.hit_point);
     return true;
   }
 
@@ -121,10 +130,11 @@ class SmoothTriangle : public SceneElement {
            m_normals[0] * (1.f - m_uPar - m_vPar);
   }
 
-  static SceneElementPtr create(const Point3D &p1, const Point3D &p2,
-                                const Point3D &p3, const Normal3D &v1,
-                                const Normal3D &v2, const Normal3D &v3) {
-    return std::make_shared<SmoothTriangle>(p1, p2, p3, v1, v2, v3);
+  static PrimitivePtr create(const Point3D &p1, const Point3D &p2,
+                             const Point3D &p3, const Normal3D &v1,
+                             const Normal3D &v2, const Normal3D &v3,
+                             const Transformation &tr = Transformation()) {
+    return std::make_shared<SmoothTriangle>(p1, p2, p3, v1, v2, v3, tr);
   }
 
  private:

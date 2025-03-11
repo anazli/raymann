@@ -60,8 +60,6 @@ SceneElementContainer::iterator World::remove(SceneElementRawPtr item,
 
 bool World::isWorld() const { return true; }
 
-Normal3D World::normal(const Point3D& p) const { return Normal3D(); }
-
 void World::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementComposite(this, ray);
 }
@@ -91,5 +89,7 @@ Vec3D World::random(const Point3D& origin) {
   return m_sceneElementContainer[Random::randomInteger(0, int_size - 1)]
       ->random(origin);
 }
+
+BoundingBox World::getBoundingBox() const { return m_bBox; }
 
 SceneElementPtr World::create() { return std::make_shared<World>(); }

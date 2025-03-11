@@ -25,8 +25,8 @@ struct Intersection {
   Point3D hit_point;
   // negative ray direction
   Vec3D omega;
-  // normal of closest hit in world space
-  Normal3D surface_normal;
+  // geometric normal of closest hit point in world space
+  Normal3D normal;
   // primitive of closest hit
   SceneElement* primitive = nullptr;
   float minHitParam = std::numeric_limits<float>::max();

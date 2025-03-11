@@ -6,7 +6,7 @@
 #include "world.h"
 
 bool SceneElement::intersect(const Ray& r, Intersection& record) {
-  return false;
+  return m_geometric_primitive->intersect(r, record);
 }
 
 void SceneElement::add(SceneElementPtr item) {}
@@ -15,8 +15,6 @@ SceneElementContainer::iterator SceneElement::remove(
     SceneElementRawPtr item, SceneElementPtr removedElem) {}
 
 bool SceneElement::isWorld() const { return false; }
-
-Normal3D SceneElement::normal(const Point3D& p) const { return Normal3D(); }
 
 void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElementLeaf(this, ray);
@@ -34,6 +32,8 @@ const MaterialRawPtr SceneElement::getMaterial() const {
   return m_material.get();
 }
 
+void SceneElement::setPrimitive(PrimitivePtr pr) { m_geometric_primitive = pr; }
+
 void SceneElement::setParent(SceneElementRawPtr parent) { m_parent = parent; }
 
 SceneElementRawPtr SceneElement::getParent() const { return m_parent; }
@@ -42,9 +42,9 @@ void SceneElement::setLight(const PointLight& light) {}
 
 PointLight SceneElement::getLight() const { return PointLight(); }
 
-void SceneElement::setBoundingBox(const BoundingBox& box) { m_bBox = box; }
-
-BoundingBox SceneElement::getBoundingBox() const { return m_bBox; }
+BoundingBox SceneElement::getBoundingBox() const {
+  return m_geometric_primitive->worldBounds();
+}
 
 float SceneElement::pdf(const Point3D& origin, const Vec3D& direction) {
   return 1.f / (2.f * PI);
@@ -52,34 +52,4 @@ float SceneElement::pdf(const Point3D& origin, const Vec3D& direction) {
 
 Vec3D SceneElement::random(const Point3D& origin) {
   return Vec3D(1.f, 0.f, 0.f);
-}
-
-void SceneElement::setTransformation(const Transformation& transformation) {
-  m_transformation = transformation;
-  m_transformation.objectToWorldSpace(m_bBox);
-}
-
-SceneElement::SceneElement() {
-  m_transformation = Transformation();
-  if (isWorld()) {
-    WorldIterator it(getChildren());
-    if (it.first()) {
-      while (it.notDone()) {
-        it.currentElement()->setParent(this);
-        it.advance();
-      }
-    }
-  }
-}
-SceneElement::SceneElement(const BoundingBox& props) : m_bBox(props) {
-  m_transformation = Transformation();
-  if (isWorld()) {
-    WorldIterator it(getChildren());
-    if (it.first()) {
-      while (it.notDone()) {
-        it.currentElement()->setParent(this);
-        it.advance();
-      }
-    }
-  }
 }

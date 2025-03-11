@@ -19,17 +19,15 @@
 #include "materials/standard.h"
 #include "transformations/transformation.h"
 
-void PrimitiveBuilder::reset() {
-  m_current_element.reset();
-  m_current_material.reset();
-  m_current_texture.reset();
-}
+void EntityFactory::setData(const DataContainer& data) { m_input_data = data; }
 
-void PrimitiveBuilder::setData(const DataContainer& data) {
-  m_input_data = data;
-}
-
-void PrimitiveBuilder::buildPrimitive() {
+PrimitivePtr EntityFactory::createPrimitive() {
+  Transformation transformation;
+  if (m_input_data.hasProperty(AppParameters::TRANSFORMATION_MATRIX)) {
+    transformation =
+        m_input_data.getPropertyAs<Mat4D>(AppParameters::TRANSFORMATION_MATRIX)
+            .value();
+  }
   auto type =
       m_input_data.getPropertyAs<AppParameters>(AppParameters::PRIMITIVE_TYPE);
   if (!type.has_value()) {
@@ -37,10 +35,10 @@ void PrimitiveBuilder::buildPrimitive() {
   }
   switch (type.value()) {
     case AppParameters::CONE:
-      m_current_element = Cone::create();
+      return Cone::create(transformation);
       break;
     case AppParameters::CUBE:
-      m_current_element = Cube::create();
+      return Cube::create(transformation);
       break;
     case AppParameters::CYLINDER: {
       auto ymin =
@@ -52,14 +50,14 @@ void PrimitiveBuilder::buildPrimitive() {
       auto closed =
           m_input_data.getPropertyAs<bool>(AppParameters::CYLINDER_CLOSED)
               .value();
-      m_current_element = Cylinder::create(ymin, ymax, closed);
+      return Cylinder::create(ymin, ymax, closed, transformation);
       break;
     }
     case AppParameters::PLANE:
-      m_current_element = Plane::create();
+      return Plane::create(transformation);
       break;
     case AppParameters::SPHERE:
-      m_current_element = Sphere::create();
+      return Sphere::create(transformation);
       break;
     case AppParameters::QUAD: {
       auto origin =
@@ -69,15 +67,16 @@ void PrimitiveBuilder::buildPrimitive() {
           m_input_data.getPropertyAs<Vec3D>(AppParameters::QUAD_UAXIS).value();
       auto v_axis =
           m_input_data.getPropertyAs<Vec3D>(AppParameters::QUAD_VAXIS).value();
-      m_current_element = Quad::create(origin, u_axis, v_axis);
+      return Quad::create(origin, u_axis, v_axis, transformation);
       break;
     }
     default:
       APP_ASSERT(false, "Cannot create the specified primitive type!");
   }
+  return nullptr;
 }
 
-void PrimitiveBuilder::buildTexture() {
+TexturePtr EntityFactory::createTexture() {
   auto type =
       m_input_data.getPropertyAs<AppParameters>(AppParameters::TEXTURE_TYPE);
   if (!type.has_value()) {
@@ -87,15 +86,17 @@ void PrimitiveBuilder::buildTexture() {
     case AppParameters::CONSTANT_TEXTURE: {
       auto color = m_input_data.getPropertyAs<Vec3D>(AppParameters::COLOR)
                        .value_or(Vec3D());
-      m_current_texture = ConstantTexture::create(color);
+      return ConstantTexture::create(color);
       break;
     }
     default:
       APP_ASSERT(false, "Cannot create the specified texture type!");
   }
+  return nullptr;
 }
 
-void PrimitiveBuilder::buildMaterial() {
+MaterialPtr EntityFactory::createMaterial() {
+  auto texture = createTexture();
   const auto type =
       m_input_data.getPropertyAs<AppParameters>(AppParameters::MATERIAL_TYPE);
   if (!type.has_value()) {
@@ -106,49 +107,31 @@ void PrimitiveBuilder::buildMaterial() {
       auto refractive_index =
           m_input_data.getPropertyAs<float>(AppParameters::REFRACTIVE_INDEX)
               .value_or(1);
-      m_current_material =
-          Dielectric::create(std::move(m_current_texture), refractive_index);
+      return Dielectric::create(std::move(texture), refractive_index);
       break;
     }
     case AppParameters::LAMBERTIAN:
-      m_current_material = Lambertian::create(std::move(m_current_texture));
+      return Lambertian::create(std::move(texture));
       break;
     case AppParameters::METAL: {
       auto fuzz =
           m_input_data.getPropertyAs<float>(AppParameters::FUZZ).value_or(0.2);
-      m_current_material = Metal::create(std::move(m_current_texture), fuzz);
+      return Metal::create(std::move(texture), fuzz);
       break;
     }
     case AppParameters::DIFFUSE_LIGHT:
-      m_current_material =
-          EmissiveMaterial::create(std::move(m_current_texture));
+      return EmissiveMaterial::create(std::move(texture));
       break;
     case AppParameters::ISOTROPIC:
-      m_current_material = Isotropic::create(std::move(m_current_texture));
+      return Isotropic::create(std::move(texture));
       break;
     case AppParameters::STANDARD:
-      m_current_material =
-          StandardMaterial::create(std::move(m_current_texture), m_input_data);
+      return StandardMaterial::create(std::move(texture), m_input_data);
       break;
     default:
       APP_ASSERT(false, "Cannot create the specified material type!");
   }
-  m_current_element->setMaterial(m_current_material);
-}
-
-void PrimitiveBuilder::buildTransformation() {
-  if (!m_input_data.hasProperty(AppParameters::TRANSFORMATION_MATRIX)) {
-    m_transformation = Transformation();
-  } else {
-    m_transformation =
-        m_input_data.getPropertyAs<Mat4D>(AppParameters::TRANSFORMATION_MATRIX)
-            .value();
-  }
-  m_current_element->setTransformation(m_transformation);
-}
-
-SceneElementPtr PrimitiveBuilder::getProduct() const {
-  return m_current_element;
+  return nullptr;
 }
 
 void WorldBuilder::reset() { m_world.reset(); }
@@ -174,16 +157,15 @@ SceneElementPtr WorldBuilder::getProductWithBVHierarchy() {
   return m_world;
 }
 
-void SceneDirector::createSceneElement(PrimitiveBuilder& builder,
+void SceneDirector::createSceneElement(EntityFactory& factory,
                                        const DataContainer& data) {
-  builder.setData(data);
-  builder.buildPrimitive();
-  builder.buildTexture();
-  builder.buildMaterial();
-  builder.buildTransformation();
-  m_element_container.emplace_back(builder.getProduct());
-  m_current_element = builder.getProduct();
-  builder.reset();
+  m_current_scene_element = std::make_shared<SceneElement>();
+  factory.setData(data);
+  auto primitive = factory.createPrimitive();
+  auto material = factory.createMaterial();
+  m_current_scene_element->setMaterial(material);
+  m_current_scene_element->setPrimitive(primitive);
+  m_element_container.emplace_back(m_current_scene_element);
 }
 
 void SceneDirector::createWorld(WorldBuilder& builder,
@@ -197,7 +179,7 @@ void SceneDirector::createWorld(WorldBuilder& builder,
 }
 
 SceneElementPtr SceneDirector::getCurrentElement() const {
-  return m_current_element;
+  return m_current_scene_element;
 }
 
 SceneElementPtr SceneDirector::getSceneProduct() const {
