@@ -7,11 +7,6 @@
 #include "stochastic/random.h"
 #include "world.h"
 
-using std::list;
-using std::shared_ptr;
-using std::sort;
-using std::vector;
-
 bool World::intersect(const Ray& r, Intersection& record) {
   if (!m_bBox.intersectsRay(r)) {
     return false;
@@ -45,19 +40,6 @@ void World::add(SceneElementPtr item) {
   m_sceneElementContainer.push_back(item);
 }
 
-SceneElementContainer::iterator World::remove(SceneElementRawPtr item,
-                                              SceneElementPtr removedElem) {
-  auto it = std::find_if(
-      m_sceneElementContainer.begin(), m_sceneElementContainer.end(),
-      [&item](const SceneElementPtr& elem) { return item == elem.get(); });
-  if (it != m_sceneElementContainer.end()) {
-    removedElem = *it;
-    auto itret = m_sceneElementContainer.erase(it);
-    return itret;
-  }
-  return m_sceneElementContainer.end();
-}
-
 bool World::isWorld() const { return true; }
 
 void World::accept(BaseRenderer& renderer, const Ray& ray) {
@@ -73,22 +55,6 @@ SceneElementContainer& World::getChildren() { return m_sceneElementContainer; }
 void World::setLight(const PointLight& light) { m_light = light; }
 
 PointLight World::getLight() const { return m_light; }
-
-float World::pdf(const Point3D& origin, const Vec3D& direction) {
-  auto weight = 1.f / m_sceneElementContainer.size();
-  auto sum = 0.f;
-
-  for (const auto& object : m_sceneElementContainer)
-    sum += weight * object->pdf(origin, direction);
-
-  return sum;
-}
-
-Vec3D World::random(const Point3D& origin) {
-  auto int_size = static_cast<int>(m_sceneElementContainer.size());
-  return m_sceneElementContainer[Random::randomInteger(0, int_size - 1)]
-      ->random(origin);
-}
 
 BoundingBox World::getBoundingBox() const { return m_bBox; }
 

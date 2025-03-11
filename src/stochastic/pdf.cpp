@@ -26,11 +26,9 @@ void CosPdf::setFromW(const Vec3D &w) { onb.buildFromW(w); }
 PrimitivePdf::PrimitivePdf(const SceneElementRawPtr elem, const Point3D &origin)
     : m_element(elem), m_origin(origin) {}
 
-float PrimitivePdf::value(const Vec3D &direction) const {
-  return m_element->pdf(m_origin, direction);
-}
+float PrimitivePdf::value(const Vec3D &direction) const { return 1.f; }
 
-Vec3D PrimitivePdf::generate() const { return m_element->random(m_origin); }
+Vec3D PrimitivePdf::generate() const { return Vec3D(1.f, 1.f, 1.f); }
 
 CombinedPdf::CombinedPdf(StochasticPdfPtr pdf1, StochasticPdfPtr pdf2,
                          float ratio)

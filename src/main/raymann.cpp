@@ -163,11 +163,11 @@ int main() {
 
   auto canvas = Canvas(100, 100);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.54f);
+  auto camera = Camera(canvas.width(), canvas.height(), 1.54f);
   auto from = Point3D(278.f, 260.f, -830.f);
   auto to = Point3D(278.f, 278.f, 0.f);
   auto up = Vec3D(0.0f, 1.0f, 0.0f);
-  camera->setTransform(view_transform(from, to, up));
+  camera.setTransform(view_transform(from, to, up));
 
   auto samples_per_pixel = 10;
   auto material_depth = 5;

@@ -19,8 +19,6 @@ class SceneElement {
   virtual ~SceneElement() = default;
   virtual bool intersect(const Ray &r, Intersection &record);
   virtual void add(std::shared_ptr<SceneElement> item);
-  virtual std::vector<std::shared_ptr<SceneElement>>::iterator remove(
-      SceneElement *item, std::shared_ptr<SceneElement> removedElem);
   virtual bool isWorld() const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);
   virtual std::vector<std::shared_ptr<SceneElement>> getChildren() const;
@@ -30,8 +28,6 @@ class SceneElement {
   virtual void setLight(const PointLight &light);
   virtual PointLight getLight() const;
   virtual BoundingBox getBoundingBox() const;
-  virtual float pdf(const Point3D &origin, const Vec3D &direction);
-  virtual Vec3D random(const Point3D &origin);
   void setMaterial(MaterialPtr mat);
   const MaterialRawPtr getMaterial() const;
   void setPrimitive(PrimitivePtr pr);
@@ -40,6 +36,7 @@ class SceneElement {
   SceneElement *m_parent = nullptr;
   MaterialPtr m_material;
   PrimitivePtr m_geometric_primitive;
+  BoundingBox m_bBox;
 };
 
 using SceneElementPtr = std::shared_ptr<SceneElement>;

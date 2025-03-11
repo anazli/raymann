@@ -6,13 +6,12 @@
 #include "world.h"
 
 bool SceneElement::intersect(const Ray& r, Intersection& record) {
-  return m_geometric_primitive->intersect(r, record);
+  if (getBoundingBox().intersectsRay(r))
+    return m_geometric_primitive->intersect(r, record);
+  return false;
 }
 
 void SceneElement::add(SceneElementPtr item) {}
-
-SceneElementContainer::iterator SceneElement::remove(
-    SceneElementRawPtr item, SceneElementPtr removedElem) {}
 
 bool SceneElement::isWorld() const { return false; }
 
@@ -44,12 +43,4 @@ PointLight SceneElement::getLight() const { return PointLight(); }
 
 BoundingBox SceneElement::getBoundingBox() const {
   return m_geometric_primitive->worldBounds();
-}
-
-float SceneElement::pdf(const Point3D& origin, const Vec3D& direction) {
-  return 1.f / (2.f * PI);
-}
-
-Vec3D SceneElement::random(const Point3D& origin) {
-  return Vec3D(1.f, 0.f, 0.f);
 }
