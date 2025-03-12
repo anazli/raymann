@@ -6,7 +6,6 @@
 
 #include "acceleration/bvh.h"
 #include "application/error.h"
-#include "composite/world.h"
 #include "geometry/primitive.h"
 
 using std::isspace;
@@ -56,7 +55,7 @@ void handleStringsWithSlash(string &str) {
 }
 
 WavefrontReader::WavefrontReader(string_view file) : m_file(file) {
-  m_finalProduct = World::create();
+  m_finalProduct = SceneElement::create();
 }
 
 void WavefrontReader::parseInput() {
@@ -290,7 +289,7 @@ void WavefrontReader::parsePolygonEntry(string_view line) {
 }
 
 void WavefrontReader::parseGroupEntry(std::string_view line) {
-  m_currentGroup = World::create();
+  m_currentGroup = SceneElement::create();
   m_currentGroup->setLight(m_light);
   m_finalProduct->add(m_currentGroup);
 }

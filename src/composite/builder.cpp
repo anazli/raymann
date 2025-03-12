@@ -3,7 +3,6 @@
 #include "acceleration/bvh.h"
 #include "application/error.h"
 #include "builder.h"
-#include "composite/world.h"
 #include "geometry/cone.h"
 #include "geometry/cube.h"
 #include "geometry/cylinder.h"
@@ -136,7 +135,7 @@ MaterialPtr EntityFactory::createMaterial() {
 
 void WorldBuilder::reset() { m_world.reset(); }
 
-void WorldBuilder::createWorld() { m_world = World::create(); }
+void WorldBuilder::createWorld() { m_world = SceneElement::create(); }
 
 void WorldBuilder::addLight(const PointLight& light) {
   m_world->setLight(light);

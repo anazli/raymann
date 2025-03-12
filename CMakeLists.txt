@@ -3,6 +3,7 @@ project(raymann VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_BUILD_TYPE Debug) 
 project(raymann CXX)
 set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
@@ -30,8 +31,6 @@ add_library(${LIBRARY_NAME}
             src/composite/iterator.h
             src/composite/scene_element.cpp
             src/composite/scene_element.h
-            src/composite/world.cpp
-            src/composite/world.h
             src/container/canvas.cpp
             src/container/canvas.h
             src/distribution/bxdf.cpp

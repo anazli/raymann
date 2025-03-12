@@ -29,7 +29,4 @@ struct Intersection {
   Normal3D normal;
   // primitive of closest hit
   SceneElement* primitive = nullptr;
-  float minHitParam = std::numeric_limits<float>::max();
-  float max_ray_range = std::numeric_limits<float>::infinity();
-  bool hitFound = false;
 };

@@ -14,8 +14,11 @@
 class BaseRenderer;
 class StandardMaterial;
 
+enum SceneElementType { PRIMITIVE = 0, WORLD = 1 };
+
 class SceneElement {
  public:
+  SceneElement();
   virtual ~SceneElement() = default;
   virtual bool intersect(const Ray &r, Intersection &record);
   virtual void add(std::shared_ptr<SceneElement> item);
@@ -32,12 +35,17 @@ class SceneElement {
   const MaterialRawPtr getMaterial() const;
   void setPrimitive(PrimitivePtr pr);
 
+  static std::shared_ptr<SceneElement> create();
+
  protected:
   SceneElement *m_parent = nullptr;
   MaterialPtr m_material;
   PrimitivePtr m_geometric_primitive;
   BoundingBox m_bBox;
+  std::vector<std::shared_ptr<SceneElement>> m_children;
+  PointLight m_light;
 };
 
 using SceneElementPtr = std::shared_ptr<SceneElement>;
 using SceneElementRawPtr = SceneElement *;
+using SceneElementContainer = std::vector<SceneElementPtr>;
