@@ -16,7 +16,7 @@ bool Lambertian::scatter(const Ray& r_in, const Intersection& rec,
   // OrthoNormalBasis orthnb;
   // orthnb.buildFromW(rec.object->normal(point));
   // auto scatterDir = orthnb.local(Random::randomCosineDirection());
-  auto point = rec.getHitPoint(r_in);
+  auto point = rec.hit_point;
   auto target = point + Random::randomVectorOnUnitSphere() + Vec3D(rec.normal);
   scattered = Ray(point, target - point);
   m_pdf->setFromW(Vec3D(rec.normal));
