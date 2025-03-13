@@ -10,22 +10,26 @@ bool SceneElement::intersect(const Ray& r, Intersection& record) {
   if (!m_bBox.intersectsRay(r)) {
     return false;
   }
-  auto hit_found = false;
+
+  Intersection closest_hit = record;
+  bool hit_found = false;
   if (isWorld()) {
     for (const auto& child : getChildren()) {
-      if (child->intersect(r, record)) {
-        return true;
+      if (child->intersect(r, closest_hit)) {
+        hit_found = true;
+        if (closest_hit.min_hit < record.min_hit) {
+          record = closest_hit;
+        }
       }
     }
   } else {
-    auto rec = Intersection();
-    if (m_geometric_primitive->intersect(r, rec) &&
-        (rec.min_hit >= r.getMinRange() && rec.min_hit < r.getMaxRange())) {
+    if (m_geometric_primitive->intersect(r, closest_hit) &&
+        (closest_hit.min_hit >= r.getMinRange() &&
+         closest_hit.min_hit < r.getMaxRange())) {
       hit_found = true;
-      if (rec.min_hit < record.min_hit) {
-        rec.primitive = this;
-        rec.min_hit = rec.min_hit;
-        record = rec;
+      if (closest_hit.min_hit < record.min_hit) {
+        closest_hit.primitive = this;
+        record = closest_hit;
       }
     }
   }
@@ -62,6 +66,8 @@ void SceneElement::setPrimitive(PrimitivePtr pr) {
   m_geometric_primitive = pr;
   m_bBox = m_geometric_primitive->worldBounds();
 }
+
+PrimitivePtr SceneElement::getPrimitive() { return m_geometric_primitive; }
 
 std::shared_ptr<SceneElement> SceneElement::create() {
   return std::make_shared<SceneElement>();

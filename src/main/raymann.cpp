@@ -161,7 +161,7 @@ int main() {
   scene_director.createWorld(world_builder, light);
   auto world = scene_director.getSceneProduct();
 
-  auto canvas = Canvas(300, 300);
+  auto canvas = Canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   auto camera = Camera(canvas.width(), canvas.height(), 1.54f);
   auto from = Point3D(278.f, 260.f, -830.f);

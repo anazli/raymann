@@ -34,6 +34,7 @@ class SceneElement {
   void setMaterial(MaterialPtr mat);
   const MaterialRawPtr getMaterial() const;
   void setPrimitive(PrimitivePtr pr);
+  PrimitivePtr getPrimitive();
 
   static std::shared_ptr<SceneElement> create();
 
