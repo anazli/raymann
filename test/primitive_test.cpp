@@ -419,7 +419,7 @@ TEST_F(SphereTest, testingTheNextTest) {
 
 TEST_F(SphereTest, transformsSphere) {
   r = Ray(Point3D(0.0f, 0.0f, -5.0f), Vec3D(0.0f, 0.0f, 1.0f));
-  SceneElement* t = new Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f);
+  SceneElementNode* t = new Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f);
   auto transformation = Transformation(scale(2.0f, 2.0f, 2.0f));
   t->setTransformation(transformation);
   ASSERT_TRUE(t->intersect(r, rec));
@@ -429,7 +429,7 @@ TEST_F(SphereTest, transformsSphere) {
 
 TEST_F(SphereTest, translatesSphere) {
   r = Ray(Point3D(0.0f, 0.0f, -5.0f), Vec3D(0.0f, 0.0f, 1.0f));
-  SceneElement* t = new Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f);
+  SceneElementNode* t = new Sphere(Point3D(0.0f, 0.0f, 0.0f), 1.0f);
   auto transformation = Transformation(translation(5.0f, 0.0f, 0.0f));
   t->setTransformation(transformation);
   ASSERT_FALSE(t->intersect(r, rec));

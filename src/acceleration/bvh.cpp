@@ -42,8 +42,8 @@ WorldPair BVHierarchy::splitElementsOf(SceneElementContainer &worldList,
                                        const BoundingBox &worldBox) const {
   auto boxPair = splitBoundsOf(worldBox);
 
-  auto leftWorld = SceneElement::create();
-  auto rightWorld = SceneElement::create();
+  auto leftWorld = SceneElementNode::create();
+  auto rightWorld = SceneElementNode::create();
 
   WorldPair worldPair(leftWorld, rightWorld);
   auto it = worldList.begin();

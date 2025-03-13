@@ -8,7 +8,7 @@
 
 #include "tools/ray.h"
 
-class SceneElement;
+class SceneElementNode;
 
 struct Intersection {
   // get the minimum positive hit parameter from an intersection
@@ -28,5 +28,5 @@ struct Intersection {
   // geometric normal of closest hit point in world space
   Normal3D normal;
   // primitive of closest hit
-  SceneElement* closest_scene_element = nullptr;
+  SceneElementNode* closest_scene_element = nullptr;
 };

@@ -55,7 +55,7 @@ void handleStringsWithSlash(string &str) {
 }
 
 WavefrontReader::WavefrontReader(string_view file) : m_file(file) {
-  m_finalProduct = SceneElement::create();
+  m_finalProduct = SceneElementNode::create();
 }
 
 void WavefrontReader::parseInput() {
@@ -197,7 +197,7 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
           }
           auto primitive =
               Triangle::create(std::initializer_list<Point3D>{p1, p2, p3});
-          auto scene_element = std::make_shared<SceneElement>();
+          auto scene_element = std::make_shared<SceneElementNode>();
           scene_element->setMaterial(m_material);
           scene_element->setPrimitive(primitive);
           if (m_currentGroup) {  // if we don't parse any g entry
@@ -250,7 +250,7 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
         else
           n3 = Normal3D(m_verticesNormals[stoi(o) - 1]);
 
-        auto scene_element = std::make_shared<SceneElement>();
+        auto scene_element = std::make_shared<SceneElementNode>();
         auto primitive = SmoothTriangle::create(p1, p2, p3, n1, n2, n3);
         scene_element->setMaterial(m_material);
         scene_element->setPrimitive(primitive);
@@ -289,7 +289,7 @@ void WavefrontReader::parsePolygonEntry(string_view line) {
 }
 
 void WavefrontReader::parseGroupEntry(std::string_view line) {
-  m_currentGroup = SceneElement::create();
+  m_currentGroup = SceneElementNode::create();
   m_currentGroup->setLight(m_light);
   m_finalProduct->add(m_currentGroup);
 }
@@ -299,7 +299,7 @@ void WavefrontReader::triangulatePolygon(vector<Vec3D> vertices) {
     Point3D p1 = Point3D(vertices[0]);
     Point3D p2 = Point3D(vertices[i]);
     Point3D p3 = Point3D(vertices[i + 1]);
-    auto scene_element = std::shared_ptr<SceneElement>();
+    auto scene_element = std::shared_ptr<SceneElementNode>();
     auto primitive =
         Triangle::create(std::initializer_list<Point3D>{p1, p2, p3});
     scene_element->setMaterial(m_material);

@@ -16,18 +16,18 @@ class StandardMaterial;
 
 enum SceneElementType { PRIMITIVE = 0, WORLD = 1 };
 
-class SceneElement {
+class SceneElementNode {
  public:
-  SceneElement();
-  virtual ~SceneElement() = default;
+  SceneElementNode();
+  virtual ~SceneElementNode() = default;
   virtual bool intersect(const Ray &r, Intersection &record);
-  virtual void add(std::shared_ptr<SceneElement> item);
+  virtual void add(std::shared_ptr<SceneElementNode> item);
   virtual bool isWorld() const;
   virtual void accept(BaseRenderer &renderer, const Ray &ray);
-  virtual std::vector<std::shared_ptr<SceneElement>> getChildren() const;
-  virtual std::vector<std::shared_ptr<SceneElement>> &getChildren();
-  virtual void setParent(SceneElement *parent);
-  virtual SceneElement *getParent() const;
+  virtual std::vector<std::shared_ptr<SceneElementNode>> getChildren() const;
+  virtual std::vector<std::shared_ptr<SceneElementNode>> &getChildren();
+  virtual void setParent(SceneElementNode *parent);
+  virtual SceneElementNode *getParent() const;
   virtual void setLight(const PointLight &light);
   virtual PointLight getLight() const;
   virtual BoundingBox getBoundingBox() const;
@@ -36,17 +36,17 @@ class SceneElement {
   void setPrimitive(PrimitivePtr pr);
   PrimitivePtr getPrimitive();
 
-  static std::shared_ptr<SceneElement> create();
+  static std::shared_ptr<SceneElementNode> create();
 
  protected:
-  SceneElement *m_parent = nullptr;
+  SceneElementNode *m_parent = nullptr;
   MaterialPtr m_material;
   PrimitivePtr m_geometric_primitive;
   BoundingBox m_bBox;
-  std::vector<std::shared_ptr<SceneElement>> m_children;
+  std::vector<std::shared_ptr<SceneElementNode>> m_children;
   PointLight m_light;
 };
 
-using SceneElementPtr = std::shared_ptr<SceneElement>;
-using SceneElementRawPtr = SceneElement *;
+using SceneElementPtr = std::shared_ptr<SceneElementNode>;
+using SceneElementRawPtr = SceneElementNode *;
 using SceneElementContainer = std::vector<SceneElementPtr>;

@@ -4,9 +4,9 @@
 #include "renderers/renderer.h"
 #include "scene_element.h"
 
-SceneElement::SceneElement() {}
+SceneElementNode::SceneElementNode() {}
 
-bool SceneElement::intersect(const Ray& r, Intersection& record) {
+bool SceneElementNode::intersect(const Ray& r, Intersection& record) {
   if (!m_bBox.intersectsRay(r)) {
     return false;
   }
@@ -36,49 +36,53 @@ bool SceneElement::intersect(const Ray& r, Intersection& record) {
   return hit_found;
 }
 
-void SceneElement::add(SceneElementPtr item) {
+void SceneElementNode::add(SceneElementPtr item) {
   item->setParent(this);
   m_bBox.addBox(item->getBoundingBox());
   m_children.emplace_back(item);
 }
 
-bool SceneElement::isWorld() const { return !m_children.empty(); }
+bool SceneElementNode::isWorld() const { return !m_children.empty(); }
 
-void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
+void SceneElementNode::accept(BaseRenderer& renderer, const Ray& ray) {
   renderer.visitSceneElement(this, ray);
 }
 
-std::vector<std::shared_ptr<SceneElement>> SceneElement::getChildren() const {
+std::vector<std::shared_ptr<SceneElementNode>> SceneElementNode::getChildren()
+    const {
   return m_children;
 }
 
-std::vector<std::shared_ptr<SceneElement>>& SceneElement::getChildren() {
+std::vector<std::shared_ptr<SceneElementNode>>&
+SceneElementNode::getChildren() {
   return m_children;
 }
 
-void SceneElement::setMaterial(MaterialPtr mat) { m_material = mat; }
+void SceneElementNode::setMaterial(MaterialPtr mat) { m_material = mat; }
 
-const MaterialRawPtr SceneElement::getMaterial() const {
+const MaterialRawPtr SceneElementNode::getMaterial() const {
   return m_material.get();
 }
 
-void SceneElement::setPrimitive(PrimitivePtr pr) {
+void SceneElementNode::setPrimitive(PrimitivePtr pr) {
   m_geometric_primitive = pr;
   m_bBox = m_geometric_primitive->worldBounds();
 }
 
-PrimitivePtr SceneElement::getPrimitive() { return m_geometric_primitive; }
+PrimitivePtr SceneElementNode::getPrimitive() { return m_geometric_primitive; }
 
-std::shared_ptr<SceneElement> SceneElement::create() {
-  return std::make_shared<SceneElement>();
+std::shared_ptr<SceneElementNode> SceneElementNode::create() {
+  return std::make_shared<SceneElementNode>();
 }
 
-void SceneElement::setParent(SceneElementRawPtr parent) { m_parent = parent; }
+void SceneElementNode::setParent(SceneElementRawPtr parent) {
+  m_parent = parent;
+}
 
-SceneElementRawPtr SceneElement::getParent() const { return m_parent; }
+SceneElementRawPtr SceneElementNode::getParent() const { return m_parent; }
 
-void SceneElement::setLight(const PointLight& light) { m_light = light; }
+void SceneElementNode::setLight(const PointLight& light) { m_light = light; }
 
-PointLight SceneElement::getLight() const { return m_light; }
+PointLight SceneElementNode::getLight() const { return m_light; }
 
-BoundingBox SceneElement::getBoundingBox() const { return m_bBox; }
+BoundingBox SceneElementNode::getBoundingBox() const { return m_bBox; }

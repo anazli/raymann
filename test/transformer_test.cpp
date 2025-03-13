@@ -186,7 +186,7 @@ TEST_F(TransformerTest, appliesTransformationChaining) {
 }
 
 TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
-  SceneElement *s = new Sphere();
+  SceneElementNode *s = new Sphere();
   auto t = Transformation(translation(0.0f, 1.0f, 0.0f));
   s->setTransformation(t);
   auto norm = s->normal(Point3D(0.0f, 1.70711f, -0.70711));

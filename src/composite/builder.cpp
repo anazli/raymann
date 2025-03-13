@@ -135,7 +135,7 @@ MaterialPtr EntityFactory::createMaterial() {
 
 void WorldBuilder::reset() { m_world.reset(); }
 
-void WorldBuilder::createWorld() { m_world = SceneElement::create(); }
+void WorldBuilder::createWorld() { m_world = SceneElementNode::create(); }
 
 void WorldBuilder::addLight(const PointLight& light) {
   m_world->setLight(light);
@@ -158,7 +158,7 @@ SceneElementPtr WorldBuilder::getProductWithBVHierarchy() {
 
 void SceneDirector::createSceneElement(EntityFactory& factory,
                                        const DataContainer& data) {
-  m_current_scene_element = std::make_shared<SceneElement>();
+  m_current_scene_element = std::make_shared<SceneElementNode>();
   factory.setData(data);
   auto primitive = factory.createPrimitive();
   auto material = factory.createMaterial();
