@@ -2,7 +2,7 @@
 
 #include "stochastic/random.h"
 
-StochasticSampler::StochasticSampler(const BaseCameraPtr &cam, int pixelSamples,
+StochasticSampler::StochasticSampler(const Camera &cam, int pixelSamples,
                                      int materialDepth)
     : m_camera(cam),
       m_samplesPerPixel(pixelSamples),
@@ -24,7 +24,7 @@ void StochasticSampler::addRandomSample(Vec3D &outputColor,
   outputColor = outputColor + tempColor;
 }
 
-BruteForceSampler::BruteForceSampler(const BaseCameraPtr &cam, int pixelSamples,
+BruteForceSampler::BruteForceSampler(const Camera &cam, int pixelSamples,
                                      int materialDepth)
     : StochasticSampler(cam, pixelSamples, materialDepth) {}
 
@@ -34,7 +34,7 @@ Vec3D BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
     auto col = Vec3D();
     auto x = renderer->getPixelInfoX();
     auto y = renderer->getPixelInfoY();
-    auto interval = m_camera->pixelSize() / 2.f;
+    auto interval = m_camera.pixelSize() / 2.f;
     for (int s = 0; s < m_samplesPerPixel; ++s) {
       auto ax = x - interval;
       auto bx = x + interval;
@@ -44,7 +44,7 @@ Vec3D BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
       auto by = y + interval;
       auto v = ay + Random::randomNumber() * (by - ay);
 
-      auto newRay = m_camera->getRay(u, v);
+      auto newRay = m_camera.getRay(u, v);
       Vec3D sColor = renderer->computeColor(world, newRay, m_materialDepth);
       addRandomSample(col, sColor);
     }
@@ -53,7 +53,7 @@ Vec3D BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
   return Vec3D();
 }
 
-StratifiedSampler::StratifiedSampler(const BaseCameraPtr &cam, int pixelSamples,
+StratifiedSampler::StratifiedSampler(const Camera &cam, int pixelSamples,
                                      int materialDepth)
     : StochasticSampler(cam, pixelSamples, materialDepth) {}
 
@@ -64,8 +64,8 @@ Vec3D StratifiedSampler::computeColor(BaseRendererRawPtr renderer,
     auto x = renderer->getPixelInfoX();
     auto y = renderer->getPixelInfoY();
     auto sqrtN = floor(sqrt(m_samplesPerPixel));
-    auto stratumInterval = m_camera->pixelSize() / 2.f;
-    auto strataInterval = m_camera->pixelSize() / sqrtN;
+    auto stratumInterval = m_camera.pixelSize() / 2.f;
+    auto strataInterval = m_camera.pixelSize() / sqrtN;
     for (int i = 0; i < sqrtN; ++i) {
       for (int j = 0; j < sqrtN; ++j) {
         auto ax = x - stratumInterval + i * strataInterval;
@@ -76,7 +76,7 @@ Vec3D StratifiedSampler::computeColor(BaseRendererRawPtr renderer,
         auto by = ay + strataInterval;
         auto v = ay + Random::randomNumber() * (by - ay);
 
-        auto newRay = m_camera->getRay(u, v);
+        auto newRay = m_camera.getRay(u, v);
         Vec3D sColor = renderer->computeColor(world, newRay, m_materialDepth);
         addRandomSample(col, sColor);
       }

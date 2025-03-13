@@ -1,7 +1,7 @@
 #pragma once
 
 #include "composite/scene_element.h"
-#include "tools/tools.h"
+#include "math_utils/math_utils.h"
 
 class StochasticPdf {
  public:

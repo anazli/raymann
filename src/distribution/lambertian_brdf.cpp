@@ -5,7 +5,7 @@
 #include "distribution/lambertian_brdf.h"
 
 #include "lambertian_brdf.h"
-#include "tools/tools.h"
+#include "math_utils/math_utils.h"
 
 LambertianBrdf::LambertianBrdf(const Spectrum& sp)
     : Bxdf(BxdfType(BxdfType::BSDF_REFLECTION | BxdfType::BSDF_DIFFUSE)) {}

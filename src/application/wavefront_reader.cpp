@@ -6,7 +6,7 @@
 
 #include "acceleration/bvh.h"
 #include "application/error.h"
-#include "composite/world.h"
+#include "geometry/primitive.h"
 
 using std::isspace;
 using std::istringstream;
@@ -55,7 +55,7 @@ void handleStringsWithSlash(string &str) {
 }
 
 WavefrontReader::WavefrontReader(string_view file) : m_file(file) {
-  m_finalProduct = World::create();
+  m_finalProduct = SceneElementNode::create();
 }
 
 void WavefrontReader::parseInput() {
@@ -195,13 +195,15 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
             p2 = Point3D(m_verticesNormalized[stoi(j) - 1]);
             p3 = Point3D(m_verticesNormalized[stoi(k) - 1]);
           }
-          SceneElementPtr tr =
+          auto primitive =
               Triangle::create(std::initializer_list<Point3D>{p1, p2, p3});
-          tr->setMaterial(m_material);
+          auto scene_element = std::make_shared<SceneElementNode>();
+          scene_element->setMaterial(m_material);
+          scene_element->setPrimitive(primitive);
           if (m_currentGroup) {  // if we don't parse any g entry
-            m_currentGroup->add(tr);
+            m_currentGroup->add(scene_element);
           } else {
-            m_finalProduct->add(tr);
+            m_finalProduct->add(scene_element);
           }
           m_triangles.push_back(Triangle({p1, p2, p3}));
         } catch (...) {
@@ -248,12 +250,14 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
         else
           n3 = Normal3D(m_verticesNormals[stoi(o) - 1]);
 
-        SceneElementPtr tr = SmoothTriangle::create(p1, p2, p3, n1, n2, n3);
-        tr->setMaterial(m_material);
+        auto scene_element = std::make_shared<SceneElementNode>();
+        auto primitive = SmoothTriangle::create(p1, p2, p3, n1, n2, n3);
+        scene_element->setMaterial(m_material);
+        scene_element->setPrimitive(primitive);
         if (m_currentGroup) {  // if we don't parse any g entry
-          m_currentGroup->add(tr);
+          m_currentGroup->add(scene_element);
         } else {
-          m_finalProduct->add(tr);
+          m_finalProduct->add(scene_element);
         }
       }
     } catch (...) {
@@ -285,7 +289,7 @@ void WavefrontReader::parsePolygonEntry(string_view line) {
 }
 
 void WavefrontReader::parseGroupEntry(std::string_view line) {
-  m_currentGroup = World::create();
+  m_currentGroup = SceneElementNode::create();
   m_currentGroup->setLight(m_light);
   m_finalProduct->add(m_currentGroup);
 }
@@ -295,13 +299,15 @@ void WavefrontReader::triangulatePolygon(vector<Vec3D> vertices) {
     Point3D p1 = Point3D(vertices[0]);
     Point3D p2 = Point3D(vertices[i]);
     Point3D p3 = Point3D(vertices[i + 1]);
-    SceneElementPtr tr =
+    auto scene_element = std::shared_ptr<SceneElementNode>();
+    auto primitive =
         Triangle::create(std::initializer_list<Point3D>{p1, p2, p3});
-    tr->setMaterial(m_material);
+    scene_element->setMaterial(m_material);
+    scene_element->setPrimitive(primitive);
     if (m_currentGroup) {
-      m_currentGroup->add(tr);
+      m_currentGroup->add(scene_element);
     } else {
-      m_finalProduct->add(tr);
+      m_finalProduct->add(scene_element);
     }
     m_triangles.push_back(Triangle({p1, p2, p3}));
   }

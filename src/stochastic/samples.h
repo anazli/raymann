@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-#include "tools/tools.h"
+#include "math_utils/math_utils.h"
 
 Vec2D concentricSampleDisk(const Vec2D& u);
 

@@ -7,7 +7,7 @@
 #include <limits>
 #include <vector>
 
-#include "tools/vec3.h"
+#include "math_utils/vec3.h"
 
 // RGB spectrum (might change to EM)
 class Spectrum {

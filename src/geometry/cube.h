@@ -2,21 +2,22 @@
 
 #include <limits>
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 #include "stochastic/random.h"
 
-class Cube : public SceneElement {
+class Cube : public Primitive {
  public:
-  Cube() {
-    m_bBox.minPoint() = Point3D(-1.f, -1.f, -1.f);
-    m_bBox.maxPoint() = Point3D(1.f, 1.f, 1.f);
+  Cube(const Transformation &tr = Transformation()) : Primitive(tr) {
+    m_object_box.minPoint() = Point3D(-1.f, -1.f, -1.f);
+    m_object_box.maxPoint() = Point3D(1.f, 1.f, 1.f);
+    m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
   ~Cube() override = default;
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
     auto xMinMax = hitAxis(origin.x(), direction.x());
     auto yMinMax = hitAxis(origin.y(), direction.y());
     auto zMinMax = hitAxis(origin.z(), direction.z());
@@ -26,8 +27,9 @@ class Cube : public SceneElement {
     if (tmin > tmax) {
       return false;
     }
-    record.min_hit = Intersection::getMinimumHitParameter(tmin, tmax);
-    record.hit_point = record.getHitPoint(transformed_ray);
+    record.thit = Intersection::getMinHitParam(transf_ray, {tmin, tmax});
+    record.hit_point = record.getHitPoint(transf_ray);
+    record.normal = normal(record.hit_point);
     return true;
   }
 
@@ -47,7 +49,9 @@ class Cube : public SceneElement {
     return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 
-  static SceneElementPtr create() { return std::make_shared<Cube>(); }
+  static PrimitivePtr create(const Transformation &tr = Transformation()) {
+    return std::make_shared<Cube>(tr);
+  }
 
  private:
   std::pair<float, float> hitAxis(float origin, float direction) {

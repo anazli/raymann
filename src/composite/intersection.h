@@ -6,53 +6,27 @@
 
 #include <limits>
 
-#include "tools/ray.h"
+#include "math_utils/ray.h"
 
-class SceneElement;
-class Bsdf;
+class SceneElementNode;
 
-struct IntersectionParameters {
-  Point3D hit_point;
-  Vec2D uv;
-  Vec3D wo;
-  Vec3D dpdu, dpdv;
-  Normal3D dndu, dndv;
-  Normal3D n;
-};
-
-class Intersection {
- public:
-  Intersection() = default;
-  Intersection(const IntersectionParameters &parameters);
-  void computeDifferentials(const Ray &r);
-  struct {
-    Normal3D n;
-    Vec3D dpdu, dpdv;
-    Normal3D dndu, dndv;
-  } ShadingGeometry;
-  Bsdf *bsdf;
-  Vec2D uv;
-  Vec3D dpdu, dpdv;
-  Normal3D dndu, dndv;
-  void evaluateScattering(const Ray &r);
-  mutable Vec3D dpdx, dpdy;
-  mutable float dudx = 0.f, dvdx = 0.f, dudy = 0.f, dvdy = 0.f;
+struct Intersection {
   // get the minimum positive hit parameter from an intersection
-  static float getMinimumHitParameter(float t1, float t2);
-  float min_hit = std::numeric_limits<float>::infinity();
-  Point3D getHitPoint(const Ray &r) const { return r.position(min_hit); }
+  static float getMinHitParam(const Ray& r, std::vector<float>&& tparams) {
+    auto thit = r.getMaxRange();
+    for (const auto t : tparams) {
+      if (t >= r.getMinRange() && t < thit) thit = t;
+    }
+    return thit;
+  }
+  float thit = std::numeric_limits<float>::infinity();
+  Point3D getHitPoint(const Ray& r) const { return r.position(thit); }
   // point of intersection test in world space
   Point3D hit_point;
   // negative ray direction
   Vec3D omega;
-  bool inside = false;
-  Point3D over_point_from_refl_surf;
-  Point3D under_point_from_refrac_surf;
-  // normal of closest hit in world space
-  Normal3D surface_normal;
+  // geometric normal of closest hit point in world space
+  Normal3D normal;
   // primitive of closest hit
-  SceneElement *primitive = nullptr;
-  float minHitParam = std::numeric_limits<float>::max();
-  bool hitFound = false;
-  float max_ray_range = std::numeric_limits<float>::infinity();
+  SceneElementNode* closest_scene_element = nullptr;
 };

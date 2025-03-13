@@ -11,10 +11,8 @@ class BaseRenderer {
  public:
   BaseRenderer() = default;
   virtual ~BaseRenderer() = default;
-  virtual void visitSceneElementLeaf(const SceneElementRawPtr elementLeaf,
+  virtual void visitSceneElementNode(const SceneElementRawPtr elementComp,
                                      const Ray &ray) = 0;
-  virtual void visitSceneElementComposite(const SceneElementRawPtr elementComp,
-                                          const Ray &ray) = 0;
   virtual Vec3D computeColor(const SceneElementRawPtr world, const Ray &ray,
                              int rec = 5) = 0;
   virtual void attachStochasticMethod(

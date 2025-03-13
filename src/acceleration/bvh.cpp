@@ -42,21 +42,21 @@ WorldPair BVHierarchy::splitElementsOf(SceneElementContainer &worldList,
                                        const BoundingBox &worldBox) const {
   auto boxPair = splitBoundsOf(worldBox);
 
-  auto leftWorld = std::make_shared<World>();
-  auto rightWorld = std::make_shared<World>();
+  auto leftWorld = SceneElementNode::create();
+  auto rightWorld = SceneElementNode::create();
 
   WorldPair worldPair(leftWorld, rightWorld);
   auto it = worldList.begin();
   while (it != worldList.end()) {
     if (*it != nullptr) {
-      if (boxPair.first.containsBoundingBox((*it)->getBoundingBox())) {
+      if (boxPair.first.containsBoundingBox((*it)->getBounds())) {
         SceneElementPtr removedElem = *it;
         it = worldList.erase(it);
         if (removedElem) {
           worldPair.first->add(removedElem);
           worldPair.first->setLight(removedElem->getParent()->getLight());
         }
-      } else if (boxPair.second.containsBoundingBox((*it)->getBoundingBox())) {
+      } else if (boxPair.second.containsBoundingBox((*it)->getBounds())) {
         SceneElementPtr removedElem = *it;
         it = worldList.erase(it);
         if (removedElem) {
@@ -76,7 +76,7 @@ void BVHierarchy::divideWorld(const SceneElementPtr &world,
   if (world->isWorld()) {
     if (world->getChildren().size() >= threshold) {
       WorldPair worldpair =
-          splitElementsOf(world->getChildren(), world->getBoundingBox());
+          splitElementsOf(world->getChildren(), world->getBounds());
       if (!worldpair.first->getChildren().empty()) {
         world->add(worldpair.first);
       }

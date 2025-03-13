@@ -4,7 +4,7 @@
 
 #include "color/spectrum.h"
 #include "composite/intersection.h"
-#include "tools/vec3.h"
+#include "math_utils/vec3.h"
 
 class Texture {
  public:

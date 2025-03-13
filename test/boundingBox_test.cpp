@@ -77,14 +77,14 @@ TEST_F(BoundingBoxTest, transformsBoundingBox) {
 }
 
 TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
-  PrimitiveBuilder builder;
+  EntityFactory builder;
   DataContainer data;
   data.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(
           app::TRANSFORMATION_MATRIX,
           translation(Vec3D(1.f, -3.f, 5.f)) * scale(Vec3D(0.5f, 2.f, 4.f)));
   builder.setData(data);
-  builder.buildPrimitive();
+  builder.createPrimitive();
   builder.buildTransformation();
   auto p = builder.getProduct()->getBoundingBox();
 
@@ -97,14 +97,14 @@ TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   WorldBuilder world_builder;
   world_builder.createWorld();
 
-  PrimitiveBuilder primitive_builder;
+  EntityFactory primitive_builder;
   DataContainer data;
   data.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(
           app::TRANSFORMATION_MATRIX,
           translation(Vec3D(2.f, 5.f, -3.f)) * scale(Vec3D(2.f, 2.f, 2.f)));
   primitive_builder.setData(data);
-  primitive_builder.buildPrimitive();
+  primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
   primitive_builder.reset();
@@ -117,10 +117,10 @@ TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
       .setProperty(app::CYLINDER_Y_MAX, 2.f)
       .setProperty(app::CYLINDER_CLOSED, true);
   primitive_builder.setData(data);
-  primitive_builder.buildPrimitive();
+  primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
-  BoundingBox p = world_builder.getProduct()->getBoundingBox();
+  BoundingBox p = world_builder.getProduct()->getBounds();
 
   float eps = 1E-4f;
   comparePointsApprox(p.minPoint(), Point3D(-4.5f, -3.f, -5.f), eps);
@@ -216,7 +216,7 @@ TEST_F(BoundingBoxTest, splitBox) {
 }
 
 TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
-  PrimitiveBuilder primitive_builder;
+  EntityFactory primitive_builder;
   WorldBuilder world_builder;
 
   world_builder.createWorld();
@@ -225,7 +225,7 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
   data1.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, 0.f, 0.f));
   primitive_builder.setData(data1);
-  primitive_builder.buildPrimitive();
+  primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
   auto sphere1 = primitive_builder.getProduct();
@@ -235,7 +235,7 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
   data2.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(2.f, 0.f, 0.f));
   primitive_builder.setData(data2);
-  primitive_builder.buildPrimitive();
+  primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
   auto sphere2 = primitive_builder.getProduct();
@@ -244,15 +244,14 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
   DataContainer data3;
   data3.setProperty(app::PRIMITIVE_TYPE, app::SPHERE);
   primitive_builder.setData(data3);
-  primitive_builder.buildPrimitive();
+  primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
   auto sphere3 = primitive_builder.getProduct();
   primitive_builder.reset();
 
   auto world = world_builder.getProduct();
-  WorldPair wp =
-      bvh.splitElementsOf(world->getChildren(), world->getBoundingBox());
+  WorldPair wp = bvh.splitElementsOf(world->getChildren(), world->getBounds());
 
   ASSERT_EQ(world->getChildren().size(), 1);
   ASSERT_TRUE((*world->getChildren().begin()).get() == sphere3.get());
@@ -266,7 +265,7 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
 
 TEST_F(BoundingBoxTest, divideWorld) {
   WorldBuilder world_builder;
-  PrimitiveBuilder primitive_builder;
+  EntityFactory primitive_builder;
 
   world_builder.createWorld();
 
@@ -274,7 +273,7 @@ TEST_F(BoundingBoxTest, divideWorld) {
   data1.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, -2.f, 0.f));
   primitive_builder.setData(data1);
-  primitive_builder.buildPrimitive();
+  primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
   auto sphere1 = primitive_builder.getProduct();
@@ -284,7 +283,7 @@ TEST_F(BoundingBoxTest, divideWorld) {
   data2.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, 2.f, 0.f));
   primitive_builder.setData(data2);
-  primitive_builder.buildPrimitive();
+  primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
   auto sphere2 = primitive_builder.getProduct();
@@ -294,7 +293,7 @@ TEST_F(BoundingBoxTest, divideWorld) {
   data3.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, scale(4.f, 4.f, 4.f));
   primitive_builder.setData(data3);
-  primitive_builder.buildPrimitive();
+  primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
   auto sphere3 = primitive_builder.getProduct();

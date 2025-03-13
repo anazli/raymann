@@ -2,25 +2,27 @@
 
 #include <limits>
 
-#include "composite/scene_element.h"
+#include "geometry/primitive.h"
 
-class Cone : public SceneElement {
+class Cone : public Primitive {
  public:
-  Cone(float minY = -std::numeric_limits<float>::max(),
+  Cone(const Transformation &tr = Transformation(),
+       float minY = -std::numeric_limits<float>::max(),
        float maxY = std::numeric_limits<float>::max(), bool closed = false)
-      : m_minimumY(minY), m_maximumY(maxY), m_closed(closed) {
+      : m_minimumY(minY), m_maximumY(maxY), m_closed(closed), Primitive(tr) {
     if (!closed) {
-      m_bBox.minPoint() =
+      m_object_box.minPoint() =
           Point3D(-limit::infinity(), -limit::infinity(), -limit::infinity());
-      m_bBox.maxPoint() =
+      m_object_box.maxPoint() =
           Point3D(limit::infinity(), limit::infinity(), limit::infinity());
     } else {
       auto a = fabs(m_minimumY);
       auto b = fabs(m_maximumY);
       auto lim = std::max(a, b);
-      m_bBox.minPoint() = Point3D(-lim, m_minimumY, -lim);
-      m_bBox.maxPoint() = Point3D(lim, m_maximumY, lim);
+      m_object_box.minPoint() = Point3D(-lim, m_minimumY, -lim);
+      m_object_box.maxPoint() = Point3D(lim, m_maximumY, lim);
     }
+    m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
   ~Cone() override = default;
 
@@ -28,9 +30,9 @@ class Cone : public SceneElement {
   float maximumY() const { return m_maximumY; }
 
   bool intersect(const Ray &r, Intersection &record) override {
-    auto transformed_ray = m_transformation.worldToObjectSpace(r);
-    auto origin = transformed_ray.origin();
-    auto direction = transformed_ray.direction();
+    auto transf_ray = m_transformation.worldToObjectSpace(r);
+    auto origin = transf_ray.origin();
+    auto direction = transf_ray.direction();
     auto rdx = direction.x();
     auto rox = origin.x();
     auto rdy = direction.y();
@@ -65,10 +67,11 @@ class Cone : public SceneElement {
       }
     }
     if (hitAnything) {
-      record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
-      record.hit_point = record.getHitPoint(transformed_ray);
+      record.thit = Intersection::getMinHitParam(transf_ray, {t1, t2});
+      record.hit_point = record.getHitPoint(transf_ray);
+      record.normal = normal(record.hit_point);
     }
-    if (intersectCaps(transformed_ray, record)) hitAnything = true;
+    if (intersectCaps(transf_ray, record)) hitAnything = true;
     return hitAnything;
   }
   Normal3D normal(const Point3D &p) const override {
@@ -86,10 +89,11 @@ class Cone : public SceneElement {
 
   bool isClosed() const { return m_closed; }
 
-  static SceneElementPtr create(float minY = -std::numeric_limits<float>::max(),
-                                float maxY = std::numeric_limits<float>::max(),
-                                bool closed = false) {
-    return std::make_shared<Cone>(minY, maxY, closed);
+  static PrimitivePtr create(const Transformation &tr = Transformation(),
+                             float minY = -std::numeric_limits<float>::max(),
+                             float maxY = std::numeric_limits<float>::max(),
+                             bool closed = false) {
+    return std::make_shared<Cone>(tr, minY, maxY, closed);
   }
 
  private:
@@ -119,7 +123,7 @@ class Cone : public SceneElement {
       t2 = t;
       intersectsCap = true;
     }
-    record.min_hit = Intersection::getMinimumHitParameter(t1, t2);
+    record.thit = Intersection::getMinHitParam(r, {t1, t2});
     return intersectsCap;
   }
 };

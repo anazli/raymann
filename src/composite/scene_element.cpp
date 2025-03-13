@@ -3,83 +3,79 @@
 #include "iterator.h"
 #include "renderers/renderer.h"
 #include "scene_element.h"
-#include "world.h"
 
-bool SceneElement::intersect(const Ray& r, Intersection& record) {
-  return false;
+bool SceneElementNode::intersect(const Ray& r, Intersection& record) {
+  if (!m_bBox.intersectsRay(r)) {
+    return false;
+  }
+
+  Intersection closest_hit = record;
+  bool hit_found = false;
+  if (isWorld()) {
+    for (const auto& child : getChildren()) {
+      if (child->intersect(r, closest_hit)) {
+        hit_found = true;
+        if (closest_hit.thit < record.thit) {
+          record = closest_hit;
+        }
+      }
+    }
+  } else {
+    if (m_geometric_primitive->intersect(r, closest_hit) &&
+        (closest_hit.thit >= r.getMinRange() &&
+         closest_hit.thit < r.getMaxRange())) {
+      hit_found = true;
+      if (closest_hit.thit < record.thit) {
+        closest_hit.closest_scene_element = this;
+        record = closest_hit;
+      }
+    }
+  }
+  return hit_found;
 }
 
-void SceneElement::add(SceneElementPtr item) {}
-
-SceneElementContainer::iterator SceneElement::remove(
-    SceneElementRawPtr item, SceneElementPtr removedElem) {}
-
-bool SceneElement::isWorld() const { return false; }
-
-Normal3D SceneElement::normal(const Point3D& p) const { return Normal3D(); }
-
-void SceneElement::accept(BaseRenderer& renderer, const Ray& ray) {
-  renderer.visitSceneElementLeaf(this, ray);
+void SceneElementNode::add(SceneElementPtr item) {
+  item->setParent(this);
+  m_bBox.addBox(item->getBounds());
+  m_children.emplace_back(item);
 }
 
-SceneElementContainer SceneElement::getChildren() const {
-  return SceneElementContainer();
+bool SceneElementNode::isWorld() const { return !m_children.empty(); }
+
+void SceneElementNode::accept(BaseRenderer& renderer, const Ray& ray) {
+  renderer.visitSceneElementNode(this, ray);
 }
 
-std::vector<std::shared_ptr<SceneElement> >& SceneElement::getChildren() {}
+std::vector<std::shared_ptr<SceneElementNode>>&
+SceneElementNode::getChildren() {
+  return m_children;
+}
 
-void SceneElement::setMaterial(MaterialPtr mat) { m_material = mat; }
+void SceneElementNode::setMaterial(MaterialPtr mat) { m_material = mat; }
 
-const MaterialRawPtr SceneElement::getMaterial() const {
+const MaterialRawPtr SceneElementNode::getMaterial() const {
   return m_material.get();
 }
 
-void SceneElement::setParent(SceneElementRawPtr parent) { m_parent = parent; }
-
-SceneElementRawPtr SceneElement::getParent() const { return m_parent; }
-
-void SceneElement::setLight(const PointLight& light) {}
-
-PointLight SceneElement::getLight() const { return PointLight(); }
-
-void SceneElement::setBoundingBox(const BoundingBox& box) { m_bBox = box; }
-
-BoundingBox SceneElement::getBoundingBox() const { return m_bBox; }
-
-float SceneElement::pdf(const Point3D& origin, const Vec3D& direction) {
-  return 1.f / (2.f * PI);
+void SceneElementNode::setPrimitive(PrimitivePtr pr) {
+  m_geometric_primitive = pr;
+  m_bBox = m_geometric_primitive->worldBounds();
 }
 
-Vec3D SceneElement::random(const Point3D& origin) {
-  return Vec3D(1.f, 0.f, 0.f);
+PrimitivePtr SceneElementNode::getPrimitive() { return m_geometric_primitive; }
+
+std::shared_ptr<SceneElementNode> SceneElementNode::create() {
+  return std::make_shared<SceneElementNode>();
 }
 
-void SceneElement::setTransformation(const Transformation& transformation) {
-  m_transformation = transformation;
-  m_transformation.objectToWorldSpace(m_bBox);
+void SceneElementNode::setParent(SceneElementRawPtr parent) {
+  m_parent = parent;
 }
 
-SceneElement::SceneElement() {
-  m_transformation = Transformation();
-  if (isWorld()) {
-    WorldIterator it(getChildren());
-    if (it.first()) {
-      while (it.notDone()) {
-        it.currentElement()->setParent(this);
-        it.advance();
-      }
-    }
-  }
-}
-SceneElement::SceneElement(const BoundingBox& props) : m_bBox(props) {
-  m_transformation = Transformation();
-  if (isWorld()) {
-    WorldIterator it(getChildren());
-    if (it.first()) {
-      while (it.notDone()) {
-        it.currentElement()->setParent(this);
-        it.advance();
-      }
-    }
-  }
-}
+SceneElementRawPtr SceneElementNode::getParent() const { return m_parent; }
+
+void SceneElementNode::setLight(const PointLight& light) { m_light = light; }
+
+PointLight SceneElementNode::getLight() const { return m_light; }
+
+BoundingBox SceneElementNode::getBounds() const { return m_bBox; }

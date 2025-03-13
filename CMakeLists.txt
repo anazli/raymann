@@ -3,6 +3,7 @@ project(raymann VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_BUILD_TYPE Debug) 
 project(raymann CXX)
 set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
@@ -25,14 +26,11 @@ add_library(${LIBRARY_NAME}
             src/color/spectrum.h
             src/composite/builder.cpp
             src/composite/builder.h
-            src/composite/intersection.cpp
             src/composite/intersection.h
             src/composite/iterator.cpp
             src/composite/iterator.h
             src/composite/scene_element.cpp
             src/composite/scene_element.h
-            src/composite/world.cpp
-            src/composite/world.h
             src/container/canvas.cpp
             src/container/canvas.h
             src/distribution/bxdf.cpp
@@ -47,8 +45,6 @@ add_library(${LIBRARY_NAME}
             src/geometry/quad.h
             src/geometry/sphere.h
             src/geometry/triangle.h
-            src/materials/bsdf.cpp
-            src/materials/bsdf.h
             src/materials/material.cpp
             src/materials/material.h
             src/materials/dielectric.cpp
@@ -59,8 +55,6 @@ add_library(${LIBRARY_NAME}
             src/materials/isotropic.h
             src/materials/lambertian.cpp
             src/materials/lambertian.h
-            src/materials/matte.cpp
-            src/materials/matte.h
             src/materials/metal.cpp
             src/materials/metal.h
             src/materials/standard.cpp
@@ -69,8 +63,6 @@ add_library(${LIBRARY_NAME}
             src/renderers/renderer.h
             src/renderers/path_tracer.cpp
             src/renderers/path_tracer.h
-            src/renderers/phong_model.cpp
-            src/renderers/phong_model.h
             src/stochastic/pdf.cpp
             src/stochastic/pdf.h
             src/stochastic/random.cpp
@@ -81,18 +73,18 @@ add_library(${LIBRARY_NAME}
             src/textures/texture.h
             src/transformations/transformation.cpp
             src/transformations/transformation.h
-            src/tools/mat2.h
-            src/tools/mat3.h
-            src/tools/mat4.h
-            src/tools/normal3.h
-            src/tools/light.h
-            src/tools/orthonormal.h
-            src/tools/point3.h
-            src/tools/ray.h
-            src/tools/vec2.h
-            src/tools/vec3.h
-            src/tools/vec4.h
-            src/tools/tools.h
+            src/math_utils/mat2.h
+            src/math_utils/mat3.h
+            src/math_utils/mat4.h
+            src/math_utils/normal3.h
+            src/math_utils/light.h
+            src/math_utils/orthonormal.h
+            src/math_utils/point3.h
+            src/math_utils/ray.h
+            src/math_utils/vec2.h
+            src/math_utils/vec3.h
+            src/math_utils/vec4.h
+            src/math_utils/math_utils.h
 )
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)

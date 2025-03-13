@@ -1,5 +1,5 @@
 #include <chrono>
-//#include <fstream>
+// #include <fstream>
 #include <iostream>
 
 #include "application/wavefront_reader.h"
@@ -8,7 +8,6 @@
 #include "container/canvas.h"
 #include "geometry/quad.h"
 #include "renderers/path_tracer.h"
-#include "renderers/phong_model.h"
 #include "stochastic/stochastic_method.h"
 #include "textures/texture.h"
 
@@ -24,7 +23,7 @@ int main() {
   auto diffuse_light = Vec3D(15.f, 15.f, 15.f);
 
   SceneDirector scene_director;
-  PrimitiveBuilder primitive_builder;
+  EntityFactory entity_factory;
   WorldBuilder world_builder;
 
   /*---------------------------------------------------------------------------
@@ -38,7 +37,7 @@ int main() {
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, white)
       .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(primitive_builder, floor);
+  scene_director.createSceneElement(entity_factory, floor);
 
   /*---------------------------------------------------------------------------
    *				Ceil
@@ -50,7 +49,7 @@ int main() {
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, white)
       .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(primitive_builder, ceil);
+  scene_director.createSceneElement(entity_factory, ceil);
 
   /*---------------------------------------------------------------------------
    *				Left Wall
@@ -62,7 +61,7 @@ int main() {
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, green)
       .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(primitive_builder, left_wall);
+  scene_director.createSceneElement(entity_factory, left_wall);
 
   /*---------------------------------------------------------------------------
    *				Right Wall
@@ -74,7 +73,7 @@ int main() {
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, red)
       .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(primitive_builder, right_wall);
+  scene_director.createSceneElement(entity_factory, right_wall);
 
   /*---------------------------------------------------------------------------
    *				Center Wall
@@ -86,7 +85,7 @@ int main() {
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, white)
       .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(primitive_builder, center_wall);
+  scene_director.createSceneElement(entity_factory, center_wall);
 
   /*---------------------------------------------------------------------------
    *				Light Wall
@@ -103,7 +102,7 @@ int main() {
       .setProperty(app::QUAD_ORIGIN, Point3D(213.f, 554.f, -485.f))
       .setProperty(app::QUAD_UAXIS, Vec3D(130.f, 0.f, 0.f))
       .setProperty(app::QUAD_VAXIS, Vec3D(0.f, 0.f, 105.f));
-  scene_director.createSceneElement(primitive_builder, light_wall);
+  scene_director.createSceneElement(entity_factory, light_wall);
   auto diffuse_light_element = scene_director.getCurrentElement();
 
   /*---------------------------------------------------------------------------
@@ -117,7 +116,7 @@ int main() {
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, white)
       .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(primitive_builder, left_box);
+  scene_director.createSceneElement(entity_factory, left_box);
 
   /*---------------------------------------------------------------------------
    *				Right Box
@@ -130,7 +129,7 @@ int main() {
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, white)
       .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(primitive_builder, right_box);
+  scene_director.createSceneElement(entity_factory, right_box);
 
   /*---------------------------------------------------------------------------
    *				Left Sphere
@@ -143,7 +142,7 @@ int main() {
       .setProperty(app::COLOR, white)
       .setProperty(app::MATERIAL_TYPE, app::DIELECTRIC)
       .setProperty(app::REFRACTIVE_INDEX, 1.5f);
-  scene_director.createSceneElement(primitive_builder, left_sphere);
+  scene_director.createSceneElement(entity_factory, left_sphere);
 
   /*---------------------------------------------------------------------------
    *				Right Sphere
@@ -156,21 +155,21 @@ int main() {
       .setProperty(app::COLOR, white)
       .setProperty(app::MATERIAL_TYPE, app::METAL)
       .setProperty(app::FUZZ, 0.2f);
-  scene_director.createSceneElement(primitive_builder, right_sphere);
+  scene_director.createSceneElement(entity_factory, right_sphere);
 
   //----------------------------------------------------------------------------
   scene_director.createWorld(world_builder, light);
   auto world = scene_director.getSceneProduct();
 
-  auto canvas = Canvas(5, 5);
+  auto canvas = Canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = make_shared<Camera>(canvas.width(), canvas.height(), 1.54f);
+  auto camera = Camera(canvas.width(), canvas.height(), 1.54f);
   auto from = Point3D(278.f, 260.f, -830.f);
   auto to = Point3D(278.f, 278.f, 0.f);
   auto up = Vec3D(0.0f, 1.0f, 0.0f);
-  camera->setTransform(view_transform(from, to, up));
+  camera.setTransform(view_transform(from, to, up));
 
-  auto samples_per_pixel = 5;
+  auto samples_per_pixel = 20;
   auto material_depth = 5;
   BaseRendererPtr renderer =
       make_unique<PathTracer>(std::make_unique<BruteForceSampler>(

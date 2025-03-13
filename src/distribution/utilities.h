@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "tools/tools.h"
+#include "math_utils/math_utils.h"
 
 inline bool isOnSameHemisphere(const Vec3D& v1, const Vec3D& v2) {
   return v1.z() * v2.z() > 0.f;

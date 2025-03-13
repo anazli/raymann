@@ -21,28 +21,27 @@ std::string Canvas::fileName() const { return m_fileName; }
 
 void Canvas::setFileName(const std::string &fn) { m_fileName = fn; }
 
-void Canvas::render(const SceneElementPtr &world, const BaseCameraPtr &camera,
+void Canvas::render(const SceneElementPtr &world, const Camera &camera,
                     BaseRendererPtr renderer) {
-  for (int j = 0; j < camera->vSize(); ++j) {
-    for (int i = 0; i < camera->hSize(); ++i) {
+  for (int j = 0; j < camera.vSize(); ++j) {
+    for (int i = 0; i < camera.hSize(); ++i) {
       auto color = Vec3D{};
       renderer->setPixelInfo(i, j);
-      world->accept(*renderer, camera->getRay(i, j));
+      world->accept(*renderer, camera.getRay(i, j));
       color = renderer->getColor();
       writePixel(i, j, color);
     }
   }
 }
 
-void Canvas::renderParallel(const SceneElementPtr &world,
-                            const BaseCameraPtr &camera,
+void Canvas::renderParallel(const SceneElementPtr &world, const Camera &camera,
                             BaseRendererPtr renderer) {
-  fillImageResolutionIterators(camera->hSize(), camera->vSize());
+  fillImageResolutionIterators(camera.hSize(), camera.vSize());
   std::for_each(par, m_vContainer.begin(), m_vContainer.end(), [&](int j) {
     std::for_each(par, m_hContainer.begin(), m_hContainer.end(), [&](int i) {
       auto color = Vec3D{};
       renderer->setPixelInfo(i, j);
-      world->accept(*renderer, camera->getRay(i, j));
+      world->accept(*renderer, camera.getRay(i, j));
       color = renderer->getColor();
       writePixel(i, j, color);
     });

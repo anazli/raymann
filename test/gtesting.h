@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gtest/gtest.h"
-#include "tools/tools.h"
+#include "math_utils/math_utils.h"
 
 namespace testing {
 
