@@ -28,5 +28,5 @@ struct Intersection {
   // geometric normal of closest hit point in world space
   Normal3D normal;
   // primitive of closest hit
-  SceneElement* primitive = nullptr;
+  SceneElement* closest_scene_element = nullptr;
 };

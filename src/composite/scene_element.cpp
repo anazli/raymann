@@ -28,7 +28,7 @@ bool SceneElement::intersect(const Ray& r, Intersection& record) {
          closest_hit.min_hit < r.getMaxRange())) {
       hit_found = true;
       if (closest_hit.min_hit < record.min_hit) {
-        closest_hit.primitive = this;
+        closest_hit.closest_scene_element = this;
         record = closest_hit;
       }
     }

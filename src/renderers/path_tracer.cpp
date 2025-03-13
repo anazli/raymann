@@ -18,17 +18,19 @@ Vec3D PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
   Intersection record;
   if (!world->intersect(ray, record)) return m_background_color;
 
-  Vec3D emittedColor = record.primitive->getMaterial()->emmit();
+  Vec3D emittedColor = record.closest_scene_element->getMaterial()->emmit();
 
   Ray scattered;
   Vec3D attenuation;
-  if (!record.primitive->getMaterial()->scatter(ray, record, attenuation,
-                                                scattered)) {
+  if (!record.closest_scene_element->getMaterial()->scatter(
+          ray, record, attenuation, scattered)) {
     return emittedColor;
   }
 
-  if (record.primitive->getMaterial()->getType() == AppParameters::DIELECTRIC ||
-      record.primitive->getMaterial()->getType() == AppParameters::METAL) {
+  if (record.closest_scene_element->getMaterial()->getType() ==
+          AppParameters::DIELECTRIC ||
+      record.closest_scene_element->getMaterial()->getType() ==
+          AppParameters::METAL) {
     return attenuation * computeColor(world, scattered, rec - 1);
   }
 
@@ -37,9 +39,10 @@ Vec3D PathTracer::computeColor(const SceneElementRawPtr world, const Ray &ray,
     lightPdf = std::make_shared<PrimitivePdf>(m_diffuseLight,
                                               record.getHitPoint(scattered));
   }
-  CombinedPdf mixPdf(lightPdf, record.primitive->getMaterial()->pdf(), 0.7f);
+  CombinedPdf mixPdf(lightPdf,
+                     record.closest_scene_element->getMaterial()->pdf(), 0.7f);
   auto rayFromPdf = Ray(record.getHitPoint(ray), mixPdf.generate());
-  auto scatPdf = record.primitive->getMaterial()->scatteringPDF(
+  auto scatPdf = record.closest_scene_element->getMaterial()->scatteringPDF(
       scattered, record, rayFromPdf);
   auto pdf = mixPdf.value(rayFromPdf.direction());
 

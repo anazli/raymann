@@ -10,7 +10,7 @@ Dielectric::Dielectric(TexturePtr tex, float refractive_index)
 bool Dielectric::scatter(const Ray& r_in, const Intersection& rec,
                          Vec3D& attenuation, Ray& scattered) const {
   auto point = rec.getHitPoint(r_in);
-  Normal3D normal = rec.primitive->getPrimitive()->normal(point);
+  Normal3D normal = rec.closest_scene_element->getPrimitive()->normal(point);
   Normal3D outward_normal;
   Vec3D reflected = reflect(r_in.direction(), Vec3D(normal));
   float ni_over_nt;
