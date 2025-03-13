@@ -120,7 +120,7 @@ TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   primitive_builder.createPrimitive();
   primitive_builder.buildTransformation();
   world_builder.addElement(primitive_builder.getProduct());
-  BoundingBox p = world_builder.getProduct()->getBoundingBox();
+  BoundingBox p = world_builder.getProduct()->getBounds();
 
   float eps = 1E-4f;
   comparePointsApprox(p.minPoint(), Point3D(-4.5f, -3.f, -5.f), eps);
@@ -251,8 +251,7 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
   primitive_builder.reset();
 
   auto world = world_builder.getProduct();
-  WorldPair wp =
-      bvh.splitElementsOf(world->getChildren(), world->getBoundingBox());
+  WorldPair wp = bvh.splitElementsOf(world->getChildren(), world->getBounds());
 
   ASSERT_EQ(world->getChildren().size(), 1);
   ASSERT_TRUE((*world->getChildren().begin()).get() == sphere3.get());

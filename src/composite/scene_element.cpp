@@ -4,8 +4,6 @@
 #include "renderers/renderer.h"
 #include "scene_element.h"
 
-SceneElementNode::SceneElementNode() {}
-
 bool SceneElementNode::intersect(const Ray& r, Intersection& record) {
   if (!m_bBox.intersectsRay(r)) {
     return false;
@@ -38,19 +36,14 @@ bool SceneElementNode::intersect(const Ray& r, Intersection& record) {
 
 void SceneElementNode::add(SceneElementPtr item) {
   item->setParent(this);
-  m_bBox.addBox(item->getBoundingBox());
+  m_bBox.addBox(item->getBounds());
   m_children.emplace_back(item);
 }
 
 bool SceneElementNode::isWorld() const { return !m_children.empty(); }
 
 void SceneElementNode::accept(BaseRenderer& renderer, const Ray& ray) {
-  renderer.visitSceneElement(this, ray);
-}
-
-std::vector<std::shared_ptr<SceneElementNode>> SceneElementNode::getChildren()
-    const {
-  return m_children;
+  renderer.visitSceneElementNode(this, ray);
 }
 
 std::vector<std::shared_ptr<SceneElementNode>>&
@@ -85,4 +78,4 @@ void SceneElementNode::setLight(const PointLight& light) { m_light = light; }
 
 PointLight SceneElementNode::getLight() const { return m_light; }
 
-BoundingBox SceneElementNode::getBoundingBox() const { return m_bBox; }
+BoundingBox SceneElementNode::getBounds() const { return m_bBox; }

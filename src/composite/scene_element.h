@@ -18,19 +18,17 @@ enum SceneElementType { PRIMITIVE = 0, WORLD = 1 };
 
 class SceneElementNode {
  public:
-  SceneElementNode();
-  virtual ~SceneElementNode() = default;
-  virtual bool intersect(const Ray &r, Intersection &record);
-  virtual void add(std::shared_ptr<SceneElementNode> item);
-  virtual bool isWorld() const;
-  virtual void accept(BaseRenderer &renderer, const Ray &ray);
-  virtual std::vector<std::shared_ptr<SceneElementNode>> getChildren() const;
-  virtual std::vector<std::shared_ptr<SceneElementNode>> &getChildren();
-  virtual void setParent(SceneElementNode *parent);
-  virtual SceneElementNode *getParent() const;
-  virtual void setLight(const PointLight &light);
-  virtual PointLight getLight() const;
-  virtual BoundingBox getBoundingBox() const;
+  SceneElementNode() = default;
+  bool intersect(const Ray &r, Intersection &record);
+  void add(std::shared_ptr<SceneElementNode> item);
+  bool isWorld() const;
+  void accept(BaseRenderer &renderer, const Ray &ray);
+  std::vector<std::shared_ptr<SceneElementNode>> &getChildren();
+  void setParent(SceneElementNode *parent);
+  SceneElementNode *getParent() const;
+  void setLight(const PointLight &light);
+  PointLight getLight() const;
+  BoundingBox getBounds() const;
   void setMaterial(MaterialPtr mat);
   const MaterialRawPtr getMaterial() const;
   void setPrimitive(PrimitivePtr pr);

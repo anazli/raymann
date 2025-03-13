@@ -7,8 +7,8 @@ PathTracer::PathTracer(std::unique_ptr<StochasticSampler> stMethod) {
   m_stochasticSampler = std::move(stMethod);
 }
 
-void PathTracer::visitSceneElement(const SceneElementRawPtr elementComp,
-                                   const Ray &ray) {
+void PathTracer::visitSceneElementNode(const SceneElementRawPtr elementComp,
+                                       const Ray &ray) {
   m_out_color = m_stochasticSampler->computeColor(this, elementComp);
 }
 
