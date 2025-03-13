@@ -1,7 +1,7 @@
 #pragma once
 
 #include "acceleration/bounding_box.h"
-#include "tools/mat4.h"
+#include "math_utils/mat4.h"
 
 class Transformation {
  public:

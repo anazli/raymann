@@ -1,7 +1,7 @@
 #pragma once
 
 #include "application/error.h"
-#include "tools/vec4.h"
+#include "math_utils/vec4.h"
 
 template <class T>
 class Vec4;

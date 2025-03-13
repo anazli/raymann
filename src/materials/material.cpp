@@ -2,10 +2,10 @@
 
 #include "composite/scene_element.h"
 #include "material.h"
+#include "math_utils/orthonormal.h"
 #include "stochastic/pdf.h"
 #include "stochastic/random.h"
 #include "stochastic/stochastic_method.h"
-#include "tools/orthonormal.h"
 
 Material::Material(TexturePtr tex) : m_tex(std::move(tex)) {}
 

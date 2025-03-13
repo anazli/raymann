@@ -7,7 +7,7 @@
 #include "composite/scene_element.h"
 #include "geometry/triangle.h"
 #include "materials/material.h"
-#include "tools/vec3.h"
+#include "math_utils/vec3.h"
 
 class WavefrontReader {
  public:

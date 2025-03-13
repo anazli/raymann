@@ -3,8 +3,8 @@
 #include <memory>
 
 #include "composite/intersection.h"
-#include "tools/normal3.h"
-#include "tools/point3.h"
+#include "math_utils/normal3.h"
+#include "math_utils/point3.h"
 #include "transformations/transformation.h"
 
 class Primitive {

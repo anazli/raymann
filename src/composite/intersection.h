@@ -6,7 +6,7 @@
 
 #include <limits>
 
-#include "tools/ray.h"
+#include "math_utils/ray.h"
 
 class SceneElementNode;
 

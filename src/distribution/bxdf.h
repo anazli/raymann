@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "color/spectrum.h"
-#include "tools/vec2.h"
+#include "math_utils/vec2.h"
 
 // Local coordinate system
 // normal (0,0,1)

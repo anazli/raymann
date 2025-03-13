@@ -8,7 +8,7 @@
 #include "composite/intersection.h"
 #include "geometry/primitive.h"
 #include "materials/material.h"
-#include "tools/normal3.h"
+#include "math_utils/normal3.h"
 #include "transformations/transformation.h"
 
 class BaseRenderer;

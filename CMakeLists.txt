@@ -73,18 +73,18 @@ add_library(${LIBRARY_NAME}
             src/textures/texture.h
             src/transformations/transformation.cpp
             src/transformations/transformation.h
-            src/tools/mat2.h
-            src/tools/mat3.h
-            src/tools/mat4.h
-            src/tools/normal3.h
-            src/tools/light.h
-            src/tools/orthonormal.h
-            src/tools/point3.h
-            src/tools/ray.h
-            src/tools/vec2.h
-            src/tools/vec3.h
-            src/tools/vec4.h
-            src/tools/tools.h
+            src/math_utils/mat2.h
+            src/math_utils/mat3.h
+            src/math_utils/mat4.h
+            src/math_utils/normal3.h
+            src/math_utils/light.h
+            src/math_utils/orthonormal.h
+            src/math_utils/point3.h
+            src/math_utils/ray.h
+            src/math_utils/vec2.h
+            src/math_utils/vec3.h
+            src/math_utils/vec4.h
+            src/math_utils/math_utils.h
 )
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)
