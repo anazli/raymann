@@ -45,7 +45,7 @@ class Triangle : public Primitive {
     auto v = inv_det * dot(direction, cross_s_edge1);
     if (v < 0.f || (u + v) > 1.f) return false;
 
-    record.min_hit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
+    record.thit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
     record.hit_point = record.getHitPoint(transf_ray);
     record.normal = normal(record.hit_point);
     return true;
@@ -119,7 +119,7 @@ class SmoothTriangle : public Primitive {
     m_vPar = inv_det * dot(direction, cross_s_edge1);
     if (m_vPar < 0.f || (m_uPar + m_vPar) > 1.f) return false;
 
-    record.min_hit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
+    record.thit = inv_det * dot(m_edgeVec[1], cross_s_edge1);
     record.hit_point = record.getHitPoint(transf_ray);
     record.normal = normal(record.hit_point);
     return true;

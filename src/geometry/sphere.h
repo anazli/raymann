@@ -26,7 +26,7 @@ class Sphere : public Primitive {
     if (discr >= 0.0f) {
       auto t1 = static_cast<float>(-b - sqrt(discr)) / (2.f * a);
       auto t2 = static_cast<float>(-b + sqrt(discr)) / (2.f * a);
-      record.min_hit = Intersection::getMinHitParam(transf_ray, {t1, t2});
+      record.thit = Intersection::getMinHitParam(transf_ray, {t1, t2});
       record.hit_point = record.getHitPoint(transf_ray);
       record.normal = normal(record.hit_point);
       return true;

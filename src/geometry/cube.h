@@ -27,7 +27,7 @@ class Cube : public Primitive {
     if (tmin > tmax) {
       return false;
     }
-    record.min_hit = Intersection::getMinHitParam(transf_ray, {tmin, tmax});
+    record.thit = Intersection::getMinHitParam(transf_ray, {tmin, tmax});
     record.hit_point = record.getHitPoint(transf_ray);
     record.normal = normal(record.hit_point);
     return true;

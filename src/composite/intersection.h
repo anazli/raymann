@@ -19,8 +19,8 @@ struct Intersection {
     }
     return thit;
   }
-  float min_hit = std::numeric_limits<float>::infinity();
-  Point3D getHitPoint(const Ray& r) const { return r.position(min_hit); }
+  float thit = std::numeric_limits<float>::infinity();
+  Point3D getHitPoint(const Ray& r) const { return r.position(thit); }
   // point of intersection test in world space
   Point3D hit_point;
   // negative ray direction

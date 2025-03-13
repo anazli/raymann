@@ -37,7 +37,7 @@ class Quad : public Primitive {
     auto beta = dot(m_wParam, cross(m_uAxis, planarHitptVector));
     if (!isWithin(alpha, beta, record)) return false;
 
-    record.min_hit = t;
+    record.thit = t;
     record.hit_point = record.getHitPoint(transf_ray);
     record.normal = normal(record.hit_point);
     return true;

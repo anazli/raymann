@@ -19,7 +19,7 @@ class Plane : public Primitive {
     if (fabs(direction.y()) < EPS) {
       return false;
     }
-    record.min_hit = -origin.y() / direction.y();
+    record.thit = -origin.y() / direction.y();
     record.hit_point = record.getHitPoint(transf_ray);
     record.normal = normal(record.hit_point);
     return true;

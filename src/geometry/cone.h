@@ -67,7 +67,7 @@ class Cone : public Primitive {
       }
     }
     if (hitAnything) {
-      record.min_hit = Intersection::getMinHitParam(transf_ray, {t1, t2});
+      record.thit = Intersection::getMinHitParam(transf_ray, {t1, t2});
       record.hit_point = record.getHitPoint(transf_ray);
       record.normal = normal(record.hit_point);
     }
@@ -123,7 +123,7 @@ class Cone : public Primitive {
       t2 = t;
       intersectsCap = true;
     }
-    record.min_hit = Intersection::getMinHitParam(r, {t1, t2});
+    record.thit = Intersection::getMinHitParam(r, {t1, t2});
     return intersectsCap;
   }
 };

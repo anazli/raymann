@@ -17,17 +17,17 @@ bool SceneElement::intersect(const Ray& r, Intersection& record) {
     for (const auto& child : getChildren()) {
       if (child->intersect(r, closest_hit)) {
         hit_found = true;
-        if (closest_hit.min_hit < record.min_hit) {
+        if (closest_hit.thit < record.thit) {
           record = closest_hit;
         }
       }
     }
   } else {
     if (m_geometric_primitive->intersect(r, closest_hit) &&
-        (closest_hit.min_hit >= r.getMinRange() &&
-         closest_hit.min_hit < r.getMaxRange())) {
+        (closest_hit.thit >= r.getMinRange() &&
+         closest_hit.thit < r.getMaxRange())) {
       hit_found = true;
-      if (closest_hit.min_hit < record.min_hit) {
+      if (closest_hit.thit < record.thit) {
         closest_hit.closest_scene_element = this;
         record = closest_hit;
       }

@@ -124,32 +124,32 @@ TEST_F(CubeTest, rayIntersectsCube) {
   ray = Ray(Point3D(5.f, 0.5f, 0.f), Vec3D(-1.f, 0.f, 0.f));
   auto rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.min_hit, 4.f);
+  EXPECT_EQ(rec.thit, 4.f);
 
   ray = Ray(Point3D(-5.f, 0.5f, 0.f), Vec3D(1.f, 0.f, 0.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.min_hit, 4.f);
+  EXPECT_EQ(rec.thit, 4.f);
 
   ray = Ray(Point3D(0.5f, 5.f, 0.f), Vec3D(0.f, -1.f, 0.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.min_hit, 4.f);
+  EXPECT_EQ(rec.thit, 4.f);
 
   ray = Ray(Point3D(0.5f, -5.f, 0.f), Vec3D(0.f, 1.f, 0.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.min_hit, 4.f);
+  EXPECT_EQ(rec.thit, 4.f);
 
   ray = Ray(Point3D(0.5f, 0.f, 5.f), Vec3D(0.f, 0.f, -1.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.min_hit, 4.f);
+  EXPECT_EQ(rec.thit, 4.f);
 
   ray = Ray(Point3D(0.5f, 0.f, -5.f), Vec3D(0.f, 0.f, 1.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.min_hit, 4.f);
+  EXPECT_EQ(rec.thit, 4.f);
 }
 
 TEST_F(CubeTest, rayMissesCube) {

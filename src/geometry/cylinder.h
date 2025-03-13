@@ -56,7 +56,7 @@ class Cylinder : public Primitive {
       }
 
       if (hitAnything) {
-        record.min_hit = Intersection::getMinHitParam(transf_ray, {t1, t2});
+        record.thit = Intersection::getMinHitParam(transf_ray, {t1, t2});
         record.hit_point = record.getHitPoint(transf_ray);
         record.normal = normal(record.hit_point);
       }
@@ -114,7 +114,7 @@ class Cylinder : public Primitive {
     }
 
     if (intersectsCap) {
-      record.min_hit = t;
+      record.thit = t;
       record.hit_point = record.getHitPoint(r);
       record.normal = normal(record.hit_point);
     }
