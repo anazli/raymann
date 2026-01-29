@@ -42,10 +42,6 @@ add_library(${LIBRARY_NAME}
             src/composite/scene_element.h
             src/container/canvas.cpp
             src/container/canvas.h
-            src/distribution/bxdf.cpp
-            src/distribution/bxdf.h
-            src/distribution/lambertian_brdf.cpp
-            src/distribution/lambertian_brdf.h
             src/distribution/utilities.h
             src/geometry/cone.h
             src/geometry/cube.h
