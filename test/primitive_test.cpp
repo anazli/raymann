@@ -1,13 +1,14 @@
+#include <gtest/gtest.h>
+
 #include "geometry/cone.h"
 #include "geometry/cube.h"
 #include "geometry/cylinder.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "geometry/triangle.h"
-#include "gtesting.h"
 #include "transformations/transformation.h"
 
-class TCone : public testing::RTest {
+class TCone : public testing::Test {
  public:
   Cone cone;
   Ray r;

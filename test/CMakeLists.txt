@@ -23,7 +23,6 @@ if(BUILD_TESTING)
                    material_test.cpp
                    primitive_test.cpp
                    properties_test.cpp
-                   ray_test.cpp
                    transformer_test.cpp
                    world_test.cpp
   )

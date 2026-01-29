@@ -1,10 +1,11 @@
+#include <gtest/gtest.h>
+
 #include "acceleration/bvh.h"
 #include "application/parameters.h"
 #include "composite/builder.h"
 #include "composite/iterator.h"
 #include "geometry/cylinder.h"
 #include "geometry/sphere.h"
-#include "gtesting.h"
 #include "transformations/transformation.h"
 
 using std::make_shared;
@@ -13,7 +14,7 @@ using std::shared_ptr;
 using std::vector;
 using app = AppParameters;
 
-class BoundingBoxTest : public testing::RTest {
+class BoundingBoxTest : public testing::Test {
  public:
   BoundingBox box1;
   BoundingBox box2;

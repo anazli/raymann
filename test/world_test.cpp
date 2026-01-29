@@ -1,7 +1,6 @@
 #include "composite/builder.h"
 #include "composite/scene_element.h"
 #include "geometry/sphere.h"
-#include "gtesting.h"
 
 using std::make_shared;
 using std::make_unique;

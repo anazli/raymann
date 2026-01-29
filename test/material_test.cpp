@@ -1,13 +1,14 @@
+#include <gtest/gtest.h>
+
 #include "composite/builder.h"
 #include "composite/world.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
-#include "gtesting.h"
 #include "renderers/phong_model.h"
 
 using app = AppParameters;
 
-class MaterialTest : public testing::RTest {
+class MaterialTest : public testing::Test {
  public:
   Sphere *s;
   PointLight light;

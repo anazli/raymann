@@ -1,8 +1,8 @@
 #include "camera/camera.h"
 
-#include "gtesting.h"
+#include <gtest/gtest.h>
 
-class CameraTest : public testing::RTest {
+class CameraTest : public testing::Test {
  public:
   Camera c;
 };

@@ -1,10 +1,11 @@
+#include <gtest/gtest.h>
+
 #include <filesystem>
 
 #include "application/wavefront_reader.h"
 #include "composite/iterator.h"
-#include "gtesting.h"
 
-class ApplicationTest : public testing::RTest {
+class ApplicationTest : public testing::Test {
  public:
   void SetUp() override {
     test_directory = std::filesystem::current_path().string() + "/test_data/";

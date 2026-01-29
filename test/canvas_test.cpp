@@ -1,8 +1,8 @@
 #include "container/canvas.h"
 
-#include "gtesting.h"
+#include <gtest/gtest.h>
 
-class CanvasTest : public testing::RTest {
+class CanvasTest : public testing::Test {
  public:
   Canvas c;
 };

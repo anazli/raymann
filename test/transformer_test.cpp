@@ -1,8 +1,9 @@
+#include <gtest/gtest.h>
+
 #include "geometry/sphere.h"
-#include "gtesting.h"
 #include "transformations/transformation.h"
 
-class TransformerTest : public testing::RTest {
+class TransformerTest : public testing::Test {
  public:
   Mat4D m;
   Vec3f v;
