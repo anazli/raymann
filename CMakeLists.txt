@@ -9,7 +9,7 @@ set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(LIBRARY_NAME l${PROJECT_NAME})
 
-add_library(${LIBRARY_NAME} 
+add_library(${LIBRARY_NAME}
             src/acceleration/bounding_box.cpp
             src/acceleration/bounding_box.h
             src/acceleration/bvh.cpp
@@ -24,6 +24,7 @@ add_library(${LIBRARY_NAME}
             src/camera/camera.h
             src/color/spectrum.cpp
             src/color/spectrum.h
+            src/color/light.h
             src/composite/builder.cpp
             src/composite/builder.h
             src/composite/intersection.h
@@ -73,18 +74,6 @@ add_library(${LIBRARY_NAME}
             src/textures/texture.h
             src/transformations/transformation.cpp
             src/transformations/transformation.h
-            src/math_utils/mat2.h
-            src/math_utils/mat3.h
-            src/math_utils/mat4.h
-            src/math_utils/normal3.h
-            src/math_utils/light.h
-            src/math_utils/orthonormal.h
-            src/math_utils/point3.h
-            src/math_utils/ray.h
-            src/math_utils/vec2.h
-            src/math_utils/vec3.h
-            src/math_utils/vec4.h
-            src/math_utils/math_utils.h
 )
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)
@@ -121,7 +110,6 @@ if(BUILD_TESTING)
                    test/primitive_test.cpp
                    test/properties_test.cpp
                    test/ray_test.cpp
-                   test/tools_test.cpp
                    test/transformer_test.cpp
                    test/world_test.cpp
   )
