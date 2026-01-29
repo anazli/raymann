@@ -9,6 +9,14 @@ set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(LIBRARY_NAME l${PROJECT_NAME})
 
+include(FetchContent)
+FetchContent_Declare(
+  math
+  GIT_REPOSITORY https://github.com/anazli/math.git
+  GIT_TAG main
+)
+FetchContent_MakeAvailable(math)
+
 add_library(${LIBRARY_NAME}
             src/acceleration/bounding_box.cpp
             src/acceleration/bounding_box.h
@@ -77,6 +85,7 @@ add_library(${LIBRARY_NAME}
 )
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(${LIBRARY_NAME} PUBLIC math)
 
 add_executable(${PROJECT_NAME} src/main/raymann.cpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})

@@ -60,12 +60,12 @@ PrimitivePtr EntityFactory::createPrimitive() {
       break;
     case AppParameters::QUAD: {
       auto origin =
-          m_input_data.getPropertyAs<Point3D>(AppParameters::QUAD_ORIGIN)
+          m_input_data.getPropertyAs<Point3f>(AppParameters::QUAD_ORIGIN)
               .value();
       auto u_axis =
-          m_input_data.getPropertyAs<Vec3D>(AppParameters::QUAD_UAXIS).value();
+          m_input_data.getPropertyAs<Vec3f>(AppParameters::QUAD_UAXIS).value();
       auto v_axis =
-          m_input_data.getPropertyAs<Vec3D>(AppParameters::QUAD_VAXIS).value();
+          m_input_data.getPropertyAs<Vec3f>(AppParameters::QUAD_VAXIS).value();
       return Quad::create(origin, u_axis, v_axis, transformation);
       break;
     }
@@ -83,8 +83,8 @@ TexturePtr EntityFactory::createTexture() {
   }
   switch (type.value()) {
     case AppParameters::CONSTANT_TEXTURE: {
-      auto color = m_input_data.getPropertyAs<Vec3D>(AppParameters::COLOR)
-                       .value_or(Vec3D());
+      auto color = m_input_data.getPropertyAs<Vec3f>(AppParameters::COLOR)
+                       .value_or(Vec3f());
       return ConstantTexture::create(color);
       break;
     }

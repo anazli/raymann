@@ -38,7 +38,7 @@ enum class AppParameters {
   DIELECTRIC,
 
   // Material parameters
-  COLOR,             // Vec3D
+  COLOR,             // Vec3f
   AMBIENT,           // float [0,1]
   DIFFUSE,           // float [0,1]
   SPECULAR,          // float [0,1]

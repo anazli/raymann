@@ -11,8 +11,8 @@ class LambertianBrdf : public Bxdf {
   // Reflectance spectrum sp, gives fraction of incident scattered light
   LambertianBrdf(const Spectrum& sp);
   ~LambertianBrdf() override = default;
-  Spectrum f(const Vec3D& wo, const Vec3D& wi) const override;
-  Spectrum rhd(const Vec3D& wo, int num_samples, Vec2D& samples) const override;
+  Spectrum f(const Vec3f& wo, const Vec3f& wi) const override;
+  Spectrum rhd(const Vec3f& wo, int num_samples, Vec2D& samples) const override;
   Spectrum rhh(int num_samples, Vec2D& samples1,
                Vec2D& samples2) const override;
 

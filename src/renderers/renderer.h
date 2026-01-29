@@ -13,25 +13,25 @@ class BaseRenderer {
   virtual ~BaseRenderer() = default;
   virtual void visitSceneElementNode(const SceneElementRawPtr elementComp,
                                      const Ray &ray) = 0;
-  virtual Vec3D computeColor(const SceneElementRawPtr world, const Ray &ray,
+  virtual Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
                              int rec = 5) = 0;
   virtual void attachStochasticMethod(
       std::unique_ptr<StochasticSampler> stMethod);
 
-  Vec3D getColor() const;
+  Vec3f getColor() const;
   void setPixelInfo(const int &x, const int y);
   float getPixelInfoX() const;
   float getPixelInfoY() const;
-  void setBackgroundColor(const Vec3D &color);
-  Vec3D backgroundColor() const;
+  void setBackgroundColor(const Vec3f &color);
+  Vec3f backgroundColor() const;
   void addDiffuseLight(SceneElementRawPtr light);
   SceneElementRawPtr getDiffuseLight() const;
 
  protected:
   Intersection m_closestHit;
   SceneElementRawPtr m_diffuseLight;
-  Vec3D m_out_color;
-  Vec3D m_background_color;
+  Vec3f m_out_color;
+  Vec3f m_background_color;
   float m_tmin = MAXFLOAT;
   float m_x;
   float m_y;

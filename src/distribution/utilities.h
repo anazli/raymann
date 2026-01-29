@@ -6,12 +6,12 @@
 
 #include "math_utils/math_utils.h"
 
-inline bool isOnSameHemisphere(const Vec3D& v1, const Vec3D& v2) {
+inline bool isOnSameHemisphere(const Vec3f& v1, const Vec3f& v2) {
   return v1.z() * v2.z() > 0.f;
 }
 
-inline bool isOnSameHemisphere(const Vec3D& v, const Normal3D& n) {
+inline bool isOnSameHemisphere(const Vec3f& v, const Normal3f& n) {
   return v.z() * n.z() > 0.f;
 }
 
-inline float absoluteCosTheta(const Vec3D& v) { return std::abs(v.z()); }
+inline float absoluteCosTheta(const Vec3f& v) { return std::abs(v.z()); }

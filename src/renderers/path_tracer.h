@@ -8,7 +8,7 @@ class PathTracer : public BaseRenderer {
   ~PathTracer() override = default;
   void visitSceneElementNode(const SceneElementRawPtr elementComp,
                              const Ray &ray) override;
-  Vec3D computeColor(const SceneElementRawPtr world, const Ray &ray,
+  Vec3f computeColor(const SceneElementRawPtr world, const Ray &ray,
                      int rec = 5) override;
 
   void attachStochasticMethod(

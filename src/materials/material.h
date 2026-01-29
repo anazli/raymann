@@ -27,8 +27,8 @@ class Material {
   virtual void setProperties(const DataContainer& prop);
   virtual DataContainer getProperties() const;
   virtual bool scatter(const Ray& r_in, const Intersection& rec,
-                       Vec3D& attenuation, Ray& scattered) const = 0;
-  virtual Vec3D emmit(float u = 0.f, float v = 0.f, const Vec3D& p = Vec3D());
+                       Vec3f& attenuation, Ray& scattered) const = 0;
+  virtual Vec3f emmit(float u = 0.f, float v = 0.f, const Vec3f& p = Vec3f());
   virtual bool isEmissive() const;
   virtual float scatteringPDF(const Ray& r, const Intersection& record,
                               const Ray& scatteredRay) const;
@@ -38,9 +38,9 @@ class Material {
  protected:
   Material(TexturePtr tex);
   float schlick(float cosine, float ref_idx) const;
-  Vec3D reflect(const Vec3D& v, const Vec3D& n) const;
-  bool refract(const Vec3D& v, const Vec3D& n, float ni_over_nt,
-               Vec3D& refracted) const;
+  Vec3f reflect(const Vec3f& v, const Vec3f& n) const;
+  bool refract(const Vec3f& v, const Vec3f& n, float ni_over_nt,
+               Vec3f& refracted) const;
 
   TexturePtr m_tex;
   std::shared_ptr<StochasticPdf> m_pdf;

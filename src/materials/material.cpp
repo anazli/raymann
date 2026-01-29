@@ -17,7 +17,7 @@ void Material::setProperties(const DataContainer& prop) {}
 
 DataContainer Material::getProperties() const { return DataContainer(); }
 
-Vec3D Material::emmit(float u, float v, const Vec3D& p) { return Vec3D(); }
+Vec3f Material::emmit(float u, float v, const Vec3f& p) { return Vec3f(); }
 
 bool Material::isEmissive() const { return false; }
 
@@ -36,12 +36,12 @@ float Material::schlick(float cosine, float ref_idx) const {
   return r0 + (1.f - r0) * pow((1.f - cosine), 5);
 }
 
-Vec3D Material::reflect(const Vec3D& v, const Vec3D& n) const {
+Vec3f Material::reflect(const Vec3f& v, const Vec3f& n) const {
   return v - 2.f * dot(v, n) * n;
 }
 
-bool Material::refract(const Vec3D& v, const Vec3D& n, float ni_over_nt,
-                       Vec3D& refracted) const {
+bool Material::refract(const Vec3f& v, const Vec3f& n, float ni_over_nt,
+                       Vec3f& refracted) const {
   auto uv = getUnitVectorOf(v);
   auto dt = dot(uv, n);
   auto discriminant = 1.f - ni_over_nt * ni_over_nt * (1.f - dt * dt);

@@ -4,19 +4,19 @@
 
 #pragma once
 
+#include <vec3.h>
+
 #include <limits>
 #include <vector>
-
-#include "math_utils/vec3.h"
 
 // RGB spectrum (might change to EM)
 class Spectrum {
  public:
   explicit Spectrum(float value = 0.f);
-  explicit Spectrum(const Vec3D &v);
+  explicit Spectrum(const Vec3f &v);
 
-  Vec3D samples() const;
-  void setSamples(const Vec3D &s);
+  Vec3f samples() const;
+  void setSamples(const Vec3f &s);
 
   Spectrum operator-() const;
   Spectrum &operator+=(const Spectrum &other);
@@ -32,18 +32,18 @@ class Spectrum {
   bool isBlack() const;
   bool hasNaNs() const;
 
-  Vec3D toRGB() const;
-  Vec3D toXYZ() const;
+  Vec3f toRGB() const;
+  Vec3f toXYZ() const;
   float y() const;
 
  private:
-  Vec3D m_samples;
+  Vec3f m_samples;
 };
 
-Spectrum fromRGB(const Vec3D &v);
-Spectrum fromXYZ(const Vec3D &xyz);
-Vec3D RGBToXYZ(const Vec3D &rgb);
-Vec3D XYZToRGB(const Vec3D xyz);
+Spectrum fromRGB(const Vec3f &v);
+Spectrum fromXYZ(const Vec3f &xyz);
+Vec3f RGBToXYZ(const Vec3f &rgb);
+Vec3f XYZToRGB(const Vec3f xyz);
 
 Spectrum operator+(const Spectrum &l, const Spectrum &r);
 Spectrum operator-(const Spectrum &l, const Spectrum &r);

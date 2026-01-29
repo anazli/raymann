@@ -29,8 +29,8 @@ BoundingBoxPair BVHierarchy::splitBoundsOf(const BoundingBox &box) const {
     z0 = z1;
   }
 
-  auto midMin = Point3D(x0, y0, z0);
-  auto midMax = Point3D(x1, y1, z1);
+  auto midMin = Point3f(x0, y0, z0);
+  auto midMax = Point3f(x1, y1, z1);
 
   auto left = BoundingBox(box.minPoint(), midMax);
   auto right = BoundingBox(midMin, box.maxPoint());

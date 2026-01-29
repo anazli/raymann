@@ -8,14 +8,14 @@ Dielectric::Dielectric(TexturePtr tex, float refractive_index)
 }
 
 bool Dielectric::scatter(const Ray& r_in, const Intersection& rec,
-                         Vec3D& attenuation, Ray& scattered) const {
+                         Vec3f& attenuation, Ray& scattered) const {
   auto point = rec.getHitPoint(r_in);
-  Normal3D normal = rec.closest_scene_element->getPrimitive()->normal(point);
-  Normal3D outward_normal;
-  Vec3D reflected = reflect(r_in.direction(), Vec3D(normal));
+  Normal3f normal = rec.closest_scene_element->getPrimitive()->normal(point);
+  Normal3f outward_normal;
+  Vec3f reflected = reflect(r_in.direction(), Vec3f(normal));
   float ni_over_nt;
-  attenuation = Vec3D(1.f, 1.f, 1.f);
-  Vec3D refracted;
+  attenuation = Vec3f(1.f, 1.f, 1.f);
+  Vec3f refracted;
   float reflect_prob;
   float cosine;
   if (dot(r_in.direction(), normal) > 0) {
@@ -30,7 +30,7 @@ bool Dielectric::scatter(const Ray& r_in, const Intersection& rec,
     cosine = -dot(r_in.direction(), normal) / r_in.direction().length();
   }
 
-  if (refract(r_in.direction(), Vec3D(outward_normal), ni_over_nt, refracted))
+  if (refract(r_in.direction(), Vec3f(outward_normal), ni_over_nt, refracted))
     reflect_prob = schlick(cosine, m_refractive_index);
   else
     reflect_prob = 1.f;

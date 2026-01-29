@@ -7,17 +7,17 @@ class Sphere : public Primitive {
  public:
   ~Sphere() override = default;
   Sphere(const Transformation &tr = Transformation(),
-         const Point3D &c = Point3D(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
+         const Point3f &c = Point3f(0.0f, 0.0f, 0.0f), const float &r = 1.0f)
       : m_center(c), m_radius(r), Primitive(tr) {
-    m_object_box.minPoint() = Point3D(-1.f, -1.f, -1.f) + Vec3D(c);
-    m_object_box.maxPoint() = Point3D(1.f, 1.f, 1.f) + Vec3D(c);
+    m_object_box.minPoint() = Point3f(-1.f, -1.f, -1.f) + Vec3f(c);
+    m_object_box.maxPoint() = Point3f(1.f, 1.f, 1.f) + Vec3f(c);
     m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
 
   bool intersect(const Ray &r, Intersection &record) override {
     auto transf_ray = m_transformation.worldToObjectSpace(r);
-    Point3D origin = transf_ray.origin();
-    Vec3D direction = transf_ray.direction();
+    Point3f origin = transf_ray.origin();
+    Vec3f direction = transf_ray.direction();
     auto co = origin - m_center;
     auto a = dot(direction, direction);
     auto b = 2.0f * dot(direction, co);
@@ -34,25 +34,25 @@ class Sphere : public Primitive {
     return false;
   }
 
-  Normal3D normal(const Point3D &p) const override {
+  Normal3f normal(const Point3f &p) const override {
     auto object_point = m_transformation.worldToObjectSpace(p);
-    auto object_normal = Normal3D(getUnitVectorOf(object_point - m_center));
+    auto object_normal = Normal3f(getUnitVectorOf(object_point - m_center));
     return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 
-  void setCenter(const Point3D &c) { m_center = c; }
+  void setCenter(const Point3f &c) { m_center = c; }
   void setRadius(const float &r) { m_radius = r; }
-  Point3D center() const { return m_center; }
+  Point3f center() const { return m_center; }
   float radius() const { return m_radius; }
 
   static PrimitivePtr create(const Transformation &tr = Transformation(),
-                             const Point3D &c = Point3D(0.0f, 0.0f, 0.0f),
+                             const Point3f &c = Point3f(0.0f, 0.0f, 0.0f),
                              const float &r = 1.0f) {
     return std::make_shared<Sphere>(tr, c, r);
   }
 
  private:
-  Vec3D randomToSphere(float radius, float distSquared) {
+  Vec3f randomToSphere(float radius, float distSquared) {
     auto r1 = Random::randomNumber();
     auto r2 = Random::randomNumber();
     auto z = 1.f + r2 * (sqrt(1.f - radius * radius / distSquared) - 1.f);
@@ -61,9 +61,9 @@ class Sphere : public Primitive {
     auto x = cos(phi) * sqrt(1.f - z * z);
     auto y = sin(phi) * sqrt(1.f - z * z);
 
-    return Vec3D(x, y, z);
+    return Vec3f(x, y, z);
   }
 
-  Point3D m_center;
+  Point3f m_center;
   float m_radius;
 };

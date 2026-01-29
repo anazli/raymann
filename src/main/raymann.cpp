@@ -15,12 +15,12 @@ using namespace std;
 using app = AppParameters;
 
 int main() {
-  auto light = PointLight(Point3D(0.f, 0.f, 2.f), Vec3D(1.0f, 1.0f, 1.0f));
+  auto light = PointLight(Point3f(0.f, 0.f, 2.f), Vec3f(1.0f, 1.0f, 1.0f));
   auto eps = 0.05f;
-  auto white = Vec3D(0.73f, 0.73f, 0.73f);
-  auto green = Vec3D(0.12f, 0.45f, 0.15f);
-  auto red = Vec3D(0.65f, 0.05f, 0.05f);
-  auto diffuse_light = Vec3D(15.f, 15.f, 15.f);
+  auto white = Vec3f(0.73f, 0.73f, 0.73f);
+  auto green = Vec3f(0.12f, 0.45f, 0.15f);
+  auto red = Vec3f(0.65f, 0.05f, 0.05f);
+  auto diffuse_light = Vec3f(15.f, 15.f, 15.f);
 
   SceneDirector scene_director;
   EntityFactory entity_factory;
@@ -99,9 +99,9 @@ int main() {
       .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
       .setProperty(app::COLOR, diffuse_light)
       .setProperty(app::MATERIAL_TYPE, app::DIFFUSE_LIGHT)
-      .setProperty(app::QUAD_ORIGIN, Point3D(213.f, 554.f, -485.f))
-      .setProperty(app::QUAD_UAXIS, Vec3D(130.f, 0.f, 0.f))
-      .setProperty(app::QUAD_VAXIS, Vec3D(0.f, 0.f, 105.f));
+      .setProperty(app::QUAD_ORIGIN, Point3f(213.f, 554.f, -485.f))
+      .setProperty(app::QUAD_UAXIS, Vec3f(130.f, 0.f, 0.f))
+      .setProperty(app::QUAD_VAXIS, Vec3f(0.f, 0.f, 105.f));
   scene_director.createSceneElement(entity_factory, light_wall);
   auto diffuse_light_element = scene_director.getCurrentElement();
 
@@ -164,9 +164,9 @@ int main() {
   auto canvas = Canvas(500, 500);
   canvas.setFileName("scenes/scene.ppm");
   auto camera = Camera(canvas.width(), canvas.height(), 1.54f);
-  auto from = Point3D(278.f, 260.f, -830.f);
-  auto to = Point3D(278.f, 278.f, 0.f);
-  auto up = Vec3D(0.0f, 1.0f, 0.0f);
+  auto from = Point3f(278.f, 260.f, -830.f);
+  auto to = Point3f(278.f, 278.f, 0.f);
+  auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera.setTransform(view_transform(from, to, up));
 
   auto samples_per_pixel = 20;
@@ -174,7 +174,7 @@ int main() {
   BaseRendererPtr renderer =
       make_unique<PathTracer>(std::make_unique<BruteForceSampler>(
           camera, samples_per_pixel, material_depth));
-  renderer->setBackgroundColor(Vec3D(0.3f, 0.3f, 0.3f));
+  renderer->setBackgroundColor(Vec3f(0.3f, 0.3f, 0.3f));
   renderer->addDiffuseLight(diffuse_light_element.get());
   auto start = chrono::steady_clock::now();
   canvas.renderParallel(world, camera, std::move(renderer));

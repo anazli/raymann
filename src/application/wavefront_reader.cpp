@@ -99,7 +99,7 @@ void WavefrontReader::normalizeVertices() {
   auto maxY = -limit::max();
   auto minZ = limit::max();
   auto maxZ = -limit::max();
-  for (const Vec3D &elem : m_verticesNormalized) {
+  for (const Vec3f &elem : m_verticesNormalized) {
     minX = std::min(minX, elem.x());
     maxX = std::max(maxX, elem.x());
     minY = std::min(minY, elem.y());
@@ -110,7 +110,7 @@ void WavefrontReader::normalizeVertices() {
   auto xrange = maxX - minX;
   auto yrange = maxY - minY;
   auto zrange = maxZ - minZ;
-  for (Vec3D &elem : m_verticesNormalized) {
+  for (Vec3f &elem : m_verticesNormalized) {
     elem.setX((elem.x() - minX) / xrange * 2.f - 1.f);
     elem.setY((elem.y() - minY) / yrange * 2.f - 1.f);
     elem.setZ((elem.z() - minZ) / zrange * 2.f - 1.f);
@@ -124,9 +124,9 @@ void WavefrontReader::addLightForModel(const PointLight &light) {
 
 void WavefrontReader::addMaterial(MaterialPtr mat) { m_material = mat; }
 
-vector<Vec3D> WavefrontReader::vertexCollection() const { return m_vertices; }
+vector<Vec3f> WavefrontReader::vertexCollection() const { return m_vertices; }
 
-std::vector<Normal3D> WavefrontReader::vertexNormalCollection() const {
+std::vector<Normal3f> WavefrontReader::vertexNormalCollection() const {
   return m_verticesNormals;
 }
 
@@ -149,12 +149,12 @@ void WavefrontReader::openFile() {
 }
 
 void WavefrontReader::parseVertexEntry(string_view line,
-                                       std::vector<Vec3D> &vec) {
+                                       std::vector<Vec3f> &vec) {
   istringstream ss(line.data());
   string v, x, y, z;
   if (ss >> v >> x >> y >> z) {
     try {
-      vec.push_back(Vec3D(stof(x), stof(y), stof(z)));
+      vec.push_back(Vec3f(stof(x), stof(y), stof(z)));
     } catch (...) {
       APP_MSG(line.data());
       APP_ASSERT(false,
@@ -168,7 +168,7 @@ void WavefrontReader::parseVertexNormalEntry(std::string_view line) {
   string v, x, y, z;
   if (ss >> v >> x >> y >> z) {
     try {
-      m_verticesNormals.push_back(Normal3D(stof(x), stof(y), stof(z)));
+      m_verticesNormals.push_back(Normal3f(stof(x), stof(y), stof(z)));
     } catch (...) {
       APP_MSG(line.data());
       APP_ASSERT(false,
@@ -185,18 +185,18 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
       string v, i, j, k;
       if (ss >> v >> i >> j >> k) {
         try {
-          Point3D p1, p2, p3;
+          Point3f p1, p2, p3;
           if (m_verticesNormalized.empty()) {
-            p1 = Point3D(m_vertices[stoi(i) - 1]);
-            p2 = Point3D(m_vertices[stoi(j) - 1]);
-            p3 = Point3D(m_vertices[stoi(k) - 1]);
+            p1 = Point3f(m_vertices[stoi(i) - 1]);
+            p2 = Point3f(m_vertices[stoi(j) - 1]);
+            p3 = Point3f(m_vertices[stoi(k) - 1]);
           } else {
-            p1 = Point3D(m_verticesNormalized[stoi(i) - 1]);
-            p2 = Point3D(m_verticesNormalized[stoi(j) - 1]);
-            p3 = Point3D(m_verticesNormalized[stoi(k) - 1]);
+            p1 = Point3f(m_verticesNormalized[stoi(i) - 1]);
+            p2 = Point3f(m_verticesNormalized[stoi(j) - 1]);
+            p3 = Point3f(m_verticesNormalized[stoi(k) - 1]);
           }
           auto primitive =
-              Triangle::create(std::initializer_list<Point3D>{p1, p2, p3});
+              Triangle::create(std::initializer_list<Point3f>{p1, p2, p3});
           auto scene_element = std::make_shared<SceneElementNode>();
           scene_element->setMaterial(m_material);
           scene_element->setPrimitive(primitive);
@@ -221,34 +221,34 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
       string v, i, j, k, h, g, o;
       if (ss >> v >> i >> j >> k >> h >> g >> o) {
         size_t vertSize = m_vertices.size();
-        Point3D p1, p2, p3;
+        Point3f p1, p2, p3;
         if (stoi(i) < 0)
-          p1 = Point3D(m_vertices[vertSize + stoi(i) - 1]);
+          p1 = Point3f(m_vertices[vertSize + stoi(i) - 1]);
         else
-          p1 = Point3D(m_vertices[stoi(i) - 1]);
+          p1 = Point3f(m_vertices[stoi(i) - 1]);
         if (stoi(j) < 0)
-          p2 = Point3D(m_vertices[vertSize + stoi(k) - 1]);
+          p2 = Point3f(m_vertices[vertSize + stoi(k) - 1]);
         else
-          p2 = Point3D(m_vertices[stoi(k) - 1]);
+          p2 = Point3f(m_vertices[stoi(k) - 1]);
         if (stoi(k) < 0)
-          p3 = Point3D(m_vertices[vertSize + stoi(g) - 1]);
+          p3 = Point3f(m_vertices[vertSize + stoi(g) - 1]);
         else
-          p3 = Point3D(m_vertices[stoi(g) - 1]);
+          p3 = Point3f(m_vertices[stoi(g) - 1]);
 
         size_t vertNormSize = m_verticesNormals.size();
-        Normal3D n1, n2, n3;
+        Normal3f n1, n2, n3;
         if (stoi(j) < 0)
-          n1 = Normal3D(m_verticesNormals[vertNormSize + stoi(j) - 1]);
+          n1 = Normal3f(m_verticesNormals[vertNormSize + stoi(j) - 1]);
         else
-          n1 = Normal3D(m_verticesNormals[stoi(j) - 1]);
+          n1 = Normal3f(m_verticesNormals[stoi(j) - 1]);
         if (stoi(h) < 0)
-          n2 = Normal3D(m_verticesNormals[vertNormSize + stoi(h) - 1]);
+          n2 = Normal3f(m_verticesNormals[vertNormSize + stoi(h) - 1]);
         else
-          n2 = Normal3D(m_verticesNormals[stoi(h) - 1]);
+          n2 = Normal3f(m_verticesNormals[stoi(h) - 1]);
         if (stoi(o) < 0)
-          n3 = Normal3D(m_verticesNormals[vertNormSize + stoi(o) - 1]);
+          n3 = Normal3f(m_verticesNormals[vertNormSize + stoi(o) - 1]);
         else
-          n3 = Normal3D(m_verticesNormals[stoi(o) - 1]);
+          n3 = Normal3f(m_verticesNormals[stoi(o) - 1]);
 
         auto scene_element = std::make_shared<SceneElementNode>();
         auto primitive = SmoothTriangle::create(p1, p2, p3, n1, n2, n3);
@@ -273,7 +273,7 @@ void WavefrontReader::parsePolygonEntry(string_view line) {
   string v, i, j, k, f, g;
   if (ss >> v >> i >> j >> k >> f >> g) {
     try {
-      vector<Vec3D> polygonVertices;
+      vector<Vec3f> polygonVertices;
       polygonVertices.push_back(m_vertices[stol(i) - 1]);
       polygonVertices.push_back(m_vertices[stol(j) - 1]);
       polygonVertices.push_back(m_vertices[stol(k) - 1]);
@@ -294,14 +294,14 @@ void WavefrontReader::parseGroupEntry(std::string_view line) {
   m_finalProduct->add(m_currentGroup);
 }
 
-void WavefrontReader::triangulatePolygon(vector<Vec3D> vertices) {
+void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {
   for (int i = 1; i < vertices.size() - 1; ++i) {
-    Point3D p1 = Point3D(vertices[0]);
-    Point3D p2 = Point3D(vertices[i]);
-    Point3D p3 = Point3D(vertices[i + 1]);
+    Point3f p1 = Point3f(vertices[0]);
+    Point3f p2 = Point3f(vertices[i]);
+    Point3f p3 = Point3f(vertices[i + 1]);
     auto scene_element = std::shared_ptr<SceneElementNode>();
     auto primitive =
-        Triangle::create(std::initializer_list<Point3D>{p1, p2, p3});
+        Triangle::create(std::initializer_list<Point3f>{p1, p2, p3});
     scene_element->setMaterial(m_material);
     scene_element->setPrimitive(primitive);
     if (m_currentGroup) {

@@ -12,15 +12,15 @@ class Cone : public Primitive {
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed), Primitive(tr) {
     if (!closed) {
       m_object_box.minPoint() =
-          Point3D(-limit::infinity(), -limit::infinity(), -limit::infinity());
+          Point3f(-limit::infinity(), -limit::infinity(), -limit::infinity());
       m_object_box.maxPoint() =
-          Point3D(limit::infinity(), limit::infinity(), limit::infinity());
+          Point3f(limit::infinity(), limit::infinity(), limit::infinity());
     } else {
       auto a = fabs(m_minimumY);
       auto b = fabs(m_maximumY);
       auto lim = std::max(a, b);
-      m_object_box.minPoint() = Point3D(-lim, m_minimumY, -lim);
-      m_object_box.maxPoint() = Point3D(lim, m_maximumY, lim);
+      m_object_box.minPoint() = Point3f(-lim, m_minimumY, -lim);
+      m_object_box.maxPoint() = Point3f(lim, m_maximumY, lim);
     }
     m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
@@ -74,16 +74,16 @@ class Cone : public Primitive {
     if (intersectCaps(transf_ray, record)) hitAnything = true;
     return hitAnything;
   }
-  Normal3D normal(const Point3D &p) const override {
+  Normal3f normal(const Point3f &p) const override {
     auto object_point = m_transformation.worldToObjectSpace(p);
     auto distance = object_point.x() * object_point.x() +
                     object_point.z() * object_point.z();
     if (distance < 1.f && object_point.y() >= m_maximumY - EPS) {
-      return Normal3D(0.f, 1.f, 0.f);
+      return Normal3f(0.f, 1.f, 0.f);
     } else if (distance < 1.f && object_point.y() <= m_minimumY + EPS) {
-      return Normal3D(0.f, -1.f, 0.f);
+      return Normal3f(0.f, -1.f, 0.f);
     }
-    auto object_normal = Normal3D(object_point.x(), 0.f, object_point.z());
+    auto object_normal = Normal3f(object_point.x(), 0.f, object_point.z());
     return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }
 

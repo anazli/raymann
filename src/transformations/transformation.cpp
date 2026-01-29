@@ -14,69 +14,69 @@ Mat4D Transformation::getInverseTransposeMatrix() const {
 Ray Transformation::worldToObjectSpace(const Ray& ray) {
   auto object_space_origin = m_inverse_matrix * Vec4D(ray.origin());
   auto object_space_direction = m_inverse_matrix * Vec4D(ray.direction());
-  return Ray(Point3D(object_space_origin), Vec3D(object_space_direction));
+  return Ray(Point3f(object_space_origin), Vec3f(object_space_direction));
 }
 
 Ray Transformation::objectToWorldSpace(const Ray& ray) {
   auto world_space_origin = m_matrix * Vec4D(ray.origin());
   auto world_space_direction = m_matrix * Vec4D(ray.direction());
-  return Ray(Point3D(world_space_origin), Vec3D(world_space_direction));
+  return Ray(Point3f(world_space_origin), Vec3f(world_space_direction));
 }
 
 BoundingBox Transformation::worldToObjectSpace(const BoundingBox& b) const {
-  Point3D p1 = b.minPoint();
-  Point3D p2 = Point3D(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3D p3 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
-  Point3D p4 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.maxPoint().z());
-  Point3D p5 = Point3D(b.maxPoint().x(), b.minPoint().y(), b.minPoint().z());
-  Point3D p6 = Point3D(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3D p7 = Point3D(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
-  Point3D p8 = b.maxPoint();
+  Point3f p1 = b.minPoint();
+  Point3f p2 = Point3f(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
+  Point3f p3 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
+  Point3f p4 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.maxPoint().z());
+  Point3f p5 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.minPoint().z());
+  Point3f p6 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
+  Point3f p7 = Point3f(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
+  Point3f p8 = b.maxPoint();
   auto box = BoundingBox{};
-  std::vector<Point3D> v{p1, p2, p3, p4, p5, p6, p7, p8};
-  for (Point3D& elem : v) {
-    box.addPoint(Point3D(m_matrix.inverse() * Vec4D(elem)));
+  std::vector<Point3f> v{p1, p2, p3, p4, p5, p6, p7, p8};
+  for (Point3f& elem : v) {
+    box.addPoint(Point3f(m_matrix.inverse() * Vec4D(elem)));
   }
   return box;
 }
 
 BoundingBox Transformation::objectToWorldSpace(const BoundingBox& b) const {
-  Point3D p1 = b.minPoint();
-  Point3D p2 = Point3D(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3D p3 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
-  Point3D p4 = Point3D(b.minPoint().x(), b.maxPoint().y(), b.maxPoint().z());
-  Point3D p5 = Point3D(b.maxPoint().x(), b.minPoint().y(), b.minPoint().z());
-  Point3D p6 = Point3D(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3D p7 = Point3D(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
-  Point3D p8 = b.maxPoint();
+  Point3f p1 = b.minPoint();
+  Point3f p2 = Point3f(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
+  Point3f p3 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
+  Point3f p4 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.maxPoint().z());
+  Point3f p5 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.minPoint().z());
+  Point3f p6 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
+  Point3f p7 = Point3f(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
+  Point3f p8 = b.maxPoint();
   auto box = BoundingBox{};
-  std::vector<Point3D> v{p1, p2, p3, p4, p5, p6, p7, p8};
-  for (Point3D& elem : v) {
-    box.addPoint(Point3D(m_matrix * Vec4D(elem)));
+  std::vector<Point3f> v{p1, p2, p3, p4, p5, p6, p7, p8};
+  for (Point3f& elem : v) {
+    box.addPoint(Point3f(m_matrix * Vec4D(elem)));
   }
   return box;
 }
 
-Point3D Transformation::worldToObjectSpace(const Point3D& p) const {
-  return Point3D(m_inverse_matrix * Vec4D(p));
+Point3f Transformation::worldToObjectSpace(const Point3f& p) const {
+  return Point3f(m_inverse_matrix * Vec4D(p));
 }
 
-Point3D Transformation::objectToWorldSpace(const Point3D& p) const {
-  return Point3D(m_matrix * Vec4D(p));
+Point3f Transformation::objectToWorldSpace(const Point3f& p) const {
+  return Point3f(m_matrix * Vec4D(p));
 }
 
-Vec3D Transformation::worldToObjectSpace(const Vec3D& v) const {
-  return Vec3D(m_inverse_matrix * Vec4D(v));
+Vec3f Transformation::worldToObjectSpace(const Vec3f& v) const {
+  return Vec3f(m_inverse_matrix * Vec4D(v));
 }
 
-Vec3D Transformation::objectToWorldSpace(const Vec3D& v) const {
-  return Vec3D(m_matrix * Vec4D(v));
+Vec3f Transformation::objectToWorldSpace(const Vec3f& v) const {
+  return Vec3f(m_matrix * Vec4D(v));
 }
 
-Normal3D Transformation::worldToObjectSpace(const Normal3D& n) const {
-  return Normal3D(m_inverse_matrix * Vec4D(n));
+Normal3f Transformation::worldToObjectSpace(const Normal3f& n) const {
+  return Normal3f(m_inverse_matrix * Vec4D(n));
 }
 
-Normal3D Transformation::objectToWorldSpace(const Normal3D& n) const {
-  return Normal3D(m_inverse_transpose_matrix * Vec4D(n));
+Normal3f Transformation::objectToWorldSpace(const Normal3f& n) const {
+  return Normal3f(m_inverse_transpose_matrix * Vec4D(n));
 }

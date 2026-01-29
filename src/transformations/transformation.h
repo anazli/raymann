@@ -1,7 +1,8 @@
 #pragma once
 
+#include <mat4.h>
+
 #include "acceleration/bounding_box.h"
-#include "math_utils/mat4.h"
 
 class Transformation {
  public:
@@ -14,12 +15,12 @@ class Transformation {
   Ray objectToWorldSpace(const Ray& ray);
   BoundingBox worldToObjectSpace(const BoundingBox& b) const;
   BoundingBox objectToWorldSpace(const BoundingBox& b) const;
-  Point3D worldToObjectSpace(const Point3D& p) const;
-  Point3D objectToWorldSpace(const Point3D& p) const;
-  Vec3D worldToObjectSpace(const Vec3D& v) const;
-  Vec3D objectToWorldSpace(const Vec3D& v) const;
-  Normal3D worldToObjectSpace(const Normal3D& n) const;
-  Normal3D objectToWorldSpace(const Normal3D& n) const;
+  Point3f worldToObjectSpace(const Point3f& p) const;
+  Point3f objectToWorldSpace(const Point3f& p) const;
+  Vec3f worldToObjectSpace(const Vec3f& v) const;
+  Vec3f objectToWorldSpace(const Vec3f& v) const;
+  Normal3f worldToObjectSpace(const Normal3f& n) const;
+  Normal3f objectToWorldSpace(const Normal3f& n) const;
 
  protected:
   Mat4D m_matrix;

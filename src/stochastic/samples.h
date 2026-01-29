@@ -10,9 +10,9 @@
 
 Vec2D concentricSampleDisk(const Vec2D& u);
 
-inline Vec3D cosineSampleHemisphere(const Vec2D& v) {
+inline Vec3f cosineSampleHemisphere(const Vec2D& v) {
   auto ret = concentricSampleDisk(v);
   auto z =
       std::sqrt(std::max(0.f, 1.f - ret.x() * ret.x() - ret.y() * ret.y()));
-  return Vec3D(ret.x(), ret.y(), z);
+  return Vec3f(ret.x(), ret.y(), z);
 }

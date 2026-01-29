@@ -7,11 +7,11 @@ EmissiveMaterial::EmissiveMaterial(TexturePtr tex) : Material(std::move(tex)) {
 }
 
 bool EmissiveMaterial::scatter(const Ray& r_in, const Intersection& rec,
-                               Vec3D& attenuation, Ray& scattered) const {
+                               Vec3f& attenuation, Ray& scattered) const {
   return false;
 }
 
-Vec3D EmissiveMaterial::emmit(float u, float v, const Vec3D& p) {
+Vec3f EmissiveMaterial::emmit(float u, float v, const Vec3f& p) {
   return m_tex->value(u, v, p);
 }
 

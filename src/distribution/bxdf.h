@@ -20,14 +20,14 @@ class Bxdf {
  public:
   virtual ~Bxdf() = default;
   // value of distribution for pair of directions
-  virtual Spectrum f(const Vec3D& wo, const Vec3D& wi) const = 0;
-  virtual Spectrum sampleF(const Vec3D& wo, Vec3D& wi, const Vec2D& p,
+  virtual Spectrum f(const Vec3f& wo, const Vec3f& wi) const = 0;
+  virtual Spectrum sampleF(const Vec3f& wo, Vec3f& wi, const Vec2D& p,
                            float& pdf_val) const;
   // Hemispherical-directional reflectance
-  virtual Spectrum rhd(const Vec3D& wo, int num_samples, Vec2D& samples) const;
+  virtual Spectrum rhd(const Vec3f& wo, int num_samples, Vec2D& samples) const;
   // Hemispherical-hemispherical reflectance
   virtual Spectrum rhh(int num_samples, Vec2D& samples1, Vec2D& samples2) const;
-  virtual float pdf(const Vec3D& wi, const Vec3D& wo) const;
+  virtual float pdf(const Vec3f& wi, const Vec3f& wo) const;
 
  protected:
   explicit Bxdf(const BxdfType& type);

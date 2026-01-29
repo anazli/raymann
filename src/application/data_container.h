@@ -5,7 +5,6 @@
 #include <optional>
 
 #include "application/parameters.h"
-#include "math_utils/math_utils.h"
 
 class DataContainer {
  public:

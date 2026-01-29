@@ -11,11 +11,11 @@ class Cylinder : public Primitive {
            const Transformation &tr = Transformation())
       : m_minimumY(minY), m_maximumY(maxY), m_closed(closed), Primitive(tr) {
     if (!closed) {
-      m_object_box.minPoint() = Point3D(-1.f, -limit::infinity(), -1.f);
-      m_object_box.maxPoint() = Point3D(1.f, limit::infinity(), 1.f);
+      m_object_box.minPoint() = Point3f(-1.f, -limit::infinity(), -1.f);
+      m_object_box.maxPoint() = Point3f(1.f, limit::infinity(), 1.f);
     } else {
-      m_object_box.minPoint() = Point3D(-1.f, m_minimumY, -1.f);
-      m_object_box.maxPoint() = Point3D(1.f, m_maximumY, 1.f);
+      m_object_box.minPoint() = Point3f(-1.f, m_minimumY, -1.f);
+      m_object_box.maxPoint() = Point3f(1.f, m_maximumY, 1.f);
     }
     m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
@@ -64,17 +64,17 @@ class Cylinder : public Primitive {
     if (intersectCaps(transf_ray, record)) hitAnything = true;
     return hitAnything;
   }
-  Normal3D normal(const Point3D &p) const override {
+  Normal3f normal(const Point3f &p) const override {
     auto object_point = m_transformation.worldToObjectSpace(p);
     auto distance = object_point.x() * object_point.x() +
                     object_point.z() * object_point.z();
-    Normal3D object_normal;
+    Normal3f object_normal;
     if (distance < 1.f && object_point.y() >= m_maximumY - EPS) {
-      object_normal = Normal3D(0.f, 1.f, 0.f);
+      object_normal = Normal3f(0.f, 1.f, 0.f);
     } else if (distance < 1.f && object_point.y() <= m_minimumY + EPS) {
-      object_normal = Normal3D(0.f, -1.f, 0.f);
+      object_normal = Normal3f(0.f, -1.f, 0.f);
     } else {
-      object_normal = Normal3D(object_point.x(), 0.f, object_point.z());
+      object_normal = Normal3f(object_point.x(), 0.f, object_point.z());
     }
     return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }

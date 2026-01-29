@@ -7,12 +7,12 @@ class StochasticSampler {
   StochasticSampler(const Camera &cam, int pixelSamples = 50,
                     int materialDepth = 30);
   virtual ~StochasticSampler() = default;
-  virtual Vec3D computeColor(BaseRendererRawPtr renderer,
+  virtual Vec3f computeColor(BaseRendererRawPtr renderer,
                              const SceneElementRawPtr world) = 0;
 
  protected:
-  Vec3D colorCorrection(Vec3D &color);
-  void addRandomSample(Vec3D &outputColor, const Vec3D &randomSampleColor);
+  Vec3f colorCorrection(Vec3f &color);
+  void addRandomSample(Vec3f &outputColor, const Vec3f &randomSampleColor);
   Camera m_camera;
   int m_samplesPerPixel;
   int m_materialDepth;
@@ -25,7 +25,7 @@ class BruteForceSampler : public StochasticSampler {
   BruteForceSampler(const Camera &cam, int pixelSamples = 50,
                     int materialDepth = 30);
   ~BruteForceSampler() override = default;
-  Vec3D computeColor(BaseRendererRawPtr renderer,
+  Vec3f computeColor(BaseRendererRawPtr renderer,
                      const SceneElementRawPtr world) override;
 };
 
@@ -34,6 +34,6 @@ class StratifiedSampler : public StochasticSampler {
   StratifiedSampler(const Camera &cam, int pixelSamples = 50,
                     int materialDepth = 30);
   ~StratifiedSampler() override = default;
-  Vec3D computeColor(BaseRendererRawPtr renderer,
+  Vec3f computeColor(BaseRendererRawPtr renderer,
                      const SceneElementRawPtr world) override;
 };

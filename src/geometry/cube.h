@@ -8,8 +8,8 @@
 class Cube : public Primitive {
  public:
   Cube(const Transformation &tr = Transformation()) : Primitive(tr) {
-    m_object_box.minPoint() = Point3D(-1.f, -1.f, -1.f);
-    m_object_box.maxPoint() = Point3D(1.f, 1.f, 1.f);
+    m_object_box.minPoint() = Point3f(-1.f, -1.f, -1.f);
+    m_object_box.maxPoint() = Point3f(1.f, 1.f, 1.f);
     m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
   ~Cube() override = default;
@@ -33,18 +33,18 @@ class Cube : public Primitive {
     return true;
   }
 
-  Normal3D normal(const Point3D &p) const override {
+  Normal3f normal(const Point3f &p) const override {
     auto object_point = m_transformation.worldToObjectSpace(p);
     auto max_coord =
         std::max(std::max(fabs(object_point.x()), fabs(object_point.y())),
                  fabs(object_point.z()));
-    Normal3D object_normal;
+    Normal3f object_normal;
     if (max_coord == fabs(object_point.x())) {
-      object_normal = Normal3D(object_point.x(), 0.f, 0.f);
+      object_normal = Normal3f(object_point.x(), 0.f, 0.f);
     } else if (max_coord == fabs(object_point.y())) {
-      object_normal = Normal3D(0.f, object_point.y(), 0.f);
+      object_normal = Normal3f(0.f, object_point.y(), 0.f);
     } else {
-      object_normal = Normal3D(0.f, 0.f, object_point.z());
+      object_normal = Normal3f(0.f, 0.f, object_point.z());
     }
     return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
   }

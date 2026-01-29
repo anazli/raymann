@@ -5,14 +5,14 @@
 
 class Triangle : public Primitive {
  public:
-  Triangle(const std::initializer_list<Point3D> &points,
+  Triangle(const std::initializer_list<Point3f> &points,
            const Transformation &tr = Transformation())
       : m_points(points), Primitive(tr) {
     APP_ASSERT((points.size() == 3),
                "Wrong number of points for triangle creation!");
     m_edgeVec.push_back(m_points[1] - m_points[0]);
     m_edgeVec.push_back(m_points[2] - m_points[0]);
-    m_normalVec = Normal3D(getUnitVectorOf(cross(m_edgeVec[0], m_edgeVec[1])));
+    m_normalVec = Normal3f(getUnitVectorOf(cross(m_edgeVec[0], m_edgeVec[1])));
 
     m_object_box.addPoint(m_points[0]);
     m_object_box.addPoint(m_points[1]);
@@ -20,8 +20,8 @@ class Triangle : public Primitive {
     m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
   ~Triangle() override = default;
-  Point3D point(int idx) const { return m_points[idx]; }
-  Vec3D edgeVector(int idx) const {
+  Point3f point(int idx) const { return m_points[idx]; }
+  Vec3f edgeVector(int idx) const {
     APP_ASSERT((idx < 2 && idx >= 0),
                "Out of bounds index error in triangle (Edge Vector)");
     return m_edgeVec[idx];
@@ -50,17 +50,17 @@ class Triangle : public Primitive {
     record.normal = normal(record.hit_point);
     return true;
   }
-  Normal3D normal(const Point3D &p) const override { return m_normalVec; }
+  Normal3f normal(const Point3f &p) const override { return m_normalVec; }
 
-  static PrimitivePtr create(const std::initializer_list<Point3D> &points,
+  static PrimitivePtr create(const std::initializer_list<Point3f> &points,
                              const Transformation &tr = Transformation()) {
     return std::make_shared<Triangle>(points, tr);
   }
 
  private:
-  std::vector<Point3D> m_points;
-  std::vector<Vec3D> m_edgeVec;
-  Normal3D m_normalVec;
+  std::vector<Point3f> m_points;
+  std::vector<Vec3f> m_edgeVec;
+  Normal3f m_normalVec;
 };
 
 //-----------------------------------------
@@ -68,8 +68,8 @@ class Triangle : public Primitive {
 //-----------------------------------------
 class SmoothTriangle : public Primitive {
  public:
-  SmoothTriangle(const Point3D &p1, const Point3D &p2, const Point3D &p3,
-                 const Normal3D &v1, const Normal3D &v2, const Normal3D &v3,
+  SmoothTriangle(const Point3f &p1, const Point3f &p2, const Point3f &p3,
+                 const Normal3f &v1, const Normal3f &v2, const Normal3f &v3,
                  const Transformation &tr = Transformation())
       : Primitive(tr) {
     m_points.push_back(p1);
@@ -89,13 +89,13 @@ class SmoothTriangle : public Primitive {
     m_world_box = m_transformation.objectToWorldSpace(m_object_box);
   }
 
-  Point3D points(int idx) const {
+  Point3f points(int idx) const {
     APP_ASSERT((idx < 3 && idx >= 0),
                "Out of bounds index error in smooth triangle (Points)");
     return m_points[idx];
   }
 
-  Normal3D normals(int idx) const {
+  Normal3f normals(int idx) const {
     APP_ASSERT((idx < 3 && idx >= 0),
                "Out of bounds index error in smooth triangle (Points)");
     return m_normals[idx];
@@ -125,22 +125,22 @@ class SmoothTriangle : public Primitive {
     return true;
   }
 
-  Normal3D normal(const Point3D &p) const override {
+  Normal3f normal(const Point3f &p) const override {
     return m_normals[1] * m_uPar + m_normals[2] * m_vPar +
            m_normals[0] * (1.f - m_uPar - m_vPar);
   }
 
-  static PrimitivePtr create(const Point3D &p1, const Point3D &p2,
-                             const Point3D &p3, const Normal3D &v1,
-                             const Normal3D &v2, const Normal3D &v3,
+  static PrimitivePtr create(const Point3f &p1, const Point3f &p2,
+                             const Point3f &p3, const Normal3f &v1,
+                             const Normal3f &v2, const Normal3f &v3,
                              const Transformation &tr = Transformation()) {
     return std::make_shared<SmoothTriangle>(p1, p2, p3, v1, v2, v3, tr);
   }
 
  private:
-  std::vector<Point3D> m_points;
-  std::vector<Normal3D> m_normals;
-  std::vector<Vec3D> m_edgeVec;
+  std::vector<Point3f> m_points;
+  std::vector<Normal3f> m_normals;
+  std::vector<Vec3f> m_edgeVec;
   float m_uPar;
   float m_vPar;
 };

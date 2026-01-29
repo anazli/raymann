@@ -1,14 +1,16 @@
 #pragma once
 
+#include <normal3.h>
+
 #include <limits>
 #include <list>
 #include <memory>
 
 #include "acceleration/bounding_box.h"
+#include "color/light.h"
 #include "composite/intersection.h"
 #include "geometry/primitive.h"
 #include "materials/material.h"
-#include "math_utils/normal3.h"
 #include "transformations/transformation.h"
 
 class BaseRenderer;

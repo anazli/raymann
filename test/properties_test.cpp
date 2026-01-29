@@ -48,10 +48,10 @@ TEST_F(DataContainerTest, getsPropertyAsFloat) {
   EXPECT_EQ(p.getPropertyAs<float>(name).value(), any_cast<float>(value));
 }
 
-TEST_F(DataContainerTest, getsPropertyAsVec3D) {
-  Vec3D new_value(1.f, 1.f, 1.f);
+TEST_F(DataContainerTest, getsPropertyAsVec3f) {
+  Vec3f new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAs<Vec3D>(name).value(), new_value);
+  EXPECT_EQ(p.getPropertyAs<Vec3f>(name).value(), new_value);
 }
 
 TEST_F(DataContainerTest, getsPropertyAsMat4D) {
@@ -63,10 +63,10 @@ TEST_F(DataContainerTest, getsPropertyAsMat4D) {
   EXPECT_EQ(p.getPropertyAs<Mat4D>(name).value(), new_value);
 }
 
-TEST_F(DataContainerTest, getsPropertyAsPoint3D) {
-  Point3D new_value(1.f, 1.f, 1.f);
+TEST_F(DataContainerTest, getsPropertyAsPoint3f) {
+  Point3f new_value(1.f, 1.f, 1.f);
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAs<Point3D>(name).value(), new_value);
+  EXPECT_EQ(p.getPropertyAs<Point3f>(name).value(), new_value);
 }
 
 TEST_F(DataContainerTest, removesProperty) {

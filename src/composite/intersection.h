@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <limits>
+#include <ray.h>
 
-#include "math_utils/ray.h"
+#include <limits>
 
 class SceneElementNode;
 
@@ -20,13 +20,13 @@ struct Intersection {
     return thit;
   }
   float thit = std::numeric_limits<float>::infinity();
-  Point3D getHitPoint(const Ray& r) const { return r.position(thit); }
+  Point3f getHitPoint(const Ray& r) const { return r.position(thit); }
   // point of intersection test in world space
-  Point3D hit_point;
+  Point3f hit_point;
   // negative ray direction
-  Vec3D omega;
+  Vec3f omega;
   // geometric normal of closest hit point in world space
-  Normal3D normal;
+  Normal3f normal;
   // primitive of closest hit
   SceneElementNode* closest_scene_element = nullptr;
 };

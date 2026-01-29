@@ -10,11 +10,11 @@
 LambertianBrdf::LambertianBrdf(const Spectrum& sp)
     : Bxdf(BxdfType(BxdfType::BSDF_REFLECTION | BxdfType::BSDF_DIFFUSE)) {}
 
-Spectrum LambertianBrdf::f(const Vec3D& wo, const Vec3D& wi) const {
+Spectrum LambertianBrdf::f(const Vec3f& wo, const Vec3f& wi) const {
   return m_spectrum * InvPI;
 }
 
-Spectrum LambertianBrdf::rhd(const Vec3D& wo, int num_samples,
+Spectrum LambertianBrdf::rhd(const Vec3f& wo, int num_samples,
                              Vec2D& samples) const {
   return m_spectrum;
 }

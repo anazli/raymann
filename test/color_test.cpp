@@ -3,8 +3,8 @@
 
 class ColorTest : public testing::RTest {
  public:
-  Spectrum s1 = Spectrum(Vec3D(1.f, 2.f, 3.f));
-  Spectrum s2 = Spectrum(Vec3D(4.f, 5.f, 6.f));
+  Spectrum s1 = Spectrum(Vec3f(1.f, 2.f, 3.f));
+  Spectrum s2 = Spectrum(Vec3f(4.f, 5.f, 6.f));
 };
 
 TEST_F(ColorTest, unaryMinus) {
@@ -44,7 +44,7 @@ TEST_F(ColorTest, unaryDivision) {
 }
 
 TEST_F(ColorTest, clampSpectrum) {
-  s1.setSamples(Vec3D(200.f, -200.f, 50.f));
+  s1.setSamples(Vec3f(200.f, -200.f, 50.f));
   s1 = s1.clamp(0.f, 100.f);
   EXPECT_EQ(s1.samples()[0], 100.f);
   EXPECT_EQ(s1.samples()[1], 0.f);
@@ -73,7 +73,7 @@ TEST_F(ColorTest, spectrumIsBlackTest) {
 TEST_F(ColorTest, spectrumHasNaNsTest) {
   EXPECT_FALSE(s1.hasNaNs());
   Spectrum s3(0.f);
-  s3.setSamples(Vec3D(0.f, std::nan("9"), 0.f));
+  s3.setSamples(Vec3f(0.f, std::nan("9"), 0.f));
   EXPECT_TRUE(s3.hasNaNs());
 }
 

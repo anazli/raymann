@@ -5,12 +5,12 @@
 
 class Quad : public Primitive {
  public:
-  Quad(const Point3D& origin, const Vec3D& uAxis, const Vec3D& vAxis,
+  Quad(const Point3f& origin, const Vec3f& uAxis, const Vec3f& vAxis,
        const Transformation& tr = Transformation())
       : m_origin(origin), m_uAxis(uAxis), m_vAxis(vAxis), Primitive(tr) {
     auto n = cross(m_uAxis, m_vAxis);
     auto normalV = getUnitVectorOf(n);
-    m_dParam = dot(normalV, Vec3D(m_origin));
+    m_dParam = dot(normalV, Vec3f(m_origin));
     m_wParam = normalV / dot(n, n);
 
     m_area = n.length();
@@ -25,11 +25,11 @@ class Quad : public Primitive {
     auto direction = transf_ray.direction();
     auto normalV = normal(record.getHitPoint(transf_ray));
     auto denom = dot(normalV, direction);
-    auto dParam = dot(normalV, Vec3D(m_origin));
+    auto dParam = dot(normalV, Vec3f(m_origin));
 
     if (fabs(denom) < EPS) return false;
 
-    auto t = (dParam - dot(normalV, Vec3D(origin))) / denom;
+    auto t = (dParam - dot(normalV, Vec3f(origin))) / denom;
     auto intersection = transf_ray.position(t);
     auto planarHitptVector = intersection - m_origin;
 
@@ -43,14 +43,14 @@ class Quad : public Primitive {
     return true;
   }
 
-  Normal3D normal(const Point3D& p) const override {
+  Normal3f normal(const Point3f& p) const override {
     auto n = cross(m_uAxis, m_vAxis);
     n.normalize();
-    return Normal3D(n);
+    return Normal3f(n);
   }
 
-  static PrimitivePtr create(const Point3D& origin, const Vec3D& uAxis,
-                             const Vec3D& vAxis,
+  static PrimitivePtr create(const Point3f& origin, const Vec3f& uAxis,
+                             const Vec3f& vAxis,
                              const Transformation& tr = Transformation()) {
     return std::make_shared<Quad>(origin, uAxis, vAxis, tr);
   }
@@ -63,10 +63,10 @@ class Quad : public Primitive {
     return true;
   }
 
-  Point3D m_origin;
-  Vec3D m_uAxis;
-  Vec3D m_vAxis;
+  Point3f m_origin;
+  Vec3f m_uAxis;
+  Vec3f m_vAxis;
   float m_dParam;
-  Vec3D m_wParam;
+  Vec3f m_wParam;
   float m_area;
 };

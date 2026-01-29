@@ -7,7 +7,7 @@
 #include "distribution/utilities.h"
 #include "stochastic/samples.h"
 
-Spectrum Bxdf::sampleF(const Vec3D& wo, Vec3D& wi, const Vec2D& p,
+Spectrum Bxdf::sampleF(const Vec3f& wo, Vec3f& wi, const Vec2D& p,
                        float& pdf_val) const {
   wi = cosineSampleHemisphere(p);
   if (wo.z() < 0.f) wi.setZ(wi.z() * (-1));
@@ -15,11 +15,11 @@ Spectrum Bxdf::sampleF(const Vec3D& wo, Vec3D& wi, const Vec2D& p,
   return f(wo, wi);
 }
 
-Spectrum Bxdf::rhd(const Vec3D& wo, int num_samples, Vec2D& samples) const {
+Spectrum Bxdf::rhd(const Vec3f& wo, int num_samples, Vec2D& samples) const {
   Spectrum r(0.f);
   /*for (int i = 0; i < num_samples; ++i) {
     // Estimate one term of $\rho_\roman{hd}$
-    Vec3D wi;
+    Vec3f wi;
     auto pdf = 0.f;
     Spectrum f = Sample_f(w, &wi, u[i], &pdf);
     if (pdf > 0) r += f * absoluteCosTheta(wi) / pdf;
@@ -31,7 +31,7 @@ Spectrum Bxdf::rhh(int num_samples, Vec2D& samples1, Vec2D& samples2) const {
   Spectrum r(0.f);
   /*for (int i = 0; i < num_samples; ++i) {
     // Estimate one term of $\rho_\roman{hh}$
-    Vec3D wo, wi;
+    Vec3f wo, wi;
     wo = UniformSampleHemisphere(u1[i]);
     float pdfo = UniformHemispherePdf(), pdfi = 0;
     Spectrum f = Sample_f(wo, &wi, u2[i], &pdfi);
@@ -41,7 +41,7 @@ Spectrum Bxdf::rhh(int num_samples, Vec2D& samples1, Vec2D& samples2) const {
   return r / (PI * num_samples);
 }
 
-float Bxdf::pdf(const Vec3D& wi, const Vec3D& wo) const {
+float Bxdf::pdf(const Vec3f& wi, const Vec3f& wo) const {
   return isOnSameHemisphere(wo, wi) ? absoluteCosTheta(wi) * InvPI : 0;
 }
 
