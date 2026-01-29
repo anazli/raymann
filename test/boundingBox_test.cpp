@@ -1,4 +1,6 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <mat3.h>
 
 #include "acceleration/bvh.h"
 #include "application/parameters.h"
@@ -13,6 +15,12 @@ using std::make_unique;
 using std::shared_ptr;
 using std::vector;
 using app = AppParameters;
+using testing::Eq;
+
+MATCHER_P2(Point3Near, v, eps, "") {
+  return fabs(arg.x() - v.x()) < eps && fabs(arg.y() - v.y()) < eps &&
+         fabs(arg.z() - v.z()) < eps;
+}
 
 class BoundingBoxTest : public testing::Test {
  public:
@@ -21,21 +29,22 @@ class BoundingBoxTest : public testing::Test {
   DataContainer prop;
   Intersection rec;
   BVHierarchy bvh;
+  float eps = 1.E-6f;
 };
 
 TEST_F(BoundingBoxTest, addsPointToBoundingBox) {
   box1.addPoint(Point3f(-5.f, 2.f, 0.f));
   box1.addPoint(Point3f(7.f, 0.f, -3.f));
-  comparePoints(box1.minPoint(), Point3f(-5.f, 0.f, -3.f));
-  comparePoints(box1.maxPoint(), Point3f(7.f, 2.f, 0.f));
+  EXPECT_THAT(box1.minPoint(), Eq(Point3f(-5.f, 0.f, -3.f)));
+  EXPECT_THAT(box1.maxPoint(), Eq(Point3f(7.f, 2.f, 0.f)));
 }
 
 TEST_F(BoundingBoxTest, addsBoxToBoundingBox) {
   box1 = BoundingBox(Point3f(-5.f, -2.f, 0.f), Point3f(7.f, 4.f, 4.f));
   box2 = BoundingBox(Point3f(8.f, -7.f, -2.f), Point3f(14.f, 2.f, 8.f));
   box1.addBox(box2);
-  comparePoints(box1.minPoint(), Point3f(-5.f, -7.f, -2.f));
-  comparePoints(box1.maxPoint(), Point3f(14.f, 4.f, 8.f));
+  EXPECT_THAT(box1.minPoint(), Eq(Point3f(-5.f, -7.f, -2.f)));
+  EXPECT_THAT(box1.maxPoint(), Eq(Point3f(14.f, 4.f, 8.f)));
 }
 
 TEST_F(BoundingBoxTest, checkIfBoxContainsPoint) {
@@ -73,42 +82,37 @@ TEST_F(BoundingBoxTest, transformsBoundingBox) {
   BoundingBox p = builder->getCurrentElement()->boundingBox();
 
   float eps = 1E-4f;
-  comparePointsApprox(p.minPoint(), Point3f(-1.4142f, -1.7071f, -1.7071f), eps);
-  comparePointsApprox(p.maxPoint(), Point3f(1.4142f, 1.7071f, 1.7071f), eps);*/
+  EXPECT_THATApprox(p.minPoint(), Point3f(-1.4142f, -1.7071f, -1.7071f), eps);
+  EXPECT_THATApprox(p.maxPoint(), Point3f(1.4142f, 1.7071f, 1.7071f), eps);*/
 }
 
 TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   EntityFactory builder;
+  SceneDirector director;
   DataContainer data;
   data.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(
           app::TRANSFORMATION_MATRIX,
           translation(Vec3f(1.f, -3.f, 5.f)) * scale(Vec3f(0.5f, 2.f, 4.f)));
-  builder.setData(data);
-  builder.createPrimitive();
-  builder.buildTransformation();
-  auto p = builder.getProduct()->getBoundingBox();
+  director.createSceneElement(builder, data);
+  auto p = director.getCurrentElement()->getBounds();
 
   auto eps = 1E-4f;
-  comparePointsApprox(p.minPoint(), Point3f(0.5f, -5.f, 1.f), eps);
-  comparePointsApprox(p.maxPoint(), Point3f(1.5f, -1.f, 9.f), eps);
+  EXPECT_THAT(p.minPoint(), Point3Near(Point3f(0.5f, -5.f, 1.f), eps));
+  EXPECT_THAT(p.maxPoint(), Point3Near(Point3f(1.5f, -1.f, 9.f), eps));
 }
 
 TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
   WorldBuilder world_builder;
-  world_builder.createWorld();
-
   EntityFactory primitive_builder;
+  SceneDirector scene_director;
+
   DataContainer data;
   data.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(
           app::TRANSFORMATION_MATRIX,
           translation(Vec3f(2.f, 5.f, -3.f)) * scale(Vec3f(2.f, 2.f, 2.f)));
-  primitive_builder.setData(data);
-  primitive_builder.createPrimitive();
-  primitive_builder.buildTransformation();
-  world_builder.addElement(primitive_builder.getProduct());
-  primitive_builder.reset();
+  scene_director.createSceneElement(primitive_builder, data);
 
   data.setProperty(app::PRIMITIVE_TYPE, app::CYLINDER)
       .setProperty(
@@ -117,15 +121,15 @@ TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
       .setProperty(app::CYLINDER_Y_MIN, -2.f)
       .setProperty(app::CYLINDER_Y_MAX, 2.f)
       .setProperty(app::CYLINDER_CLOSED, true);
-  primitive_builder.setData(data);
-  primitive_builder.createPrimitive();
-  primitive_builder.buildTransformation();
-  world_builder.addElement(primitive_builder.getProduct());
-  BoundingBox p = world_builder.getProduct()->getBounds();
+  scene_director.createSceneElement(primitive_builder, data);
+
+  scene_director.createWorld(world_builder, PointLight());
+
+  BoundingBox p = scene_director.getSceneProduct()->getBounds();
 
   float eps = 1E-4f;
-  comparePointsApprox(p.minPoint(), Point3f(-4.5f, -3.f, -5.f), eps);
-  comparePointsApprox(p.maxPoint(), Point3f(4.f, 7.f, 4.5f), eps);
+  EXPECT_THAT(p.minPoint(), Point3Near(Point3f(-4.5f, -3.f, -5.f), eps));
+  EXPECT_THAT(p.maxPoint(), Point3Near(Point3f(4.f, 7.f, 4.5f), eps));
 }
 
 TEST_F(BoundingBoxTest, intersectRayWithBBox) {
@@ -189,69 +193,60 @@ TEST_F(BoundingBoxTest, intersectRayWithBBox) {
 TEST_F(BoundingBoxTest, splitBox) {
   box1 = BoundingBox(Point3f(-1.f, -4.f, -5.f), Point3f(9.f, 6.f, 5.f));
   BoundingBoxPair splittedBox = bvh.splitBoundsOf(box1);
-  comparePoints(splittedBox.first.minPoint(), Point3f(-1.f, -4.f, -5.f));
-  comparePoints(splittedBox.first.maxPoint(), Point3f(4.f, 6.f, 5.f));
-  comparePoints(splittedBox.second.minPoint(), Point3f(4.f, -4.f, -5.f));
-  comparePoints(splittedBox.second.maxPoint(), Point3f(9.f, 6.f, 5.f));
+  EXPECT_THAT(splittedBox.first.minPoint(), Eq(Point3f(-1.f, -4.f, -5.f)));
+  EXPECT_THAT(splittedBox.first.maxPoint(), Eq(Point3f(4.f, 6.f, 5.f)));
+  EXPECT_THAT(splittedBox.second.minPoint(), Eq(Point3f(4.f, -4.f, -5.f)));
+  EXPECT_THAT(splittedBox.second.maxPoint(), Eq(Point3f(9.f, 6.f, 5.f)));
 
   box1 = BoundingBox(Point3f(-1.f, -2.f, -3.f), Point3f(9.f, 5.5f, 3.f));
   splittedBox = bvh.splitBoundsOf(box1);
-  comparePoints(splittedBox.first.minPoint(), Point3f(-1.f, -2.f, -3.f));
-  comparePoints(splittedBox.first.maxPoint(), Point3f(4.f, 5.5f, 3.f));
-  comparePoints(splittedBox.second.minPoint(), Point3f(4.f, -2.f, -3.f));
-  comparePoints(splittedBox.second.maxPoint(), Point3f(9.f, 5.5f, 3.f));
+  EXPECT_THAT(splittedBox.first.minPoint(), Eq(Point3f(-1.f, -2.f, -3.f)));
+  EXPECT_THAT(splittedBox.first.maxPoint(), Eq(Point3f(4.f, 5.5f, 3.f)));
+  EXPECT_THAT(splittedBox.second.minPoint(), Eq(Point3f(4.f, -2.f, -3.f)));
+  EXPECT_THAT(splittedBox.second.maxPoint(), Eq(Point3f(9.f, 5.5f, 3.f)));
 
   box1 = BoundingBox(Point3f(-1.f, -2.f, -3.f), Point3f(5.f, 8.f, 3.f));
   splittedBox = bvh.splitBoundsOf(box1);
-  comparePoints(splittedBox.first.minPoint(), Point3f(-1.f, -2.f, -3.f));
-  comparePoints(splittedBox.first.maxPoint(), Point3f(5.f, 3.f, 3.f));
-  comparePoints(splittedBox.second.minPoint(), Point3f(-1.f, 3.f, -3.f));
-  comparePoints(splittedBox.second.maxPoint(), Point3f(5.f, 8.f, 3.f));
+  EXPECT_THAT(splittedBox.first.minPoint(), Eq(Point3f(-1.f, -2.f, -3.f)));
+  EXPECT_THAT(splittedBox.first.maxPoint(), Eq(Point3f(5.f, 3.f, 3.f)));
+  EXPECT_THAT(splittedBox.second.minPoint(), Eq(Point3f(-1.f, 3.f, -3.f)));
+  EXPECT_THAT(splittedBox.second.maxPoint(), Eq(Point3f(5.f, 8.f, 3.f)));
 
   box1 = BoundingBox(Point3f(-1.f, -2.f, -3.f), Point3f(5.f, 3.f, 7.f));
   splittedBox = bvh.splitBoundsOf(box1);
-  comparePoints(splittedBox.first.minPoint(), Point3f(-1.f, -2.f, -3.f));
-  comparePoints(splittedBox.first.maxPoint(), Point3f(5.f, 3.f, 2.f));
-  comparePoints(splittedBox.second.minPoint(), Point3f(-1.f, -2.f, 2.f));
-  comparePoints(splittedBox.second.maxPoint(), Point3f(5.f, 3.f, 7.f));
+  EXPECT_THAT(splittedBox.first.minPoint(), Eq(Point3f(-1.f, -2.f, -3.f)));
+  EXPECT_THAT(splittedBox.first.maxPoint(), Eq(Point3f(5.f, 3.f, 2.f)));
+  EXPECT_THAT(splittedBox.second.minPoint(), Eq(Point3f(-1.f, -2.f, 2.f)));
+  EXPECT_THAT(splittedBox.second.maxPoint(), Eq(Point3f(5.f, 3.f, 7.f)));
 }
 
 TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
   EntityFactory primitive_builder;
   WorldBuilder world_builder;
+  SceneDirector scene_director;
 
   world_builder.createWorld();
 
   DataContainer data1;
   data1.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, 0.f, 0.f));
-  primitive_builder.setData(data1);
-  primitive_builder.createPrimitive();
-  primitive_builder.buildTransformation();
-  world_builder.addElement(primitive_builder.getProduct());
-  auto sphere1 = primitive_builder.getProduct();
-  primitive_builder.reset();
+  scene_director.createSceneElement(primitive_builder, data1);
+  auto sphere1 = scene_director.getCurrentElement();
 
   DataContainer data2;
   data2.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(2.f, 0.f, 0.f));
-  primitive_builder.setData(data2);
-  primitive_builder.createPrimitive();
-  primitive_builder.buildTransformation();
-  world_builder.addElement(primitive_builder.getProduct());
-  auto sphere2 = primitive_builder.getProduct();
-  primitive_builder.reset();
+  scene_director.createSceneElement(primitive_builder, data2);
+  auto sphere2 = scene_director.getCurrentElement();
 
   DataContainer data3;
   data3.setProperty(app::PRIMITIVE_TYPE, app::SPHERE);
-  primitive_builder.setData(data3);
-  primitive_builder.createPrimitive();
-  primitive_builder.buildTransformation();
-  world_builder.addElement(primitive_builder.getProduct());
-  auto sphere3 = primitive_builder.getProduct();
-  primitive_builder.reset();
+  scene_director.createSceneElement(primitive_builder, data3);
+  auto sphere3 = scene_director.getCurrentElement();
 
-  auto world = world_builder.getProduct();
+  scene_director.createWorld(world_builder, PointLight());
+
+  auto world = scene_director.getSceneProduct();
   WorldPair wp = bvh.splitElementsOf(world->getChildren(), world->getBounds());
 
   ASSERT_EQ(world->getChildren().size(), 1);
@@ -267,40 +262,29 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
 TEST_F(BoundingBoxTest, divideWorld) {
   WorldBuilder world_builder;
   EntityFactory primitive_builder;
-
-  world_builder.createWorld();
+  SceneDirector scene_director;
 
   DataContainer data1;
   data1.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, -2.f, 0.f));
-  primitive_builder.setData(data1);
-  primitive_builder.createPrimitive();
-  primitive_builder.buildTransformation();
-  world_builder.addElement(primitive_builder.getProduct());
-  auto sphere1 = primitive_builder.getProduct();
-  primitive_builder.reset();
+  scene_director.createSceneElement(primitive_builder, data1);
+  auto sphere1 = scene_director.getCurrentElement();
 
   DataContainer data2;
   data2.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, 2.f, 0.f));
-  primitive_builder.setData(data2);
-  primitive_builder.createPrimitive();
-  primitive_builder.buildTransformation();
-  world_builder.addElement(primitive_builder.getProduct());
-  auto sphere2 = primitive_builder.getProduct();
-  primitive_builder.reset();
+  scene_director.createSceneElement(primitive_builder, data2);
+  auto sphere2 = scene_director.getCurrentElement();
 
   DataContainer data3;
   data3.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
       .setProperty(app::TRANSFORMATION_MATRIX, scale(4.f, 4.f, 4.f));
-  primitive_builder.setData(data3);
-  primitive_builder.createPrimitive();
-  primitive_builder.buildTransformation();
-  world_builder.addElement(primitive_builder.getProduct());
-  auto sphere3 = primitive_builder.getProduct();
-  primitive_builder.reset();
+  scene_director.createSceneElement(primitive_builder, data3);
+  auto sphere3 = scene_director.getCurrentElement();
 
-  SceneElementPtr world = world_builder.getProduct();
+  scene_director.createWorld(world_builder, PointLight());
+
+  auto world = scene_director.getSceneProduct();
   bvh.divideWorld(world, 1);
   WorldIterator it(world->getChildren());
   if (it.first()) {
