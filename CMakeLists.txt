@@ -84,47 +84,4 @@ target_compile_options(${PROJECT_NAME} PRIVATE "-g")
 target_link_options(${PROJECT_NAME} PRIVATE "-lstdc++" PRIVATE "-lm")
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARY_NAME})
 
-if(BUILD_TESTING)
-  include(FetchContent)
-  FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG v1.15.2
-  )
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  FetchContent_MakeAvailable(googletest)
-  include(GoogleTest)
-
-  set(PROJECT_NAME_TEST ${PROJECT_NAME}-test)
-
-  add_executable(${PROJECT_NAME_TEST})
-
-  target_sources(${PROJECT_NAME_TEST} 
-           PRIVATE test/gtesting.h
-                   test/application_test.cpp
-                   test/boundingBox_test.cpp
-                   test/camera_test.cpp
-                   test/canvas_test.cpp
-                   test/color_test.cpp
-                   test/material_test.cpp
-                   test/primitive_test.cpp
-                   test/properties_test.cpp
-                   test/ray_test.cpp
-                   test/transformer_test.cpp
-                   test/world_test.cpp
-  )
-
-  target_include_directories(${PROJECT_NAME_TEST} PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/test)
-  target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest ${LIBRARY_NAME})
-  target_compile_options(${PROJECT_NAME_TEST} PRIVATE "-g")
-  target_link_options(${PROJECT_NAME_TEST} PRIVATE "-lstdc++" PRIVATE "-lm")
-  gtest_discover_tests(${PROJECT_NAME_TEST} WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME_TEST}>)
-  enable_testing()
-
-  add_custom_command(
-    TARGET ${PROJECT_NAME_TEST}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/test/test_data ${CMAKE_CURRENT_BINARY_DIR}/test_data
-    COMMENT "Copy test_data"
-  )
-endif()
+add_subdirectory(test)
