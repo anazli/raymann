@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vec3.h>
+
 #include <fstream>
 #include <string_view>
 
@@ -7,7 +9,6 @@
 #include "composite/scene_element.h"
 #include "geometry/triangle.h"
 #include "materials/material.h"
-#include "math_utils/vec3.h"
 
 class WavefrontReader {
  public:

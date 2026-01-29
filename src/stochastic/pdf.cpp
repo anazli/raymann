@@ -13,7 +13,7 @@ Vec3f SpherePdf::generate() const { return Random::randomVectorOnUnitSphere(); }
 CosPdf::CosPdf(const Vec3f &w) { onb.buildFromW(w); }
 
 float CosPdf::value(const Vec3f &direction) const {
-  auto cosTheta = dot(getUnitVectorOf(direction), onb.w());
+  auto cosTheta = dot(normalized(direction), onb.w());
   return fmax(0, cosTheta / PI);
 }
 

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ray.h>
+#include <math.h>
 
 #include <limits>
 

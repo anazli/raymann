@@ -4,8 +4,9 @@
 
 #include "distribution/lambertian_brdf.h"
 
+#include <math.h>
+
 #include "lambertian_brdf.h"
-#include "math_utils/math_utils.h"
 
 LambertianBrdf::LambertianBrdf(const Spectrum& sp)
     : Bxdf(BxdfType(BxdfType::BSDF_REFLECTION | BxdfType::BSDF_DIFFUSE)) {}
@@ -15,11 +16,11 @@ Spectrum LambertianBrdf::f(const Vec3f& wo, const Vec3f& wi) const {
 }
 
 Spectrum LambertianBrdf::rhd(const Vec3f& wo, int num_samples,
-                             Vec2D& samples) const {
+                             Vec2f& samples) const {
   return m_spectrum;
 }
 
-Spectrum LambertianBrdf::rhh(int num_samples, Vec2D& samples1,
-                             Vec2D& samples2) const {
+Spectrum LambertianBrdf::rhh(int num_samples, Vec2f& samples1,
+                             Vec2f& samples2) const {
   return m_spectrum;
 }

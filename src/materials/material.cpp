@@ -1,8 +1,9 @@
 #include "materials/material.h"
 
+#include <orthonormal.h>
+
 #include "composite/scene_element.h"
 #include "material.h"
-#include "math_utils/orthonormal.h"
 #include "stochastic/pdf.h"
 #include "stochastic/random.h"
 #include "stochastic/stochastic_method.h"
@@ -42,7 +43,7 @@ Vec3f Material::reflect(const Vec3f& v, const Vec3f& n) const {
 
 bool Material::refract(const Vec3f& v, const Vec3f& n, float ni_over_nt,
                        Vec3f& refracted) const {
-  auto uv = getUnitVectorOf(v);
+  auto uv = normalized(v);
   auto dt = dot(uv, n);
   auto discriminant = 1.f - ni_over_nt * ni_over_nt * (1.f - dt * dt);
   if (discriminant > 0) {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <random>
+#include <math.h>
 
-#include "math_utils/math_utils.h"
+#include <random>
 
 class Random {
  public:

@@ -4,9 +4,9 @@
 
 #include "samples.h"
 
-Vec2D concentricSampleDisk(const Vec2D& u) {
-  auto offset = 2.f * u - Vec2D(1.f, 1.f);
-  if (offset == Vec2D()) return Vec2D();
+Vec2f concentricSampleDisk(const Vec2f& u) {
+  auto offset = 2.f * u - Vec2f(1.f, 1.f);
+  if (offset == Vec2f()) return Vec2f();
   float theta, r;
   if (std::fabs(offset.x()) > std::fabs(offset.y())) {
     r = offset.x();
@@ -15,5 +15,5 @@ Vec2D concentricSampleDisk(const Vec2D& u) {
     r = offset.y();
     theta = PIOver2 - PIOver4 * (offset.x() / offset.y());
   }
-  return r * Vec2D(std::cos(theta), std::sin(theta));
+  return r * Vec2f(std::cos(theta), std::sin(theta));
 }

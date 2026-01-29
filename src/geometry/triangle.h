@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math.h>
+
 #include "application/error.h"
 #include "geometry/primitive.h"
 
@@ -12,7 +14,7 @@ class Triangle : public Primitive {
                "Wrong number of points for triangle creation!");
     m_edgeVec.push_back(m_points[1] - m_points[0]);
     m_edgeVec.push_back(m_points[2] - m_points[0]);
-    m_normalVec = Normal3f(getUnitVectorOf(cross(m_edgeVec[0], m_edgeVec[1])));
+    m_normalVec = Normal3f(normalized(cross(m_edgeVec[0], m_edgeVec[1])));
 
     m_object_box.addPoint(m_points[0]);
     m_object_box.addPoint(m_points[1]);

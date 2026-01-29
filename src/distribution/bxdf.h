@@ -4,10 +4,11 @@
 
 #pragma once
 
+#include <vec2.h>
+
 #include <memory>
 
 #include "color/spectrum.h"
-#include "math_utils/vec2.h"
 
 // Local coordinate system
 // normal (0,0,1)
@@ -21,12 +22,12 @@ class Bxdf {
   virtual ~Bxdf() = default;
   // value of distribution for pair of directions
   virtual Spectrum f(const Vec3f& wo, const Vec3f& wi) const = 0;
-  virtual Spectrum sampleF(const Vec3f& wo, Vec3f& wi, const Vec2D& p,
+  virtual Spectrum sampleF(const Vec3f& wo, Vec3f& wi, const Vec2f& p,
                            float& pdf_val) const;
   // Hemispherical-directional reflectance
-  virtual Spectrum rhd(const Vec3f& wo, int num_samples, Vec2D& samples) const;
+  virtual Spectrum rhd(const Vec3f& wo, int num_samples, Vec2f& samples) const;
   // Hemispherical-hemispherical reflectance
-  virtual Spectrum rhh(int num_samples, Vec2D& samples1, Vec2D& samples2) const;
+  virtual Spectrum rhh(int num_samples, Vec2f& samples1, Vec2f& samples2) const;
   virtual float pdf(const Vec3f& wi, const Vec3f& wo) const;
 
  protected:

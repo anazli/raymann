@@ -4,13 +4,13 @@
 
 #pragma once
 
+#include <math.h>
+
 #include <algorithm>
 
-#include "math_utils/math_utils.h"
+Vec2f concentricSampleDisk(const Vec2f& u);
 
-Vec2D concentricSampleDisk(const Vec2D& u);
-
-inline Vec3f cosineSampleHemisphere(const Vec2D& v) {
+inline Vec3f cosineSampleHemisphere(const Vec2f& v) {
   auto ret = concentricSampleDisk(v);
   auto z =
       std::sqrt(std::max(0.f, 1.f - ret.x() * ret.x() - ret.y() * ret.y()));

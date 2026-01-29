@@ -1,7 +1,6 @@
 #pragma once
 
-#include <point3.h>
-#include <ray.h>
+#include <math.h>
 
 using limit = std::numeric_limits<float>;
 

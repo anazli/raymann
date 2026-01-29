@@ -29,7 +29,7 @@ bool Lambertian::scatter(const Ray& r_in, const Intersection& rec,
 
 float Lambertian::scatteringPDF(const Ray& r, const Intersection& record,
                                 const Ray& scatteredRay) const {
-  auto cTheta = dot(record.normal, getUnitVectorOf(scatteredRay.direction()));
+  auto cTheta = dot(record.normal, normalized(scatteredRay.direction()));
   return cTheta < 0 ? 0 : cTheta / PI;
 }
 

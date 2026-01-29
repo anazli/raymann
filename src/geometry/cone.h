@@ -84,7 +84,7 @@ class Cone : public Primitive {
       return Normal3f(0.f, -1.f, 0.f);
     }
     auto object_normal = Normal3f(object_point.x(), 0.f, object_point.z());
-    return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
+    return normalized(m_transformation.objectToWorldSpace(object_normal));
   }
 
   bool isClosed() const { return m_closed; }

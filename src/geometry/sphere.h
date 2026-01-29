@@ -36,8 +36,8 @@ class Sphere : public Primitive {
 
   Normal3f normal(const Point3f &p) const override {
     auto object_point = m_transformation.worldToObjectSpace(p);
-    auto object_normal = Normal3f(getUnitVectorOf(object_point - m_center));
-    return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
+    auto object_normal = Normal3f(normalized(object_point - m_center));
+    return normalized(m_transformation.objectToWorldSpace(object_normal));
   }
 
   void setCenter(const Point3f &c) { m_center = c; }

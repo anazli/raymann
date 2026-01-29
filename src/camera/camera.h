@@ -1,9 +1,10 @@
 #pragma once
 
+#include <math.h>
+
 #include <memory>
 
 #include "application/error.h"
-#include "math_utils/math_utils.h"
 
 class Camera {
  public:

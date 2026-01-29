@@ -7,15 +7,15 @@
 #include "distribution/utilities.h"
 #include "stochastic/samples.h"
 
-Spectrum Bxdf::sampleF(const Vec3f& wo, Vec3f& wi, const Vec2D& p,
+Spectrum Bxdf::sampleF(const Vec3f& wo, Vec3f& wi, const Vec2f& p,
                        float& pdf_val) const {
   wi = cosineSampleHemisphere(p);
-  if (wo.z() < 0.f) wi.setZ(wi.z() * (-1));
+  if (wo.z() < 0.f) wi.z(wi.z() * (-1));
   pdf_val = pdf(wo, wi);
   return f(wo, wi);
 }
 
-Spectrum Bxdf::rhd(const Vec3f& wo, int num_samples, Vec2D& samples) const {
+Spectrum Bxdf::rhd(const Vec3f& wo, int num_samples, Vec2f& samples) const {
   Spectrum r(0.f);
   /*for (int i = 0; i < num_samples; ++i) {
     // Estimate one term of $\rho_\roman{hd}$
@@ -27,7 +27,7 @@ Spectrum Bxdf::rhd(const Vec3f& wo, int num_samples, Vec2D& samples) const {
   return r / num_samples;
 }
 
-Spectrum Bxdf::rhh(int num_samples, Vec2D& samples1, Vec2D& samples2) const {
+Spectrum Bxdf::rhh(int num_samples, Vec2f& samples1, Vec2f& samples2) const {
   Spectrum r(0.f);
   /*for (int i = 0; i < num_samples; ++i) {
     // Estimate one term of $\rho_\roman{hh}$

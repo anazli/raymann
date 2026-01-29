@@ -13,10 +13,10 @@ Ray Camera::getRay(int pixel_x, int pixel_y) const {
   auto yoffset = (fpixel_y + 0.5f) * m_pixel_size;
   auto world_x = m_half_width - xoffset;
   auto world_y = m_half_height - yoffset;
-  auto pixel = m_transformInv * Vec4D(world_x, world_y, -1.0f, 1.0f);
-  ray.setOrigin(Point3f(m_transformInv * Vec4D(0.0f, 0.0f, 0.0f, 1.0f)));
+  auto pixel = m_transformInv * Vec4f(world_x, world_y, -1.0f, 1.0f);
+  ray.setOrigin(Point3f(m_transformInv * Vec4f(0.0f, 0.0f, 0.0f, 1.0f)));
   auto dir =
-      getUnitVectorOf(Point3f(pixel.x(), pixel.y(), pixel.z()) - ray.origin());
+      normalized(Point3f(pixel.x(), pixel.y(), pixel.z()) - ray.origin());
   ray.setDirection(dir);
   return ray;
 }

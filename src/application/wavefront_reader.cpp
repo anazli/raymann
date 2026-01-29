@@ -1,5 +1,7 @@
 #include "application/wavefront_reader.h"
 
+#include <math.h>
+
 #include <algorithm>
 #include <iterator>
 #include <sstream>
@@ -111,9 +113,9 @@ void WavefrontReader::normalizeVertices() {
   auto yrange = maxY - minY;
   auto zrange = maxZ - minZ;
   for (Vec3f &elem : m_verticesNormalized) {
-    elem.setX((elem.x() - minX) / xrange * 2.f - 1.f);
-    elem.setY((elem.y() - minY) / yrange * 2.f - 1.f);
-    elem.setZ((elem.z() - minZ) / zrange * 2.f - 1.f);
+    elem.x((elem.x() - minX) / xrange * 2.f - 1.f);
+    elem.y((elem.y() - minY) / yrange * 2.f - 1.f);
+    elem.z((elem.z() - minZ) / zrange * 2.f - 1.f);
   }
 }
 

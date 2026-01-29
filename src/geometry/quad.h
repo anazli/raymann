@@ -9,7 +9,7 @@ class Quad : public Primitive {
        const Transformation& tr = Transformation())
       : m_origin(origin), m_uAxis(uAxis), m_vAxis(vAxis), Primitive(tr) {
     auto n = cross(m_uAxis, m_vAxis);
-    auto normalV = getUnitVectorOf(n);
+    auto normalV = normalized(n);
     m_dParam = dot(normalV, Vec3f(m_origin));
     m_wParam = normalV / dot(n, n);
 

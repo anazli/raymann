@@ -46,7 +46,7 @@ class Cube : public Primitive {
     } else {
       object_normal = Normal3f(0.f, 0.f, object_point.z());
     }
-    return getUnitVectorOf(m_transformation.objectToWorldSpace(object_normal));
+    return normalized(m_transformation.objectToWorldSpace(object_normal));
   }
 
   static PrimitivePtr create(const Transformation &tr = Transformation()) {

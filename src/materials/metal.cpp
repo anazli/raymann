@@ -17,7 +17,7 @@ bool Metal::scatter(const Ray& r_in, const Intersection& rec,
                     Vec3f& attenuation, Ray& scattered) const {
   auto point = rec.getHitPoint(r_in);
   auto normal = rec.closest_scene_element->getPrimitive()->normal(point);
-  Vec3f reflected = reflect(getUnitVectorOf(r_in.direction()), Vec3f(normal));
+  Vec3f reflected = reflect(normalized(r_in.direction()), Vec3f(normal));
   scattered =
       Ray(point, reflected + m_fuzz * Random::randomVectorOnUnitSphere());
   attenuation = m_tex->value(0, 0, Vec3f());

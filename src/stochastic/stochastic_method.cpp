@@ -18,9 +18,9 @@ Vec3f StochasticSampler::colorCorrection(Vec3f &color) {
 void StochasticSampler::addRandomSample(Vec3f &outputColor,
                                         const Vec3f &randomSampleColor) {
   Vec3f tempColor(randomSampleColor);
-  if (tempColor.x() != tempColor.x()) tempColor.setX(0.f);
-  if (tempColor.y() != tempColor.y()) tempColor.setY(0.f);
-  if (tempColor.z() != tempColor.z()) tempColor.setZ(0.f);
+  if (tempColor.x() != tempColor.x()) tempColor.x(0.f);
+  if (tempColor.y() != tempColor.y()) tempColor.y(0.f);
+  if (tempColor.z() != tempColor.z()) tempColor.z(0.f);
   outputColor = outputColor + tempColor;
 }
 

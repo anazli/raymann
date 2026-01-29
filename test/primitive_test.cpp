@@ -206,28 +206,28 @@ TEST_F(CubeTest, normalOnSurfaceOfCube) {
 
 TEST_F(CylinderTest, rayMissesTheCylinder) {
   cyl = Cylinder();
-  r = Ray(Point3f(1.f, 0.f, 0.f), getUnitVectorOf(Vec3f(0.f, 1.f, 0.f)));
+  r = Ray(Point3f(1.f, 0.f, 0.f), normalized(Vec3f(0.f, 1.f, 0.f)));
   rec = Intersection();
   EXPECT_FALSE(cyl.intersect(r, rec));
-  r = Ray(Point3f(0.f, 0.f, 0.f), getUnitVectorOf(Vec3f(0.f, 1.f, 0.f)));
+  r = Ray(Point3f(0.f, 0.f, 0.f), normalized(Vec3f(0.f, 1.f, 0.f)));
   rec = Intersection();
   EXPECT_FALSE(cyl.intersect(r, rec));
-  r = Ray(Point3f(0.f, 0.f, -5.f), getUnitVectorOf(Vec3f(1.f, 1.f, 1.f)));
+  r = Ray(Point3f(0.f, 0.f, -5.f), normalized(Vec3f(1.f, 1.f, 1.f)));
   rec = Intersection();
   EXPECT_FALSE(cyl.intersect(r, rec));
 }
 
 TEST_F(CylinderTest, rayHitsTheCylinder) {
   cyl = Cylinder();
-  r = Ray(Point3f(1.f, 0.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
+  r = Ray(Point3f(1.f, 0.f, -5.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
   EXPECT_FLOAT_EQ(rec.min_hit, 5.f);
-  r = Ray(Point3f(0.f, 0.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
+  r = Ray(Point3f(0.f, 0.f, -5.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
   EXPECT_FLOAT_EQ(rec.min_hit, 4.f);
-  r = Ray(Point3f(0.5f, 0.f, -5.f), getUnitVectorOf(Vec3f(0.1f, 1.f, 1.f)));
+  r = Ray(Point3f(0.5f, 0.f, -5.f), normalized(Vec3f(0.1f, 1.f, 1.f)));
   rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
   float eps = 10E-5f;
@@ -256,48 +256,48 @@ TEST_F(CylinderTest, normalVectorOnCylinder) {
 
 TEST_F(CylinderTest, intersectConstrainedCylinder) {
   cyl = Cylinder(1, 2);
-  r = Ray(Point3f(0.f, 1.5f, 0.f), getUnitVectorOf(Vec3f(0.1f, 1.f, 0.f)));
+  r = Ray(Point3f(0.f, 1.5f, 0.f), normalized(Vec3f(0.1f, 1.f, 0.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, 3.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
+  r = Ray(Point3f(0.f, 3.f, -5.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, 0.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
+  r = Ray(Point3f(0.f, 0.f, -5.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, 2.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
+  r = Ray(Point3f(0.f, 2.f, -5.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, 1.f, -5.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
+  r = Ray(Point3f(0.f, 1.f, -5.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, 1.5f, -2.f), getUnitVectorOf(Vec3f(0.f, 0.f, 1.f)));
+  r = Ray(Point3f(0.f, 1.5f, -2.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
 }
 
 TEST_F(CylinderTest, intersectClosedCylinder) {
   cyl = Cylinder(1, 2, true);
-  r = Ray(Point3f(0.f, 3.f, 0.f), getUnitVectorOf(Vec3f(0.1f, -1.f, 0.f)));
+  r = Ray(Point3f(0.f, 3.f, 0.f), normalized(Vec3f(0.1f, -1.f, 0.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, 3.f, -2.f), getUnitVectorOf(Vec3f(0.f, -1.f, 2.f)));
+  r = Ray(Point3f(0.f, 3.f, -2.f), normalized(Vec3f(0.f, -1.f, 2.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, 4.f, -2.f), getUnitVectorOf(Vec3f(0.f, -1.f, 1.f)));
+  r = Ray(Point3f(0.f, 4.f, -2.f), normalized(Vec3f(0.f, -1.f, 1.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, 0.f, -2.f), getUnitVectorOf(Vec3f(0.f, 1.f, 2.f)));
+  r = Ray(Point3f(0.f, 0.f, -2.f), normalized(Vec3f(0.f, 1.f, 2.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
-  r = Ray(Point3f(0.f, -1.f, -2.f), getUnitVectorOf(Vec3f(0.f, 1.f, 1.f)));
+  r = Ray(Point3f(0.f, -1.f, -2.f), normalized(Vec3f(0.f, 1.f, 1.f)));
   rec = Intersection();
   cyl.intersect(r, rec);
 }
 
 TEST_F(CylinderTest, normalVectorOnEndCaps) {
   cyl = Cylinder(1, 2, true);
-  r = Ray(Point3f(0.f, 3.f, 0.f), getUnitVectorOf(Vec3f(0.1f, -1.f, 0.f)));
+  r = Ray(Point3f(0.f, 3.f, 0.f), normalized(Vec3f(0.1f, -1.f, 0.f)));
 
   Vec3f vect1(0.f, -1.f, 0.f);
   Vec3f vect2(0.f, 1.f, 0.f);
@@ -466,7 +466,7 @@ TEST_F(SphereTest, normalIsNormalizedVector) {
   s = Sphere();
   auto n = s.normal(
       Point3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
-  EXPECT_NEAR(1.f, getUnitVectorOf(n).length(), 1.E-6);
+  EXPECT_NEAR(1.f, normalized(n).length(), 1.E-6);
 }
 
 /*==================================================================
