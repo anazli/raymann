@@ -11,9 +11,6 @@ class Texture {
  public:
   virtual ~Texture() = default;
   virtual Vec3f value(float u, float v, const Vec3f &p) const = 0;
-  virtual Spectrum value(const Intersection &record) const {
-    return Spectrum(0.f);
-  }
   virtual void setColor(const Vec3f &col) = 0;
 };
 
@@ -26,14 +23,12 @@ class ConstantTexture : public Texture {
   ConstantTexture() = default;
   ConstantTexture(const Vec3f &c);
   Vec3f value(float u, float v, const Vec3f &p) const override;
-  Spectrum value(const Intersection &record) const override;
   void setColor(const Vec3f &col) override;
 
   static TexturePtr create(const Vec3f &color);
 
  private:
   Vec3f m_color;
-  Spectrum m_value;
 };
 
 class CheckerTexture : public Texture {

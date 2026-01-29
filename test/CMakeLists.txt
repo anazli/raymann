@@ -14,12 +14,10 @@ if(BUILD_TESTING)
   add_executable(${PROJECT_NAME_TEST})
 
   target_sources(${PROJECT_NAME_TEST} 
-           PRIVATE gtesting.h
-                   application_test.cpp
+           PRIVATE application_test.cpp
                    boundingBox_test.cpp
                    camera_test.cpp
                    canvas_test.cpp
-                   color_test.cpp
                    material_test.cpp
                    primitive_test.cpp
                    properties_test.cpp
@@ -28,7 +26,7 @@ if(BUILD_TESTING)
   )
 
   target_include_directories(${PROJECT_NAME_TEST} PRIVATE ${PROJECT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
-  target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest ${LIBRARY_NAME})
+  target_link_libraries(${PROJECT_NAME_TEST} gtest_main gtest gmock ${LIBRARY_NAME})
   target_compile_options(${PROJECT_NAME_TEST} PRIVATE "-g")
   target_link_options(${PROJECT_NAME_TEST} PRIVATE "-lstdc++" PRIVATE "-lm")
   gtest_discover_tests(${PROJECT_NAME_TEST} WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME_TEST}>)

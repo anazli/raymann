@@ -30,8 +30,6 @@ add_library(${LIBRARY_NAME}
             src/application/wavefront_reader.h
             src/camera/camera.cpp
             src/camera/camera.h
-            src/color/spectrum.cpp
-            src/color/spectrum.h
             src/color/light.h
             src/composite/builder.cpp
             src/composite/builder.h

@@ -8,10 +8,6 @@ Vec3f ConstantTexture::value(float u, float v, const Vec3f &p) const {
   return m_color;
 };
 
-Spectrum ConstantTexture::value(const Intersection &record) const {
-  return m_value;
-}
-
 void ConstantTexture::setColor(const Vec3f &col) { m_color = col; }
 
 TexturePtr ConstantTexture::create(const Vec3f &color) {
