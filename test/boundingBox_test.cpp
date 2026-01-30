@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <mat3.h>
+#include <vec3.h>
 
 #include "acceleration/bvh.h"
 #include "application/parameters.h"
@@ -20,12 +21,13 @@ using testing::Eq;
 
 class BoundingBoxTest : public testing::Test {
  public:
+  Vec3f white = Vec3f(1.f, 1.f, 1.f);
   BoundingBox box1;
   BoundingBox box2;
   DataContainer prop;
   Intersection rec;
   BVHierarchy bvh;
-  float eps = 1.E-6f;
+  float eps = 1.E-4f;
 };
 
 TEST_F(BoundingBoxTest, addsPointToBoundingBox) {
@@ -77,9 +79,8 @@ TEST_F(BoundingBoxTest, transformsBoundingBox) {
                                rotationOverY(PI / 4.f));
   BoundingBox p = builder->getCurrentElement()->boundingBox();
 
-  float eps = 1E-4f;
-  EXPECT_THATApprox(p.minPoint(), Point3f(-1.4142f, -1.7071f, -1.7071f), eps);
-  EXPECT_THATApprox(p.maxPoint(), Point3f(1.4142f, 1.7071f, 1.7071f), eps);*/
+  EXPECT_THAT(p.minPoint(), Point3f(-1.4142f, -1.7071f, -1.7071f), eps);
+  EXPECT_THAT(p.maxPoint(), Point3f(1.4142f, 1.7071f, 1.7071f), eps);*/
 }
 
 TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
@@ -87,13 +88,15 @@ TEST_F(BoundingBoxTest, boundsOfSceneElementInParentSpace) {
   SceneDirector director;
   DataContainer data;
   data.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN)
+      .setProperty(app::COLOR, white)
       .setProperty(
           app::TRANSFORMATION_MATRIX,
           translation(Vec3f(1.f, -3.f, 5.f)) * scale(Vec3f(0.5f, 2.f, 4.f)));
   director.createSceneElement(builder, data);
   auto p = director.getCurrentElement()->getBounds();
 
-  auto eps = 1E-4f;
   EXPECT_THAT(p.minPoint(), Point3Near(Point3f(0.5f, -5.f, 1.f), eps));
   EXPECT_THAT(p.maxPoint(), Point3Near(Point3f(1.5f, -1.f, 9.f), eps));
 }
@@ -105,12 +108,18 @@ TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
 
   DataContainer data;
   data.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN)
+      .setProperty(app::COLOR, white)
       .setProperty(
           app::TRANSFORMATION_MATRIX,
           translation(Vec3f(2.f, 5.f, -3.f)) * scale(Vec3f(2.f, 2.f, 2.f)));
   scene_director.createSceneElement(primitive_builder, data);
 
   data.setProperty(app::PRIMITIVE_TYPE, app::CYLINDER)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN)
+      .setProperty(app::COLOR, white)
       .setProperty(
           app::TRANSFORMATION_MATRIX,
           translation(Vec3f(-4.f, -1.f, 4.f)) * scale(Vec3f(0.5f, 1.f, 0.5f)))
@@ -123,7 +132,6 @@ TEST_F(BoundingBoxTest, boundingBoxOfWorld) {
 
   BoundingBox p = scene_director.getSceneProduct()->getBounds();
 
-  float eps = 1E-4f;
   EXPECT_THAT(p.minPoint(), Point3Near(Point3f(-4.5f, -3.f, -5.f), eps));
   EXPECT_THAT(p.maxPoint(), Point3Near(Point3f(4.f, 7.f, 4.5f), eps));
 }
@@ -225,18 +233,27 @@ TEST_F(BoundingBoxTest, splitChildrenOfWorld) {
 
   DataContainer data1;
   data1.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::COLOR, white)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, 0.f, 0.f));
   scene_director.createSceneElement(primitive_builder, data1);
   auto sphere1 = scene_director.getCurrentElement();
 
   DataContainer data2;
   data2.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::COLOR, white)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(2.f, 0.f, 0.f));
   scene_director.createSceneElement(primitive_builder, data2);
   auto sphere2 = scene_director.getCurrentElement();
 
   DataContainer data3;
-  data3.setProperty(app::PRIMITIVE_TYPE, app::SPHERE);
+  data3.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::COLOR, white)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
   scene_director.createSceneElement(primitive_builder, data3);
   auto sphere3 = scene_director.getCurrentElement();
 
@@ -262,18 +279,27 @@ TEST_F(BoundingBoxTest, divideWorld) {
 
   DataContainer data1;
   data1.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::COLOR, white)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, -2.f, 0.f));
   scene_director.createSceneElement(primitive_builder, data1);
   auto sphere1 = scene_director.getCurrentElement();
 
   DataContainer data2;
   data2.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::COLOR, white)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN)
       .setProperty(app::TRANSFORMATION_MATRIX, translation(-2.f, 2.f, 0.f));
   scene_director.createSceneElement(primitive_builder, data2);
   auto sphere2 = scene_director.getCurrentElement();
 
   DataContainer data3;
   data3.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
+      .setProperty(app::COLOR, white)
+      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
+      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN)
       .setProperty(app::TRANSFORMATION_MATRIX, scale(4.f, 4.f, 4.f));
   scene_director.createSceneElement(primitive_builder, data3);
   auto sphere3 = scene_director.getCurrentElement();

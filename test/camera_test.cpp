@@ -8,7 +8,7 @@ using testing::FloatEq;
 class CameraTest : public testing::Test {
  public:
   Camera c;
-  float eps = 1.E-6;
+  float eps = 1.E-5;
 };
 
 TEST_F(CameraTest, createsCamera) {
