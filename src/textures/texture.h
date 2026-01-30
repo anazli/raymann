@@ -4,9 +4,6 @@
 #include <cmath>
 #include <memory>
 
-#include "color/spectrum.h"
-#include "composite/intersection.h"
-
 class Texture {
  public:
   virtual ~Texture() = default;

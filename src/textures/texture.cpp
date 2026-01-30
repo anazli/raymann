@@ -2,7 +2,7 @@
 
 #include "texture.h"
 
-ConstantTexture::ConstantTexture(const Vec3f &c) : m_color(c), m_value(c) {}
+ConstantTexture::ConstantTexture(const Vec3f &c) : m_color(c) {}
 
 Vec3f ConstantTexture::value(float u, float v, const Vec3f &p) const {
   return m_color;

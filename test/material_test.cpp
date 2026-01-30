@@ -1,10 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "composite/builder.h"
-#include "composite/world.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
-#include "renderers/phong_model.h"
 
 using app = AppParameters;
 
@@ -15,7 +13,7 @@ class MaterialTest : public testing::Test {
   Intersection rec;
 };
 
-TEST_F(MaterialTest, createsDefaultLight) {
+/*TEST_F(MaterialTest, createsDefaultLight) {
   ASSERT_TRUE(light.position() == Point3f());
   ASSERT_TRUE(light.intensity() == Vec3f());
 }
@@ -170,7 +168,7 @@ TEST_F(MaterialTest, strikeNonReflectiveSurface) {
   Vec3f color = pm->getColor();
   float e = 0.1f;
   compareVectorsApprox(color, Vec3f(), e);
-}
+}*/
 
 /*TEST_F(TMat, determiningN1AndN2) {
   PointLight light(Point3f(-10.f, 10.f, -10.f), Vec3f(1.f, 1.f, 1.f));

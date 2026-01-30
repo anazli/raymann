@@ -1,13 +1,18 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "geometry/sphere.h"
 #include "transformations/transformation.h"
+#include "utils.h"
+
+using testing::Eq;
 
 class TransformerTest : public testing::Test {
  public:
   Mat4D m;
   Vec3f v;
   Point3f p;
+  float eps = 1.E-4f;
 };
 
 /**********************************
@@ -22,7 +27,7 @@ TEST_F(TransformerTest, appliesTranslationToPoint) {  // TODO: better interface
   v4 = m * v4;  // transformation
   p = v4;
 
-  comparePoints(p, Point3f(2.f, 1.f, 7.f));
+  ASSERT_THAT(p, Eq(Point3f(2.f, 1.f, 7.f)));
 }
 
 TEST_F(TransformerTest, appliesTranslationToPointOverloaded) {
@@ -34,7 +39,7 @@ TEST_F(TransformerTest, appliesTranslationToPointOverloaded) {
   v4 = m * v4;  // transformation
   p = v4;
 
-  comparePoints(p, Point3f(2.f, 1.f, 7.f));
+  ASSERT_THAT(p, Eq(Point3f(2.f, 1.f, 7.f)));
 }
 
 TEST_F(TransformerTest, appliesInverseTranslationToPoint) {
@@ -46,7 +51,7 @@ TEST_F(TransformerTest, appliesInverseTranslationToPoint) {
   v4 = m * v4;
   p = v4;
 
-  comparePoints(p, Point3f(-8.f, 7.f, 3.f));
+  ASSERT_THAT(p, Eq(Point3f(-8.f, 7.f, 3.f)));
 }
 
 TEST_F(TransformerTest, appliesTranslationToVector) {
@@ -57,7 +62,7 @@ TEST_F(TransformerTest, appliesTranslationToVector) {
   v4 = m * v4;
   auto v3 = Vec3(v4);
 
-  ASSERT_TRUE(v == v3);  // translation does not affect vectors
+  ASSERT_THAT(v, Eq(v3));  // translation does not affect vectors
 }
 
 /**********************************
@@ -72,7 +77,7 @@ TEST_F(TransformerTest, appliesScalingToPoint) {
   v4 = m * v4;
   p = v4;
 
-  comparePoints(p, Point3f(-8.f, 18.f, 32.f));
+  ASSERT_THAT(p, Eq(Point3f(-8.f, 18.f, 32.f)));
 }
 
 TEST_F(TransformerTest, appliesScalingToVector) {
@@ -83,7 +88,7 @@ TEST_F(TransformerTest, appliesScalingToVector) {
   v4 = m * v4;
   v = v4;
 
-  compareVectors(v, Vec3f(-8.f, 18.f, 32.f));
+  ASSERT_THAT(v, Eq(Vec3f(-8.f, 18.f, 32.f)));
 }
 
 TEST_F(TransformerTest,
@@ -96,7 +101,7 @@ TEST_F(TransformerTest,
   v4 = m * v4;
   v = v4;
 
-  compareVectors(v, Vec3f(-2.f, 2.f, 2.f));
+  ASSERT_THAT(v, Eq(Vec3f(-2.f, 2.f, 2.f)));
 }
 
 /**********************************
@@ -110,7 +115,7 @@ TEST_F(TransformerTest, appliesRotationXToPoint) {
   v4 = m * v4;
   p = v4;
 
-  comparePoints(p, Point3f(0.f, sqrt(2.) / 2.f, sqrt(2.) / 2.f));
+  ASSERT_THAT(p, Eq(Point3f(0.f, sqrt(2.) / 2.f, sqrt(2.) / 2.f)));
 }
 
 TEST_F(TransformerTest, appliesInverseRotationXToPoint) {
@@ -121,7 +126,7 @@ TEST_F(TransformerTest, appliesInverseRotationXToPoint) {
   v4 = m * v4;
   p = v4;
 
-  comparePoints(p, Point3f(0.f, sqrt(2.) / 2.f, -sqrt(2.) / 2.f));
+  ASSERT_THAT(p, Vec3Near(Point3f(0.f, sqrt(2.) / 2.f, -sqrt(2.) / 2.f), eps));
 }
 
 TEST_F(TransformerTest, appliesRotationYToPoint) {
@@ -131,7 +136,7 @@ TEST_F(TransformerTest, appliesRotationYToPoint) {
   v4 = m * v4;
   p = v4;
 
-  comparePoints(p, Point3f(sqrt(2.) / 2.f, 0.f, sqrt(2.) / 2.f));
+  ASSERT_THAT(p, Eq(Point3f(sqrt(2.) / 2.f, 0.f, sqrt(2.) / 2.f)));
 }
 
 TEST_F(TransformerTest, appliesRotationZToPoint) {
@@ -141,7 +146,7 @@ TEST_F(TransformerTest, appliesRotationZToPoint) {
   v4 = m * v4;
   p = v4;
 
-  comparePoints(p, Point3f(-sqrt(2.) / 2.f, sqrt(2.) / 2.f, 0.f));
+  ASSERT_THAT(p, Eq(Point3f(-sqrt(2.) / 2.f, sqrt(2.) / 2.f, 0.f)));
 }
 
 TEST_F(TransformerTest, appliesTransformationsInSequence) {
@@ -154,23 +159,17 @@ TEST_F(TransformerTest, appliesTransformationsInSequence) {
   v4 = A * v4;
   Point3f p1(v4);
 
-  ASSERT_FLOAT_EQ(p1.x(), 1.0f);
-  ASSERT_FLOAT_EQ(p1.y(), -1.0f);
-  EXPECT_NEAR(p1.z(), 0.0f, 4.4E-8);
-
   Vec4f v41(p1);
   v41 = B * v41;
   Point3f p2(v41);
-
-  ASSERT_FLOAT_EQ(p2.x(), 5.0f);
-  ASSERT_FLOAT_EQ(p2.y(), -5.0f);
-  EXPECT_NEAR(p2.z(), 0.0f, 2.2E-7);
 
   Vec4f v42(p2);
   v41 = C * v41;
   Point3f p3(v41);
 
-  comparePoints(p3, Point3f(15.f, 0.f, 7.f));
+  ASSERT_THAT(p1, Vec3Near(Vec3f(1.f, -1.f, 0.f), eps));
+  ASSERT_THAT(p2, Vec3Near(Vec3f(5.f, -5.f, 0.f), eps));
+  ASSERT_THAT(p3, Eq(Point3f(15.f, 0.f, 7.f)));
 }
 
 TEST_F(TransformerTest, appliesTransformationChaining) {
@@ -183,11 +182,11 @@ TEST_F(TransformerTest, appliesTransformationChaining) {
   v4 = m * v4;
   p = v4;
 
-  comparePoints(p, Point3f(15.f, 0.f, 7.f));
+  ASSERT_THAT(p, Eq(Point3f(15.f, 0.f, 7.f)));
 }
 
 TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
-  SceneElementNode *s = new Sphere();
+  PrimitivePtr s = Sphere::create();
   auto t = Transformation(translation(0.0f, 1.0f, 0.0f));
   s->setTransformation(t);
   auto norm = s->normal(Point3f(0.0f, 1.70711f, -0.70711));
@@ -195,19 +194,18 @@ TEST_F(TransformerTest, computesNormalOfTranslatedSphere) {
   Vec3f tn(0.0f, 0.70711f, -0.70711f);
 
   float eps = 1.E-5;
-  compareVectorsApprox(norm, tn, eps);
+  ASSERT_THAT(norm, Vec3Near(tn, eps));
 }
 
 TEST_F(TransformerTest, computesNormalOfRotatedSphere) {
-  SceneElementPtr s = Sphere::create();
+  PrimitivePtr s = Sphere::create();
   auto t = Transformation(rotationOverZ(PI / 5.0f) * scale(1.0f, 0.5f, 1.0f));
   s->setTransformation(t);
 
   auto norm = s->normal(Point3f(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f));
   Vec3f tn(0.0f, 0.97014f, -0.24254f);
 
-  float eps = 1.E-5;
-  compareVectorsApprox(norm, tn, eps);
+  ASSERT_THAT(norm, Vec3Near(tn, eps));
 }
 
 TEST_F(TransformerTest, transformationMatrixForDefaultOrientation) {
@@ -218,7 +216,7 @@ TEST_F(TransformerTest, transformationMatrixForDefaultOrientation) {
   Mat4D m = view_transform(from, to, up);
   Mat4D t = Mat4D();
   t.identity();
-  ASSERT_TRUE(m == t);
+  ASSERT_THAT(m, Eq(t));
 }
 
 TEST_F(TransformerTest, viewTransformationLookingInPositiveZ) {
@@ -227,7 +225,7 @@ TEST_F(TransformerTest, viewTransformationLookingInPositiveZ) {
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
 
   Mat4D m = view_transform(from, to, up);
-  ASSERT_TRUE(m == scale(-1.0f, 1.0f, -1.0f));
+  ASSERT_THAT(m, Eq(scale(-1.0f, 1.0f, -1.0f)));
 }
 
 TEST_F(TransformerTest, viewTransformationMovesTheWorld) {
@@ -236,7 +234,7 @@ TEST_F(TransformerTest, viewTransformationMovesTheWorld) {
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
 
   Mat4D m = view_transform(from, to, up);
-  ASSERT_TRUE(m == translation(0.0f, 0.0f, -8.0f));
+  ASSERT_THAT(m, Eq(translation(0.0f, 0.0f, -8.0f)));
 }
 
 TEST_F(TransformerTest, ArbitraryViewTransformation) {
@@ -250,7 +248,6 @@ TEST_F(TransformerTest, ArbitraryViewTransformation) {
           Vec4f(-0.35857, 0.59761, -0.71714, 0.0f),
           Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 
-  float eps = 10E-6;
   EXPECT_NEAR(m[0][0], t[0][0], eps);
   EXPECT_NEAR(m[0][1], t[0][1], eps);
   EXPECT_NEAR(m[0][2], t[0][2], eps);

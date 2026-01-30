@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ray.h>
+
 #include "application/data_container.h"
 #include "textures/texture.h"
 

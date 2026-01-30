@@ -21,6 +21,12 @@ Ray Camera::getRay(int pixel_x, int pixel_y) const {
   return ray;
 }
 
+void Camera::setHSize(int h_size) { m_hsize = h_size; }
+
+void Camera::setVSize(int v_size) { m_vsize = v_size; }
+
+void Camera::setFieldOfView(float fov) { m_field_of_view = fov; }
+
 int Camera::hSize() const { return m_hsize; }
 
 int Camera::vSize() const { return m_vsize; }
@@ -29,6 +35,8 @@ void Camera::setTransform(const Mat4D &m) {
   m_transform = m;
   m_transformInv = m_transform.inverse();
 }
+
+Mat4D Camera::getTransform() const { return m_transform; }
 
 float Camera::pixelSize() const { return m_pixel_size; }
 

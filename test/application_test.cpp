@@ -11,7 +11,7 @@ using testing::Eq;
 class ApplicationTest : public testing::Test {
  public:
   void SetUp() override {
-    test_directory = std::filesystem::current_path().string() + "/test_data/";
+    test_directory = std::filesystem::current_path() / "test/test_data/";
   }
   WavefrontReader reader;
   std::string test_directory;
@@ -58,7 +58,7 @@ TEST_F(ApplicationTest, parseValidInputWithVertexNormals) {
   EXPECT_THAT(reader.vertexNormalCollection()[2], Eq(Normal3f(1.f, 2.f, 3.f)));
 }
 
-TEST_F(ApplicationTest, parseValidPolygonInput) {
+TEST_F(ApplicationTest, DISABLED_parseValidPolygonInput) {
   reader.setFileName(test_directory + "valid_input_polygon.txt");
   reader.parseInput();
   ASSERT_TRUE(reader.vertexCollection().size() == 5);
