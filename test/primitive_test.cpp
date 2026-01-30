@@ -214,7 +214,7 @@ TEST_F(CubeTest, normalOnSurfaceOfCube) {
  *		Cylinder Tests
  *=================================================================*/
 
-/*TEST_F(CylinderTest, rayMissesTheCylinder) {
+TEST_F(CylinderTest, rayMissesTheCylinder) {
   cyl = Cylinder();
   r = Ray(Point3f(1.f, 0.f, 0.f), normalized(Vec3f(0.f, 1.f, 0.f)));
   rec = Intersection();
@@ -232,16 +232,16 @@ TEST_F(CylinderTest, rayHitsTheCylinder) {
   r = Ray(Point3f(1.f, 0.f, -5.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
-  EXPECT_FLOAT_EQ(rec.min_hit, 5.f);
+  EXPECT_THAT(rec.thit, FloatEq(5.f));
   r = Ray(Point3f(0.f, 0.f, -5.f), normalized(Vec3f(0.f, 0.f, 1.f)));
   rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
-  EXPECT_FLOAT_EQ(rec.min_hit, 4.f);
+  EXPECT_THAT(rec.thit, FloatEq(4.f));
   r = Ray(Point3f(0.5f, 0.f, -5.f), normalized(Vec3f(0.1f, 1.f, 1.f)));
   rec = Intersection();
   EXPECT_TRUE(cyl.intersect(r, rec));
   float eps = 10E-5f;
-  EXPECT_NEAR(rec.min_hit, 6.80798f, eps);
+  EXPECT_THAT(rec.thit, FloatNear(6.80798f, eps));
 }
 
 TEST_F(CylinderTest, normalVectorOnCylinder) {
@@ -249,19 +249,19 @@ TEST_F(CylinderTest, normalVectorOnCylinder) {
   Point3f point(1.f, 0.f, 0.f);
 
   auto vec = cyl.normal(point);
-  ASSERT_THAT(vec, Vec3f(1.f, 0.f, 0.f));
+  EXPECT_THAT(Vec3f(vec), Eq(Vec3f(1.f, 0.f, 0.f)));
 
   point = Point3f(0.f, 5.f, -1.f);
   vec = cyl.normal(point);
-  ASSERT_THAT(vec, Vec3f(0.f, 0.f, -1.f));
+  EXPECT_THAT(Vec3f(vec), Eq(Vec3f(0.f, 0.f, -1.f)));
 
   point = Point3f(0.f, -2.f, 1.f);
   vec = cyl.normal(point);
-  ASSERT_THAT(vec, Vec3f(0.f, 0.f, 1.f));
+  EXPECT_THAT(Vec3f(vec), Eq(Vec3f(0.f, 0.f, 1.f)));
 
   point = Point3f(-1.f, 1.f, 0.f);
   vec = cyl.normal(point);
-  ASSERT_THAT(vec, Vec3f(-1.f, 0.f, 0.f));
+  ASSERT_THAT(Vec3f(vec), Eq(Vec3f(-1.f, 0.f, 0.f)));
 }
 
 TEST_F(CylinderTest, intersectConstrainedCylinder) {
@@ -314,28 +314,28 @@ TEST_F(CylinderTest, normalVectorOnEndCaps) {
 
   Point3f point(0.f, 1.f, 0.f);
   auto vec = cyl.normal(point);
-  ASSERT_THAT(vec, vect1);
+  EXPECT_THAT(Vec3f(vec), Eq(vect1));
 
   point = Point3f(0.5f, 1.f, 0.f);
   vec = cyl.normal(point);
-  ASSERT_THAT(vec, vect1);
+  EXPECT_THAT(Vec3f(vec), Eq(vect1));
 
   point = Point3f(0.f, 1.f, 0.5f);
   vec = cyl.normal(point);
-  ASSERT_THAT(vec, vect1);
+  EXPECT_THAT(Vec3f(vec), Eq(vect1));
 
   point = Point3f(0.f, 2.f, 0.f);
   vec = cyl.normal(point);
-  ASSERT_THAT(vec, vect2);
+  EXPECT_THAT(Vec3f(vec), Eq(vect2));
 
   point = Point3f(0.5f, 2.f, 0.f);
   vec = cyl.normal(point);
-  ASSERT_THAT(vec, vect2);
+  EXPECT_THAT(Vec3f(vec), Eq(vect2));
 
   point = Point3f(0.f, 2.f, 0.5f);
   vec = cyl.normal(point);
-  ASSERT_THAT(vec, vect2);
-}*/
+  ASSERT_THAT(Vec3f(vec), Eq(vect2));
+}
 
 /*==================================================================
  *		Plane Tests
