@@ -341,15 +341,15 @@ TEST_F(CylinderTest, normalVectorOnEndCaps) {
  *		Plane Tests
  *=================================================================*/
 
-/*TEST_F(PlaneTest, normalOfPlaneIsConstantEverywhere) {
+TEST_F(PlaneTest, normalOfPlaneIsConstantEverywhere) {
   p = Plane();
   auto n1 = p.normal(Point3f(0.0f, 0.0f, 0.0f));
   auto n2 = p.normal(Point3f(10.0f, 0.0f, -10.0f));
   auto n3 = p.normal(Point3f(-5.0f, 0.0f, 150.0f));
 
-  ASSERT_TRUE(n1 == Vec3f(0.0f, 1.0f, 0.0f));
-  ASSERT_TRUE(n2 == Vec3f(0.0f, 1.0f, 0.0f));
-  ASSERT_TRUE(n3 == Vec3f(0.0f, 1.0f, 0.0f));
+  EXPECT_THAT(Vec3f(n1), Eq(Vec3f(0.0f, 1.0f, 0.0f)));
+  EXPECT_THAT(Vec3f(n2), Eq(Vec3f(0.0f, 1.0f, 0.0f)));
+  ASSERT_THAT(Vec3f(n3), Eq(Vec3f(0.0f, 1.0f, 0.0f)));
 }
 
 TEST_F(PlaneTest, intersectRayParallelToThePlane) {
@@ -367,16 +367,16 @@ TEST_F(PlaneTest, intersectWithACoplanarRay) {
 TEST_F(PlaneTest, rayIntersectingPlaneFromAbove) {
   p = Plane();
   r = Ray(Point3f(0.0f, 1.0f, 0.0f), Vec3f(0.0f, -1.0f, 0.0f));
-  ASSERT_TRUE(p.intersect(r, rec));
-  ASSERT_TRUE(rec.min_hit == 1.0f);
+  EXPECT_TRUE(p.intersect(r, rec));
+  ASSERT_THAT(rec.thit, FloatEq(1.0f));
 }
 
 TEST_F(PlaneTest, rayIntersectingPlaneFromBelow) {
   p = Plane();
   r = Ray(Point3f(0.0f, -1.0f, 0.0f), Vec3f(0.0f, 1.0f, 0.0f));
-  ASSERT_TRUE(p.intersect(r, rec));
-  ASSERT_TRUE(rec.min_hit == 1.0f);
-}*/
+  EXPECT_TRUE(p.intersect(r, rec));
+  ASSERT_THAT(rec.thit, FloatEq(1.0f));
+}
 
 /*==================================================================
  *		Sphere Tests
@@ -410,7 +410,7 @@ TEST_F(SphereTest, rayOriginAtSphereCenterIntersection) {
   ASSERT_THAT(rec.thit, FloatEq(1.0f));
 }
 
-TEST_F(SphereTest, testingTheNextTest) {
+TEST_F(SphereTest, transformsSphere1) {
   s = Sphere(transf, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   Transformation trans(scale(2.0f, 2.0f, 2.0f));
@@ -419,7 +419,7 @@ TEST_F(SphereTest, testingTheNextTest) {
   ASSERT_THAT(rec.thit, FloatEq(3.0f));
 }
 
-TEST_F(SphereTest, transformsSphere) {
+TEST_F(SphereTest, transformsSphere2) {
   r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   auto transformation = Transformation(scale(2.0f, 2.0f, 2.0f));
   PrimitivePtr t =
