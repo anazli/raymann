@@ -6,6 +6,10 @@
 
 using app = AppParameters;
 
+/*----------------------------------------------------------
+ * Tests are based on the phone model which has been removed
+------------------------------------------------------------*/
+
 class MaterialTest : public testing::Test {
  public:
   Sphere *s;
