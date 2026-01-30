@@ -24,7 +24,7 @@ class TCone : public testing::Test {
 
 class CubeTest : public testing::Test {
  public:
-  SceneElementPtr box;
+  PrimitivePtr box;
   Ray ray;
 };
 
@@ -128,38 +128,38 @@ EXPECT_NEAR(rec.t2, 49.44994f, eps);
  *		Cube Tests
  *=================================================================*/
 
-/*TEST_F(CubeTest, rayIntersectsCube) {
+TEST_F(CubeTest, rayIntersectsCube) {
   box = std::make_shared<Cube>();
 
   ray = Ray(Point3f(5.f, 0.5f, 0.f), Vec3f(-1.f, 0.f, 0.f));
   auto rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.thit, 4.f);
+  EXPECT_THAT(rec.thit, FloatEq(4.f));
 
   ray = Ray(Point3f(-5.f, 0.5f, 0.f), Vec3f(1.f, 0.f, 0.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.thit, 4.f);
+  EXPECT_THAT(rec.thit, FloatEq(4.f));
 
   ray = Ray(Point3f(0.5f, 5.f, 0.f), Vec3f(0.f, -1.f, 0.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.thit, 4.f);
+  EXPECT_THAT(rec.thit, FloatEq(4.f));
 
   ray = Ray(Point3f(0.5f, -5.f, 0.f), Vec3f(0.f, 1.f, 0.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.thit, 4.f);
+  EXPECT_THAT(rec.thit, FloatEq(4.f));
 
   ray = Ray(Point3f(0.5f, 0.f, 5.f), Vec3f(0.f, 0.f, -1.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.thit, 4.f);
+  EXPECT_THAT(rec.thit, Eq(4.f));
 
   ray = Ray(Point3f(0.5f, 0.f, -5.f), Vec3f(0.f, 0.f, 1.f));
   rec = Intersection{};
   EXPECT_TRUE(box->intersect(ray, rec));
-  EXPECT_EQ(rec.thit, 4.f);
+  EXPECT_THAT(rec.thit, FloatEq(4.f));
 }
 
 TEST_F(CubeTest, rayMissesCube) {
@@ -193,22 +193,22 @@ TEST_F(CubeTest, rayMissesCube) {
 TEST_F(CubeTest, normalOnSurfaceOfCube) {
   box = std::make_shared<Cube>();
   auto point = Point3f(1.f, 0.5f, -0.8f);
-  EXPECT_TRUE(box->normal(point) == Vec3f(1.f, 0.f, 0.f));
+  EXPECT_THAT(Vec3f(box->normal(point)), Eq(Vec3f(1.f, 0.f, 0.f)));
   point = Point3f(-1.f, -0.2f, 0.9f);
-  EXPECT_TRUE(box->normal(point) == Vec3f(-1.f, 0.f, 0.f));
+  EXPECT_THAT(Vec3f(box->normal(point)), Eq(Vec3f(-1.f, 0.f, 0.f)));
   point = Point3f(-0.4f, 1.f, -0.1f);
-  EXPECT_TRUE(box->normal(point) == Vec3f(0.f, 1.f, 0.f));
+  EXPECT_THAT(Vec3f(box->normal(point)), Eq(Vec3f(0.f, 1.f, 0.f)));
   point = Point3f(0.3f, -1.f, -0.7f);
-  EXPECT_TRUE(box->normal(point) == Vec3f(0.f, -1.f, 0.f));
+  EXPECT_THAT(Vec3f(box->normal(point)), Eq(Vec3f(0.f, -1.f, 0.f)));
   point = Point3f(-0.6f, 0.3f, 1.f);
-  EXPECT_TRUE(box->normal(point) == Vec3f(0.f, 0.f, 1.f));
+  EXPECT_THAT(Vec3f(box->normal(point)), Eq(Vec3f(0.f, 0.f, 1.f)));
   point = Point3f(0.4f, 0.4f, -1.f);
-  EXPECT_TRUE(box->normal(point) == Vec3f(0.f, 0.f, -1.f));
+  EXPECT_THAT(Vec3f(box->normal(point)), Eq(Vec3f(0.f, 0.f, -1.f)));
   point = Point3f(1.f, 1.f, 1.f);
-  EXPECT_TRUE(box->normal(point) == Vec3f(1.f, 0.f, 0.f));
+  EXPECT_THAT(Vec3f(box->normal(point)), Eq(Vec3f(1.f, 0.f, 0.f)));
   point = Point3f(-1.f, -1.f, -1.f);
-  EXPECT_TRUE(box->normal(point) == Vec3f(-1.f, 0.f, 0.f));
-}*/
+  EXPECT_THAT(Vec3f(box->normal(point)), Eq(Vec3f(-1.f, 0.f, 0.f)));
+}
 
 /*==================================================================
  *		Cylinder Tests
