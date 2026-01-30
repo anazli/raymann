@@ -12,6 +12,8 @@
 #include "utils.h"
 
 using testing::Eq;
+using testing::FloatEq;
+using testing::FloatNear;
 
 class TCone : public testing::Test {
  public:
@@ -45,6 +47,7 @@ class SphereTest : public testing::Test {
   Sphere s;
   Ray r;
   Intersection rec;
+  Transformation transf;
 };
 
 class TriangleTest : public testing::Test {
@@ -379,86 +382,76 @@ TEST_F(PlaneTest, rayIntersectingPlaneFromBelow) {
  *		Sphere Tests
  *=================================================================*/
 
-/*TEST_F(SphereTest, raySphereIntersection) {
-  s = Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+TEST_F(SphereTest, raySphereIntersection) {
+  s = Sphere(transf, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  ASSERT_TRUE(s.intersect(r, rec));
-  ASSERT_EQ(rec.min_hit, 4.0f);
+  EXPECT_TRUE(s.intersect(r, rec));
+  ASSERT_THAT(rec.thit, FloatEq(4.0f));
 }
 
 TEST_F(SphereTest, raySphereTangentIntersection) {
-  s = Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  s = Sphere(transf, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   r = Ray(Point3f(0.0f, 1.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  ASSERT_TRUE(s.intersect(r, rec));
-  ASSERT_EQ(rec.min_hit, 5.0f);
+  EXPECT_TRUE(s.intersect(r, rec));
+  ASSERT_THAT(rec.thit, FloatEq(5.0f));
 }
 
 TEST_F(SphereTest, raySphereNoIntersection) {
-  s = Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  s = Sphere(transf, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   r = Ray(Point3f(0.0f, 2.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  ASSERT_FALSE(s.intersect(r, rec));
-  ASSERT_EQ(rec.min_hit, std::numeric_limits<float>::infinity());
+  EXPECT_FALSE(s.intersect(r, rec));
+  ASSERT_THAT(rec.thit, FloatEq(std::numeric_limits<float>::infinity()));
 }
 
 TEST_F(SphereTest, rayOriginAtSphereCenterIntersection) {
-  s = Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  s = Sphere(transf, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   r = Ray(Point3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  ASSERT_TRUE(s.intersect(r, rec));
-  ASSERT_EQ(rec.min_hit, 1.0f);
-}
-
-TEST_F(SphereTest, SphereIsBehindOrigin) {
-  //s = Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
-  //r = Ray(Point3f(0.0f, 0.0f, 5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  //ASSERT_TRUE(s.intersect(r, rec));
-  //ASSERT_EQ(rec.t1, -6.0f);
-  //ASSERT_EQ(rec.t2, -4.0f);
+  EXPECT_TRUE(s.intersect(r, rec));
+  ASSERT_THAT(rec.thit, FloatEq(1.0f));
 }
 
 TEST_F(SphereTest, testingTheNextTest) {
-  s = Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  s = Sphere(transf, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   Transformation trans(scale(2.0f, 2.0f, 2.0f));
   Ray r1 = trans.worldToObjectSpace(r);
-  ASSERT_TRUE(s.intersect(r1, rec));
-  ASSERT_EQ(rec.min_hit, 3.0f);
+  EXPECT_TRUE(s.intersect(r1, rec));
+  ASSERT_THAT(rec.thit, FloatEq(3.0f));
 }
 
 TEST_F(SphereTest, transformsSphere) {
   r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  SceneElementNode* t = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   auto transformation = Transformation(scale(2.0f, 2.0f, 2.0f));
-  t->setTransformation(transformation);
-  ASSERT_TRUE(t->intersect(r, rec));
-  ASSERT_EQ(rec.min_hit, 3.0f);
-  delete t;
+  PrimitivePtr t =
+      std::make_shared<Sphere>(transformation, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
+  EXPECT_TRUE(t->intersect(r, rec));
+  ASSERT_THAT(rec.thit, FloatEq(3.0f));
 }
 
 TEST_F(SphereTest, translatesSphere) {
   r = Ray(Point3f(0.0f, 0.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
-  SceneElementNode* t = new Sphere(Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   auto transformation = Transformation(translation(5.0f, 0.0f, 0.0f));
-  t->setTransformation(transformation);
+  PrimitivePtr t =
+      std::make_shared<Sphere>(transformation, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   ASSERT_FALSE(t->intersect(r, rec));
-  delete t;
 }
 
 TEST_F(SphereTest, returnsSurfaceNormalOnX) {
   s = Sphere();
   auto n = s.normal(Point3f(1, 0, 0));
-  ASSERT_TRUE(n == Vec3f(1, 0, 0));
+  ASSERT_THAT(Vec3f(n), Eq(Vec3f(1, 0, 0)));
 }
 
 TEST_F(SphereTest, returnsSurfaceNormalOnY) {
   s = Sphere();
   auto n = s.normal(Point3f(0, 1, 0));
-  ASSERT_TRUE(n == Vec3f(0, 1, 0));
+  ASSERT_THAT(Vec3f(n), Eq(Vec3f(0, 1, 0)));
 }
 
 TEST_F(SphereTest, returnsSurfaceNormalOnZ) {
   s = Sphere();
   auto n = s.normal(Point3f(0, 0, 1));
-  ASSERT_TRUE(n == Vec3f(0, 0, 1));
+  ASSERT_THAT(Vec3f(n), Eq(Vec3f(0, 0, 1)));
 }
 
 TEST_F(SphereTest, returnsNonAxialSurfaceNormal) {
@@ -466,20 +459,19 @@ TEST_F(SphereTest, returnsNonAxialSurfaceNormal) {
   auto n = s.normal(
       Point3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
   Vec3f n1 = Vec3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f);
-  ASSERT_THAT(n, n1);
+  ASSERT_THAT(Vec3f(n), Eq(n1));
 }
 
 TEST_F(SphereTest, normalIsNormalizedVector) {
   s = Sphere();
   auto n = s.normal(
       Point3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
-  EXPECT_NEAR(1.f, normalized(n).length(), 1.E-6);
+  ASSERT_THAT(1.f, FloatNear(normalized(n).length(), 1.E-6));
 }
-* /
 
-    /*==================================================================
-     *		Triangle Tests
-     *=================================================================*/
+/*==================================================================
+ *		Triangle Tests
+ *=================================================================*/
 
 TEST_F(TriangleTest, constructingTriangle) {
   ASSERT_THAT(t.point(0), Eq(p1));
