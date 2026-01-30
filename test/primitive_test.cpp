@@ -9,6 +9,9 @@
 #include "geometry/sphere.h"
 #include "geometry/triangle.h"
 #include "transformations/transformation.h"
+#include "utils.h"
+
+using testing::Eq;
 
 class TCone : public testing::Test {
  public:
@@ -63,6 +66,7 @@ class SmoothTriangleTest : public testing::Test {
   Normal3f v2 = Normal3f(-1.f, 0.f, 0.f);
   Normal3f v3 = Normal3f(1.f, 0.f, 0.f);
   SmoothTriangle t = SmoothTriangle(p1, p2, p3, v1, v2, v3);
+  float eps = 1.E-6f;
 };
 
 /*==================================================================
@@ -242,19 +246,19 @@ TEST_F(CylinderTest, normalVectorOnCylinder) {
   Point3f point(1.f, 0.f, 0.f);
 
   auto vec = cyl.normal(point);
-  compareVectors(vec, Vec3f(1.f, 0.f, 0.f));
+  ASSERT_THAT(vec, Vec3f(1.f, 0.f, 0.f));
 
   point = Point3f(0.f, 5.f, -1.f);
   vec = cyl.normal(point);
-  compareVectors(vec, Vec3f(0.f, 0.f, -1.f));
+  ASSERT_THAT(vec, Vec3f(0.f, 0.f, -1.f));
 
   point = Point3f(0.f, -2.f, 1.f);
   vec = cyl.normal(point);
-  compareVectors(vec, Vec3f(0.f, 0.f, 1.f));
+  ASSERT_THAT(vec, Vec3f(0.f, 0.f, 1.f));
 
   point = Point3f(-1.f, 1.f, 0.f);
   vec = cyl.normal(point);
-  compareVectors(vec, Vec3f(-1.f, 0.f, 0.f));
+  ASSERT_THAT(vec, Vec3f(-1.f, 0.f, 0.f));
 }
 
 TEST_F(CylinderTest, intersectConstrainedCylinder) {
@@ -307,27 +311,27 @@ TEST_F(CylinderTest, normalVectorOnEndCaps) {
 
   Point3f point(0.f, 1.f, 0.f);
   auto vec = cyl.normal(point);
-  compareVectors(vec, vect1);
+  ASSERT_THAT(vec, vect1);
 
   point = Point3f(0.5f, 1.f, 0.f);
   vec = cyl.normal(point);
-  compareVectors(vec, vect1);
+  ASSERT_THAT(vec, vect1);
 
   point = Point3f(0.f, 1.f, 0.5f);
   vec = cyl.normal(point);
-  compareVectors(vec, vect1);
+  ASSERT_THAT(vec, vect1);
 
   point = Point3f(0.f, 2.f, 0.f);
   vec = cyl.normal(point);
-  compareVectors(vec, vect2);
+  ASSERT_THAT(vec, vect2);
 
   point = Point3f(0.5f, 2.f, 0.f);
   vec = cyl.normal(point);
-  compareVectors(vec, vect2);
+  ASSERT_THAT(vec, vect2);
 
   point = Point3f(0.f, 2.f, 0.5f);
   vec = cyl.normal(point);
-  compareVectors(vec, vect2);
+  ASSERT_THAT(vec, vect2);
 }*/
 
 /*==================================================================
@@ -462,7 +466,7 @@ TEST_F(SphereTest, returnsNonAxialSurfaceNormal) {
   auto n = s.normal(
       Point3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f));
   Vec3f n1 = Vec3f(sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f, sqrt(3.0f) / 3.0f);
-  compareVectors(n, n1);
+  ASSERT_THAT(n, n1);
 }
 
 TEST_F(SphereTest, normalIsNormalizedVector) {
@@ -477,21 +481,21 @@ TEST_F(SphereTest, normalIsNormalizedVector) {
      *		Triangle Tests
      *=================================================================*/
 
-/*TEST_F(TriangleTest, constructingTriangle) {
-  comparePoints(t.point(0), p1);
-  comparePoints(t.point(1), p2);
-  comparePoints(t.point(2), p3);
-  compareVectors(t.normal(Point3f()), Vec3f(0.f, 0.f, 1.f));
-  compareVectors(t.edgeVector(0), Vec3f(-1.f, -1.f, 0.f));
-  compareVectors(t.edgeVector(1), Vec3f(1.f, -1.f, 0.f));
+TEST_F(TriangleTest, constructingTriangle) {
+  ASSERT_THAT(t.point(0), Eq(p1));
+  ASSERT_THAT(t.point(1), Eq(p2));
+  ASSERT_THAT(t.point(2), Eq(p3));
+  ASSERT_THAT(Vec3f(t.normal(Point3f())), Eq(Vec3f(0.f, 0.f, 1.f)));
+  ASSERT_THAT(t.edgeVector(0), Eq(Vec3f(-1.f, -1.f, 0.f)));
+  ASSERT_THAT(t.edgeVector(1), Eq(Vec3f(1.f, -1.f, 0.f)));
 }
 
 TEST_F(TriangleTest, normalVectorOfTriangle) {
   auto v1 = t.normal(Point3f(0.f, 0.5f, 0.f));
   auto v2 = t.normal(Point3f(1.f, 1.5f, 1.f));
   auto v3 = t.normal(Point3f(0.453f, 0.5f, 6.f));
-  ASSERT_TRUE(v1 == v2);
-  ASSERT_TRUE(v1 == v3);
+  ASSERT_THAT(v1, Eq(v2));
+  ASSERT_THAT(v1, Eq(v3));
 }
 
 TEST_F(TriangleTest, intersectingRayParallelToTriangle) {
@@ -517,16 +521,16 @@ TEST_F(TriangleTest, rayMissesP2P3Edge) {
 TEST_F(TriangleTest, rayStrikesTriangle) {
   Ray r(Point3f(0.f, 0.5f, -2.f), Vec3f(0.f, 0.f, 1.f));
   ASSERT_TRUE(t.intersect(r, rec));
-  ASSERT_TRUE(rec.min_hit == 2);
+  ASSERT_TRUE(rec.thit == 2);
 }
 
 TEST_F(SmoothTriangleTest, propertiesAreCorrect) {
-  comparePoints(t.points(0), Point3f(0.f, 1.f, 0.f));
-  comparePoints(t.points(1), Point3f(-1.f, 0.f, 0.f));
-  comparePoints(t.points(2), Point3f(1.f, 0.f, 0.f));
-  compareVectors(t.normals(0), Vec3f(0.f, 1.f, 0.f));
-  compareVectors(t.normals(1), Vec3f(-1.f, 0.f, 0.f));
-  compareVectors(t.normals(2), Vec3f(1.f, 0.f, 0.f));
+  ASSERT_THAT(t.points(0), Eq(Point3f(0.f, 1.f, 0.f)));
+  ASSERT_THAT(t.points(1), Eq(Point3f(-1.f, 0.f, 0.f)));
+  ASSERT_THAT(t.points(2), Eq(Point3f(1.f, 0.f, 0.f)));
+  ASSERT_THAT(Vec3f(t.normals(0)), Eq(Vec3f(0.f, 1.f, 0.f)));
+  ASSERT_THAT(Vec3f(t.normals(1)), Eq(Vec3f(-1.f, 0.f, 0.f)));
+  ASSERT_THAT(Vec3f(t.normals(2)), Eq(Vec3f(1.f, 0.f, 0.f)));
 }
 
 TEST_F(SmoothTriangleTest, normalInterpolation) {
@@ -534,5 +538,5 @@ TEST_F(SmoothTriangleTest, normalInterpolation) {
   Intersection rec;
   t.intersect(r, rec);
   auto v = t.normal(Point3f());
-  compareVectorsApprox(v, Vec3f(-0.2f, 0.3f, 0.f), EPS);
-}*/
+  ASSERT_THAT(Vec3f(v), Vec3Near(Vec3f(-0.2f, 0.3f, 0.f), eps));
+}
