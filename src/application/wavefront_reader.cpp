@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include <algorithm>
+#include <exception>
 #include <iterator>
 #include <sstream>
 
@@ -56,7 +57,14 @@ void handleStringsWithSlash(string &str) {
   }
 }
 
-WavefrontReader::WavefrontReader(string_view file) : m_file(file) {
+WavefrontReader::WavefrontReader(const std::filesystem::path &file)
+    : m_file(file) {
+  if (!std::filesystem::exists(m_file)) {
+    throw std::runtime_error(
+        "File not exists! Consider adding an obj file from "
+        "'https://github.com/anazli/common-3d-test-models' to the main "
+        "folder.");
+  }
   m_finalProduct = SceneElementNode::create();
 }
 
@@ -81,7 +89,15 @@ void WavefrontReader::parseInput() {
   m_inputStream.close();
 }
 
-void WavefrontReader::setFileName(std::string_view file) { m_file = file; }
+void WavefrontReader::setInputFile(const std::filesystem::path &file) {
+  if (!std::filesystem::exists(file)) {
+    throw std::runtime_error(
+        "File not exists! Consider adding an obj file from "
+        "'https://github.com/anazli/common-3d-test-models' to the main "
+        "folder.");
+  }
+  m_file = file;
+}
 
 void WavefrontReader::normalizeVertices() {
   openFile();
@@ -145,9 +161,8 @@ SceneElementPtr WavefrontReader::getStructureBVHierarchy() const {
 }
 
 void WavefrontReader::openFile() {
-  if (!m_file.empty()) {
-    m_inputStream.open(m_file.data());
-  }
+  auto file_name = m_file.filename().string();
+  m_inputStream.open(file_name.data());
 }
 
 void WavefrontReader::parseVertexEntry(string_view line,

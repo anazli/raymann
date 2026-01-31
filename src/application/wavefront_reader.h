@@ -2,6 +2,7 @@
 
 #include <vec3.h>
 
+#include <filesystem>
 #include <fstream>
 #include <string_view>
 
@@ -12,10 +13,11 @@
 
 class WavefrontReader {
  public:
-  WavefrontReader(std::string_view file = "");
+  WavefrontReader() = default;
+  WavefrontReader(const std::filesystem::path& file);
 
   void parseInput();
-  void setFileName(std::string_view file);
+  void setInputFile(const std::filesystem::path& file);
   void normalizeVertices();
   void addLightForModel(const PointLight& light);
   void addMaterial(MaterialPtr mat);
@@ -44,5 +46,5 @@ class WavefrontReader {
   SceneElementPtr m_currentGroup;
   PointLight m_light;
   MaterialPtr m_material;
-  std::string m_file;
+  std::filesystem::path m_file;
 };
