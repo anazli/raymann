@@ -29,4 +29,7 @@ struct Intersection {
   Normal3f normal;
   // primitive of closest hit
   SceneElementNode* closest_scene_element = nullptr;
+
+  Vec3f eye(const Ray& r) const { return -r.direction(); }
+  Point3f over_point_from_refl_surf;
 };

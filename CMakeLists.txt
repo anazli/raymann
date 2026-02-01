@@ -4,7 +4,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_BUILD_TYPE Debug) 
-project(raymann CXX)
 set(RUN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUN_TEST_DIR ${PROJECT_SOURCE_DIR}/test/bin)
 set(LIBRARY_NAME l${PROJECT_NAME})
@@ -65,6 +64,8 @@ add_library(${LIBRARY_NAME}
             src/renderers/renderer.cpp
             src/renderers/renderer.h
             src/renderers/path_tracer.cpp
+            src/renderers/phong_model.cpp
+            src/renderers/phong_model.h
             src/renderers/path_tracer.h
             src/stochastic/pdf.cpp
             src/stochastic/pdf.h

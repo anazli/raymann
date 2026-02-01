@@ -7,7 +7,11 @@
 #include "composite/builder.h"
 #include "container/canvas.h"
 #include "geometry/quad.h"
+#include "materials/lambertian.h"
+#include "materials/metal.h"
+#include "materials/standard.h"
 #include "renderers/path_tracer.h"
+#include "renderers/phong_model.h"
 #include "stochastic/stochastic_method.h"
 #include "textures/texture.h"
 
@@ -15,173 +19,58 @@ using namespace std;
 using app = AppParameters;
 
 int main() {
-  auto light = PointLight(Point3f(0.f, 0.f, 2.f), Vec3f(1.0f, 1.0f, 1.0f));
-  auto eps = 0.05f;
-  auto white = Vec3f(0.73f, 0.73f, 0.73f);
-  auto green = Vec3f(0.12f, 0.45f, 0.15f);
-  auto red = Vec3f(0.65f, 0.05f, 0.05f);
-  auto diffuse_light = Vec3f(15.f, 15.f, 15.f);
+  auto light = PointLight(Point3f(80.f, 70.f, 200.f), Vec3f(1.f, 1.f, 1.f));
 
-  SceneDirector scene_director;
-  EntityFactory entity_factory;
-  WorldBuilder world_builder;
+  auto file = std::filesystem::path("dragon.obj");
+  WavefrontReader reader(file);
+  DataContainer dragon_properties;
+  dragon_properties.setProperty(AppParameters::AMBIENT, 0.1f)
+      .setProperty(AppParameters::DIFFUSE, 0.9f)
+      .setProperty(AppParameters::REFLECTION, 0.f)
+      .setProperty(AppParameters::TRANSPARENCY, 0.f)
+      .setProperty(AppParameters::SPECULAR, 0.4f)
+      .setProperty(AppParameters::SHININESS, 5.f);
 
-  /*---------------------------------------------------------------------------
-   *				Floor
-   * -------------------------------------------------------------------------*/
+  auto dragon_texture =
+      make_unique<PerlinTexture>(0.5f, Vec3f(0.5f, 0.5f, 0.5f));
+  auto dragon_material =
+      StandardMaterial::create(std::move(dragon_texture), dragon_properties);
 
-  DataContainer floor;
-  floor.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
-      .setProperty(app::TRANSFORMATION_MATRIX,
-                   translation(278.f, 0.f, -245.f) * scale(279.f, eps, 556.f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, white)
-      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(entity_factory, floor);
+  reader.addMaterial(dragon_material);
+  reader.addLightForModel(light);
+  reader.parseInput();
+  SceneElementPtr world = reader.getStructureBVHierarchy();
 
-  /*---------------------------------------------------------------------------
-   *				Ceil
-   * -------------------------------------------------------------------------*/
-  DataContainer ceil;
-  ceil.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
-      .setProperty(app::TRANSFORMATION_MATRIX,
-                   translation(278.f, 555.f, -245.f) * scale(279.f, eps, 556.f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, white)
-      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(entity_factory, ceil);
+  DataContainer data;
+  data.setProperty(AppParameters::PRIMITIVE_TYPE, AppParameters::PLANE)
+      .setProperty(AppParameters::TRANSFORMATION_MATRIX,
+                   translation(0.f, -40.f, 0.f) * rotationOverY(PI))
+      .setProperty(AppParameters::TEXTURE_TYPE, AppParameters::CONSTANT_TEXTURE)
+      .setProperty(AppParameters::COLOR, Vec3f(0.35f, 0.35f, 0.65f))
+      .setProperty(AppParameters::MATERIAL_TYPE, AppParameters::STANDARD);
+  EntityFactory builder;
+  SceneDirector director;
+  director.createSceneElement(builder, data);
+  world->add(director.getCurrentElement());
 
-  /*---------------------------------------------------------------------------
-   *				Left Wall
-   * -------------------------------------------------------------------------*/
-  DataContainer left_wall;
-  left_wall.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
-      .setProperty(app::TRANSFORMATION_MATRIX,
-                   translation(0.f, 278.f, -245.f) * scale(eps, 279.f, 556.f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, green)
-      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(entity_factory, left_wall);
-
-  /*---------------------------------------------------------------------------
-   *				Right Wall
-   * -------------------------------------------------------------------------*/
-  DataContainer right_wall;
-  right_wall.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
-      .setProperty(app::TRANSFORMATION_MATRIX,
-                   translation(555.f, 278.f, -245.f) * scale(eps, 279.f, 556.f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, red)
-      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(entity_factory, right_wall);
-
-  /*---------------------------------------------------------------------------
-   *				Center Wall
-   * -------------------------------------------------------------------------*/
-  DataContainer center_wall;
-  center_wall.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
-      .setProperty(app::TRANSFORMATION_MATRIX,
-                   translation(0.f, 278.f, -245.f) * scale(556.f, 279.f, eps))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, white)
-      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(entity_factory, center_wall);
-
-  /*---------------------------------------------------------------------------
-   *				Light Wall
-   * -------------------------------------------------------------------------*/
-  DataContainer light_wall;
-  light_wall
-      .setProperty(app::PRIMITIVE_TYPE, app::QUAD)
-      //.setProperty(app::TRANSFORMATION_MATRIX,
-      //             translation(277.f, 554.5f, -455.f) * scale(139.f,
-      //             eps, 50.f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, diffuse_light)
-      .setProperty(app::MATERIAL_TYPE, app::DIFFUSE_LIGHT)
-      .setProperty(app::QUAD_ORIGIN, Point3f(213.f, 554.f, -485.f))
-      .setProperty(app::QUAD_UAXIS, Vec3f(130.f, 0.f, 0.f))
-      .setProperty(app::QUAD_VAXIS, Vec3f(0.f, 0.f, 105.f));
-  scene_director.createSceneElement(entity_factory, light_wall);
-  auto diffuse_light_element = scene_director.getCurrentElement();
-
-  /*---------------------------------------------------------------------------
-   *				Left Box
-   * -------------------------------------------------------------------------*/
-  DataContainer left_box;
-  left_box.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
-      .setProperty(app::TRANSFORMATION_MATRIX, translation(195.f, 1.f, -390.f) *
-                                                   scale(70.f, 290.f, 60.f) *
-                                                   rotationOverY(-0.4f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, white)
-      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(entity_factory, left_box);
-
-  /*---------------------------------------------------------------------------
-   *				Right Box
-   * -------------------------------------------------------------------------*/
-  DataContainer right_box;
-  right_box.setProperty(app::PRIMITIVE_TYPE, app::CUBE)
-      .setProperty(app::TRANSFORMATION_MATRIX, translation(367.f, 1.f, -440.f) *
-                                                   scale(60.f, 110.f, 60.f) *
-                                                   rotationOverY(0.4f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, white)
-      .setProperty(app::MATERIAL_TYPE, app::LAMBERTIAN);
-  scene_director.createSceneElement(entity_factory, right_box);
-
-  /*---------------------------------------------------------------------------
-   *				Left Sphere
-   * -------------------------------------------------------------------------*/
-  DataContainer left_sphere;
-  left_sphere.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
-      .setProperty(app::TRANSFORMATION_MATRIX,
-                   translation(200.f, 300.f, -385.f) * scale(60.f, 60.f, 60.f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, white)
-      .setProperty(app::MATERIAL_TYPE, app::DIELECTRIC)
-      .setProperty(app::REFRACTIVE_INDEX, 1.5f);
-  scene_director.createSceneElement(entity_factory, left_sphere);
-
-  /*---------------------------------------------------------------------------
-   *				Right Sphere
-   * -------------------------------------------------------------------------*/
-  DataContainer right_sphere;
-  right_sphere.setProperty(app::PRIMITIVE_TYPE, app::SPHERE)
-      .setProperty(app::TRANSFORMATION_MATRIX,
-                   translation(200.f, 30.f, -500.f) * scale(60.f, 60.f, 60.f))
-      .setProperty(app::TEXTURE_TYPE, app::CONSTANT_TEXTURE)
-      .setProperty(app::COLOR, white)
-      .setProperty(app::MATERIAL_TYPE, app::METAL)
-      .setProperty(app::FUZZ, 0.2f);
-  scene_director.createSceneElement(entity_factory, right_sphere);
-
-  //----------------------------------------------------------------------------
-  scene_director.createWorld(world_builder, light);
-  auto world = scene_director.getSceneProduct();
-
-  auto canvas = Canvas(500, 500);
+  auto canvas = Canvas(200, 200);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = Camera(canvas.width(), canvas.height(), 1.54f);
-  auto from = Point3f(278.f, 260.f, -830.f);
-  auto to = Point3f(278.f, 278.f, 0.f);
+  auto camera = Camera(canvas.width(), canvas.height(), 1.5f);
+  auto from = Point3f(0.f, -15.f, 130.f);
+  auto to = Point3f(30.f, 30.0f, -40.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera.setTransform(view_transform(from, to, up));
 
-  auto samples_per_pixel = 20;
-  auto material_depth = 5;
-  BaseRendererPtr renderer =
-      make_unique<PathTracer>(std::make_unique<BruteForceSampler>(
-          camera, samples_per_pixel, material_depth));
-  renderer->setBackgroundColor(Vec3f(0.3f, 0.3f, 0.3f));
-  renderer->addDiffuseLight(diffuse_light_element.get());
+  int samplesPerPixel = 5;
+  int materialDepth = 2;
+  auto renderer = std::make_unique<PhongModel>();
+  renderer->setBackgroundColor(Vec3f(0.5f, 0.3f, 0.3f));
   auto start = chrono::steady_clock::now();
   canvas.renderParallel(world, camera, std::move(renderer));
   canvas.save();
 
   auto end = chrono::steady_clock::now();
-  auto elapsed = chrono::duration_cast<chrono::minutes>(end - start);
+  std::chrono::duration<double> elapsed = end - start;
   cout << "..............................." << endl;
   cout << "Total elapsed time:" << elapsed.count() << " min." << endl;
   cout << "..............................." << endl;

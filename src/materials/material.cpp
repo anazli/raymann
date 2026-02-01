@@ -53,6 +53,3 @@ bool Material::refract(const Vec3f& v, const Vec3f& n, float ni_over_nt,
   } else
     return false;
 }
-
-BaseMaterial::BaseMaterial(TexturePtr texture)
-    : m_texture(std::move(texture)) {}

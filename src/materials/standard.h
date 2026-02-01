@@ -17,5 +17,6 @@ class StandardMaterial : public Material {
   static MaterialPtr create(TexturePtr tex,
                             const DataContainer& prop = DataContainer());
 
+ private:
   DataContainer m_prop;
 };
