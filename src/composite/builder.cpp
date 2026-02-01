@@ -88,6 +88,15 @@ TexturePtr EntityFactory::createTexture() {
       return ConstantTexture::create(color);
       break;
     }
+    case AppParameters::PERLIN_TEXTURE: {
+      auto scale =
+          m_input_data.getPropertyAs<float>(AppParameters::PERLIN_SCALE)
+              .value_or(0.5);
+      auto color = m_input_data.getPropertyAs<Vec3f>(AppParameters::COLOR)
+                       .value_or(Vec3f());
+      return PerlinTexture::create(scale, color);
+      break;
+    }
     default:
       APP_ASSERT(false, "Cannot create the specified texture type!");
   }

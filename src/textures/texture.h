@@ -49,14 +49,11 @@ class PerlinTexture : public Texture {
  public:
   ~PerlinTexture() override = default;
   PerlinTexture() = default;
-  PerlinTexture(float scale, const Vec3f &color = Vec3f(1.f, 1.f, 1.f))
-      : m_scale(scale), m_color(color) {}
-  Vec3f value(float u, float v, const Vec3f &p) const override {
-    return m_color * 0.5f *
-           static_cast<float>(
-               1.f + sin(m_scale * p.x() + 5.f * m_noise.turb(m_scale * p)));
-  }
-  void setColor(const Vec3f &col) override {}
+  PerlinTexture(float scale, const Vec3f &color = Vec3f(1.f, 1.f, 1.f));
+  Vec3f value(float u, float v, const Vec3f &p) const override;
+  void setColor(const Vec3f &col) override;
+
+  static TexturePtr create(float scale, const Vec3f &color);
 
  private:
   Perlin m_noise;

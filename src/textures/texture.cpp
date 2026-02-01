@@ -28,3 +28,18 @@ void CheckerTexture::setColor(const Vec3f &col) {}
 TexturePtr CheckerTexture::create(TexturePtr t1, TexturePtr t2) {
   return std::make_unique<CheckerTexture>(std::move(t1), std::move(t2));
 }
+
+PerlinTexture::PerlinTexture(float scale, const Vec3f &color)
+    : m_scale(scale), m_color(color) {}
+
+Vec3f PerlinTexture::value(float u, float v, const Vec3f &p) const {
+  return m_color * 0.5f *
+         static_cast<float>(
+             1.f + sin(m_scale * p.x() + 5.f * m_noise.turb(m_scale * p)));
+}
+
+void PerlinTexture::setColor(const Vec3f &col) {}
+
+TexturePtr PerlinTexture::create(float scale, const Vec3f &color) {
+  return std::make_unique<PerlinTexture>(scale, color);
+}
