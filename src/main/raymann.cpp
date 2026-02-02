@@ -32,7 +32,8 @@ int main() {
       .setProperty(AppParameters::SHININESS, 5.f);
 
   auto dragon_texture =
-      make_unique<PerlinTexture>(0.5f, Vec3f(0.5f, 0.5f, 0.5f));
+      // make_unique<PerlinTexture>(0.2f, Vec3f(0.5f, 0.5f, 0.5f));
+      make_unique<ConstantTexture>(Vec3f(0.5f, 0.5f, 0.5f));
   auto dragon_material =
       StandardMaterial::create(std::move(dragon_texture), dragon_properties);
 
@@ -46,31 +47,31 @@ int main() {
       .setProperty(AppParameters::TRANSFORMATION_MATRIX,
                    translation(0.f, -40.f, 0.f) * rotationOverY(PI))
       .setProperty(AppParameters::TEXTURE_TYPE, AppParameters::CONSTANT_TEXTURE)
-      .setProperty(AppParameters::COLOR, Vec3f(0.35f, 0.35f, 0.65f))
+      .setProperty(AppParameters::COLOR, Vec3f(0.25f, 0.25f, 0.25f))
       .setProperty(AppParameters::MATERIAL_TYPE, AppParameters::STANDARD);
   EntityFactory builder;
   SceneDirector director;
   director.createSceneElement(builder, data);
   world->add(director.getCurrentElement());
 
-  auto canvas = Canvas(200, 200);
+  auto canvas = Canvas(100, 100);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = Camera(canvas.width(), canvas.height(), 1.5f);
-  auto from = Point3f(0.f, -15.f, 130.f);
-  auto to = Point3f(30.f, 30.0f, -40.f);
+  auto camera = Camera(canvas.width(), canvas.height(), 1.0f);
+  auto from = Point3f(170.f, 43.f, 90.f);
+  auto to = Point3f(-90.f, 0.0f, -30.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera.setTransform(view_transform(from, to, up));
 
   int samplesPerPixel = 5;
   int materialDepth = 2;
   auto renderer = std::make_unique<PhongModel>();
-  renderer->setBackgroundColor(Vec3f(0.5f, 0.3f, 0.3f));
+  renderer->setBackgroundColor(Vec3f(0.3f, 0.5f, 0.3f));
   auto start = chrono::steady_clock::now();
   canvas.renderParallel(world, camera, std::move(renderer));
   canvas.save();
 
   auto end = chrono::steady_clock::now();
-  std::chrono::duration<double> elapsed = end - start;
+  auto elapsed = chrono::duration_cast<chrono::minutes>(end - start);
   cout << "..............................." << endl;
   cout << "Total elapsed time:" << elapsed.count() << " min." << endl;
   cout << "..............................." << endl;
