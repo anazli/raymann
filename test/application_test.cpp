@@ -48,17 +48,17 @@ TEST_F(ApplicationTest, parseValidInput) {
               Eq(Point3f(reader.vertexCollection()[3])));
 }
 
-TEST_F(ApplicationTest, DISABLED_parseValidInputWithVertexNormals) {
+TEST_F(ApplicationTest, parseValidInputWithVertexNormals) {
   reader.setInputFile(test_directory / "valid_input_vn.txt");
   reader.parseInput();
-  EXPECT_TRUE(reader.vertexNormalCollection().size() == 3);
+  ASSERT_TRUE(reader.vertexNormalCollection().size() == 3);
   EXPECT_THAT(reader.vertexNormalCollection()[0], Eq(Normal3f(0.f, 0.f, 1.f)));
   EXPECT_THAT(reader.vertexNormalCollection()[1],
               Eq(Normal3f(0.707f, 0.f, -0.707f)));
   EXPECT_THAT(reader.vertexNormalCollection()[2], Eq(Normal3f(1.f, 2.f, 3.f)));
 }
 
-TEST_F(ApplicationTest, DISABLED_parseValidPolygonInput) {
+TEST_F(ApplicationTest, parseValidPolygonInput) {
   reader.setInputFile(test_directory / "valid_input_polygon.txt");
   reader.parseInput();
   ASSERT_TRUE(reader.vertexCollection().size() == 5);
@@ -86,10 +86,11 @@ TEST_F(ApplicationTest, DISABLED_parseValidPolygonInput) {
               Eq(Point3f(reader.vertexCollection()[4])));
 }
 
-TEST_F(ApplicationTest, DISABLED_parseFileWithGroups) {
+TEST_F(ApplicationTest, parseFileWithGroups) {
   reader.setInputFile(test_directory / "valid_input_groups.txt");
   reader.parseInput();
   SceneElementPtr world = reader.getStructure();
+  ASSERT_TRUE(world);
   ASSERT_TRUE(world->getChildren().size() == 2);
   WorldIterator it(world->getChildren());
   if (it.first()) {
@@ -102,6 +103,7 @@ TEST_F(ApplicationTest, DISABLED_parseFileWithGroups) {
       SceneElementRawPtr tr1 = it1.currentElement();
       auto t1 = dynamic_cast<Triangle *>(tr1->getPrimitive().get());
       if (t1) {
+        ASSERT_TRUE(reader.vertexCollection().size() == 3);
         EXPECT_THAT(t1->point(0), Eq(Point3f(reader.vertexCollection()[0])));
         EXPECT_THAT(t1->point(1), Eq(Point3f(reader.vertexCollection()[1])));
         EXPECT_THAT(t1->point(2), Eq(Point3f(reader.vertexCollection()[2])));
@@ -113,6 +115,7 @@ TEST_F(ApplicationTest, DISABLED_parseFileWithGroups) {
       SceneElementRawPtr tr2 = it2.currentElement();
       auto t2 = dynamic_cast<Triangle *>(tr2->getPrimitive().get());
       if (t2) {
+        ASSERT_TRUE(reader.vertexCollection().size() == 3);
         EXPECT_THAT(t2->point(0), Eq(Point3f(reader.vertexCollection()[0])));
         EXPECT_THAT(t2->point(1), Eq(Point3f(reader.vertexCollection()[2])));
         EXPECT_THAT(t2->point(2), Eq(Point3f(reader.vertexCollection()[3])));
@@ -121,10 +124,11 @@ TEST_F(ApplicationTest, DISABLED_parseFileWithGroups) {
   }
 }
 
-TEST_F(ApplicationTest, DISABLED_parseFileWithSmoothTriangles) {
+TEST_F(ApplicationTest, parseFileWithSmoothTriangles) {
   reader.setInputFile(test_directory / "valid_input_sm_triangle.txt");
   reader.parseInput();
   SceneElementPtr world = reader.getStructure();
+  ASSERT_TRUE(world);
   ASSERT_TRUE(world->getChildren().size() == 2);
   WorldIterator it(world->getChildren());
   if (it.first()) {

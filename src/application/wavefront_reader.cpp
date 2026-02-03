@@ -160,10 +160,7 @@ SceneElementPtr WavefrontReader::getStructureBVHierarchy() const {
   return m_finalProduct;
 }
 
-void WavefrontReader::openFile() {
-  auto file_name = m_file.filename().string();
-  m_inputStream.open(file_name.data());
-}
+void WavefrontReader::openFile() { m_inputStream.open(m_file.string()); }
 
 void WavefrontReader::parseVertexEntry(string_view line,
                                        std::vector<Vec3f> &vec) {
@@ -219,7 +216,7 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
           scene_element->setPrimitive(primitive);
           if (m_currentGroup) {  // if we don't parse any g entry
             m_currentGroup->add(scene_element);
-          } else {
+          } else if (m_finalProduct) {
             m_finalProduct->add(scene_element);
           }
           m_triangles.push_back(Triangle({p1, p2, p3}));
@@ -273,7 +270,7 @@ void WavefrontReader::parseTriangleEntry(string_view line) {
         scene_element->setPrimitive(primitive);
         if (m_currentGroup) {  // if we don't parse any g entry
           m_currentGroup->add(scene_element);
-        } else {
+        } else if (m_finalProduct) {
           m_finalProduct->add(scene_element);
         }
       }
@@ -308,7 +305,7 @@ void WavefrontReader::parsePolygonEntry(string_view line) {
 void WavefrontReader::parseGroupEntry(std::string_view line) {
   m_currentGroup = SceneElementNode::create();
   m_currentGroup->setLight(m_light);
-  m_finalProduct->add(m_currentGroup);
+  if (m_finalProduct) m_finalProduct->add(m_currentGroup);
 }
 
 void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {
@@ -316,14 +313,14 @@ void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {
     Point3f p1 = Point3f(vertices[0]);
     Point3f p2 = Point3f(vertices[i]);
     Point3f p3 = Point3f(vertices[i + 1]);
-    auto scene_element = std::shared_ptr<SceneElementNode>();
+    auto scene_element = SceneElementNode::create();
     auto primitive =
         Triangle::create(std::initializer_list<Point3f>{p1, p2, p3});
     scene_element->setMaterial(m_material);
     scene_element->setPrimitive(primitive);
     if (m_currentGroup) {
       m_currentGroup->add(scene_element);
-    } else {
+    } else if (m_finalProduct) {
       m_finalProduct->add(scene_element);
     }
     m_triangles.push_back(Triangle({p1, p2, p3}));
