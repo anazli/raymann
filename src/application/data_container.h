@@ -15,7 +15,7 @@ class DataContainer {
   bool removeProperty(const App &name);
   bool hasProperty(const App &name) const;
   template <typename T>
-  std::optional<T> getPropertyAs(const AppParameters &name) const {
+  std::optional<T> getPropertyAs(const App &name) const {
     if (hasProperty(name)) {
       try {
         return std::any_cast<T>(m_parameters.at(name));
@@ -27,5 +27,5 @@ class DataContainer {
   }
 
  private:
-  std::map<AppParameters, std::any> m_parameters;
+  std::map<App, std::any> m_parameters;
 };

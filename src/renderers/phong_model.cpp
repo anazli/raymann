@@ -116,7 +116,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
   auto closest_refract = findClosestHit(world, ray);
   auto black = Vec3f(0.f, 0.f, 0.f);
   if (closest_refract.object->getMaterial()->getProperties().getPropertyAsFloat(
-          Props::TRANSPARENCY) <= 0.f ||
+          App::TRANSPARENCY) <= 0.f ||
       rec == 0) {
     return black;
   }
@@ -141,7 +141,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
   return computeColor(world, refracted, rec - 1) *
          closest_refract.object->getMaterial()
              ->getProperties()
-             .getPropertyAsFloat(Props::TRANSPARENCY);
+             .getPropertyAsFloat(App::TRANSPARENCY);
   return Vec3f(0.f, 0.f, 0.f);
 }*/
 
@@ -157,7 +157,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
       n1 = 1.f;
     } else {
       n1 = container.back()->getMaterial()->getProperties().getPropertyAsFloat(
-          Props::REFRACTIVE_INDEX);
+          App::REFRACTIVE_INDEX);
     }
 
     auto is_in = false;
@@ -178,7 +178,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
       n2 = 1.f;
     } else {
       n2 = container.back()->getMaterial()->getProperties().getPropertyAsFloat(
-          Props::REFRACTIVE_INDEX);
+          App::REFRACTIVE_INDEX);
     }
     m_refract_index_collection[key] = std::make_pair(n1, n2);
   }

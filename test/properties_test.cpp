@@ -9,11 +9,10 @@ using namespace std;
 class DataContainerTest : public Test {
  public:
   DataContainer p;
-  AppParameters name =
-      AppParameters::COLOR;  // For some weird reason, with other values
-                             // like AMBIENT, DIFFUSE etc.. the tests
-                             // [addsProperty, entityHasProperty] fail.
-                             // Either GoogleTests's or STL's problem
+  App name = App::COLOR;  // For some weird reason, with other values
+                          // like AMBIENT, DIFFUSE etc.. the tests
+                          // [addsProperty, entityHasProperty] fail.
+                          // Either GoogleTests's or STL's problem
   std::any value = 5.6f;
 };
 
@@ -35,7 +34,7 @@ TEST_F(DataContainerTest, entityHasProperty) {
   EXPECT_FALSE(p.hasProperty(name));
   p.setProperty(name, value);
   EXPECT_TRUE(p.hasProperty(name));
-  EXPECT_FALSE(p.hasProperty(static_cast<AppParameters>(1000)));
+  EXPECT_FALSE(p.hasProperty(static_cast<App>(1000)));
 }
 
 TEST_F(DataContainerTest, getsPropertyAsInt) {

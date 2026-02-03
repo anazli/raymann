@@ -11,10 +11,9 @@ class EntityFactory {
   void setData(const DataContainer& data);
   PrimitivePtr createPrimitive();
   MaterialPtr createMaterial();
-
- private:
   TexturePtr createTexture();
 
+ private:
   DataContainer m_input_data;
 };
 
