@@ -23,7 +23,7 @@ class Material {
   virtual float scatteringPDF(const Ray& r, const Intersection& record,
                               const Ray& scatteredRay) const;
   std::shared_ptr<StochasticPdf> pdf() const;
-  AppParameters getType() const;
+  App getType() const;
 
  protected:
   Material(TexturePtr tex);
@@ -34,7 +34,7 @@ class Material {
 
   TexturePtr m_tex;
   std::shared_ptr<StochasticPdf> m_pdf;
-  AppParameters m_type;
+  App m_type;
 };
 
 using MaterialPtr = std::shared_ptr<Material>;

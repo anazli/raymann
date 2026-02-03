@@ -22,50 +22,42 @@ void EntityFactory::setData(const DataContainer& data) { m_input_data = data; }
 
 PrimitivePtr EntityFactory::createPrimitive() {
   Transformation transformation;
-  if (m_input_data.hasProperty(AppParameters::TRANSFORMATION_MATRIX)) {
+  if (m_input_data.hasProperty(App::TRANSFORMATION_MATRIX)) {
     transformation =
-        m_input_data.getPropertyAs<Mat4D>(AppParameters::TRANSFORMATION_MATRIX)
-            .value();
+        m_input_data.getPropertyAs<Mat4D>(App::TRANSFORMATION_MATRIX).value();
   }
-  auto type =
-      m_input_data.getPropertyAs<AppParameters>(AppParameters::PRIMITIVE_TYPE);
+  auto type = m_input_data.getPropertyAs<App>(App::PRIMITIVE_TYPE);
   if (!type.has_value()) {
     throw std::runtime_error("Primitive type must be specified!");
   }
   switch (type.value()) {
-    case AppParameters::CONE:
+    case App::CONE:
       return Cone::create(transformation);
       break;
-    case AppParameters::CUBE:
+    case App::CUBE:
       return Cube::create(transformation);
       break;
-    case AppParameters::CYLINDER: {
+    case App::CYLINDER: {
       auto ymin =
-          m_input_data.getPropertyAs<float>(AppParameters::CYLINDER_Y_MIN)
-              .value();
+          m_input_data.getPropertyAs<float>(App::CYLINDER_Y_MIN).value();
       auto ymax =
-          m_input_data.getPropertyAs<float>(AppParameters::CYLINDER_Y_MAX)
-              .value();
+          m_input_data.getPropertyAs<float>(App::CYLINDER_Y_MAX).value();
       auto closed =
-          m_input_data.getPropertyAs<bool>(AppParameters::CYLINDER_CLOSED)
-              .value();
+          m_input_data.getPropertyAs<bool>(App::CYLINDER_CLOSED).value();
       return Cylinder::create(ymin, ymax, closed, transformation);
       break;
     }
-    case AppParameters::PLANE:
+    case App::PLANE:
       return Plane::create(transformation);
       break;
-    case AppParameters::SPHERE:
+    case App::SPHERE:
       return Sphere::create(transformation);
       break;
-    case AppParameters::QUAD: {
+    case App::QUAD: {
       auto origin =
-          m_input_data.getPropertyAs<Point3f>(AppParameters::QUAD_ORIGIN)
-              .value();
-      auto u_axis =
-          m_input_data.getPropertyAs<Vec3f>(AppParameters::QUAD_UAXIS).value();
-      auto v_axis =
-          m_input_data.getPropertyAs<Vec3f>(AppParameters::QUAD_VAXIS).value();
+          m_input_data.getPropertyAs<Point3f>(App::QUAD_ORIGIN).value();
+      auto u_axis = m_input_data.getPropertyAs<Vec3f>(App::QUAD_UAXIS).value();
+      auto v_axis = m_input_data.getPropertyAs<Vec3f>(App::QUAD_VAXIS).value();
       return Quad::create(origin, u_axis, v_axis, transformation);
       break;
     }
@@ -76,24 +68,22 @@ PrimitivePtr EntityFactory::createPrimitive() {
 }
 
 TexturePtr EntityFactory::createTexture() {
-  auto type =
-      m_input_data.getPropertyAs<AppParameters>(AppParameters::TEXTURE_TYPE);
+  auto type = m_input_data.getPropertyAs<App>(App::TEXTURE_TYPE);
   if (!type.has_value()) {
     throw std::runtime_error("Texture type must be specified!");
   }
   switch (type.value()) {
-    case AppParameters::CONSTANT_TEXTURE: {
-      auto color = m_input_data.getPropertyAs<Vec3f>(AppParameters::COLOR)
-                       .value_or(Vec3f());
+    case App::CONSTANT_TEXTURE: {
+      auto color =
+          m_input_data.getPropertyAs<Vec3f>(App::COLOR).value_or(Vec3f());
       return ConstantTexture::create(color);
       break;
     }
-    case AppParameters::PERLIN_TEXTURE: {
+    case App::PERLIN_TEXTURE: {
       auto scale =
-          m_input_data.getPropertyAs<float>(AppParameters::PERLIN_SCALE)
-              .value_or(0.5);
-      auto color = m_input_data.getPropertyAs<Vec3f>(AppParameters::COLOR)
-                       .value_or(Vec3f());
+          m_input_data.getPropertyAs<float>(App::PERLIN_SCALE).value_or(0.5);
+      auto color =
+          m_input_data.getPropertyAs<Vec3f>(App::COLOR).value_or(Vec3f());
       return PerlinTexture::create(scale, color);
       break;
     }
@@ -105,35 +95,32 @@ TexturePtr EntityFactory::createTexture() {
 
 MaterialPtr EntityFactory::createMaterial() {
   auto texture = createTexture();
-  const auto type =
-      m_input_data.getPropertyAs<AppParameters>(AppParameters::MATERIAL_TYPE);
+  const auto type = m_input_data.getPropertyAs<App>(App::MATERIAL_TYPE);
   if (!type.has_value()) {
     throw std::runtime_error("Material type must be specified!");
   }
   switch (type.value()) {
-    case AppParameters::DIELECTRIC: {
+    case App::DIELECTRIC: {
       auto refractive_index =
-          m_input_data.getPropertyAs<float>(AppParameters::REFRACTIVE_INDEX)
-              .value_or(1);
+          m_input_data.getPropertyAs<float>(App::REFRACTIVE_INDEX).value_or(1);
       return Dielectric::create(std::move(texture), refractive_index);
       break;
     }
-    case AppParameters::LAMBERTIAN:
+    case App::LAMBERTIAN:
       return Lambertian::create(std::move(texture));
       break;
-    case AppParameters::METAL: {
-      auto fuzz =
-          m_input_data.getPropertyAs<float>(AppParameters::FUZZ).value_or(0.2);
+    case App::METAL: {
+      auto fuzz = m_input_data.getPropertyAs<float>(App::FUZZ).value_or(0.2);
       return Metal::create(std::move(texture), fuzz);
       break;
     }
-    case AppParameters::DIFFUSE_LIGHT:
+    case App::DIFFUSE_LIGHT:
       return EmissiveMaterial::create(std::move(texture));
       break;
-    case AppParameters::ISOTROPIC:
+    case App::ISOTROPIC:
       return Isotropic::create(std::move(texture));
       break;
-    case AppParameters::STANDARD:
+    case App::STANDARD:
       return StandardMaterial::create(std::move(texture), m_input_data);
       break;
     default:

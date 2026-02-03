@@ -1,6 +1,6 @@
 #include "application/data_container.h"
 
-DataContainer& DataContainer::setProperty(const AppParameters& name,
+DataContainer& DataContainer::setProperty(const App& name,
                                           const std::any& value) {
   if (!addProperty(name, value)) {
     m_parameters[name] = value;
@@ -8,8 +8,7 @@ DataContainer& DataContainer::setProperty(const AppParameters& name,
   return *this;
 }
 
-bool DataContainer::addProperty(const AppParameters& name,
-                                const std::any& value) {
+bool DataContainer::addProperty(const App& name, const std::any& value) {
   if (!hasProperty(name)) {
     m_parameters[name] = value;
     return true;
@@ -17,7 +16,7 @@ bool DataContainer::addProperty(const AppParameters& name,
   return false;
 }
 
-bool DataContainer::removeProperty(const AppParameters& name) {
+bool DataContainer::removeProperty(const App& name) {
   if (m_parameters.empty()) return false;
   if (hasProperty(name)) {
     m_parameters.erase(name);
@@ -26,7 +25,7 @@ bool DataContainer::removeProperty(const AppParameters& name) {
   return false;
 }
 
-bool DataContainer::hasProperty(const AppParameters& name) const {
+bool DataContainer::hasProperty(const App& name) const {
   if (auto it{m_parameters.find(name)}; it != m_parameters.end()) return true;
   return false;
 }

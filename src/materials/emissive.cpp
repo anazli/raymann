@@ -3,7 +3,7 @@
 #include "composite/scene_element.h"
 
 EmissiveMaterial::EmissiveMaterial(TexturePtr tex) : Material(std::move(tex)) {
-  m_type = AppParameters::DIFFUSE_LIGHT;
+  m_type = App::DIFFUSE_LIGHT;
 }
 
 bool EmissiveMaterial::scatter(const Ray& r_in, const Intersection& rec,

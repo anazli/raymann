@@ -10,10 +10,10 @@
 class DataContainer {
  public:
   DataContainer() = default;
-  DataContainer &setProperty(const AppParameters &name, const std::any &value);
-  bool addProperty(const AppParameters &name, const std::any &value);
-  bool removeProperty(const AppParameters &name);
-  bool hasProperty(const AppParameters &name) const;
+  DataContainer &setProperty(const App &name, const std::any &value);
+  bool addProperty(const App &name, const std::any &value);
+  bool removeProperty(const App &name);
+  bool hasProperty(const App &name) const;
   template <typename T>
   std::optional<T> getPropertyAs(const AppParameters &name) const {
     if (hasProperty(name)) {

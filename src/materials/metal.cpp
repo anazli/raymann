@@ -10,7 +10,7 @@ Metal::Metal(TexturePtr tex, float fuzz) : Material(std::move(tex)) {
     m_fuzz = fuzz;
   else
     m_fuzz = 1.f;
-  m_type = AppParameters::METAL;
+  m_type = App::METAL;
 }
 
 bool Metal::scatter(const Ray& r_in, const Intersection& rec,

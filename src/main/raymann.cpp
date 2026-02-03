@@ -16,7 +16,7 @@
 #include "textures/texture.h"
 
 using namespace std;
-using app = AppParameters;
+using app = App;
 
 int main() {
   auto light = PointLight(Point3f(80.f, 70.f, 200.f), Vec3f(1.f, 1.f, 1.f));
@@ -24,12 +24,12 @@ int main() {
   auto file = std::filesystem::path("dragon.obj");
   WavefrontReader reader(file);
   DataContainer dragon_properties;
-  dragon_properties.setProperty(AppParameters::AMBIENT, 0.1f)
-      .setProperty(AppParameters::DIFFUSE, 0.9f)
-      .setProperty(AppParameters::REFLECTION, 0.f)
-      .setProperty(AppParameters::TRANSPARENCY, 0.f)
-      .setProperty(AppParameters::SPECULAR, 0.5f)
-      .setProperty(AppParameters::SHININESS, 50.f);
+  dragon_properties.setProperty(App::AMBIENT, 0.1f)
+      .setProperty(App::DIFFUSE, 0.9f)
+      .setProperty(App::REFLECTION, 0.f)
+      .setProperty(App::TRANSPARENCY, 0.f)
+      .setProperty(App::SPECULAR, 0.5f)
+      .setProperty(App::SHININESS, 50.f);
 
   auto dragon_texture =
       make_unique<PerlinTexture>(0.17f, Vec3f(0.3f, 0.55f, 0.3f));
@@ -42,12 +42,12 @@ int main() {
   SceneElementPtr world = reader.getStructureBVHierarchy();
 
   DataContainer data;
-  data.setProperty(AppParameters::PRIMITIVE_TYPE, AppParameters::PLANE)
-      .setProperty(AppParameters::TRANSFORMATION_MATRIX,
+  data.setProperty(App::PRIMITIVE_TYPE, App::PLANE)
+      .setProperty(App::TRANSFORMATION_MATRIX,
                    translation(0.f, -40.f, 0.f) * rotationOverY(PI))
-      .setProperty(AppParameters::TEXTURE_TYPE, AppParameters::CONSTANT_TEXTURE)
-      .setProperty(AppParameters::COLOR, Vec3f(0.25f, 0.25f, 0.25f))
-      .setProperty(AppParameters::MATERIAL_TYPE, AppParameters::STANDARD);
+      .setProperty(App::TEXTURE_TYPE, App::CONSTANT_TEXTURE)
+      .setProperty(App::COLOR, Vec3f(0.25f, 0.25f, 0.25f))
+      .setProperty(App::MATERIAL_TYPE, App::STANDARD);
   EntityFactory builder;
   SceneDirector director;
   director.createSceneElement(builder, data);

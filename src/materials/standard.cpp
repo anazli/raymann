@@ -5,20 +5,18 @@
 StandardMaterial::StandardMaterial(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex)), m_prop(prop) {
   // Default properties of standard material
-  if (!m_prop.hasProperty(AppParameters::AMBIENT))
-    m_prop.setProperty(AppParameters::AMBIENT, 0.1f);
-  if (!m_prop.hasProperty(AppParameters::DIFFUSE))
-    m_prop.setProperty(AppParameters::DIFFUSE, 0.9f);
-  if (!m_prop.hasProperty(AppParameters::SPECULAR))
-    m_prop.setProperty(AppParameters::SPECULAR, 0.9f);
-  if (!m_prop.hasProperty(AppParameters::SHININESS))
-    m_prop.setProperty(AppParameters::SHININESS, 200.f);
-  if (!m_prop.hasProperty(AppParameters::REFLECTION))
-    m_prop.setProperty(AppParameters::REFLECTION, 0.f);
-  if (!m_prop.hasProperty(AppParameters::TRANSPARENCY))
-    m_prop.setProperty(AppParameters::TRANSPARENCY, 0.f);
-  if (!m_prop.hasProperty(AppParameters::REFRACTIVE_INDEX))
-    m_prop.setProperty(AppParameters::REFRACTIVE_INDEX, 1.f);
+  if (!m_prop.hasProperty(App::AMBIENT)) m_prop.setProperty(App::AMBIENT, 0.1f);
+  if (!m_prop.hasProperty(App::DIFFUSE)) m_prop.setProperty(App::DIFFUSE, 0.9f);
+  if (!m_prop.hasProperty(App::SPECULAR))
+    m_prop.setProperty(App::SPECULAR, 0.9f);
+  if (!m_prop.hasProperty(App::SHININESS))
+    m_prop.setProperty(App::SHININESS, 200.f);
+  if (!m_prop.hasProperty(App::REFLECTION))
+    m_prop.setProperty(App::REFLECTION, 0.f);
+  if (!m_prop.hasProperty(App::TRANSPARENCY))
+    m_prop.setProperty(App::TRANSPARENCY, 0.f);
+  if (!m_prop.hasProperty(App::REFRACTIVE_INDEX))
+    m_prop.setProperty(App::REFRACTIVE_INDEX, 1.f);
 }
 
 void StandardMaterial::setTexture(TexturePtr tex) { m_tex = std::move(tex); }

@@ -4,7 +4,7 @@
 
 Dielectric::Dielectric(TexturePtr tex, float refractive_index)
     : m_refractive_index(refractive_index), Material(std::move(tex)) {
-  m_type = AppParameters::DIELECTRIC;
+  m_type = App::DIELECTRIC;
 }
 
 bool Dielectric::scatter(const Ray& r_in, const Intersection& rec,

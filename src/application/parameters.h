@@ -1,6 +1,6 @@
 #pragma once
 
-enum class AppParameters {
+enum class App {
   // Primitive types
   PRIMITIVE_TYPE,
   CONE,

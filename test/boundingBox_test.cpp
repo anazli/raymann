@@ -16,7 +16,7 @@ using std::make_shared;
 using std::make_unique;
 using std::shared_ptr;
 using std::vector;
-using app = AppParameters;
+using app = App;
 using testing::Eq;
 
 class BoundingBoxTest : public testing::Test {
