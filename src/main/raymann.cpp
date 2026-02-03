@@ -32,8 +32,7 @@ int main() {
       .setProperty(AppParameters::SHININESS, 5.f);
 
   auto dragon_texture =
-      // make_unique<PerlinTexture>(0.2f, Vec3f(0.5f, 0.5f, 0.5f));
-      make_unique<ConstantTexture>(Vec3f(0.5f, 0.5f, 0.5f));
+      make_unique<PerlinTexture>(0.1f, Vec3f(0.3f, 0.6f, 0.3f));
   auto dragon_material =
       StandardMaterial::create(std::move(dragon_texture), dragon_properties);
 
@@ -54,16 +53,16 @@ int main() {
   director.createSceneElement(builder, data);
   world->add(director.getCurrentElement());
 
-  auto canvas = Canvas(100, 100);
+  auto canvas = Canvas(800, 600);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = Camera(canvas.width(), canvas.height(), 1.0f);
-  auto from = Point3f(170.f, 43.f, 90.f);
-  auto to = Point3f(-90.f, 0.0f, -30.f);
+  auto camera = Camera(canvas.width(), canvas.height(), 1.1f);
+  auto from = Point3f(170.f, 47.f, 90.f);
+  auto to = Point3f(-90.f, -1.f, -30.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera.setTransform(view_transform(from, to, up));
 
-  int samplesPerPixel = 5;
-  int materialDepth = 2;
+  int samples_per_pixel = 5;
+  int material_depth = 2;
   auto renderer = std::make_unique<PhongModel>();
   renderer->setBackgroundColor(Vec3f(0.3f, 0.5f, 0.3f));
   auto start = chrono::steady_clock::now();
