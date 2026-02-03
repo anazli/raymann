@@ -28,11 +28,11 @@ int main() {
       .setProperty(AppParameters::DIFFUSE, 0.9f)
       .setProperty(AppParameters::REFLECTION, 0.f)
       .setProperty(AppParameters::TRANSPARENCY, 0.f)
-      .setProperty(AppParameters::SPECULAR, 0.4f)
-      .setProperty(AppParameters::SHININESS, 5.f);
+      .setProperty(AppParameters::SPECULAR, 0.5f)
+      .setProperty(AppParameters::SHININESS, 50.f);
 
   auto dragon_texture =
-      make_unique<PerlinTexture>(0.1f, Vec3f(0.3f, 0.6f, 0.3f));
+      make_unique<PerlinTexture>(0.17f, Vec3f(0.3f, 0.55f, 0.3f));
   auto dragon_material =
       StandardMaterial::create(std::move(dragon_texture), dragon_properties);
 
@@ -55,9 +55,9 @@ int main() {
 
   auto canvas = Canvas(800, 600);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = Camera(canvas.width(), canvas.height(), 1.1f);
-  auto from = Point3f(170.f, 47.f, 90.f);
-  auto to = Point3f(-90.f, -1.f, -30.f);
+  auto camera = Camera(canvas.width(), canvas.height(), 1.02f);
+  auto from = Point3f(240.f, 45.f, 120.f);
+  auto to = Point3f(-90.f, -5.f, -30.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera.setTransform(view_transform(from, to, up));
 
