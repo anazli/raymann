@@ -1,6 +1,5 @@
 # raymann
-A Ray Tracer. 
-Still under construction...
+Ray Tracer that provides a renderer for ray casting (http://raytracerchallenge.com/) and path tracing based on (https://raytracing.github.io/books/RayTracingInOneWeekend.html).
 
 Current Scene
 -------------

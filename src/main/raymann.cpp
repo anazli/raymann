@@ -19,20 +19,21 @@ using namespace std;
 using app = App;
 
 int main() {
-  auto light = PointLight(Point3f(80.f, 70.f, 200.f), Vec3f(1.f, 1.f, 1.f));
+  auto light =
+      PointLight(Point3f(80.f, 50.f, 200.f), Vec3f(1.05f, 1.05f, 1.05f));
 
   auto file = std::filesystem::path("dragon.obj");
   WavefrontReader reader(file);
   DataContainer dragon_properties;
   dragon_properties.setProperty(App::AMBIENT, 0.1f)
       .setProperty(App::DIFFUSE, 0.9f)
-      .setProperty(App::REFLECTION, 0.f)
+      .setProperty(App::REFLECTION, 0.2f)
       .setProperty(App::TRANSPARENCY, 0.f)
-      .setProperty(App::SPECULAR, 0.5f)
-      .setProperty(App::SHININESS, 50.f);
+      .setProperty(App::SPECULAR, 0.6f)
+      .setProperty(App::SHININESS, 1.3f);
 
   auto dragon_texture =
-      make_unique<PerlinTexture>(0.17f, Vec3f(0.3f, 0.55f, 0.3f));
+      make_unique<PerlinTexture>(0.33f, Vec3f(0.3f, 0.6f, 0.3f));
   auto dragon_material =
       StandardMaterial::create(std::move(dragon_texture), dragon_properties);
 
@@ -46,7 +47,9 @@ int main() {
       .setProperty(App::TRANSFORMATION_MATRIX,
                    translation(0.f, -40.f, 0.f) * rotationOverY(PI))
       .setProperty(App::TEXTURE_TYPE, App::CONSTANT_TEXTURE)
-      .setProperty(App::COLOR, Vec3f(0.25f, 0.25f, 0.25f))
+      .setProperty(App::COLOR, Vec3f(0.1f, 0.1f, 0.1f))
+      .setProperty(App::REFLECTION, 0.8f)
+      .setProperty(App::DIFFUSE, 0.f)
       .setProperty(App::MATERIAL_TYPE, App::STANDARD);
   EntityFactory builder;
   SceneDirector director;
@@ -55,8 +58,8 @@ int main() {
 
   auto canvas = Canvas(800, 600);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = Camera(canvas.width(), canvas.height(), 1.02f);
-  auto from = Point3f(240.f, 45.f, 120.f);
+  auto camera = Camera(canvas.width(), canvas.height(), 1.12f);
+  auto from = Point3f(240.f, 35.f, 155.f);
   auto to = Point3f(-90.f, -5.f, -30.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera.setTransform(view_transform(from, to, up));
