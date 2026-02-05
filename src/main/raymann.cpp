@@ -20,7 +20,7 @@ using app = App;
 
 int main() {
   auto light =
-      PointLight(Point3f(80.f, 50.f, 200.f), Vec3f(1.05f, 1.05f, 1.05f));
+      PointLight(Point3f(80.f, 50.f, 200.f), Vec3f(1.12f, 1.12f, 1.12f));
 
   auto file = std::filesystem::path("dragon.obj");
   WavefrontReader reader(file);
@@ -29,8 +29,8 @@ int main() {
       .setProperty(App::DIFFUSE, 0.9f)
       .setProperty(App::REFLECTION, 0.2f)
       .setProperty(App::TRANSPARENCY, 0.f)
-      .setProperty(App::SPECULAR, 0.6f)
-      .setProperty(App::SHININESS, 1.3f);
+      .setProperty(App::SPECULAR, 0.5f)
+      .setProperty(App::SHININESS, 1.2f);
 
   auto dragon_texture =
       make_unique<PerlinTexture>(0.33f, Vec3f(0.3f, 0.6f, 0.3f));
@@ -58,16 +58,16 @@ int main() {
 
   auto canvas = Canvas(800, 600);
   canvas.setFileName("scenes/scene.ppm");
-  auto camera = Camera(canvas.width(), canvas.height(), 1.12f);
-  auto from = Point3f(240.f, 35.f, 155.f);
-  auto to = Point3f(-90.f, -5.f, -30.f);
+  auto camera = Camera(canvas.width(), canvas.height(), 1.0f);
+  auto from = Point3f(280.f, 35.f, 215.f);
+  auto to = Point3f(-90.f, -35.f, -30.f);
   auto up = Vec3f(0.0f, 1.0f, 0.0f);
   camera.setTransform(view_transform(from, to, up));
 
-  int samples_per_pixel = 5;
-  int material_depth = 2;
+  // int samples_per_pixel = 5;
+  // int material_depth = 2;
   auto renderer = std::make_unique<PhongModel>();
-  renderer->setBackgroundColor(Vec3f(0.3f, 0.5f, 0.3f));
+  renderer->setBackgroundColor(Vec3f(0.2f, 0.21f, 0.2f));
   auto start = chrono::steady_clock::now();
   canvas.renderParallel(world, camera, std::move(renderer));
   canvas.save();

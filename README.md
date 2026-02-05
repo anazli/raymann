@@ -3,6 +3,8 @@ Ray Tracer that provides a renderer for ray casting (http://raytracerchallenge.c
 
 Current Scene
 -------------
+Dragon from https://github.com/alecjacobson/common-3d-test-models rendered with the phong model and perlin texture.
+
 ![alt text](https://github.com/anazli/raymann/blob/main/scenes/scene.jpg?raw=true)
 
 Building
