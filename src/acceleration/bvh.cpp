@@ -4,19 +4,19 @@
 #include "composite/iterator.h"
 
 BoundingBoxPair BVHierarchy::splitBoundsOf(const BoundingBox &box) const {
-  auto dx = box.maxPoint().x() - box.minPoint().x();
-  auto dy = box.maxPoint().y() - box.minPoint().y();
-  auto dz = box.maxPoint().z() - box.minPoint().z();
+  auto dx = box.maxPoint().x - box.minPoint().x;
+  auto dy = box.maxPoint().y - box.minPoint().y;
+  auto dz = box.maxPoint().z - box.minPoint().z;
 
   auto m = std::max(std::max(dx, dy), dz);
 
-  auto x0 = box.minPoint().x();
-  auto y0 = box.minPoint().y();
-  auto z0 = box.minPoint().z();
+  auto x0 = box.minPoint().x;
+  auto y0 = box.minPoint().y;
+  auto z0 = box.minPoint().z;
 
-  auto x1 = box.maxPoint().x();
-  auto y1 = box.maxPoint().y();
-  auto z1 = box.maxPoint().z();
+  auto x1 = box.maxPoint().x;
+  auto y1 = box.maxPoint().y;
+  auto z1 = box.maxPoint().z;
 
   if (m == dx) {
     x1 = x0 + dx / 2.f;

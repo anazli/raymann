@@ -77,7 +77,7 @@ TEST_F(BoundingBoxTest, transformsBoundingBox) {
       BoundingBox(Point3f(-1.f, -1.f, -1.f), Point3f(1.f, 1.f, 1.f)));
   builder->applyTransformation(rotationOverX(PI / 4.f) *
                                rotationOverY(PI / 4.f));
-  BoundingBox p = builder->getCurrentElement()->boundingBox();
+  BoundingBox p = builder->getCurrentElement()->boundingBox;
 
   EXPECT_THAT(p.minPoint(), Point3f(-1.4142f, -1.7071f, -1.7071f), eps);
   EXPECT_THAT(p.maxPoint(), Point3f(1.4142f, 1.7071f, 1.7071f), eps);*/

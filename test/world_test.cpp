@@ -85,12 +85,12 @@ TEST_F(WorldTest, intersectingTransformedWorld) {
   builder->applyWorldTransformation(translation(5.f, 0.f, 0.f));
 
   SceneElementPtr world = builder->getProduct();
-  std::cout << (*world->getChildren().begin())->boundingBox().minPoint()
+  std::cout << (*world->getChildren().begin())->boundingBox.minPoint()
             << std::endl;
-  std::cout << (*world->getChildren().begin())->boundingBox().maxPoint()
+  std::cout << (*world->getChildren().begin())->boundingBox.maxPoint()
             << std::endl;
-  std::cout << world->boundingBox().minPoint() << std::endl;
-  std::cout << world->boundingBox().maxPoint() << std::endl;
+  std::cout << world->boundingBox.minPoint() << std::endl;
+  std::cout << world->boundingBox.maxPoint() << std::endl;
   EXPECT_TRUE(world->intersect(r, rec));
   EXPECT_EQ(rec.count, 2);
 }
@@ -410,9 +410,9 @@ TEST_F(Tworld, ShadingAnIntersection) {
   ASSERT_TRUE(t == s1);
 
   float eps = 1E-3f;
-  EXPECT_NEAR(color.x(), 0.38066f, eps);
-  EXPECT_NEAR(color.y(), 0.47583f, eps);
-  EXPECT_NEAR(color.z(), 0.2855f, eps);
+  EXPECT_NEAR(color.x, 0.38066f, eps);
+  EXPECT_NEAR(color.y, 0.47583f, eps);
+  EXPECT_NEAR(color.z, 0.2855f, eps);
 }
 
 TEST_F(Tworld, ShadingAnInsideIntersection) {
@@ -446,9 +446,9 @@ TEST_F(Tworld, ShadingAnInsideIntersection) {
   ASSERT_TRUE(t == s2);
 
   float eps = 1E-3f;
-  EXPECT_NEAR(color.x(), 0.90498f, eps);
-  EXPECT_NEAR(color.y(), 0.90498f, eps);
-  EXPECT_NEAR(color.z(), 0.90498f, eps);
+  EXPECT_NEAR(color.x, 0.90498f, eps);
+  EXPECT_NEAR(color.y, 0.90498f, eps);
+  EXPECT_NEAR(color.z, 0.90498f, eps);
 }
 
 TEST_F(Tworld, colorWhenRayMisses) {
@@ -506,9 +506,9 @@ TEST_F(Tworld, colorWhenRayHits) {
   Vec3f color = t->lighting(r);
 
   float eps = 1E-3f;
-  EXPECT_NEAR(color.x(), 0.38066f, eps);
-  EXPECT_NEAR(color.y(), 0.47583f, eps);
-  EXPECT_NEAR(color.z(), 0.2855f, eps);
+  EXPECT_NEAR(color.x, 0.38066f, eps);
+  EXPECT_NEAR(color.y, 0.47583f, eps);
+  EXPECT_NEAR(color.z, 0.2855f, eps);
 }
 
 TEST_F(Tworld, colorWithAnIntersectionBehind) {

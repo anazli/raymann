@@ -15,8 +15,7 @@ Ray Camera::getRay(int pixel_x, int pixel_y) const {
   auto world_y = m_half_height - yoffset;
   auto pixel = m_transformInv * Vec4f(world_x, world_y, -1.0f, 1.0f);
   ray.setOrigin(Point3f(m_transformInv * Vec4f(0.0f, 0.0f, 0.0f, 1.0f)));
-  auto dir =
-      normalized(Point3f(pixel.x(), pixel.y(), pixel.z()) - ray.origin());
+  auto dir = normalized(Point3f(pixel.x, pixel.y, pixel.z) - ray.origin());
   ray.setDirection(dir);
   return ray;
 }
@@ -31,12 +30,12 @@ int Camera::hSize() const { return m_hsize; }
 
 int Camera::vSize() const { return m_vsize; }
 
-void Camera::setTransform(const Mat4D &m) {
+void Camera::setTransform(const Mat4f &m) {
   m_transform = m;
   m_transformInv = m_transform.inverse();
 }
 
-Mat4D Camera::getTransform() const { return m_transform; }
+Mat4f Camera::getTransform() const { return m_transform; }
 
 float Camera::pixelSize() const { return m_pixel_size; }
 

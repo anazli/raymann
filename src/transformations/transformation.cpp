@@ -1,13 +1,13 @@
 #include "transformation.h"
 
-Transformation::Transformation(const Mat4D& matrix) : m_matrix(matrix) {
+Transformation::Transformation(const Mat4f& matrix) : m_matrix(matrix) {
   m_inverse_matrix = m_matrix.inverse();
   m_inverse_transpose_matrix = m_inverse_matrix.transpose();
 }
 
-Mat4D Transformation::getMatrix() const { return m_matrix; }
-Mat4D Transformation::getInverseMatrix() const { return m_inverse_matrix; }
-Mat4D Transformation::getInverseTransposeMatrix() const {
+Mat4f Transformation::getMatrix() const { return m_matrix; }
+Mat4f Transformation::getInverseMatrix() const { return m_inverse_matrix; }
+Mat4f Transformation::getInverseTransposeMatrix() const {
   return m_inverse_transpose_matrix;
 }
 
@@ -25,12 +25,12 @@ Ray Transformation::objectToWorldSpace(const Ray& ray) {
 
 BoundingBox Transformation::worldToObjectSpace(const BoundingBox& b) const {
   Point3f p1 = b.minPoint();
-  Point3f p2 = Point3f(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3f p3 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
-  Point3f p4 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.maxPoint().z());
-  Point3f p5 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.minPoint().z());
-  Point3f p6 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3f p7 = Point3f(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
+  Point3f p2 = Point3f(b.minPoint().x, b.minPoint().y, b.maxPoint().z);
+  Point3f p3 = Point3f(b.minPoint().x, b.maxPoint().y, b.minPoint().z);
+  Point3f p4 = Point3f(b.minPoint().x, b.maxPoint().y, b.maxPoint().z);
+  Point3f p5 = Point3f(b.maxPoint().x, b.minPoint().y, b.minPoint().z);
+  Point3f p6 = Point3f(b.maxPoint().x, b.minPoint().y, b.maxPoint().z);
+  Point3f p7 = Point3f(b.maxPoint().x, b.maxPoint().y, b.minPoint().z);
   Point3f p8 = b.maxPoint();
   auto box = BoundingBox{};
   std::vector<Point3f> v{p1, p2, p3, p4, p5, p6, p7, p8};
@@ -42,12 +42,12 @@ BoundingBox Transformation::worldToObjectSpace(const BoundingBox& b) const {
 
 BoundingBox Transformation::objectToWorldSpace(const BoundingBox& b) const {
   Point3f p1 = b.minPoint();
-  Point3f p2 = Point3f(b.minPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3f p3 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.minPoint().z());
-  Point3f p4 = Point3f(b.minPoint().x(), b.maxPoint().y(), b.maxPoint().z());
-  Point3f p5 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.minPoint().z());
-  Point3f p6 = Point3f(b.maxPoint().x(), b.minPoint().y(), b.maxPoint().z());
-  Point3f p7 = Point3f(b.maxPoint().x(), b.maxPoint().y(), b.minPoint().z());
+  Point3f p2 = Point3f(b.minPoint().x, b.minPoint().y, b.maxPoint().z);
+  Point3f p3 = Point3f(b.minPoint().x, b.maxPoint().y, b.minPoint().z);
+  Point3f p4 = Point3f(b.minPoint().x, b.maxPoint().y, b.maxPoint().z);
+  Point3f p5 = Point3f(b.maxPoint().x, b.minPoint().y, b.minPoint().z);
+  Point3f p6 = Point3f(b.maxPoint().x, b.minPoint().y, b.maxPoint().z);
+  Point3f p7 = Point3f(b.maxPoint().x, b.maxPoint().y, b.minPoint().z);
   Point3f p8 = b.maxPoint();
   auto box = BoundingBox{};
   std::vector<Point3f> v{p1, p2, p3, p4, p5, p6, p7, p8};

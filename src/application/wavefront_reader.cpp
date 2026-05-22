@@ -118,20 +118,20 @@ void WavefrontReader::normalizeVertices() {
   auto minZ = limit::max();
   auto maxZ = -limit::max();
   for (const Vec3f &elem : m_verticesNormalized) {
-    minX = std::min(minX, elem.x());
-    maxX = std::max(maxX, elem.x());
-    minY = std::min(minY, elem.y());
-    maxY = std::max(maxY, elem.y());
-    minZ = std::min(minZ, elem.z());
-    maxZ = std::max(maxZ, elem.z());
+    minX = std::min(minX, elem.x);
+    maxX = std::max(maxX, elem.x);
+    minY = std::min(minY, elem.y);
+    maxY = std::max(maxY, elem.y);
+    minZ = std::min(minZ, elem.z);
+    maxZ = std::max(maxZ, elem.z);
   }
   auto xrange = maxX - minX;
   auto yrange = maxY - minY;
   auto zrange = maxZ - minZ;
   for (Vec3f &elem : m_verticesNormalized) {
-    elem.x((elem.x() - minX) / xrange * 2.f - 1.f);
-    elem.y((elem.y() - minY) / yrange * 2.f - 1.f);
-    elem.z((elem.z() - minZ) / zrange * 2.f - 1.f);
+    elem.x = (elem.x - minX) / xrange * 2.f - 1.f;
+    elem.y = (elem.y - minY) / yrange * 2.f - 1.f;
+    elem.z = (elem.z - minZ) / zrange * 2.f - 1.f;
   }
 }
 

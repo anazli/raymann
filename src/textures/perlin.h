@@ -17,15 +17,15 @@ static int *perlinGeneratePerm();
 class Perlin {
  public:
   float noise(const Vec3f &p) const {
-    float u = p.x() - floor(p.x());
-    float v = p.y() - floor(p.y());
-    float w = p.z() - floor(p.z());
+    float u = p.x - floor(p.x);
+    float v = p.y - floor(p.y);
+    float w = p.z - floor(p.z);
     u = u * u * (3 - 2 * u);
     v = v * v * (3 - 2 * v);
     w = w * w * (3 - 2 * w);
-    int i = floor(p.x());
-    int j = floor(p.y());
-    int k = floor(p.z());
+    int i = floor(p.x);
+    int j = floor(p.y);
+    int k = floor(p.z);
     Vec3f c[2][2][2];
     for (int di = 0; di < 2; ++di)
       for (int dj = 0; dj < 2; ++dj)

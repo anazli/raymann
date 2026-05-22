@@ -16,10 +16,10 @@ class Plane : public Primitive {
     auto transf_ray = m_transformation.worldToObjectSpace(r);
     auto origin = transf_ray.origin();
     auto direction = transf_ray.direction();
-    if (fabs(direction.y()) < EPS) {
+    if (fabs(direction.y) < EPS) {
       return false;
     }
-    record.thit = -origin.y() / direction.y();
+    record.thit = -origin.y / direction.y;
     record.hit_point = record.getHitPoint(transf_ray);
     record.normal = normal(record.hit_point);
     return true;

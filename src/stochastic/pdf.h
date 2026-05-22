@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include <orthonormal.h>
 
 #include "composite/scene_element.h"
 

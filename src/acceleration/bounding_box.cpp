@@ -12,13 +12,13 @@ const Point3f& BoundingBox::minPoint() const { return m_minPoint; }
 const Point3f& BoundingBox::maxPoint() const { return m_maxPoint; }
 
 void BoundingBox::addPoint(const Point3f& point) {
-  if (point.x() < m_minPoint.x()) m_minPoint.x(point.x());
-  if (point.y() < m_minPoint.y()) m_minPoint.y(point.y());
-  if (point.z() < m_minPoint.z()) m_minPoint.z(point.z());
+  if (point.x < m_minPoint.x) m_minPoint.x = point.x;
+  if (point.y < m_minPoint.y) m_minPoint.y = point.y;
+  if (point.z < m_minPoint.z) m_minPoint.z = point.z;
 
-  if (point.x() > m_maxPoint.x()) m_maxPoint.x(point.x());
-  if (point.y() > m_maxPoint.y()) m_maxPoint.y(point.y());
-  if (point.z() > m_maxPoint.z()) m_maxPoint.z(point.z());
+  if (point.x > m_maxPoint.x) m_maxPoint.x = point.x;
+  if (point.y > m_maxPoint.y) m_maxPoint.y = point.y;
+  if (point.z > m_maxPoint.z) m_maxPoint.z = point.z;
 }
 
 void BoundingBox::addBox(const BoundingBox& box) {
@@ -28,9 +28,9 @@ void BoundingBox::addBox(const BoundingBox& box) {
 
 bool BoundingBox::containsPoint(const Point3f& point) const {
   // three-way comparison doesn't work
-  return point.x() >= m_minPoint.x() && point.x() <= m_maxPoint.x() &&
-         point.y() >= m_minPoint.y() && point.y() <= m_maxPoint.y() &&
-         point.z() >= m_minPoint.z() && point.z() <= m_maxPoint.z();
+  return point.x >= m_minPoint.x && point.x <= m_maxPoint.x &&
+         point.y >= m_minPoint.y && point.y <= m_maxPoint.y &&
+         point.z >= m_minPoint.z && point.z <= m_maxPoint.z;
 }
 
 bool BoundingBox::containsBoundingBox(const BoundingBox& box) const {
@@ -40,12 +40,9 @@ bool BoundingBox::containsBoundingBox(const BoundingBox& box) const {
 bool BoundingBox::intersectsRay(const Ray& r) const {
   auto origin = r.origin();
   auto direction = r.direction();
-  auto xMinMax =
-      hitAxis(origin.x(), direction.x(), m_minPoint.x(), m_maxPoint.x());
-  auto yMinMax =
-      hitAxis(origin.y(), direction.y(), m_minPoint.y(), m_maxPoint.y());
-  auto zMinMax =
-      hitAxis(origin.z(), direction.z(), m_minPoint.z(), m_maxPoint.z());
+  auto xMinMax = hitAxis(origin.x, direction.x, m_minPoint.x, m_maxPoint.x);
+  auto yMinMax = hitAxis(origin.y, direction.y, m_minPoint.y, m_maxPoint.y);
+  auto zMinMax = hitAxis(origin.z, direction.z, m_minPoint.z, m_maxPoint.z);
   auto tmin = std::max(std::max(xMinMax.first, yMinMax.first), zMinMax.first);
   auto tmax =
       std::min(std::min(xMinMax.second, yMinMax.second), zMinMax.second);

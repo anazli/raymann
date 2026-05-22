@@ -1,6 +1,7 @@
 #pragma once
 
-#include <math.h>
+#include <mat4.h>
+#include <ray.h>
 
 #include <memory>
 
@@ -16,8 +17,8 @@ class Camera {
   void setFieldOfView(float fov);
   int hSize() const;
   int vSize() const;
-  void setTransform(const Mat4D &m);
-  Mat4D getTransform() const;
+  void setTransform(const Mat4f &m);
+  Mat4f getTransform() const;
   float pixelSize() const;
   void computePixelSize();
 
@@ -25,8 +26,8 @@ class Camera {
   int m_hsize;
   int m_vsize;
   float m_field_of_view;
-  Mat4D m_transform;
-  Mat4D m_transformInv;
+  Mat4f m_transform;
+  Mat4f m_transformInv;
   float m_pixel_size;
   float m_half_width;
   float m_half_height;

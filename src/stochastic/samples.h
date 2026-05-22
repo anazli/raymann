@@ -12,7 +12,6 @@ Vec2f concentricSampleDisk(const Vec2f& u);
 
 inline Vec3f cosineSampleHemisphere(const Vec2f& v) {
   auto ret = concentricSampleDisk(v);
-  auto z =
-      std::sqrt(std::max(0.f, 1.f - ret.x() * ret.x() - ret.y() * ret.y()));
-  return Vec3f(ret.x(), ret.y(), z);
+  auto z = std::sqrt(std::max(0.f, 1.f - ret.x * ret.x - ret.y * ret.y));
+  return Vec3f(ret.x, ret.y, z);
 }

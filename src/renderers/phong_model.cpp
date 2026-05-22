@@ -153,7 +153,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
   for (const auto& [key, value] : intersections) {
     SceneElementPtr current_elem = findSceneElementById(value.first, world);
     auto n1 = 0.f, n2 = 0.f;
-    if (container.empty()) {
+    if (container.empty) {
       n1 = 1.f;
     } else {
       n1 = container.back()->getMaterial()->getProperties().getPropertyAsFloat(
@@ -174,7 +174,7 @@ Vec3f PhongModel::reflectedColor(const SceneElementRawPtr world, const Ray& ray,
       container.emplace_back(current_elem);
     }
 
-    if (container.empty()) {
+    if (container.empty) {
       n2 = 1.f;
     } else {
       n2 = container.back()->getMaterial()->getProperties().getPropertyAsFloat(

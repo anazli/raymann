@@ -215,7 +215,7 @@ TEST_F(TransformerTest, transformationMatrixForDefaultOrientation) {
 
   Mat4D m = view_transform(from, to, up);
   Mat4D t = Mat4D();
-  t.identity();
+  t.identity;
   ASSERT_THAT(m, Eq(t));
 }
 

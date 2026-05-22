@@ -1,16 +1,17 @@
 #pragma once
 
 #include <mat4.h>
+#include <normal3.h>
 
 #include "acceleration/bounding_box.h"
 
 class Transformation {
  public:
   Transformation() = default;
-  Transformation(const Mat4D& matrix);
-  Mat4D getMatrix() const;
-  Mat4D getInverseMatrix() const;
-  Mat4D getInverseTransposeMatrix() const;
+  Transformation(const Mat4f& matrix);
+  Mat4f getMatrix() const;
+  Mat4f getInverseMatrix() const;
+  Mat4f getInverseTransposeMatrix() const;
   Ray worldToObjectSpace(const Ray& ray);
   Ray objectToWorldSpace(const Ray& ray);
   BoundingBox worldToObjectSpace(const BoundingBox& b) const;
@@ -23,7 +24,7 @@ class Transformation {
   Normal3f objectToWorldSpace(const Normal3f& n) const;
 
  protected:
-  Mat4D m_matrix;
-  Mat4D m_inverse_matrix;
-  Mat4D m_inverse_transpose_matrix;
+  Mat4f m_matrix;
+  Mat4f m_inverse_matrix;
+  Mat4f m_inverse_transpose_matrix;
 };

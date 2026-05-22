@@ -28,10 +28,10 @@ class Cylinder : public Primitive {
     auto transf_ray = m_transformation.worldToObjectSpace(r);
     auto origin = transf_ray.origin();
     auto direction = transf_ray.direction();
-    auto rdx = direction.x();
-    auto rox = origin.x();
-    auto rdz = direction.z();
-    auto roz = origin.z();
+    auto rdx = direction.x;
+    auto rox = origin.x;
+    auto rdz = direction.z;
+    auto roz = origin.z;
 
     auto a = rdx * rdx + rdz * rdz;
     if (a <= EPS && a >= -EPS) return intersectCaps(transf_ray, record);
@@ -45,12 +45,12 @@ class Cylinder : public Primitive {
       auto t2 = static_cast<float>(-b + sqrt(discr)) / (2.0f * a);
       if (t1 > t2) std::swap(t1, t2);
 
-      auto y1 = origin.y() + t1 * direction.y();
+      auto y1 = origin.y + t1 * direction.y;
       if (m_minimumY < y1 && m_maximumY > y1) {
         hitAnything = true;
       }
 
-      auto y2 = origin.y() + t2 * direction.y();
+      auto y2 = origin.y + t2 * direction.y;
       if (m_minimumY < y2 && m_maximumY > y2) {
         hitAnything = true;
       }
@@ -66,15 +66,15 @@ class Cylinder : public Primitive {
   }
   Normal3f normal(const Point3f &p) const override {
     auto object_point = m_transformation.worldToObjectSpace(p);
-    auto distance = object_point.x() * object_point.x() +
-                    object_point.z() * object_point.z();
+    auto distance =
+        object_point.x * object_point.x + object_point.z * object_point.z;
     Normal3f object_normal;
-    if (distance < 1.f && object_point.y() >= m_maximumY - EPS) {
+    if (distance < 1.f && object_point.y >= m_maximumY - EPS) {
       object_normal = Normal3f(0.f, 1.f, 0.f);
-    } else if (distance < 1.f && object_point.y() <= m_minimumY + EPS) {
+    } else if (distance < 1.f && object_point.y <= m_minimumY + EPS) {
       object_normal = Normal3f(0.f, -1.f, 0.f);
     } else {
-      object_normal = Normal3f(object_point.x(), 0.f, object_point.z());
+      object_normal = Normal3f(object_point.x, 0.f, object_point.z);
     }
     return normalized(m_transformation.objectToWorldSpace(object_normal));
   }
@@ -94,21 +94,21 @@ class Cylinder : public Primitive {
   bool m_closed;
 
   bool checkCap(const Ray &r, float t) {
-    auto x = r.origin().x() + t * r.direction().x();
-    auto z = r.origin().z() + t * r.direction().z();
+    auto x = r.origin().x + t * r.direction().x;
+    auto z = r.origin().z + t * r.direction().z;
     return x * x + z * z <= 1.f;
   }
 
   bool intersectCaps(const Ray &r, Intersection &record) {
-    if (!m_closed || (r.direction().y() <= EPS && r.direction().y() >= -EPS))
+    if (!m_closed || (r.direction().y <= EPS && r.direction().y >= -EPS))
       return false;
 
     auto intersectsCap = false;
-    auto t = (m_minimumY - r.origin().y()) / r.direction().y();
+    auto t = (m_minimumY - r.origin().y) / r.direction().y;
     if (checkCap(r, t)) {
       intersectsCap = true;
     }
-    t = (m_maximumY - r.origin().y()) / r.direction().y();
+    t = (m_maximumY - r.origin().y) / r.direction().y;
     if (checkCap(r, t)) {
       intersectsCap = true;
     }

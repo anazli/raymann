@@ -10,17 +10,17 @@ StochasticSampler::StochasticSampler(const Camera &cam, int pixelSamples,
 
 Vec3f StochasticSampler::colorCorrection(Vec3f &color) {
   color = color / static_cast<float>(m_samplesPerPixel);
-  return Vec3f(static_cast<float>(sqrt(color.x())),
-               static_cast<float>(sqrt(color.y())),
-               static_cast<float>(sqrt(color.z())));
+  return Vec3f(static_cast<float>(sqrt(color.x)),
+               static_cast<float>(sqrt(color.y)),
+               static_cast<float>(sqrt(color.z)));
 }
 
 void StochasticSampler::addRandomSample(Vec3f &outputColor,
                                         const Vec3f &randomSampleColor) {
   Vec3f tempColor(randomSampleColor);
-  if (tempColor.x() != tempColor.x()) tempColor.x(0.f);
-  if (tempColor.y() != tempColor.y()) tempColor.y(0.f);
-  if (tempColor.z() != tempColor.z()) tempColor.z(0.f);
+  if (tempColor.x != tempColor.x) tempColor.x = 0.f;
+  if (tempColor.y != tempColor.y) tempColor.y = 0.f;
+  if (tempColor.z != tempColor.z) tempColor.z = 0.f;
   outputColor = outputColor + tempColor;
 }
 

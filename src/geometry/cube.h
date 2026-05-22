@@ -18,9 +18,9 @@ class Cube : public Primitive {
     auto transf_ray = m_transformation.worldToObjectSpace(r);
     auto origin = transf_ray.origin();
     auto direction = transf_ray.direction();
-    auto xMinMax = hitAxis(origin.x(), direction.x());
-    auto yMinMax = hitAxis(origin.y(), direction.y());
-    auto zMinMax = hitAxis(origin.z(), direction.z());
+    auto xMinMax = hitAxis(origin.x, direction.x);
+    auto yMinMax = hitAxis(origin.y, direction.y);
+    auto zMinMax = hitAxis(origin.z, direction.z);
     auto tmin = std::max(std::max(xMinMax.first, yMinMax.first), zMinMax.first);
     auto tmax =
         std::min(std::min(xMinMax.second, yMinMax.second), zMinMax.second);
@@ -36,15 +36,15 @@ class Cube : public Primitive {
   Normal3f normal(const Point3f &p) const override {
     auto object_point = m_transformation.worldToObjectSpace(p);
     auto max_coord =
-        std::max(std::max(fabs(object_point.x()), fabs(object_point.y())),
-                 fabs(object_point.z()));
+        std::max(std::max(fabs(object_point.x), fabs(object_point.y)),
+                 fabs(object_point.z));
     Normal3f object_normal;
-    if (max_coord == fabs(object_point.x())) {
-      object_normal = Normal3f(object_point.x(), 0.f, 0.f);
-    } else if (max_coord == fabs(object_point.y())) {
-      object_normal = Normal3f(0.f, object_point.y(), 0.f);
+    if (max_coord == fabs(object_point.x)) {
+      object_normal = Normal3f(object_point.x, 0.f, 0.f);
+    } else if (max_coord == fabs(object_point.y)) {
+      object_normal = Normal3f(0.f, object_point.y, 0.f);
     } else {
-      object_normal = Normal3f(0.f, 0.f, object_point.z());
+      object_normal = Normal3f(0.f, 0.f, object_point.z);
     }
     return normalized(m_transformation.objectToWorldSpace(object_normal));
   }

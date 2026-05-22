@@ -23,8 +23,8 @@ void EntityFactory::setData(const DataContainer& data) { m_input_data = data; }
 PrimitivePtr EntityFactory::createPrimitive() {
   Transformation transformation;
   if (m_input_data.hasProperty(App::TRANSFORMATION_MATRIX)) {
-    transformation =
-        m_input_data.getPropertyAs<Mat4D>(App::TRANSFORMATION_MATRIX).value();
+    transformation = Transformation(
+        m_input_data.getPropertyAs<Mat4f>(App::TRANSFORMATION_MATRIX).value());
   }
   auto type = m_input_data.getPropertyAs<App>(App::PRIMITIVE_TYPE);
   if (!type.has_value()) {
