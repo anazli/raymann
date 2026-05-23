@@ -34,7 +34,7 @@ TEST_F(RayTest, computesPositionAtT) {
 
 TEST_F(RayTest, translatesRay) {
   r = Ray(Point3f(1, 2, 3), Vec3f(0, 1, 0));
-  Mat4D m = translation(3.0f, 4.0f, 5.0f);
+  Mat4f m = translation(3.0f, 4.0f, 5.0f);
   Transformation trans(m.inverse());
   Ray tr = trans.worldToObjectSpace(r);
 
@@ -44,7 +44,7 @@ TEST_F(RayTest, translatesRay) {
 
 TEST_F(RayTest, scalesRay) {
   r = Ray(Point3f(1, 2, 3), Vec3f(0, 1, 0));
-  Mat4D m = scale(2.0f, 3.0f, 4.0f);
+  Mat4f m = scale(2.0f, 3.0f, 4.0f);
   Transformation trans(m.inverse());
   Ray tr = trans.worldToObjectSpace(r);
 

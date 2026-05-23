@@ -400,7 +400,7 @@ TEST_F(SphereTest, raySphereNoIntersection) {
   s = Sphere(transf, Point3f(0.0f, 0.0f, 0.0f), 1.0f);
   r = Ray(Point3f(0.0f, 2.0f, -5.0f), Vec3f(0.0f, 0.0f, 1.0f));
   EXPECT_FALSE(s.intersect(r, rec));
-  ASSERT_THAT(rec.thit, FloatEq(std::numeric_limits<float>::infinity));
+  ASSERT_THAT(rec.thit, FloatEq(std::numeric_limits<float>::infinity()));
 }
 
 TEST_F(SphereTest, rayOriginAtSphereCenterIntersection) {

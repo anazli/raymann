@@ -1,4 +1,7 @@
-#include <math.h>
+#include <mat4.h>
+#include <point3.h>
+#include <vec3.h>
+#include <vec4.h>
 
 #include "application/data_container.h"
 #include "gtest/gtest.h"
@@ -55,12 +58,12 @@ TEST_F(DataContainerTest, getsPropertyAsVec3f) {
 }
 
 TEST_F(DataContainerTest, getsPropertyAsMat4D) {
-  Mat4D new_value(Vec4<float>(1.36f, 1.28f, 0.85f, -7.f),
+  Mat4f new_value(Vec4<float>(1.36f, 1.28f, 0.85f, -7.f),
                   Vec4<float>(1.5f, 0.f, -6.58f, 1.f),
                   Vec4<float>(4.5f, 0.f, -3.f, 10.f),
                   Vec4<float>(0.f, 1.f, 6.68f, -9.f));
   p.setProperty(name, new_value);
-  EXPECT_EQ(p.getPropertyAs<Mat4D>(name).value(), new_value);
+  EXPECT_EQ(p.getPropertyAs<Mat4f>(name).value(), new_value);
 }
 
 TEST_F(DataContainerTest, getsPropertyAsPoint3f) {

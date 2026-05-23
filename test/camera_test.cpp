@@ -12,7 +12,7 @@ class CameraTest : public testing::Test {
 };
 
 TEST_F(CameraTest, createsCamera) {
-  ASSERT_THAT(c.getTransform(), Eq(Mat4D()));
+  ASSERT_THAT(c.getTransform(), Eq(Mat4f()));
 }
 
 TEST_F(CameraTest, pixelSizeForHorCanvas) {

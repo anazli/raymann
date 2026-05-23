@@ -9,7 +9,7 @@ using testing::Eq;
 
 class TransformerTest : public testing::Test {
  public:
-  Mat4D m;
+  Mat4f m;
   Vec3f v;
   Point3f p;
   float eps = 1.E-4f;
@@ -152,9 +152,9 @@ TEST_F(TransformerTest, appliesRotationZToPoint) {
 TEST_F(TransformerTest, appliesTransformationsInSequence) {
   p = Point3f(1.0f, 0.0f, 1.0f);
 
-  Mat4D A = rotationOverX(PI / 2.0f);
-  Mat4D B = scale(5.0f, 5.0f, 5.0f);
-  Mat4D C = translation(10.0f, 5.0f, 7.0f);
+  Mat4f A = rotationOverX(PI / 2.0f);
+  Mat4f B = scale(5.0f, 5.0f, 5.0f);
+  Mat4f C = translation(10.0f, 5.0f, 7.0f);
   Vec4f v4(p);
   v4 = A * v4;
   Point3f p1(v4);
@@ -174,9 +174,9 @@ TEST_F(TransformerTest, appliesTransformationsInSequence) {
 
 TEST_F(TransformerTest, appliesTransformationChaining) {
   p = Point3f(1.0f, 0.0f, 1.0f);
-  Mat4D A = rotationOverX(PI / 2.0f);
-  Mat4D B = scale(5.0f, 5.0f, 5.0f);
-  Mat4D C = translation(10.0f, 5.0f, 7.0f);
+  Mat4f A = rotationOverX(PI / 2.0f);
+  Mat4f B = scale(5.0f, 5.0f, 5.0f);
+  Mat4f C = translation(10.0f, 5.0f, 7.0f);
   m = C * B * A;
   Vec4f v4(p);
   v4 = m * v4;
@@ -213,9 +213,9 @@ TEST_F(TransformerTest, transformationMatrixForDefaultOrientation) {
   Point3f to = Point3f(0.0f, 0.0f, -1.0f);
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
 
-  Mat4D m = view_transform(from, to, up);
-  Mat4D t = Mat4D();
-  t.identity;
+  Mat4f m = view_transform(from, to, up);
+  Mat4f t = Mat4f();
+  t.identity();
   ASSERT_THAT(m, Eq(t));
 }
 
@@ -224,7 +224,7 @@ TEST_F(TransformerTest, viewTransformationLookingInPositiveZ) {
   Point3f to = Point3f(0.0f, 0.0f, 1.0f);
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
 
-  Mat4D m = view_transform(from, to, up);
+  Mat4f m = view_transform(from, to, up);
   ASSERT_THAT(m, Eq(scale(-1.0f, 1.0f, -1.0f)));
 }
 
@@ -233,7 +233,7 @@ TEST_F(TransformerTest, viewTransformationMovesTheWorld) {
   Point3f to = Point3f(0.0f, 0.0f, 0.0f);
   Vec3f up = Vec3f(0.0f, 1.0f, 0.0f);
 
-  Mat4D m = view_transform(from, to, up);
+  Mat4f m = view_transform(from, to, up);
   ASSERT_THAT(m, Eq(translation(0.0f, 0.0f, -8.0f)));
 }
 
@@ -242,8 +242,8 @@ TEST_F(TransformerTest, ArbitraryViewTransformation) {
   Point3f to = Point3f(4.0f, -2.0f, 8.0f);
   Vec3f up = Vec3f(1.0f, 1.0f, 0.0f);
 
-  Mat4D m = view_transform(from, to, up);
-  Mat4D t(Vec4f(-0.50709, 0.50709, 0.67612, -2.36643),
+  Mat4f m = view_transform(from, to, up);
+  Mat4f t(Vec4f(-0.50709, 0.50709, 0.67612, -2.36643),
           Vec4f(0.76772, 0.60609, 0.12122, -2.82843),
           Vec4f(-0.35857, 0.59761, -0.71714, 0.0f),
           Vec4f(0.0f, 0.0f, 0.0f, 1.0f));

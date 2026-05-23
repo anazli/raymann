@@ -22,7 +22,7 @@ class MaterialTest : public testing::Test {
 
 TEST_F(MaterialTest, createsDefaultLight) {
   EXPECT_THAT(light.position(), Eq(Point3f()));
-  ASSERT_THAT(light.intensity, Eq(Vec3f()));
+  ASSERT_THAT(light.intensity(), Eq(Vec3f()));
 }
 
 TEST_F(MaterialTest, createsNewLight1) {
@@ -30,14 +30,14 @@ TEST_F(MaterialTest, createsNewLight1) {
   light.setIntensity(Vec3f(0.1f, 0.1f, 0.3f));
 
   EXPECT_THAT(light.position(), Eq(Point3f(1.f, 2.f, 3.f)));
-  EXPECT_THAT(light.intensity, Eq(Vec3f(0.1f, 0.1f, 0.3f)));
+  EXPECT_THAT(light.intensity(), Eq(Vec3f(0.1f, 0.1f, 0.3f)));
 }
 
 TEST_F(MaterialTest, createsNewLight2) {
   light = PointLight(Point3f(0.1f, -4.0f, -0.4f), Vec3f(1.0f, 4.0f, 0.0f));
 
   EXPECT_THAT(light.position(), Eq(Point3f(0.1f, -4.f, -0.4f)));
-  EXPECT_THAT(light.intensity, Eq(Vec3f(1.f, 4.f, 0.f)));
+  EXPECT_THAT(light.intensity(), Eq(Vec3f(1.f, 4.f, 0.f)));
 }
 
 TEST_F(MaterialTest, lightsWithEyeBetweenLightAndSurface) {
@@ -50,7 +50,7 @@ TEST_F(MaterialTest, lightsWithEyeBetweenLightAndSurface) {
 
   Point3f p(0.0f, 0.0f, 0.0f);
   Vec3f m_color(1.0f, 1.0f, 1.0f);
-  Vec3f effective_color = m_color * light.intensity;
+  Vec3f effective_color = m_color * light.intensity();
   Vec3f lightv = normalized(light.position() - p);
   float m_ambient = 0.1f;
   float m_diffuse = 0.9f;
@@ -69,7 +69,7 @@ TEST_F(MaterialTest, lightsWithEyeBetweenLightAndSurface) {
     float reflect_dot_eye = dot(reflectv, eye);
     if (reflect_dot_eye > 0.0f) {
       float factor = pow(reflect_dot_eye, m_shininess);
-      ret_specular = light.intensity * m_specular * factor;
+      ret_specular = light.intensity() * m_specular * factor;
     }
   }
 
@@ -88,7 +88,7 @@ TEST_F(MaterialTest, lightingWithSurfaceInShadow) {
 
   Point3f p(0.0f, 0.0f, 0.0f);
   Vec3f m_color(1.0f, 1.0f, 1.0f);
-  Vec3f effective_color = m_color * light.intensity;
+  Vec3f effective_color = m_color * light.intensity();
   Vec3f lightv = normalized(light.position() - p);
   float m_ambient = 0.1f;
   float m_diffuse = 0.9f;
@@ -108,7 +108,7 @@ TEST_F(MaterialTest, lightingWithSurfaceInShadow) {
       float reflect_dot_eye = dot(reflectv, eye);
       if (reflect_dot_eye > 0.0f) {
         float factor = pow(reflect_dot_eye, m_shininess);
-        ret_specular = light.intensity * m_specular * factor;
+        ret_specular = light.intensity() * m_specular * factor;
       }
     }
   }
