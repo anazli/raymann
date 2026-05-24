@@ -9,8 +9,10 @@ using std::list;
 using std::ofstream;
 using std::execution::par;
 
-Canvas::Canvas(int w, int h) : m_width(w), m_height(h) {
-  m_pixels = std::vector(w, std::vector<Vec3f>(h));
+Canvas::Canvas(Camera &&camera, std::unique_ptr<BaseRenderer> renderer)
+    : m_camera(camera), m_renderer(std::move(renderer)) {
+  m_pixels =
+      std::vector(m_camera.hSize(), std::vector<Vec3f>(m_camera.vSize()));
 }
 
 int Canvas::width() const { return m_pixels.size(); }
@@ -21,28 +23,32 @@ std::string Canvas::fileName() const { return m_fileName; }
 
 void Canvas::setFileName(const std::string &fn) { m_fileName = fn; }
 
-void Canvas::render(const SceneElementPtr &world, const Camera &camera,
-                    BaseRendererPtr renderer) {
-  for (int j = 0; j < camera.vSize(); ++j) {
-    for (int i = 0; i < camera.hSize(); ++i) {
+void Canvas::render(const SceneElementPtr &world) {
+  for (int j = 0; j < m_camera.vSize(); ++j) {
+    for (int i = 0; i < m_camera.hSize(); ++i) {
       auto color = Vec3f{};
-      renderer->setPixelInfo(i, j);
-      world->accept(*renderer, camera.getRay(i, j));
-      color = renderer->getColor();
+      m_renderer->setPixelInfo(i, j);
+      world->accept(*m_renderer, m_camera.getRay(i, j));
+      color = m_renderer->getColor();
       writePixel(i, j, color);
     }
   }
 }
 
-void Canvas::renderParallel(const SceneElementPtr &world, const Camera &camera,
-                            BaseRendererPtr renderer) {
-  fillImageResolutionIterators(camera.hSize(), camera.vSize());
-  std::for_each(par, m_vContainer.begin(), m_vContainer.end(), [&](int j) {
-    std::for_each(par, m_hContainer.begin(), m_hContainer.end(), [&](int i) {
+void Canvas::renderParallel(const SceneElementPtr &world) {
+  std::vector<int> hContainer;
+  std::vector<int> vContainer;
+  hContainer.resize(m_camera.hSize());
+  vContainer.resize(m_camera.vSize());
+  std::iota(hContainer.begin(), hContainer.end(), 0);
+  std::iota(vContainer.begin(), vContainer.end(), 0);
+
+  std::for_each(par, vContainer.begin(), vContainer.end(), [&](int j) {
+    std::for_each(par, hContainer.begin(), hContainer.end(), [&](int i) {
       auto color = Vec3f{};
-      renderer->setPixelInfo(i, j);
-      world->accept(*renderer, camera.getRay(i, j));
-      color = renderer->getColor();
+      m_renderer->setPixelInfo(i, j);
+      world->accept(*m_renderer, m_camera.getRay(i, j));
+      color = m_renderer->getColor();
       writePixel(i, j, color);
     });
   });
@@ -81,9 +87,4 @@ void Canvas::save() {
   }
 
   out.close();
-}
-
-void Canvas::fillImageResolutionIterators(int hSize, int vSize) {
-  for (int i = 0; i < hSize; ++i) m_hContainer.push_back(i);
-  for (int j = 0; j < vSize; ++j) m_vContainer.push_back(j);
 }
