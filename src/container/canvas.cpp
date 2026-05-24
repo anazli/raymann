@@ -23,7 +23,7 @@ std::string Canvas::fileName() const { return m_fileName; }
 
 void Canvas::setFileName(const std::string &fn) { m_fileName = fn; }
 
-void Canvas::render(const SceneElementPtr &world) {
+void Canvas::render(SceneElementPtr &&world) {
   for (int j = 0; j < m_camera.vSize(); ++j) {
     for (int i = 0; i < m_camera.hSize(); ++i) {
       auto color = Vec3f{};
@@ -35,7 +35,7 @@ void Canvas::render(const SceneElementPtr &world) {
   }
 }
 
-void Canvas::renderParallel(const SceneElementPtr &world) {
+void Canvas::renderParallel(SceneElementPtr &&world) {
   std::vector<int> hContainer;
   std::vector<int> vContainer;
   hContainer.resize(m_camera.hSize());

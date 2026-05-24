@@ -181,7 +181,7 @@ int main() {
 
   auto canvas = Canvas(std::move(camera), std::move(renderer));
   canvas.setFileName("scenes/scene.ppm");
-  canvas.renderParallel(world);
+  canvas.renderParallel(std::move(world));
   canvas.save();
 
   auto end = chrono::steady_clock::now();
