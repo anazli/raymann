@@ -53,8 +53,8 @@ class Sphere : public Primitive {
 
  private:
   Vec3f randomToSphere(float radius, float distSquared) {
-    auto r1 = Random::randomNumber();
-    auto r2 = Random::randomNumber();
+    auto r1 = Random::randomFloat();
+    auto r2 = Random::randomFloat();
     auto z = 1.f + r2 * (sqrt(1.f - radius * radius / distSquared) - 1.f);
 
     auto phi = 2.f * PI * r1;

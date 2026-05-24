@@ -43,7 +43,7 @@ float CombinedPdf::value(const Vec3f &direction) const {
 }
 
 Vec3f CombinedPdf::generate() const {
-  if (m_firstPdf && Random::randomNumber() < m_ratio) {
+  if (m_firstPdf && Random::randomFloat() < m_ratio) {
     return m_firstPdf->generate();
   } else if (m_secondPdf) {
     return m_secondPdf->generate();

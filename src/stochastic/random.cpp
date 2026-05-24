@@ -2,7 +2,7 @@
 
 std::mt19937 Random::m_gen(198485949u);
 
-float Random::randomNumber(float a, float b) {
+float Random::randomFloat(float a, float b) {
   std::uniform_real_distribution<float> rnd(a, b);
   return rnd(m_gen);
 }
@@ -15,8 +15,8 @@ float Random::randomInteger(int a, int b) {
 Vec3f Random::randomVectorOnUnitSphere() {
   float xi1{0.f}, xi2{0.f}, dsq{2.f};
   while (dsq >= 1.f) {
-    xi1 = 1.f - 2.f * randomNumber();
-    xi2 = 1.f - 2.f * randomNumber();
+    xi1 = 1.f - 2.f * randomFloat();
+    xi2 = 1.f - 2.f * randomFloat();
     dsq = xi1 * xi1 + xi2 * xi2;
   }
 
@@ -29,8 +29,8 @@ Vec3f Random::randomVectorOnUnitSphere() {
 }
 
 Vec3f Random::randomCosineDirection() {
-  auto r1 = randomNumber();
-  auto r2 = randomNumber();
+  auto r1 = randomFloat();
+  auto r2 = randomFloat();
   auto phi = 2.f * PI * r1;
   auto x = cos(phi) * sqrt(r2);
   auto y = sin(phi) * sqrt(r2);
