@@ -13,7 +13,7 @@
 
 class WavefrontReader {
  public:
-  WavefrontReader() = default;
+  WavefrontReader();
   WavefrontReader(const std::filesystem::path& file);
 
   void parseInput();

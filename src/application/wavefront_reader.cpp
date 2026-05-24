@@ -68,6 +68,10 @@ WavefrontReader::WavefrontReader(const std::filesystem::path &file)
   m_finalProduct = SceneElementNode::create();
 }
 
+WavefrontReader::WavefrontReader() {
+  m_finalProduct = SceneElementNode::create();
+}
+
 void WavefrontReader::parseInput() {
   openFile();
   if (m_inputStream.is_open()) {
@@ -97,6 +101,7 @@ void WavefrontReader::setInputFile(const std::filesystem::path &file) {
         "folder.");
   }
   m_file = file;
+  if (!m_finalProduct) m_finalProduct = SceneElementNode::create();
 }
 
 void WavefrontReader::normalizeVertices() {
@@ -305,7 +310,8 @@ void WavefrontReader::parsePolygonEntry(string_view line) {
 void WavefrontReader::parseGroupEntry(std::string_view line) {
   m_currentGroup = SceneElementNode::create();
   m_currentGroup->setLight(m_light);
-  if (m_finalProduct) m_finalProduct->add(m_currentGroup);
+  if (!m_finalProduct) m_finalProduct = SceneElementNode::create();
+  m_finalProduct->add(m_currentGroup);
 }
 
 void WavefrontReader::triangulatePolygon(vector<Vec3f> vertices) {

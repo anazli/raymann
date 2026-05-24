@@ -73,20 +73,25 @@ WorldPair BVHierarchy::splitElementsOf(SceneElementContainer &worldList,
 
 void BVHierarchy::divideWorld(const SceneElementPtr &world,
                               size_t threshold) const {
-  if (world->isWorld()) {
-    if (world->getChildren().size() >= threshold) {
-      WorldPair worldpair =
-          splitElementsOf(world->getChildren(), world->getBounds());
-      if (!worldpair.first->getChildren().empty()) {
-        world->add(worldpair.first);
-      }
-      if (!worldpair.second->getChildren().empty()) {
-        world->add(worldpair.second);
-      }
+  if (!world->isWorld()) {
+    return;
+  }
+
+  if (world->getChildren().size() > threshold) {
+    WorldPair worldpair =
+        splitElementsOf(world->getChildren(), world->getBounds());
+    if (!worldpair.first->getChildren().empty()) {
+      world->add(worldpair.first);
     }
-    if (world->getChildren().empty()) return;
-    for (const auto &elem : world->getChildren()) {
-      divideWorld(elem, threshold);
+    if (!worldpair.second->getChildren().empty()) {
+      world->add(worldpair.second);
     }
+  }
+
+  if (world->getChildren().empty()) {
+    return;
+  }
+  for (const auto &elem : world->getChildren()) {
+    divideWorld(elem, threshold);
   }
 }

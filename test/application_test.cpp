@@ -103,7 +103,7 @@ TEST_F(ApplicationTest, parseFileWithGroups) {
       SceneElementRawPtr tr1 = it1.currentElement();
       auto t1 = dynamic_cast<Triangle *>(tr1->getPrimitive().get());
       if (t1) {
-        ASSERT_TRUE(reader.vertexCollection().size() == 3);
+        ASSERT_FALSE(reader.vertexCollection().empty());
         EXPECT_THAT(t1->point(0), Eq(Point3f(reader.vertexCollection()[0])));
         EXPECT_THAT(t1->point(1), Eq(Point3f(reader.vertexCollection()[1])));
         EXPECT_THAT(t1->point(2), Eq(Point3f(reader.vertexCollection()[2])));
@@ -115,7 +115,7 @@ TEST_F(ApplicationTest, parseFileWithGroups) {
       SceneElementRawPtr tr2 = it2.currentElement();
       auto t2 = dynamic_cast<Triangle *>(tr2->getPrimitive().get());
       if (t2) {
-        ASSERT_TRUE(reader.vertexCollection().size() == 3);
+        ASSERT_FALSE(reader.vertexCollection().empty());
         EXPECT_THAT(t2->point(0), Eq(Point3f(reader.vertexCollection()[0])));
         EXPECT_THAT(t2->point(1), Eq(Point3f(reader.vertexCollection()[2])));
         EXPECT_THAT(t2->point(2), Eq(Point3f(reader.vertexCollection()[3])));

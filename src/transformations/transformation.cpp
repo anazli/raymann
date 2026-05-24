@@ -74,7 +74,11 @@ Vec3f Transformation::objectToWorldSpace(const Vec3f& v) const {
 }
 
 Normal3f Transformation::worldToObjectSpace(const Normal3f& n) const {
-  return Normal3f(m_inverse_matrix * Vec4f(n));
+  // To transform a normal from world to object space we need to apply
+  // the inverse of the object-to-world normal transform. If
+  // object->world uses (M^{-1})^{T}, then world->object for normals is
+  // ( (M^{-1})^{T} )^{-1} == M^{T}.
+  return Normal3f(m_matrix.transpose() * Vec4f(n));
 }
 
 Normal3f Transformation::objectToWorldSpace(const Normal3f& n) const {

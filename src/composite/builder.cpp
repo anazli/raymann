@@ -170,7 +170,7 @@ void SceneDirector::createWorld(WorldBuilder& builder,
   for (auto element : m_element_container) {
     builder.addElement(element);
   }
-  m_scene_product = builder.getProductWithBVHierarchy();
+  m_scene_product = builder.getProduct();
 }
 
 SceneElementPtr SceneDirector::getCurrentElement() const {
