@@ -1,5 +1,7 @@
 #include "textures/perlin.h"
 
+#include "stochastic/random.h"
+
 Vec3f *Perlin::ranvec = perlinGenerate();
 int *Perlin::perm_x = perlinGeneratePerm();
 int *Perlin::perm_y = perlinGeneratePerm();
@@ -34,15 +36,16 @@ float perlinInterpolation(Vec3f c[2][2][2], float u, float v, float w) {
 Vec3f *perlinGenerate() {
   Vec3f *p = new Vec3f[256];
   for (int i = 0; i < 256; ++i)
-    p[i] = normalized(
-        Vec3f(-1 + 2 * drand48(), -1 + 2 * drand48(), -1 + 2 * drand48()));
+    p[i] = normalized(Vec3f(-1 + 2 * Random::randomFloat(),
+                            -1 + 2 * Random::randomFloat(),
+                            -1 + 2 * Random::randomFloat()));
 
   return p;
 }
 
 void permute(int *p, int n) {
   for (int i = n - 1; i > 0; --i) {
-    int target = int(drand48() * (i + 1));
+    int target = int(Random::randomFloat() * (i + 1));
     int tmp = p[i];
     p[i] = p[target];
     p[target] = tmp;

@@ -1,6 +1,7 @@
 #include "materials/dielectric.h"
 
 #include "composite/scene_element.h"
+#include "stochastic/random.h"
 
 Dielectric::Dielectric(TexturePtr tex, float refractive_index)
     : m_refractive_index(refractive_index), Material(std::move(tex)) {
@@ -35,7 +36,7 @@ bool Dielectric::scatter(const Ray& r_in, const Intersection& rec,
   else
     reflect_prob = 1.f;
 
-  if (drand48() < reflect_prob)
+  if (Random::randomFloat() < reflect_prob)
     scattered = Ray(point, reflected);
   else
     scattered = Ray(point, refracted);
