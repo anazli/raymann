@@ -10,25 +10,20 @@ class BaseCamera;
 
 class Canvas {
  public:
-  Canvas(int w = 0, int h = 0);
+  Canvas(Camera &&camera, std::unique_ptr<BaseRenderer> renderer);
   int width() const;
   int height() const;
   std::string fileName() const;
   void setFileName(const std::string &fn);
-  void render(const SceneElementPtr &world, const Camera &camera,
-              BaseRendererPtr renderer);
-  void renderParallel(const SceneElementPtr &world, const Camera &camera,
-                      BaseRendererPtr renderer);
+  void render(SceneElementPtr &&world);
+  void renderParallel(SceneElementPtr &&world);
   void writePixel(int x, int y, const Vec3f &color);
   Vec3f pixel(int x, int y) const;
   void save();
 
  private:
-  void fillImageResolutionIterators(int hSize, int vSize);
-  int m_width;
-  int m_height;
+  Camera m_camera;
+  std::unique_ptr<BaseRenderer> m_renderer;
   std::string m_fileName;
   std::vector<std::vector<Vec3f>> m_pixels;
-  std::vector<int> m_hContainer;
-  std::vector<int> m_vContainer;
 };

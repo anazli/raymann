@@ -2,8 +2,6 @@
 
 #include <vec3.h>
 
-#include <experimental/random>
-
 //------------------------------------------------------------------------------
 // Perlin implementation from Peter Shirley's  book, ray tracing the next week
 //------------------------------------------------------------------------------

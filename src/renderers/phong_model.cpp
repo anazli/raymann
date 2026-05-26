@@ -217,12 +217,12 @@ bool PhongModel::isShadowed(const SceneElementRawPtr world, const Point3f& p) {
     while (iter.notDone()) {
       auto record = IntersectionRecord{};
       if (iter.currentElement()->intersect(ray, record))
-        if (record.t1 != -MAXFLOAT) {
+        if (record.t1 != -std::numeric_limits<float>::max()) {
           ret[count] =
               std::make_pair(iter.currentElement()->getId(), record.t1);
           count++;
         }
-      if (record.t2 != -MAXFLOAT) {
+      if (record.t2 != -std::numeric_limits<float>::max()) {
         ret[count] = std::make_pair(iter.currentElement()->getId(), record.t2);
       }
       iter.advance();

@@ -16,6 +16,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(math)
 
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 add_library(${LIBRARY_NAME}
             src/acceleration/bounding_box.cpp
             src/acceleration/bounding_box.h
@@ -27,6 +30,8 @@ add_library(${LIBRARY_NAME}
             src/application/data_container.h
             src/application/wavefront_reader.cpp
             src/application/wavefront_reader.h
+            src/application/config_parser.h
+            src/application/scene_parser.h
             src/camera/camera.cpp
             src/camera/camera.h
             src/color/light.h
@@ -82,7 +87,7 @@ add_library(${LIBRARY_NAME}
 )
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(${LIBRARY_NAME} PUBLIC math)
+target_link_libraries(${LIBRARY_NAME} PUBLIC math nlohmann_json::nlohmann_json)
 
 add_executable(${PROJECT_NAME} src/main/raymann.cpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})

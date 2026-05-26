@@ -38,11 +38,11 @@ Vec3f BruteForceSampler::computeColor(BaseRendererRawPtr renderer,
     for (int s = 0; s < m_samplesPerPixel; ++s) {
       auto ax = x - interval;
       auto bx = x + interval;
-      auto u = ax + Random::randomNumber() * (bx - ax);
+      auto u = ax + Random::randomFloat() * (bx - ax);
 
       auto ay = y - interval;
       auto by = y + interval;
-      auto v = ay + Random::randomNumber() * (by - ay);
+      auto v = ay + Random::randomFloat() * (by - ay);
 
       auto newRay = m_camera.getRay(u, v);
       Vec3f sColor = renderer->computeColor(world, newRay, m_materialDepth);
@@ -70,11 +70,11 @@ Vec3f StratifiedSampler::computeColor(BaseRendererRawPtr renderer,
       for (int j = 0; j < sqrtN; ++j) {
         auto ax = x - stratumInterval + i * strataInterval;
         auto bx = ax + strataInterval;
-        auto u = ax + Random::randomNumber() * (bx - ax);
+        auto u = ax + Random::randomFloat() * (bx - ax);
 
         auto ay = y - stratumInterval + j * strataInterval;
         auto by = ay + strataInterval;
-        auto v = ay + Random::randomNumber() * (by - ay);
+        auto v = ay + Random::randomFloat() * (by - ay);
 
         auto newRay = m_camera.getRay(u, v);
         Vec3f sColor = renderer->computeColor(world, newRay, m_materialDepth);

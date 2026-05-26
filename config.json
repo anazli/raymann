@@ -1,0 +1,15 @@
+{
+  "canvas": { "width": 400, "height": 400, "output": "scenes/scene.ppm" },
+  "camera": {
+    "from": [278, 260, -830],
+    "to": [278, 278, 0],
+    "up": [0, 1, 0],
+    "fov": 1.54
+  },
+  "render_settings": {
+    "method": "PathTracer",
+    "background": [0.3, 0.3, 0.3],
+    "samples": 70,
+    "depth": 20
+  }
+}

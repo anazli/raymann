@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <memory>
 
 #include "camera/camera.h"
@@ -32,7 +33,7 @@ class BaseRenderer {
   SceneElementRawPtr m_diffuseLight;
   Vec3f m_out_color;
   Vec3f m_background_color;
-  float m_tmin = MAXFLOAT;
+  float m_tmin = std::numeric_limits<float>::max();
   float m_x;
   float m_y;
 };
