@@ -31,6 +31,7 @@ add_library(${LIBRARY_NAME}
             src/application/wavefront_reader.cpp
             src/application/wavefront_reader.h
             src/application/config_parser.h
+            src/application/scene_parser.h
             src/camera/camera.cpp
             src/camera/camera.h
             src/color/light.h

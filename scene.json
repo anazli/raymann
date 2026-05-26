@@ -1,0 +1,121 @@
+{
+  "light": {
+    "position": [0.0, 0.0, 2.0],
+    "intensity": [1.0, 1.0, 1.0]
+  },
+  "elements": [
+    {
+      "name": "floor",
+      "primitive": "cube",
+      "material": "lambertian",
+      "texture": "constant",
+      "color": [0.73, 0.73, 0.73],
+      "transform": {
+        "translate": [278.0, 0.0, -245.0],
+        "scale": [279.0, 0.05, 556.0]
+      }
+    },
+    {
+      "name": "ceiling",
+      "primitive": "cube",
+      "material": "lambertian",
+      "texture": "constant",
+      "color": [0.73, 0.73, 0.73],
+      "transform": {
+        "translate": [278.0, 555.0, -245.0],
+        "scale": [279.0, 0.05, 556.0]
+      }
+    },
+    {
+      "name": "left_wall",
+      "primitive": "cube",
+      "material": "lambertian",
+      "texture": "constant",
+      "color": [0.12, 0.45, 0.15],
+      "transform": {
+        "translate": [0.0, 278.0, -245.0],
+        "scale": [0.05, 279.0, 556.0]
+      }
+    },
+    {
+      "name": "right_wall",
+      "primitive": "cube",
+      "material": "lambertian",
+      "texture": "constant",
+      "color": [0.65, 0.05, 0.05],
+      "transform": {
+        "translate": [555.0, 278.0, -245.0],
+        "scale": [0.05, 279.0, 556.0]
+      }
+    },
+    {
+      "name": "center_wall",
+      "primitive": "cube",
+      "material": "lambertian",
+      "texture": "constant",
+      "color": [0.73, 0.73, 0.73],
+      "transform": {
+        "translate": [0.0, 278.0, -245.0],
+        "scale": [556.0, 279.0, 0.05]
+      }
+    },
+    {
+      "name": "light_source",
+      "primitive": "quad",
+      "material": "diffuse_light",
+      "texture": "constant",
+      "color": [15.0, 15.0, 15.0],
+      "origin": [213.0, 554.0, -485.0],
+      "u_axis": [130.0, 0.0, 0.0],
+      "v_axis": [0.0, 0.0, 105.0]
+    },
+    {
+      "name": "left_box",
+      "primitive": "cube",
+      "material": "lambertian",
+      "texture": "constant",
+      "color": [0.73, 0.73, 0.73],
+      "transform": {
+        "translate": [195.0, 1.0, -390.0],
+        "scale": [70.0, 290.0, 60.0],
+        "rotate_y": -0.4
+      }
+    },
+    {
+      "name": "right_box",
+      "primitive": "cube",
+      "material": "lambertian",
+      "texture": "constant",
+      "color": [0.73, 0.73, 0.73],
+      "transform": {
+        "translate": [367.0, 1.0, -440.0],
+        "scale": [60.0, 110.0, 60.0],
+        "rotate_y": 0.4
+      }
+    },
+    {
+      "name": "left_sphere",
+      "primitive": "sphere",
+      "material": "dielectric",
+      "texture": "constant",
+      "color": [0.73, 0.73, 0.73],
+      "refractive_index": 1.5,
+      "transform": {
+        "translate": [200.0, 300.0, -385.0],
+        "scale": [60.0, 60.0, 60.0]
+      }
+    },
+    {
+      "name": "right_sphere",
+      "primitive": "sphere",
+      "material": "metal",
+      "texture": "constant",
+      "color": [0.73, 0.73, 0.73],
+      "fuzz": 0.2,
+      "transform": {
+        "translate": [200.0, 30.0, -500.0],
+        "scale": [60.0, 60.0, 60.0]
+      }
+    }
+  ]
+}
