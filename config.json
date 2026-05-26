@@ -1,0 +1,15 @@
+{
+  "canvas": { "width": 200, "height": 200, "output": "scenes/scene.ppm" },
+  "camera": {
+    "from": [280, 35, 215],
+    "to": [-90, -35, -30],
+    "up": [0, 1, 0],
+    "fov": 1.0
+  },
+  "render_settings": {
+    "method": "PhongModel",
+    "background": [0.2, 0.21, 0.2],
+    "samples": 1,
+    "depth": 1
+  }
+}
