@@ -1,5 +1,5 @@
 {
-  "canvas": { "width": 400, "height": 400, "output": "scenes/scene.ppm" },
+  "canvas": { "width": 400, "height": 400, "output": "scenes/scene.ppm", "threads": 4 },
   "camera": {
     "from": [278, 260, -830],
     "to": [278, 278, 0],
