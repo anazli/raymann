@@ -53,8 +53,11 @@ class ConfigParser {
         Vec3f(r["background"][0], r["background"][1], r["background"][2]);
     renderer->setBackgroundColor(background_color);
 
+    // Get number of threads (default to 4 if not specified)
+    int num_threads = cnv.value("threads", 4);
+
     // Configure canvas
-    auto canvas = Canvas(std::move(camera), std::move(renderer));
+    auto canvas = Canvas(std::move(camera), std::move(renderer), num_threads);
     canvas.setFileName(cnv["output"]);
     return canvas;
   }

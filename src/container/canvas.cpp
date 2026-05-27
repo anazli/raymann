@@ -1,16 +1,19 @@
 #include "canvas.h"
 
 #include <algorithm>
-#include <execution>
 #include <fstream>
+#include <thread>
+#include <vector>
 
 using std::endl;
 using std::list;
 using std::ofstream;
-using std::execution::par;
 
-Canvas::Canvas(Camera &&camera, std::unique_ptr<BaseRenderer> renderer)
-    : m_camera(camera), m_renderer(std::move(renderer)) {
+Canvas::Canvas(Camera &&camera, std::unique_ptr<BaseRenderer> renderer,
+               int num_threads)
+    : m_camera(camera),
+      m_renderer(std::move(renderer)),
+      m_num_threads(num_threads) {
   m_pixels =
       std::vector(m_camera.hSize(), std::vector<Vec3f>(m_camera.vSize()));
 }
@@ -22,6 +25,8 @@ int Canvas::height() const { return m_pixels[0].size(); }
 std::string Canvas::fileName() const { return m_fileName; }
 
 void Canvas::setFileName(const std::string &fn) { m_fileName = fn; }
+
+void Canvas::setNumThreads(int num_threads) { m_num_threads = num_threads; }
 
 void Canvas::render(SceneElementPtr &&world) {
   for (int j = 0; j < m_camera.vSize(); ++j) {
@@ -35,23 +40,34 @@ void Canvas::render(SceneElementPtr &&world) {
   }
 }
 
-void Canvas::renderParallel(SceneElementPtr &&world) {
-  std::vector<int> hContainer;
-  std::vector<int> vContainer;
-  hContainer.resize(m_camera.hSize());
-  vContainer.resize(m_camera.vSize());
-  std::iota(hContainer.begin(), hContainer.end(), 0);
-  std::iota(vContainer.begin(), vContainer.end(), 0);
-
-  std::for_each(par, vContainer.begin(), vContainer.end(), [&](int j) {
-    std::for_each(par, hContainer.begin(), hContainer.end(), [&](int i) {
+void Canvas::renderRegion(int y_start, int y_end,
+                          const SceneElementPtr &world) {
+  for (int j = y_start; j < y_end; ++j) {
+    for (int i = 0; i < m_camera.hSize(); ++i) {
       auto color = Vec3f{};
       m_renderer->setPixelInfo(i, j);
       world->accept(*m_renderer, m_camera.getRay(i, j));
       color = m_renderer->getColor();
       writePixel(i, j, color);
-    });
-  });
+    }
+  }
+}
+
+void Canvas::renderParallel(SceneElementPtr &&world) {
+  int height = m_camera.vSize();
+  int rows_per_thread = height / m_num_threads;
+  std::vector<std::thread> threads;
+
+  for (int t = 0; t < m_num_threads; ++t) {
+    int y_start = t * rows_per_thread;
+    int y_end = (t == m_num_threads - 1) ? height : (t + 1) * rows_per_thread;
+    threads.emplace_back(&Canvas::renderRegion, this, y_start, y_end,
+                         std::ref(world));
+  }
+
+  for (auto &thread : threads) {
+    thread.join();
+  }
 }
 
 void Canvas::writePixel(int x, int y, const Vec3f &color) {
