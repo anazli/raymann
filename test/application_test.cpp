@@ -3,6 +3,7 @@
 
 #include <filesystem>
 
+#include "application/scene_parser.h"
 #include "application/wavefront_reader.h"
 #include "composite/iterator.h"
 
@@ -21,6 +22,27 @@ TEST_F(ApplicationTest, parseInvalidInput) {
   reader.setInputFile(test_directory / "invalid_input.txt");
   reader.parseInput();
   EXPECT_TRUE(reader.vertexCollection().size() == 0);
+}
+
+TEST_F(ApplicationTest, createWavefrontSceneFromConfig) {
+  const auto config_path = test_directory / "wavefront_scene_config.json";
+  auto scene_data = SceneParser::createFromConfig(config_path.string());
+
+  ASSERT_TRUE(scene_data.world);
+  ASSERT_FALSE(scene_data.world->getChildren().empty());
+  const auto *material = scene_data.world->getChildren().front()->getMaterial();
+  ASSERT_NE(nullptr, material);
+  EXPECT_EQ(App::STANDARD, material->getType());
+
+  const auto properties = material->getProperties();
+  EXPECT_EQ(0.1f, properties.getPropertyAs<float>(App::AMBIENT).value());
+  EXPECT_EQ(0.8f, properties.getPropertyAs<float>(App::DIFFUSE).value());
+  EXPECT_EQ(0.6f, properties.getPropertyAs<float>(App::SPECULAR).value());
+  EXPECT_EQ(120.f, properties.getPropertyAs<float>(App::SHININESS).value());
+  EXPECT_EQ(0.2f, properties.getPropertyAs<float>(App::REFLECTION).value());
+  EXPECT_EQ(0.f, properties.getPropertyAs<float>(App::TRANSPARENCY).value());
+  EXPECT_EQ(1.5f,
+            properties.getPropertyAs<float>(App::REFRACTIVE_INDEX).value());
 }
 
 TEST_F(ApplicationTest, parseValidInput) {

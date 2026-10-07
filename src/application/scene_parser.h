@@ -1,14 +1,23 @@
 #pragma once
 
+#include <filesystem>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
 #include "application/config_parser.h"
 #include "application/parameters.h"
+#include "application/wavefront_reader.h"
 #include "camera/camera.h"
 #include "color/light.h"
 #include "composite/builder.h"
 #include "composite/scene_element.h"
+#include "materials/dielectric.h"
+#include "materials/emissive.h"
+#include "materials/isotropic.h"
+#include "materials/lambertian.h"
+#include "materials/metal.h"
+#include "materials/standard.h"
+#include "textures/texture.h"
 
 using json = nlohmann::json;
 
@@ -105,7 +114,112 @@ class SceneParser {
     return SceneData{world, light};
   }
 
+  static SceneData createFromConfig(const std::string& config_path) {
+    const json config = JsonLoader::load(config_path);
+    const auto scene_config = config.value("scene", json{});
+
+    if (scene_config.empty()) {
+      const auto config_directory =
+          std::filesystem::path(config_path).parent_path();
+      return createFromJSON((config_directory / "scene.json").string());
+    }
+
+    const std::string type = scene_config.value("type", "json");
+    const auto config_directory =
+        std::filesystem::path(config_path).parent_path();
+    if (type == "json") {
+      const auto scene_path = scene_config.value("file", "scene.json");
+      return createFromJSON(
+          (config_directory / scene_path).lexically_normal().string());
+    }
+
+    if (type == "wavefront") {
+      const auto model_path =
+          config_directory / scene_config.value("file", "model.obj");
+      WavefrontReader reader(model_path);
+
+      const auto light_config = scene_config.value("light", json::object());
+      const auto position =
+          light_config.value("position", json{0.f, 4.f, -4.f});
+      const auto intensity =
+          light_config.value("intensity", json{1.f, 1.f, 1.f});
+      const PointLight light(
+          Point3f(position[0].get<float>(), position[1].get<float>(),
+                  position[2].get<float>()),
+          Vec3f(intensity[0].get<float>(), intensity[1].get<float>(),
+                intensity[2].get<float>()));
+      const auto material_config =
+          scene_config.value("material", json::object());
+      const auto material = createWavefrontMaterial(material_config);
+
+      reader.addMaterial(std::move(material));
+      reader.addLightForModel(light);
+      reader.parseInput();
+      return SceneData{reader.getStructure(), light};
+    }
+
+    throw std::runtime_error("Unsupported scene type: " + type);
+  }
+
  private:
+  static TexturePtr createWavefrontTexture(const json& material_config) {
+    const auto color = material_config.value("color", json{0.7f, 0.7f, 0.7f});
+    const auto texture_type =
+        getTextureType(material_config.value("texture", "constant"));
+
+    if (texture_type == App::PERLIN_TEXTURE) {
+      const auto scale = material_config.value("scale", 0.5f);
+      return PerlinTexture::create(
+          scale, Vec3f(color[0].get<float>(), color[1].get<float>(),
+                       color[2].get<float>()));
+    }
+    return ConstantTexture::create(Vec3f(
+        color[0].get<float>(), color[1].get<float>(), color[2].get<float>()));
+  }
+
+  static MaterialPtr createWavefrontMaterial(const json& material_config) {
+    auto texture = createWavefrontTexture(material_config);
+    const auto material_type =
+        getMaterialType(material_config.value("type", "lambertian"));
+
+    switch (material_type) {
+      case App::LAMBERTIAN:
+        return Lambertian::create(std::move(texture));
+      case App::METAL:
+        return Metal::create(std::move(texture),
+                             material_config.value("fuzz", 0.2f));
+      case App::DIELECTRIC:
+        return Dielectric::create(
+            std::move(texture), material_config.value("refractive_index", 1.f));
+      case App::DIFFUSE_LIGHT:
+        return EmissiveMaterial::create(std::move(texture));
+      case App::ISOTROPIC:
+        return Isotropic::create(std::move(texture));
+      case App::STANDARD: {
+        DataContainer properties;
+        const auto property_names = {
+            std::pair<App, const char*>(App::AMBIENT, "ambient"),
+            std::pair<App, const char*>(App::DIFFUSE, "diffuse"),
+            std::pair<App, const char*>(App::SPECULAR, "specular"),
+            std::pair<App, const char*>(App::SHININESS, "shininess"),
+            std::pair<App, const char*>(App::REFLECTION, "reflection"),
+            std::pair<App, const char*>(App::TRANSPARENCY, "transparency"),
+            std::pair<App, const char*>(App::REFRACTIVE_INDEX,
+                                        "refractive_index")};
+        for (const auto& [property, name] : property_names) {
+          if (material_config.contains(name)) {
+            properties.setProperty(property,
+                                   material_config[name].get<float>());
+          }
+        }
+        return StandardMaterial::create(std::move(texture), properties);
+      }
+      default:
+        throw std::runtime_error("Unsupported Wavefront material type: " +
+                                 material_config.value("type", "lambertian"));
+    }
+  }
+
   static App getPrimitiveType(const std::string& type) {
     if (type == "cube") return App::CUBE;
     if (type == "sphere") return App::SPHERE;

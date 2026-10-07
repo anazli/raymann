@@ -4,6 +4,7 @@
 
 StandardMaterial::StandardMaterial(TexturePtr tex, const DataContainer& prop)
     : Material(std::move(tex)), m_prop(prop) {
+  m_type = App::STANDARD;
   // Default properties of standard material
   if (!m_prop.hasProperty(App::AMBIENT)) m_prop.setProperty(App::AMBIENT, 0.1f);
   if (!m_prop.hasProperty(App::DIFFUSE)) m_prop.setProperty(App::DIFFUSE, 0.9f);

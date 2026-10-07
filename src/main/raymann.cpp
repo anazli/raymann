@@ -10,8 +10,8 @@
 using namespace std;
 
 int main() {
-  // Parse scene from JSON
-  auto scene_data = SceneParser::createFromJSON("scene.json");
+  // Parse the scene source from config.json. The default remains scene.json.
+  auto scene_data = SceneParser::createFromConfig("config.json");
   auto world = std::move(scene_data.world);
 
   auto start = chrono::steady_clock::now();
